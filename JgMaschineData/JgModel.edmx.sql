@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/05/2016 16:37:59
--- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
+-- Date Created: 04/18/2016 12:25:43
+-- Generated from EDMX file: D:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -85,7 +85,7 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [ProtokollName] tinyint  NOT NULL,
     [MaschinenAdresse] nvarchar(max)  NULL,
     [PortNummer] int  NOT NULL,
-    [ScannerNummer] int  NOT NULL,
+    [ScannerNummer] nvarchar(max)  NOT NULL,
     [PfadDaten] nvarchar(max)  NULL,
     [PfadBediener] nvarchar(max)  NULL,
     [Bemerkung] nvarchar(max)  NULL,
@@ -185,6 +185,7 @@ GO
 CREATE TABLE [dbo].[tabAuswertungSet] (
     [Id] uniqueidentifier  NOT NULL,
     [ReportName] nvarchar(120)  NOT NULL,
+    [Filter] nvarchar(max)  NOT NULL,
     [ErstelltName] nvarchar(120)  NOT NULL,
     [ErstelltDatum] datetime  NOT NULL,
     [GeaendertName] nvarchar(120)  NOT NULL,

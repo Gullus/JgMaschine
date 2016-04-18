@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschine", "JgMaschine\JgMaschine.csproj", "{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineAuswertung", "JgMaschineAuswertung\JgMaschineAuswertung.csproj", "{7191D4C9-A789-4EC1-B120-2C745781E817}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineData", "JgMaschineData\JgMaschineData.csproj", "{A37F084E-2543-4FF2-A664-03830189FF4E}"
@@ -33,14 +31,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Debug|x86.Build.0 = Debug|Any CPU
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Release|x86.ActiveCfg = Release|Any CPU
-		{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}.Release|x86.Build.0 = Release|Any CPU
 		{7191D4C9-A789-4EC1-B120-2C745781E817}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7191D4C9-A789-4EC1-B120-2C745781E817}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7191D4C9-A789-4EC1-B120-2C745781E817}.Debug|x86.ActiveCfg = Debug|Any CPU

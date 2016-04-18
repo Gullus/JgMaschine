@@ -50,6 +50,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -125,11 +126,36 @@
       <Project>{a37f084e-2543-4ff2-a664-03830189ff4e}</Project>
       <Name>JgMaschineData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JgMaschineLib\JgMaschineLib.csproj">
+      <Project>{69d6b7e0-6ddc-49a5-a44f-d6bfd607aed3}</Project>
+      <Name>JgMaschineLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="SplashScreen.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JgProperties.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JgDownload.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JgPrint.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JgSave.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JgNew.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JgClose.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JgPreview.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

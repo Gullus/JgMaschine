@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DataComparison>
+  <Version>10</Version>
+  <ConnectionProperties1>
+    <ConnectionString>Data Source=.\SqlExpress;Initial Catalog=_JgMaschine;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True;Packet Size=4096;Authentication="Active Directory Integrated"</ConnectionString>
+    <FullDisplayName>.\SqlExpress._JgMaschine (GULLUSBUERO\jg)</FullDisplayName>
+  </ConnectionProperties1>
+  <ConnectionProperties2>
+    <ConnectionString>Data Source=.\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=True;Packet Size=4096</ConnectionString>
+    <FullDisplayName>.\SqlExpress.JgMaschine (GULLUSBUERO\jg)</FullDisplayName>
+  </ConnectionProperties2>
+  <SessionSettings>Default</SessionSettings>
+</DataComparison>

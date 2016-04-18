@@ -46,11 +46,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatenbankVerbindung\DatenbankVerbindungen.cs" />
-    <Compile Include="DatenbankVerbindung\FormDatenbankVerbindung.cs">
+    <Compile Include="SqlVerbindung\DatenbankVerbindungen.cs" />
+    <Compile Include="SqlVerbindung\FormDatenbankVerbindung.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DatenbankVerbindung\FormDatenbankVerbindung.Designer.cs">
+    <Compile Include="SqlVerbindung\FormDatenbankVerbindung.Designer.cs">
       <DependentUpon>FormDatenbankVerbindung.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
@@ -60,6 +60,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Scanner\DataLogicScanner.cs" />
     <Compile Include="Stahl\BvbsDatenaustausch.cs" />
     <Compile Include="TcpIpKomponenten\Helper.cs" />
     <Compile Include="TcpIpKomponenten\TcpIpClient.cs" />
@@ -97,7 +98,9 @@
     <Content Include="Bilder\JgUndo.ico" />
     <Content Include="Bilder\JgNew.ico" />
     <Content Include="Bilder\JgNext.ico" />
-    <Content Include="Bilder\JgPreview.ico" />
+    <Content Include="Bilder\JgPreview.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Bilder\JgPrint.ico" />
     <Content Include="Bilder\JgProperties.ico" />
     <Content Include="Bilder\JgRemove.ico" />
@@ -105,7 +108,7 @@
     <Content Include="Bilder\JgUpload.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DatenbankVerbindung\FormDatenbankVerbindung.resx">
+    <EmbeddedResource Include="SqlVerbindung\FormDatenbankVerbindung.resx">
       <DependentUpon>FormDatenbankVerbindung.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -119,6 +122,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

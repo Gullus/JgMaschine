@@ -28,12 +28,27 @@ namespace JgMaschineSetup.Commands
       get { return _ProtokollBearbeiten; }
     }
 
+    private static RoutedUICommand _ReportBenutzerBearbeiten;
+    public static RoutedUICommand ReportBenutzerBearbeiten
+    {
+      get { return _ReportBenutzerBearbeiten; }
+    }
+
+    private static RoutedUICommand _ReportBenutzerAnzeigen;
+    public static RoutedUICommand ReportBenutzerAnzeigen
+    {
+      get { return _ReportBenutzerAnzeigen; }
+    }
+
     static MyCommands()
     {
       _MaschineBearbeiten = new RoutedUICommand("Maschine bearbeiten", "MaschineBearbeiten", typeof(MyCommands));
       _BedienerBeabeiten = new RoutedUICommand("Bediener bearbeiten", "BedienerBearbeiten", typeof(MyCommands));
       _StandortBearbeiten = new RoutedUICommand("Standort bearbeiten", "StandortBearbeiten", typeof(MyCommands));
       _ProtokollBearbeiten = new RoutedUICommand("Protokoll bearbeiten", "ProtokollBearbeiten", typeof(MyCommands));
+
+      _ReportBenutzerBearbeiten = new RoutedUICommand("Benutzer bearbeiten", "BenutzerBearbeiten", typeof(MyCommands));
+      _ReportBenutzerAnzeigen = new RoutedUICommand("Benutzer Anzeigen", "BenutzerAnzeigen", typeof(MyCommands));
     }
   }
 }

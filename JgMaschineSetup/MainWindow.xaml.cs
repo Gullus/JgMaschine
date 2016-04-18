@@ -111,6 +111,8 @@ namespace JgMaschineSetup
       {
         erg.CanExecute = !_VsMaschine.View.IsEmpty && ((_VsMaschine.View.CurrentItem as JgMaschineData.tabMaschine).ProtokollName != EnumProtokollName.Handbiegung);
       }));
+
+      // CommandBindings.Add(new CommandBinding(MyCommands.ReportBenutzerBearbeiten, ReportBenutzerExecute));
     }
 
     private void ButtonNeuerStandort_Click(object sender, RoutedEventArgs e)

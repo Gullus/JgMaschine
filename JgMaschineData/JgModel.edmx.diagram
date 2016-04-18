@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="1f8757055d2a477f966ead49ef7f3c84" Name="JgDiagramm" ZoomLevel="100" DisplayType="true" >
         <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.5" PointX="5.875" PointY="6.25" />
-        <EntityTypeShape EntityType="JgModel.tabBediener" Width="2.5" PointX="5.875" PointY="11" />
+        <EntityTypeShape EntityType="JgModel.tabBediener" Width="2.5" PointX="5.875" PointY="10.75" />
         <EntityTypeShape EntityType="JgModel.tabDaten" Width="2.5" PointX="9.125" PointY="4.75" />
         <AssociationConnector Association="JgModel.tabMaschinetabDaten" />
         <EntityTypeShape EntityType="JgModel.tabAnmeldung" Width="2.5" PointX="9.125" PointY="9.5" />

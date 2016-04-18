@@ -60,7 +60,7 @@
     <Property Name="ProtokollName" Type="tinyint" Nullable="false" />
     <Property Name="MaschinenAdresse" Type="nvarchar(max)" Nullable="true" />
     <Property Name="PortNummer" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="ScannerNummer" Type="int" Nullable="false" DefaultValue="-1" />
+    <Property Name="ScannerNummer" Type="nvarchar(max)" Nullable="false" />
     <Property Name="PfadDaten" Type="nvarchar(max)" Nullable="true" />
     <Property Name="PfadBediener" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
@@ -160,6 +160,7 @@
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ReportName" Type="nvarchar" Nullable="false" MaxLength="120" />
+    <Property Name="Filter" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ErstelltName" Type="nvarchar" Nullable="false" MaxLength="120" />
     <Property Name="ErstelltDatum" Type="datetime" Nullable="false" />
     <Property Name="GeaendertName" Type="nvarchar" Nullable="false" MaxLength="120" />
@@ -350,7 +351,7 @@
           <Property Name="ProtokollName" Type="JgModel.EnumProtokollName" Nullable="false" />
           <Property Name="MaschinenAdresse" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="PortNummer" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="ScannerNummer" Type="Int32" Nullable="false" DefaultValue="-1" />
+          <Property Name="ScannerNummer" Type="String" Nullable="false" />
           <Property Name="PfadDaten" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="PfadBediener" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -597,6 +598,7 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="ReportName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
+          <Property Name="Filter" Type="String" Nullable="false" />
           <Property Name="ErstelltName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="ErstelltDatum" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="GeaendertName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
@@ -750,6 +752,7 @@
         <MappingFragment StoreEntitySet="tabAuswertungSet">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="ReportName" ColumnName="ReportName" />
+          <ScalarProperty Name="Filter" ColumnName="Filter" />
           <ScalarProperty Name="ErstelltName" ColumnName="ErstelltName" />
           <ScalarProperty Name="ErstelltDatum" ColumnName="ErstelltDatum" />
           <ScalarProperty Name="GeaendertName" ColumnName="GeaendertName" />

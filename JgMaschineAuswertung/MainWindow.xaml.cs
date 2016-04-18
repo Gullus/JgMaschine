@@ -17,6 +17,8 @@ namespace JgMaschineAuswertung
     private FastReport.Report _Report;
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
+    private string _FileSqlVerbindung = "JgMaschineSqlVerbindung.Xml";
+
     public MainWindow()
     {
       InitializeComponent();
@@ -62,6 +64,10 @@ namespace JgMaschineAuswertung
           string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
           form.Auswertung.ErstelltDatum = DateTime.Now;
           form.Auswertung.ErstelltName = username;
+          form.Auswertung.Filter = "JgMaschineSqlVerbindung";
+
+          form.Auswertung.GeaendertName = form.Auswertung.ErstelltName;
+          form.Auswertung.GeaendertDatum = form.Auswertung.ErstelltDatum;
 
           _Db.tabAuswertungSet.Add(form.Auswertung);
           _Db.SaveChanges();
@@ -69,6 +75,9 @@ namespace JgMaschineAuswertung
           _VsAuswertung.View.MoveCurrentTo(form.Auswertung);
 
           _Report.Clear();
+
+          JgMaschineLib.SqlVerbindung.SqlVerbindung verb = new JgMaschineLib.SqlVerbindung.SqlVerbindung(_FileSqlVerbindung);
+          _Report.SetParameterValue("SqlVerbindung", verb);
           _Report.Design();
         }
       }));
@@ -110,6 +119,13 @@ namespace JgMaschineAuswertung
           }
         }
       }, CanExecReportVorhandenAndNull));
+
+      CommandBindings.Add(new CommandBinding(MyCommands.SqlVerbindung, (sen, erg) =>
+      {
+        JgMaschineLib.SqlVerbindung.SqlVerbindung verb = new JgMaschineLib.SqlVerbindung.SqlVerbindung(_FileSqlVerbindung);
+        verb.VerbindungBearbeiten(JgMaschineLib.SqlVerbindung.SqlVerbindung.EnumVerbindungen.JgMaschine);
+      }));
+
     }
 
     private void CanExecReportVorhandenAndNull(object sender, CanExecuteRoutedEventArgs e)
@@ -133,6 +149,9 @@ namespace JgMaschineAuswertung
         mem = new MemoryStream(dsRep.Report);
         _Report.Load(mem);
       }
+
+      JgMaschineLib.SqlVerbindung.SqlVerbindung verb = new JgMaschineLib.SqlVerbindung.SqlVerbindung(_FileSqlVerbindung);
+      _Report.SetParameterValue("SqlVerbindung", verb.Get(JgMaschineLib.SqlVerbindung.SqlVerbindung.EnumVerbindungen.JgMaschine));
 
       if (e.Command == MyCommands.ReportAnzeigen)
         _Report.Show();

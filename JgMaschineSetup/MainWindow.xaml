@@ -85,7 +85,7 @@
                                 <DropShadowEffect/>
                             </Button.Effect>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgNew.ico" Margin="5">
+                                <Image Source="..\JgMaschineLib\Bilder\JgNew.ico" Margin="5">
                                     <Image.Effect>
                                         <DropShadowEffect/>
                                     </Image.Effect>
@@ -98,7 +98,7 @@
                                 <DropShadowEffect/>
                             </Button.Effect>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgSettings.ico" Margin="5">
+                                <Image Source="..\JgMaschineLib\Bilder\JgSettings.ico" Margin="5">
                                     <Image.Effect>
                                         <DropShadowEffect/>
                                     </Image.Effect>
@@ -111,7 +111,7 @@
                                 <DropShadowEffect/>
                             </Button.Effect>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgRefresh.ico" Margin="5">
+                                <Image Source="..\JgMaschineLib\Bilder\JgRefresh.ico" Margin="5">
                                     <Image.Effect>
                                         <DropShadowEffect/>
                                     </Image.Effect>
@@ -125,7 +125,7 @@
                                 <DropShadowEffect/>
                             </Button.Effect>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgCopy.ico" Margin="5">
+                                <Image Source="..\JgMaschineLib\Bilder\JgCopy.ico" Margin="5">
                                     <Image.Effect>
                                         <DropShadowEffect/>
                                     </Image.Effect>
@@ -246,7 +246,7 @@
                                 <DropShadowEffect/>
                             </Button.Effect>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgSearch.ico" Height="15"/>
+                                <Image Source="..\JgMaschineLib\Bilder\JgSearch.ico" Height="15"/>
                                 <TextBlock Text="Suchen" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
@@ -260,7 +260,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="7"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="70"/>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="7"/>
@@ -268,11 +269,12 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7"/>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="171"/>
+                        <ColumnDefinition Width="79"/>
                         <ColumnDefinition Width="7"/>
                     </Grid.ColumnDefinitions>
 
-                    <DataGrid x:Name="dgBediener" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding}" Grid.RowSpan="4" Margin="0, 0, 7, 0" IsReadOnly="True">
+                    <DataGrid x:Name="dgBediener" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding}" Grid.RowSpan="5" Margin="0, 0, 7, 0" IsReadOnly="True">
                         <DataGrid.Effect>
                             <DropShadowEffect/>
                         </DataGrid.Effect>
@@ -283,7 +285,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Grid Grid.Column="2" Grid.Row="1">
+                    <Grid Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition />
@@ -301,12 +303,12 @@
                         <TextBox Style="{StaticResource StyleTextBox}" Text="{Binding Bemerkung}" Grid.Row="2" Grid.ColumnSpan="2" Height="150"/>
                     </Grid>
 
-                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="3" Click="ButtonNeuerBediener_Click">
+                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="4" Click="ButtonNeuerBediener_Click" Grid.ColumnSpan="2">
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgNew.ico" Margin="5">
+                            <Image Source="..\JgMaschineLib\Bilder\JgNew.ico" Margin="5">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>
@@ -315,12 +317,12 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="4" Command="{x:Static comand:MyCommands.BedienerBeabeiten}">
+                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="5" Command="{x:Static comand:MyCommands.BedienerBeabeiten}" Grid.ColumnSpan="2">
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgPerson.ico" Margin="5">
+                            <Image Source="..\JgMaschineLib\Bilder\JgPerson.ico" Margin="5">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>
@@ -374,7 +376,7 @@
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgNew.ico" Margin="5">
+                            <Image Source="..\JgMaschineLib\Bilder\JgNew.ico" Margin="5">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>
@@ -388,7 +390,7 @@
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgHardDisk.ico" Margin="5">
+                            <Image Source="..\JgMaschineLib\Bilder\JgHardDisk.ico" Margin="5">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>

@@ -16,6 +16,7 @@ namespace JgMaschineData
     {
         public System.Guid Id { get; set; }
         public string ReportName { get; set; }
+        public string Filter { get; set; }
         public string ErstelltName { get; set; }
         public System.DateTime ErstelltDatum { get; set; }
         public string GeaendertName { get; set; }

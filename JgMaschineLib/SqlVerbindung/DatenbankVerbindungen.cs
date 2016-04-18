@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace JgMaschineLib
+namespace JgMaschineLib.SqlVerbindung
 {
-  public class DatenbankVerbindungen
+  public class SqlVerbindung
   {
     public enum EnumVerbindungen
     {
@@ -23,13 +23,13 @@ namespace JgMaschineLib
       set { _FileNameDatei = value; }
     }
 
-    public DatenbankVerbindungen(string FileName)
+    public SqlVerbindung(string FileName)
       : base()
     {
       _FileNameDatei = FileName;
     }
 
-    public DatenbankVerbindungen()
+    public SqlVerbindung()
     { }
 
     private void VerbindungenLaden()

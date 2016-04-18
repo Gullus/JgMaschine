@@ -18,7 +18,6 @@ namespace JgMaschineData
         public tabMaschine()
         {
             this.PortNummer = -1;
-            this.ScannerNummer = -1;
             this.VorgabeProStunde = 0m;
             this.sDaten = new HashSet<tabDaten>();
             this.sAnmeldungen = new HashSet<tabAnmeldung>();
@@ -30,7 +29,7 @@ namespace JgMaschineData
         public EnumProtokollName ProtokollName { get; set; }
         public string MaschinenAdresse { get; set; }
         public int PortNummer { get; set; }
-        public int ScannerNummer { get; set; }
+        public string ScannerNummer { get; set; }
         public string PfadDaten { get; set; }
         public string PfadBediener { get; set; }
         public string Bemerkung { get; set; }
