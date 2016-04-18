@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PMML version="3.0" xmlns="http://www.dmg.org/PMML-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema_instance">
+	<DATA>
+		<DAY date="20150807" time_on="6077">
+			<PROD time_auto="39" time_work="33" diametro="12" peso="2258" unit="0" id="0" length="1271" n_line="6" codice="" cliente="" cantiere="" n_pezzi="2" tipo_fe="ALFAL"/>
+			<PROD time_auto="261" time_work="81" diametro="12" peso="6582" unit="0" id="0" length="2471" n_line="6" codice="" cliente="" cantiere="" n_pezzi="3" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20150824" time_on="388">
+			<PROD time_auto="58" time_work="42" diametro="12" peso="1776" unit="0" id="0" length="1000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="2" tipo_fe="ALFAL"/>
+		</DAY>
+	</DATA>
+</PMML>

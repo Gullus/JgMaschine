@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A37F084E-2543-4FF2-A664-03830189FF4E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JgMaschineData</RootNamespace>
+    <AssemblyName>JgDataMaschineData</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EnumProtokollName.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnumReperaturEreigniss.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnumStatusBediener.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnumStatusMaschine.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnumStatusProtkoll.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnumVorgangAnmeldung.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="KlassenErweiterungen.cs" />
+    <Compile Include="JgModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JgModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JgModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JgModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JgModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tabAnmeldung.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabAuswertung.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabBediener.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabDaten.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabMaschine.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabProtokoll.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabReparatur.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabStandort.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="JgModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>JgModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="JgModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>JgModel.Context.cs</LastGenOutput>
+      <DependentUpon>JgModel.edmx</DependentUpon>
+    </None>
+    <None Include="JgModel.edmx.diagram">
+      <DependentUpon>JgModel.edmx</DependentUpon>
+    </None>
+    <None Include="JgModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>JgModel.cs</LastGenOutput>
+      <DependentUpon>JgModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JgModel.edmx.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

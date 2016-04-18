@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<PMML version="3.0" xmlns="http://www.dmg.org/PMML-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema_instance">
+	<DATA>
+		<DAY date="20150902" time_on="1600">
+			<PROD time_auto="42" time_work="38" diametro="12" peso="888" unit="0" id="0" length="1000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+			<PROD time_auto="63" time_work="35" diametro="12" peso="753" unit="0" id="0" length="848" n_line="3" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20150903" time_on="2871">
+			<PROD time_auto="133" time_work="113" diametro="12" peso="2664" unit="0" id="0" length="1000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="3" tipo_fe="ALFAL"/>
+			<PROD time_auto="101" time_work="72" diametro="12" peso="1506" unit="0" id="0" length="848" n_line="3" codice="" cliente="" cantiere="" n_pezzi="2" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20150916" time_on="866">
+			<PROD time_auto="42" time_work="35" diametro="12" peso="888" unit="0" id="0" length="1000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+			<PROD time_auto="49" time_work="46" diametro="12" peso="1164" unit="0" id="0" length="1311" n_line="6" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+		</DAY>
+	</DATA>
+</PMML>

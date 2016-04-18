@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<PMML version="3.0" xmlns="http://www.dmg.org/PMML-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema_instance">
+	<DATA>
+		<DAY date="20160105" time_on="1311">
+			<PROD time_auto="512" time_work="403" diametro="12" peso="55056" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="31" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20160107" time_on="4358">
+			<PROD time_auto="2279" time_work="2112" diametro="12" peso="146520" unit="0" id="0" length="1500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="110" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20160114" time_on="1882">
+			<PROD time_auto="692" time_work="435" diametro="12" peso="81252" unit="0" id="0" length="1500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="61" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20160115" time_on="11027">
+			<PROD time_auto="2475" time_work="1617" diametro="12" peso="171828" unit="0" id="0" length="1500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="129" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20160118" time_on="12923">
+			<PROD time_auto="2585" time_work="1814" diametro="12" peso="350316" unit="0" id="0" length="1500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="263" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20160120" time_on="3511">
+			<PROD time_auto="927" time_work="716" diametro="12" peso="103896" unit="0" id="0" length="1500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="78" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20160126" time_on="1682">
+			<PROD time_auto="742" time_work="391" diametro="12" peso="78588" unit="0" id="0" length="1500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="59" tipo_fe="ALFAR"/>
+		</DAY>
+	</DATA>
+</PMML>

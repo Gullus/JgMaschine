@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<PMML version="3.0" xmlns="http://www.dmg.org/PMML-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema_instance">
+	<DATA>
+		<DAY date="20151102" time_on="24809">
+			<PROD time_auto="10862" time_work="2184" diametro="8" peso="101120" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="128" tipo_fe="ALFAR"/>
+			<PROD time_auto="895" time_work="505" diametro="8" peso="18012" unit="0" id="0" length="1200" n_line="1" codice="" cliente="" cantiere="" n_pezzi="38" tipo_fe="ALFAR"/>
+			<PROD time_auto="1719" time_work="858" diametro="8" peso="54340" unit="0" id="0" length="2500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="55" tipo_fe="ALFAR"/>
+			<PROD time_auto="100" time_work="26" diametro="8" peso="1338" unit="0" id="0" length="1129" n_line="1" codice="" cliente="" cantiere="" n_pezzi="3" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151103" time_on="32191">
+			<PROD time_auto="653" time_work="279" diametro="8" peso="15800" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="20" tipo_fe="ALFAR"/>
+			<PROD time_auto="2844" time_work="2491" diametro="8" peso="33924" unit="0" id="0" length="1300" n_line="1" codice="" cliente="" cantiere="" n_pezzi="66" tipo_fe="ALFAR"/>
+			<PROD time_auto="3991" time_work="354" diametro="8" peso="39105" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="33" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151104" time_on="5657">
+			<PROD time_auto="90" time_work="83" diametro="8" peso="2370" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="3" tipo_fe="ALFAR"/>
+			<PROD time_auto="1705" time_work="928" diametro="8" peso="42186" unit="0" id="0" length="1200" n_line="1" codice="" cliente="" cantiere="" n_pezzi="89" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151105" time_on="23523">
+			<PROD time_auto="1017" time_work="94" diametro="12" peso="26640" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="10" tipo_fe="ALFAR"/>
+			<PROD time_auto="3390" time_work="206" diametro="12" peso="53280" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="30" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151106" time_on="25300">
+			<PROD time_auto="356" time_work="32" diametro="12" peso="7104" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="4" tipo_fe="ALFAR"/>
+			<PROD time_auto="1697" time_work="203" diametro="16" peso="66360" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="21" tipo_fe="ALFAR"/>
+			<PROD time_auto="518" time_work="128" diametro="16" peso="23700" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="5" tipo_fe="ALFAR"/>
+			<PROD time_auto="1971" time_work="353" diametro="16" peso="185808" unit="0" id="0" length="1200" n_line="1" codice="" cliente="" cantiere="" n_pezzi="98" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151109" time_on="28350">
+			<PROD time_auto="2035" time_work="350" diametro="16" peso="184860" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="39" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151110" time_on="24529">
+			<PROD time_auto="1605" time_work="305" diametro="16" peso="180120" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="38" tipo_fe="ALFAR"/>
+			<PROD time_auto="729" time_work="98" diametro="16" peso="123240" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="13" tipo_fe="ALFAR"/>
+			<PROD time_auto="4037" time_work="99" diametro="12" peso="69264" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="13" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151111" time_on="4409">
+			<PROD time_auto="58" time_work="29" diametro="16" peso="18960" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="4" tipo_fe="ALFAR"/>
+			<PROD time_auto="1006" time_work="111" diametro="16" peso="85320" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="9" tipo_fe="ALFAR"/>
+			<PROD time_auto="235" time_work="35" diametro="16" peso="3592" unit="0" id="0" length="1136" n_line="3" codice="" cliente="" cantiere="" n_pezzi="2" tipo_fe="ALFAR"/>
+			<PROD time_auto="166" time_work="34" diametro="16" peso="7284" unit="0" id="0" length="1536" n_line="3" codice="" cliente="" cantiere="" n_pezzi="3" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151112" time_on="25906">
+			<PROD time_auto="81" time_work="40" diametro="16" peso="2096" unit="0" id="0" length="663" n_line="3" codice="" cliente="" cantiere="" n_pezzi="2" tipo_fe="ALFAR"/>
+			<PROD time_auto="538" time_work="122" diametro="16" peso="13266" unit="0" id="0" length="932" n_line="4" codice="" cliente="" cantiere="" n_pezzi="9" tipo_fe="ALFAR"/>
+			<PROD time_auto="642" time_work="186" diametro="12" peso="79920" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="15" tipo_fe="ALFAR"/>
+			<PROD time_auto="3365" time_work="348" diametro="12" peso="125208" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="47" tipo_fe="ALFAR"/>
+			<PROD time_auto="55" time_work="10" diametro="12" peso="1378" unit="0" id="0" length="1551" n_line="3" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151113" time_on="1150">
+			<PROD time_auto="23" time_work="19" diametro="12" peso="5328" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAR"/>
+			<PROD time_auto="442" time_work="12" diametro="12" peso="1378" unit="0" id="0" length="1551" n_line="3" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151123" time_on="8347">
+			<PROD time_auto="1591" time_work="368" diametro="12" peso="127872" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="24" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151124" time_on="16950">
+			<PROD time_auto="417" time_work="129" diametro="12" peso="69264" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="13" tipo_fe="ALFAR"/>
+			<PROD time_auto="1525" time_work="155" diametro="12" peso="71928" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="27" tipo_fe="ALFAR"/>
+			<PROD time_auto="317" time_work="11" diametro="12" peso="1776" unit="0" id="0" length="500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="4" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151125" time_on="11215">
+			<PROD time_auto="619" time_work="143" diametro="12" peso="34632" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="13" tipo_fe="ALFAR"/>
+			<PROD time_auto="509" time_work="52" diametro="12" peso="7992" unit="0" id="0" length="500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="18" tipo_fe="ALFAR"/>
+			<PROD time_auto="1093" time_work="143" diametro="12" peso="22644" unit="0" id="0" length="1500" n_line="1" codice="" cliente="" cantiere="" n_pezzi="17" tipo_fe="ALFAR"/>
+			<PROD time_auto="1501" time_work="232" diametro="12" peso="88800" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="50" tipo_fe="ALFAR"/>
+			<PROD time_auto="637" time_work="150" diametro="12" peso="58608" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="11" tipo_fe="ALFAR"/>
+		</DAY>
+		<DAY date="20151130" time_on="12483">
+			<PROD time_auto="108" time_work="50" diametro="16" peso="18960" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="4" tipo_fe="ALFAR"/>
+			<PROD time_auto="346" time_work="42" diametro="16" peso="28440" unit="0" id="0" length="6000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="3" tipo_fe="ALFAR"/>
+			<PROD time_auto="300" time_work="13" diametro="16" peso="6320" unit="0" id="0" length="1000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="4" tipo_fe="ALFAR"/>
+		</DAY>
+	</DATA>
+</PMML>

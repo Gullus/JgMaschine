@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2DA0D4AB-1FE2-4658-B58F-2594A44C6C74}</ProjectGuid>
+    <ProjectGuid>{AC89B8AC-DD69-48F8-8CE8-F17E0AAFDBF0}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JgMaschine</RootNamespace>
-    <AssemblyName>JgMaschine</AssemblyName>
+    <RootNamespace>JgMaschineScanner</RootNamespace>
+    <AssemblyName>JgMaschineScanner</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

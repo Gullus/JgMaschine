@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<PMML version="3.0" xmlns="http://www.dmg.org/PMML-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema_instance">
+	<DATA>
+		<DAY date="20150716" time_on="503">
+			<PROD time_auto="119" time_work="102" diametro="12" peso="3387" unit="0" id="0" length="1271" n_line="6" codice="" cliente="" cantiere="" n_pezzi="3" tipo_fe="ALFAL"/>
+			<PROD time_auto="63" time_work="30" diametro="12" peso="2194" unit="0" id="0" length="2471" n_line="6" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+			<PROD time_auto="43" time_work="30" diametro="12" peso="1197" unit="0" id="0" length="1348" n_line="3" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20150717" time_on="20667">
+			<PROD time_auto="23" time_work="18" diametro="12" peso="1197" unit="0" id="0" length="1348" n_line="3" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+			<PROD time_auto="79" time_work="60" diametro="12" peso="4388" unit="0" id="0" length="2471" n_line="6" codice="" cliente="" cantiere="" n_pezzi="2" tipo_fe="ALFAL"/>
+			<PROD time_auto="167" time_work="86" diametro="12" peso="5810" unit="0" id="0" length="3271" n_line="6" codice="" cliente="" cantiere="" n_pezzi="2" tipo_fe="ALFAL"/>
+			<PROD time_auto="886" time_work="200" diametro="12" peso="17118" unit="0" id="0" length="1071" n_line="6" codice="" cliente="" cantiere="" n_pezzi="18" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20150720" time_on="26338">
+			<PROD time_auto="190" time_work="69" diametro="12" peso="13314" unit="0" id="0" length="1071" n_line="6" codice="" cliente="" cantiere="" n_pezzi="14" tipo_fe="ALFAL"/>
+			<PROD time_auto="1825" time_work="93" diametro="12" peso="13284" unit="0" id="0" length="831" n_line="6" codice="" cliente="" cantiere="" n_pezzi="18" tipo_fe="ALFAL"/>
+			<PROD time_auto="744" time_work="87" diametro="12" peso="14687" unit="0" id="0" length="871" n_line="6" codice="" cliente="" cantiere="" n_pezzi="19" tipo_fe="ALFAL"/>
+			<PROD time_auto="1046" time_work="92" diametro="16" peso="23556" unit="0" id="0" length="1242" n_line="6" codice="" cliente="" cantiere="" n_pezzi="12" tipo_fe="ALFAL"/>
+		</DAY>
+	</DATA>
+</PMML>

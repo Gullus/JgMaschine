@@ -1,0 +1,71 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prop="clr-namespace:JgMaschineTcpIpTest.Properties"
+        xmlns:helper="clr-namespace:JgMaschineLib;assembly=JgMaschineLib"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="JgMaschineTcpIpTest.TcpIpClient"
+        Title="TCP - IP Testclient" Height="387.243" Width="718.827">
+    <Window.Resources>
+
+    </Window.Resources>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Content="Adresse Computer"/>
+        <TextBox Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ClientAdresseServer, Source={x:Static prop:Settings.Default}}" />
+
+        <Button x:Name="btnClientBeenden" Content="Client starten" Grid.Column="4" Click="btnClientBeenden_Click"/>
+
+        <Button x:Name="btnWarteAufAction" Content="Client auslesen" Grid.Column="4" Grid.Row="1" Click="btnWarteAufAction_Click"/>
+
+        <Label Content="Portnummer" Grid.Row="1" />
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding ClientPortServer, Source={x:Static prop:Settings.Default}}"/>
+
+        <CheckBox Content="auf Rückantwort von Server warten." IsChecked="{Binding ClientRueckantwortVomServer, Source={x:Static prop:Settings.Default}}" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2"/>
+
+        <Label Content="Sendetext 1" Grid.Row="2" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding ClientSendeText1, Source={x:Static prop:Settings.Default}}" Grid.ColumnSpan="3"/>
+        <Button Content="Senden ..."  Grid.Column="4" Grid.Row="2" Click="Button_Click" Tag="1" Height="20" Margin="3,3,3,0" VerticalAlignment="Top" />
+
+        <Label Content="Sendetext 2" Grid.Row="3" />
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding ClientSendeText2, Source={x:Static prop:Settings.Default}}" Grid.ColumnSpan="3"/>
+        <Button Content="Senden ..."  Grid.Column="4" Grid.Row="3" Click="Button_Click" Tag="2" />
+
+        <Label Content="Sendetext 3" Grid.Row="4" />
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding ClientSendeText3, Source={x:Static prop:Settings.Default}}" Grid.ColumnSpan="3"/>
+        <Button Content="Senden ..."  Grid.Column="4" Grid.Row="4" Click="Button_Click" Tag="3" />
+
+        <TextBlock Text="(Es können Hexadezimale Zeichen im Format \xHD verwendet werden)" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="4" Margin="3, 0, 3, 5" FontStyle="Italic" Foreground="Gray"/>
+        <Label Content="Rückmeldung" Grid.Row="6" />
+        <TextBox x:Name="tbRueckmeldung1" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" />
+        <TextBox x:Name="tbRueckmeldung2" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="4" TextWrapping="Wrap" />
+
+        <Grid Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Content="Anzeige:" />
+            <RadioButton x:Name="rbDezimal" Content="Dezimal" Grid.Column="1" Click="RadioButton_Click" IsChecked="True"/>
+            <RadioButton x:Name="rbHexadezimal" Content="Hexadecimal" Grid.Column="2" Click="RadioButton_Click"/>
+        </Grid>
+
+    </Grid>
+</Window>
