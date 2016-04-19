@@ -30,7 +30,7 @@ namespace JgMaschineScanner
       {
         case Scanner.VorgangScanner.BF2D:
           Console.WriteLine("{0}{1}", e.ScannerVorgangScan, e.ScannerKoerper);
-          e.SendeText("Angemeldet:", "Alexander Groß", " ", "        - O K -");
+          e.SendeText("Angemeldet:", "Alex Groß", " ", "        - O K -");
           break;
         case Scanner.VorgangScanner.PROG:
           switch (e.VorgangProgramm)
