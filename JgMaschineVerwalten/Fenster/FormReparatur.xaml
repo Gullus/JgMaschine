@@ -1,13 +1,13 @@
 ﻿<Window x:Class="JgMaschineVerwalten.Fenster.FormReparatur"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:lib="clr-namespace:JgMaschineLib;assembly=JgMaschineLib"
+        xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
         xmlns:data="clr-namespace:JgMaschineData;assembly=JgDataMaschineData"
-        Title="Reparatur bearbeiten" Height="486.558" Width="777.973" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" Loaded="Window_Loaded" >
+        Title="Reparatur bearbeiten" Height="546.259" Width="851.107" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" Loaded="Window_Loaded" >
 
     <Window.Resources>
-        <lib:JgDatumZeit x:Key="dzReparaturVon" />
-        <lib:JgDatumZeit x:Key="dzReparaturBis" />
+        <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
+        <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
     </Window.Resources>
 
     <Grid x:Name="gridReparatur" DataContext="{x:Type  data:tabReparatur}" Margin="5">

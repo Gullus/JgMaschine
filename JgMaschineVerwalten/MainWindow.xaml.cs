@@ -1,4 +1,5 @@
-﻿using JgMaschineVerwalten.Commands;
+﻿using JgMaschineLib.Zeit;
+using JgMaschineVerwalten.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,7 +107,7 @@ namespace JgMaschineVerwalten
         var maschine = (JgMaschineData.tabMaschine)_VsMaschine.View.CurrentItem;
         var anzeigeText = string.Format("Möchten Sie den Bediener {0} an der Maschine {1} anmelden ?", bediener.Name, maschine.MaschinenName);
 
-        JgMaschineLib.JgFormDatumZeit form = new JgMaschineLib.JgFormDatumZeit();
+        JgFormDatumZeit form = new JgFormDatumZeit();
         if (form.Anzeigen("Anmeldung", anzeigeText, DateTime.Now))
         {
           anmeldung = new JgMaschineData.tabAnmeldung()
@@ -138,7 +139,7 @@ namespace JgMaschineVerwalten
         var anmeldung = (JgMaschineData.tabAnmeldung)_VsAnmeldung.View.CurrentItem;
         string anzeigeText = string.Format("Möchten Sie den Bediener {0} abmelden ?", anmeldung.eBediener.Name);
 
-        JgMaschineLib.JgFormDatumZeit form = new JgMaschineLib.JgFormDatumZeit();
+        JgFormDatumZeit form = new JgFormDatumZeit();
         if (form.Anzeigen("An- bzw. Abmeldung", anzeigeText, DateTime.Now))
         {
           var letzteUmmbuchung = (anmeldung.Ummeldung == null) ? anmeldung.Anmeldung : anmeldung.Ummeldung;
@@ -182,7 +183,7 @@ namespace JgMaschineVerwalten
 
         string anzeigeText = string.Format("Bearbeiter {0} von Maschine {1} auf Maschine {2} ummelden ?", anmeldung.eBediener.Name, anmeldung.eMaschine.MaschinenName, neueMaschine.MaschinenName);
 
-        JgMaschineLib.JgFormDatumZeit datumZeit = new JgMaschineLib.JgFormDatumZeit();
+        JgFormDatumZeit datumZeit = new JgFormDatumZeit();
         if (datumZeit.Anzeigen("Ummeldung !", anzeigeText, DateTime.Now))
         {
           var aktDatum = datumZeit.Datum;

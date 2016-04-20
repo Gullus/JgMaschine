@@ -65,7 +65,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgOpen.ico" Height="15"/>
+                <Image Source="..\Bilder\JgOpen.ico" Height="15"/>
                 <TextBlock Text="Pfad" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
@@ -77,7 +77,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgOpen.ico" Height="15"/>
+                <Image Source="..\Bilder\JgOpen.ico" Height="15"/>
                 <TextBlock Text="Pfad" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
@@ -93,7 +93,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgCancel.ico" Margin="5">
+                <Image Source="..\Bilder\JgCancel.ico" Margin="5">
                     <Image.Effect>
                         <DropShadowEffect/>
                     </Image.Effect>
@@ -106,7 +106,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgCheck.ico" Margin="5">
+                <Image Source="..\Bilder\JgCheck.ico" Margin="5">
                     <Image.Effect>
                         <DropShadowEffect/>
                     </Image.Effect>

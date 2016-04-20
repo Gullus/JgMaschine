@@ -7,7 +7,7 @@ namespace JgMaschineLib.Zeit
 {
   public partial class FormAuswahlDatumZeit : Window
   {
-    private JgMaschineLib.JgDatumZeit _DatumZeit { get { return (JgMaschineLib.JgDatumZeit)this.FindResource("dzUmmeldung"); } }
+    private JgDatumZeit _DatumZeit { get { return (JgDatumZeit)this.FindResource("dzUmmeldung"); } }
     public DateTime DatumZeit { get { return _DatumZeit.DatumZeit; } }
 
     public FormAuswahlDatumZeit(string Caption, string Anzeigetext, DateTime DatumZeit)

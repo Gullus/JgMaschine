@@ -14,14 +14,15 @@ namespace JgMaschineLib.DataLogicScanner
     {
       FEHLER,
       PROG,
+      MITA,
       BF2D
     }
 
     public enum VorgangProgram
     {
       FEHLER,
-      ISTBAUTEIL,
-      MITARBEIT,
+      BAUTEIL,
+      BENUTZER,
       COILSTART,
       COIL_ENDE,
       REPASTART,
@@ -40,7 +41,7 @@ namespace JgMaschineLib.DataLogicScanner
 
     public void Close()
     {
-      _ScannerClient.Close();
+      _ScannerClient.ScannerVerbindungClose();
       _Timer.Dispose();
     }
   }
@@ -67,7 +68,7 @@ namespace JgMaschineLib.DataLogicScanner
       _ScannerCom = ScannerCom;
     }
 
-    public void Close()
+    public void ScannerVerbindungClose()
     {
       _NetStream.Close();
       _Client.Close();
@@ -100,8 +101,7 @@ namespace JgMaschineLib.DataLogicScanner
           if (_ClientLaeuft)
           {
             _ClientLaeuft = false;
-            _Client.Close();
-            _NetStream.Close();
+            ScannerVerbindungClose();
           }
         }
       }
@@ -139,7 +139,8 @@ namespace JgMaschineLib.DataLogicScanner
               if (_AnzeigeProtokoll)
                 Console.WriteLine(scText.TextEmpfangen);
 
-              _ScannerCom?.Invoke(scText);
+              if (_ScannerCom != null)
+                _ScannerCom.Invoke(scText);
 
               byte[] senden = scText.PufferSendeText();
               await _NetStream.WriteAsync(senden, 0, senden.Length);
@@ -164,7 +165,8 @@ namespace JgMaschineLib.DataLogicScanner
     public string ScannerVorgangScan { get { return TextEmpfangen.Substring(13, 4); } }
     public string ScannerVorgangProgramm { get { return TextEmpfangen.Substring(17, 9); } }
 
-    public string ScannerKoerper {
+    public string ScannerKoerper 
+    {
       get
       {
         if (_VorgangScan == Scanner.VorgangScanner.PROG)
@@ -204,13 +206,15 @@ namespace JgMaschineLib.DataLogicScanner
           FehlerAusgabe("Scan Vorgang falsch.", "Wert: " + ScannerVorgangScan);
         else
         {
-          if (_VorgangScan == Scanner.VorgangScanner.PROG)
+          switch (_VorgangScan)
           {
-            if (!Enum.TryParse<Scanner.VorgangProgram>(ScannerVorgangProgramm, true, out _VorgangProgramm))
-              FehlerAusgabe("Prog. Vorgang falsch.", "Wert: " + ScannerVorgangProgramm);
+            case Scanner.VorgangScanner.BF2D: _VorgangProgramm = Scanner.VorgangProgram.BAUTEIL; break;
+            case Scanner.VorgangScanner.MITA: _VorgangProgramm = Scanner.VorgangProgram.BENUTZER; break;
+            default:
+              if (!Enum.TryParse<Scanner.VorgangProgram>(ScannerVorgangProgramm, true, out _VorgangProgramm))
+                FehlerAusgabe("Prog. Vorgang falsch.", "Wert: " + ScannerVorgangProgramm);
+              break;
           }
-          else
-            _VorgangProgramm = Scanner.VorgangProgram.ISTBAUTEIL;
         }
       }
     }
@@ -236,7 +240,7 @@ namespace JgMaschineLib.DataLogicScanner
           sb.Append(_Esc + "[G");
       }
 
-      sb.Append(_ZusatzText);
+      sb.Append(_ZusatzText);      
       sb.Append(Convert.ToChar(13));
 
       return Encoding.ASCII.GetBytes(sb.ToString());

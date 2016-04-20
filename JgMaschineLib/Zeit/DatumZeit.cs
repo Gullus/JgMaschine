@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace JgMaschineLib
+namespace JgMaschineLib.Zeit
 {
   public class JgFormDatumZeit
   {

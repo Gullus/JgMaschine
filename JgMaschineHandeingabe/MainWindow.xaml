@@ -5,13 +5,13 @@
     xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgDataMaschineData" 
     xmlns:local="clr-namespace:JgMaschineHandeingabe"
     xmlns:Properties="clr-namespace:JgMaschineHandeingabe.Properties"
-    xmlns:lib="clr-namespace:JgMaschineLib;assembly=JgMaschineLib"
+    xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
     mc:Ignorable="d" x:Class="JgMaschineHandeingabe.MainWindow" x:Name="FormBauteilHandeingabe" 
     Title="Bauteil Handeingabe" Height="579.276" Width="1101.059" Loaded="Window_Loaded" Closed="FormBauteilHandeingabe_Closed">
     <Window.Resources>
         <CollectionViewSource x:Key="vsMaschine" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabMaschine}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsDaten" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabDaten}, CreateList=True}"/>
-        <lib:JgDatumZeit x:Key="dsDatumZeit" />
+        <libZeit:JgDatumZeit x:Key="dsDatumZeit" />
     </Window.Resources>
 
     <Grid DataContext="{StaticResource vsMaschine}" Margin="8">

@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Data.Entity;
+using JgMaschineLib.Zeit;
 
 namespace JgMaschineHandeingabe
 {
@@ -15,7 +16,7 @@ namespace JgMaschineHandeingabe
     private JgModelContainer _Db;
     private CollectionViewSource _VsMaschine { get { return (System.Windows.Data.CollectionViewSource)this.FindResource("vsMaschine"); } }
     private CollectionViewSource _VsDaten { get { return (System.Windows.Data.CollectionViewSource)this.FindResource("vsDaten"); } }
-    private JgMaschineLib.JgDatumZeit _DsDatumZeit { get { return (JgMaschineLib.JgDatumZeit)this.FindResource("dsDatumZeit"); } }
+    private JgDatumZeit _DsDatumZeit { get { return (JgDatumZeit)this.FindResource("dsDatumZeit"); } }
 
     public MainWindow()
     {

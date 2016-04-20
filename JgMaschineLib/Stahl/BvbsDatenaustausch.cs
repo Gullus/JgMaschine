@@ -112,7 +112,7 @@ namespace JgMaschineLib.Stahl
         {
           var feld = felder[dl];
 
-          if (feld == System.Environment.NewLine)
+          if (feld.Contains(System.Environment.NewLine))
             return;
 
           neuerBlock = true;

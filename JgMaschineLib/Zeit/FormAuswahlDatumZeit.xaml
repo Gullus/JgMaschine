@@ -2,12 +2,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ec="http://schemas.microsoft.com/expression/2010/controls" 
-    xmlns:lib="clr-namespace:JgMaschineLib"    
+    xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit"    
     x:Class="JgMaschineLib.Zeit.FormAuswahlDatumZeit"
     Title="Terminabfrage" Height="212" Width="411" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False">
 
     <Window.Resources>
-        <lib:JgDatumZeit x:Key="dzUmmeldung" />
+        <libZeit:JgDatumZeit x:Key="dzUmmeldung" />
     </Window.Resources>
 
     <Grid Margin="7">

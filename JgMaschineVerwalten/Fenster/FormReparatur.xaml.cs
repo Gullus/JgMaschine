@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JgMaschineLib.Zeit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,14 +50,14 @@ namespace JgMaschineVerwalten.Fenster
       cmbVerursacher.ItemsSource = bediener;
       cmbProtokollant.ItemsSource = bediener;
 
-      var dz = (JgMaschineLib.JgDatumZeit)this.FindResource("dzReparaturVon");
+      var dz = (JgDatumZeit)this.FindResource("dzReparaturVon");
       dz.DatumZeit = _Reparatur.ReparaturVon;
       dz.NeuerWert = (dat) =>
       {
         _Reparatur.ReparaturVon = dat;
       };
 
-      dz = (JgMaschineLib.JgDatumZeit)this.FindResource("dzReparaturBis");
+      dz = (JgDatumZeit)this.FindResource("dzReparaturBis");
       dz.DatumZeit = _Reparatur.ReparaturBis;
       dz.NeuerWert = (dat) => { _Reparatur.ReparaturBis = dat; };
 
