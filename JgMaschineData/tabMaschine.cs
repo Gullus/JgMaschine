@@ -17,7 +17,6 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabMaschine()
         {
-            this.PortNummer = -1;
             this.VorgabeProStunde = 0m;
             this.sDaten = new HashSet<tabDaten>();
             this.sAnmeldungen = new HashSet<tabAnmeldung>();
@@ -27,14 +26,14 @@ namespace JgMaschineData
         public System.Guid Id { get; set; }
         public string MaschinenName { get; set; }
         public EnumProtokollName ProtokollName { get; set; }
-        public string MaschinenAdresse { get; set; }
-        public int PortNummer { get; set; }
-        public string ScannerNummer { get; set; }
+        public string ComputerAdresse { get; set; }
         public string PfadDaten { get; set; }
         public string PfadBediener { get; set; }
+        public string ScannerNummer { get; set; }
+        public bool ScannerMitDisplay { get; set; }
         public string Bemerkung { get; set; }
         public EnumStatusMaschine Status { get; set; }
-        public Nullable<decimal> VorgabeProStunde { get; set; }
+        public decimal VorgabeProStunde { get; set; }
         public System.Guid fStandort { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

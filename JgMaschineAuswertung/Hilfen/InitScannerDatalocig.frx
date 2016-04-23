@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/20/2016 15:25:53" ReportInfo.Modified="04/21/2016 09:34:12" ReportInfo.CreatorVersion="2016.1.2.0">
+  <Dictionary>
+    <XmlDataConnection Name="Connection" ConnectionString="rijcmlq7jX9vSVdVlArx8Hyt0wFMKfbuwSqJorGBjA2qN8UkcxM6k49x30q4ifUAaY8Be25sOOLJ/6z6aAB4S4EkVSjF9I0tH2ghFLxjMs7+wN6CK0LnJM0lT5Pjmb6AG/6cawJBGad7GqRIFcwcw670SicqzkYD2YzrM+5K/nk+e0/KvntOpHCffaB9r6SdnaZ7CZ/oWsGH7YNnV7AzHyoe+AKyN3e6caIO0w7C5be9UN86Bg=">
+      <TableDataSource Name="zeile" DataType="System.Int32" Enabled="true" TableName="zeile">
+        <Column Name="Befehl" DataType="System.String"/>
+        <Column Name="Bemerkung" DataType="System.String"/>
+      </TableDataSource>
+    </XmlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Guides="136.08,695.52,7.56">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="143.64">
+      <TextObject Name="Text2" Left="7.56" Top="15.12" Width="687.96" Height="22.68" Text="Einrichtung Scanner PowerScab PM9500 für 2 Wege Netzwerkbetrieb" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="RoyalBlue"/>
+      <TextObject Name="Text3" Left="7.56" Top="45.36" Width="687.96" Height="83.16" Text="Die Einstellungen erfolgen mit dieser Vorgehensweise über den Scanner auf der Basisstation. Ein neuer Scanner muss daher nur in die Basisstation eingelegt werden. Damit wird der Sanner von der Basisstation auf die notwendigen Einstellungen initialisiert. Bei der Einrichtung sind auf die teilweise etwas längeren Einstellungszeiten zu achten. Den Abschluss erkennt man sehr gut, wenn sich die Basisstation wieder an das Netzwerk angemeldet hat.  " VertAlign="Center"/>
+    </ReportTitleBand>
+    <DataBand Name="Data1" Top="147.64" Width="718.2" Height="98.28" Border.Lines="Top" DataSource="zeile">
+      <BarcodeObject Name="Barcode1" Left="7.56" Top="7.56" Width="36" Height="36" CanGrow="true" DataColumn="zeile.Befehl" ShowText="false" AllowExpressions="true" Barcode="Datamatrix" Barcode.SymbolSize="Auto" Barcode.Encoding="Auto" Barcode.CodePage="1252" Barcode.PixelSize="3"/>
+      <TextObject Name="Text1" Left="136.08" Width="559.44" Height="98.28" Border.Lines="Left" Text="[zeile.Bemerkung]" Padding="20, 20, 20, 20"/>
+    </DataBand>
+  </ReportPage>
+</Report>

@@ -130,40 +130,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Bilder\JgAdd.ico" />
-    <Resource Include="Bilder\JgCalendar.ico" />
-    <Resource Include="Bilder\JgCancel.ico" />
     <Resource Include="Bilder\JgCheck.ico" />
-    <Resource Include="Bilder\JgClose.ico" />
-    <Resource Include="Bilder\JgCopy v2.ico" />
-    <Resource Include="Bilder\JgCopy.ico" />
-    <Resource Include="Bilder\JgDelete.ico" />
-    <Resource Include="Bilder\JgDownload.ico" />
-    <Resource Include="Bilder\JgEdit.ico" />
-    <Resource Include="Bilder\JgForward.ico" />
-    <Resource Include="Bilder\JgHardDisk.ico" />
-    <Resource Include="Bilder\JgInformation.ico" />
-    <Resource Include="Bilder\JgKey.ico" />
-    <Resource Include="Bilder\JgNew.ico" />
-    <Resource Include="Bilder\JgNext.ico" />
-    <Resource Include="Bilder\JgOpen.ico" />
-    <Resource Include="Bilder\JgPause.ico" />
-    <Resource Include="Bilder\JgPerson.ico" />
-    <Resource Include="Bilder\JgPreview.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Bilder\JgPrint.ico" />
-    <Resource Include="Bilder\JgProperties.ico" />
-    <Resource Include="Bilder\JgRefresh.ico" />
-    <Resource Include="Bilder\JgRemove.ico" />
-    <Resource Include="Bilder\JgRename.ico" />
-    <Resource Include="Bilder\JgSave.ico" />
-    <Resource Include="Bilder\JgSearch.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Bilder\JgSettings.ico" />
-    <Resource Include="Bilder\JgSynchronize.ico" />
-    <Resource Include="Bilder\JgTextDocument.ico" />
-    <Resource Include="Bilder\JgUndo.ico" />
-    <Resource Include="Bilder\JgUpload.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgRefresh.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgNew.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgEdit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgCancel.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

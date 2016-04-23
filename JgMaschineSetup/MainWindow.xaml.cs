@@ -3,9 +3,9 @@ using JgMaschineSetup.Commands;
 using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Data.Entity;
 
 namespace JgMaschineSetup
 {
@@ -27,16 +27,16 @@ namespace JgMaschineSetup
       dtpAuswertungBis.SelectedDate = DateTime.Today;
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
       _Db = new JgMaschineData.JgModelContainer();
 
-      _VsMaschine.Source = _Db.tabMaschineSet.ToList();
+      _VsMaschine.Source = await _Db.tabMaschineSet.OrderBy(o => o.MaschinenName).ToListAsync();
       _VsMaschine.View.CurrentChanged += ViewMaschine_CurrentChanged;
       ViewMaschine_CurrentChanged(null, null);
 
-      _VsBediener.Source = _Db.tabBedienerSet.ToList();
-      _VsStandort.Source = _Db.tabStandortSet.ToList();
+      _VsBediener.Source = await _Db.tabBedienerSet.ToListAsync();
+      _VsStandort.Source = await _Db.tabStandortSet.ToListAsync();
 
       cbStatusBediener.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusBediener));
 

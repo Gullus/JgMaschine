@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<werte>
+	<zeile>
+		<Befehl>Unlnk</Befehl>
+		<Bemerkung>Unlink Scanner von der Basisstation.</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl/>
+		<Bemerkung>Sanner auf Basistation auflegen, damit sich dieser mit Basisstation verbindet.</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl>$P,Ae,P</Befehl>
+		<Bemerkung>Scanner neu initialisiern und Einstellungen zurücksetzen.</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl>$P,HA19,P</Befehl>
+		<Bemerkung>Interace der Basisstation auf Ethernet einstellen. Basisstation startet neu</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl>$P,CIFIH01,CSTTX02,CETAS02,CDIST30,P</Befehl>
+		<Bemerkung>Setup für 2 Wegekommunitkation einstellen.</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl>$P,CBTAS01,CBTAD23,P</Befehl>
+		<Bemerkung>Adresstamping mit Raute einstellen. Jeder Scanner zeigt beim versenden eine Adresse an.</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl>$P</Befehl>
+		<Bemerkung>Programmodus einschalten</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl>$CDIMD02</Befehl>
+		<Bemerkung>Display ausschalten</Bemerkung>
+	</zeile>
+	<zeile>
+		<Befehl>$P</Befehl>
+		<Bemerkung>Programmodus ausschalten</Bemerkung>
+	</zeile>
+</werte>

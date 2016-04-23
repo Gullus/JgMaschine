@@ -38,7 +38,7 @@
             <ListBox.Resources>
                 <DataTemplate x:Key="dtMaschinenKey">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgSettings.ico" Width="50"/>
+                        <Image Source="Bilder\JgSettings.ico" Width="50"/>
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding MaschinenName}" FontSize="16" FontWeight="Bold" />
                             <ListBox ItemsSource="{Binding sAktuelleBediener}" DisplayMemberPath="Name" IsEnabled="False" Width="150"/>
@@ -69,7 +69,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgRefresh.ico" Margin="3" Width="15">
+                <Image Source="Bilder\JgRefresh.ico" Margin="3" Width="15">
                     <Image.Effect>
                         <DropShadowEffect/>
                     </Image.Effect>
@@ -83,7 +83,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgSettings.ico" Margin="3" Width="15">
+                <Image Source="Bilder\JgSettings.ico" Margin="3" Width="15">
                     <Image.Effect>
                         <DropShadowEffect/>
                     </Image.Effect>

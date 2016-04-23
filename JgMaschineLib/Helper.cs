@@ -9,7 +9,6 @@ namespace JgMaschineLib
 {
   public class Helper
   {
-
     #region Net Version abfragen
 
     public static string GetNetversion()
@@ -45,5 +44,10 @@ namespace JgMaschineLib
     }
 
     #endregion
+
+    public static string StartVerzeichnis()
+    {
+      return AppDomain.CurrentDomain.BaseDirectory;
+    }
   }
 }

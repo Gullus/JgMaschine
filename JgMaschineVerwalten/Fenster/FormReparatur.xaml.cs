@@ -1,17 +1,7 @@
 ﻿using JgMaschineLib.Zeit;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace JgMaschineVerwalten.Fenster
 {
@@ -35,10 +25,12 @@ namespace JgMaschineVerwalten.Fenster
       if (_Reparatur == null)
       {
         _Reparatur = new JgMaschineData.tabReparatur()
-          {
-            ReparaturVon = DateTime.Now,
-            ReparaturBis = DateTime.Now
-          };
+        {
+          Id = Guid.NewGuid(),
+          ReparaturVon = DateTime.Now,
+          ReparaturBis = DateTime.Now,
+          InBearbeitung = true
+        };
       }
     }
 

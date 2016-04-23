@@ -22,6 +22,7 @@ namespace JgMaschineData
         public System.Guid fMaschine { get; set; }
         public System.Guid fVerursacher { get; set; }
         public System.Guid fProtokollant { get; set; }
+        public bool InBearbeitung { get; set; }
     
         public virtual tabBediener eVerursacher { get; set; }
         public virtual tabBediener eProtokollant { get; set; }

@@ -28,9 +28,9 @@
         <Label Content="_Name Report" Style="{StaticResource ResourceKey=StyleLabel}" Grid.Row="0" Target="{Binding ElementName=tbReportName}"/>
         <TextBox x:Name="tbReportName" Grid.Column="1" Grid.Row="0" Margin="3" Grid.ColumnSpan="3" TabIndex="0">
             <Binding Path="ReportName" UpdateSourceTrigger="PropertyChanged">
-                <Binding.ValidationRules>
+                <!--<Binding.ValidationRules>
                     <vRules:KontrFeldNichtLeer/>
-                </Binding.ValidationRules>
+                </Binding.ValidationRules>-->
             </Binding>
         </TextBox>
 

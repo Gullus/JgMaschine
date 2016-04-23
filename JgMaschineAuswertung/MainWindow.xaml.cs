@@ -64,7 +64,6 @@ namespace JgMaschineAuswertung
           string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
           form.Auswertung.ErstelltDatum = DateTime.Now;
           form.Auswertung.ErstelltName = username;
-          form.Auswertung.Filter = "JgMaschineSqlVerbindung";
 
           form.Auswertung.GeaendertName = form.Auswertung.ErstelltName;
           form.Auswertung.GeaendertDatum = form.Auswertung.ErstelltDatum;
@@ -125,7 +124,6 @@ namespace JgMaschineAuswertung
         JgMaschineLib.SqlVerbindung.SqlVerbindung verb = new JgMaschineLib.SqlVerbindung.SqlVerbindung(_FileSqlVerbindung);
         verb.VerbindungBearbeiten(JgMaschineLib.SqlVerbindung.SqlVerbindung.EnumVerbindungen.JgMaschine);
       }));
-
     }
 
     private void CanExecReportVorhandenAndNull(object sender, CanExecuteRoutedEventArgs e)

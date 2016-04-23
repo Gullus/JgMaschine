@@ -17,17 +17,17 @@
         <Ribbon>
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu>
-                    <RibbonApplicationMenuItem Header="Report anzeigen" Command="{x:Static comand:MyCommands.ReportAnzeigen}" ImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgProperties.ico"/>
-                    <RibbonApplicationMenuItem Header="Report drucken" Command="{x:Static comand:MyCommands.ReportDrucken}" ImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgPrint.ico"/>
+                    <RibbonApplicationMenuItem Header="Report anzeigen" Command="{x:Static comand:MyCommands.ReportAnzeigen}" ImageSource="Bilder\JgProperties.ico"/>
+                    <RibbonApplicationMenuItem Header="Report drucken" Command="{x:Static comand:MyCommands.ReportDrucken}" ImageSource="Bilder\JgPrint.ico"/>
                     <RibbonSeparator/>
-                    <RibbonApplicationMenuItem Header="Neuer Report" Command="{x:Static comand:MyCommands.ReportNeu}" ImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgNew.ico" />
-                    <RibbonApplicationMenuItem Header="Report bearbeiten" Command="{x:Static comand:MyCommands.ReportBearbeiten}" ImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgProperties.ico" />
+                    <RibbonApplicationMenuItem Header="Neuer Report" Command="{x:Static comand:MyCommands.ReportNeu}" ImageSource="Bilder\JgNew.ico" />
+                    <RibbonApplicationMenuItem Header="Report bearbeiten" Command="{x:Static comand:MyCommands.ReportBearbeiten}" ImageSource="Bilder\JgProperties.ico" />
                     <RibbonSeparator/>
-                    <RibbonApplicationMenuItem Header="Report laden" Command="{x:Static comand:MyCommands.ReportLaden}" ImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgDownLoad.ico" />
-                    <RibbonApplicationMenuItem Header="Report speichern" Command="{x:Static comand:MyCommands.ReportSpeichern}" ImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgSave.ico"/>
+                    <RibbonApplicationMenuItem Header="Report laden" Command="{x:Static comand:MyCommands.ReportLaden}" ImageSource="Bilder\JgDownLoad.ico" />
+                    <RibbonApplicationMenuItem Header="Report speichern" Command="{x:Static comand:MyCommands.ReportSpeichern}" ImageSource="Bilder\JgSave.ico"/>
 
                     <RibbonApplicationMenu.FooterPaneContent>
-                        <RibbonButton Label="Schließen" SmallImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgClose.ico" HorizontalAlignment="Right" />
+                        <RibbonButton Label="Schließen" SmallImageSource="Bilder\JgClose.ico" HorizontalAlignment="Right" />
                     </RibbonApplicationMenu.FooterPaneContent>
 
                 </RibbonApplicationMenu>
@@ -35,23 +35,23 @@
 
             <RibbonTab Header="Anzeigen" >
                 <RibbonGroup Header="Anzeigen/Drucken">
-                    <RibbonButton Label="Anzeigen" Width="60" Command="{x:Static comand:MyCommands.ReportAnzeigen}"  LargeImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgPreview.ico" />
-                    <RibbonButton Label="Drucken" Width="60" Command="{x:Static comand:MyCommands.ReportDrucken}" LargeImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgPrint.ico"/>
+                    <RibbonButton Label="Anzeigen" Width="60" Command="{x:Static comand:MyCommands.ReportAnzeigen}"  LargeImageSource="Bilder\JgPreview.ico" />
+                    <RibbonButton Label="Drucken" Width="60" Command="{x:Static comand:MyCommands.ReportDrucken}" LargeImageSource="Bilder\JgPrint.ico"/>
                 </RibbonGroup>
             </RibbonTab>
 
             <RibbonTab Header="Bearbeiten" >
                 <RibbonGroup Header="Design">
-                    <RibbonButton Label="Neu" Width="60" Command="{x:Static comand:MyCommands.ReportNeu}" LargeImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgNew.ico" />
-                    <RibbonButton Label="Bearbeiten" Width="60" Command="{x:Static comand:MyCommands.ReportBearbeiten}" LargeImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgProperties.ico" />
+                    <RibbonButton Label="Neu" Width="60" Command="{x:Static comand:MyCommands.ReportNeu}" LargeImageSource="Bilder\JgNew.ico" />
+                    <RibbonButton Label="Bearbeiten" Width="60" Command="{x:Static comand:MyCommands.ReportBearbeiten}" LargeImageSource="Bilder\JgProperties.ico" />
                 </RibbonGroup>
 
                 <RibbonGroup Header="Speichern/Laden">
-                    <RibbonButton Label="Report laden" Width="60" Command="{x:Static comand:MyCommands.ReportLaden}" LargeImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgDownLoad.ico" />
-                    <RibbonButton Label="Report speichern" Width="60" Command="{x:Static comand:MyCommands.ReportSpeichern}" LargeImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgSave.ico"/>
+                    <RibbonButton Label="Report laden" Width="60" Command="{x:Static comand:MyCommands.ReportLaden}" LargeImageSource="Bilder\JgDownLoad.ico" />
+                    <RibbonButton Label="Report speichern" Width="60" Command="{x:Static comand:MyCommands.ReportSpeichern}" LargeImageSource="Bilder\JgSave.ico"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Optionen">
-                    <RibbonButton Label="Sql Verbindung" Width="60" Command="{x:Static comand:MyCommands.SqlVerbindung}" LargeImageSource="D:\Entwicklung\JgMaschine\JgMaschineAuswertung\Resources\JgDownLoad.ico" />
+                    <RibbonButton Label="Sql Verbindung" Width="80" Command="{x:Static comand:MyCommands.SqlVerbindung}" LargeImageSource="Bilder\JgDownLoad.ico" />
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>

@@ -13,10 +13,8 @@ namespace JgMaschineData
     
     public enum EnumReperaturEreigniss : byte
     {
-        Wartung_geplant = 0,
-        Wartung_ungeplant = 1,
-        Reparatur_geplant = 2,
-        Reparatur_ungeplant = 3,
-        Stillegung = 4
+        Wartung = 0,
+        Coilwechsel = 1,
+        Reparatur = 2
     }
 }

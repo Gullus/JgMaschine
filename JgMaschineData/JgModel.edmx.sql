@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/19/2016 14:08:14
+-- Date Created: 04/21/2016 16:24:09
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -83,14 +83,14 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [Id] uniqueidentifier  NOT NULL,
     [MaschinenName] nvarchar(120)  NOT NULL,
     [ProtokollName] tinyint  NOT NULL,
-    [MaschinenAdresse] nvarchar(max)  NULL,
-    [PortNummer] int  NOT NULL,
-    [ScannerNummer] nvarchar(max)  NOT NULL,
+    [ComputerAdresse] nvarchar(max)  NULL,
     [PfadDaten] nvarchar(max)  NULL,
     [PfadBediener] nvarchar(max)  NULL,
+    [ScannerNummer] nvarchar(max)  NULL,
+    [ScannerMitDisplay] bit  NOT NULL,
     [Bemerkung] nvarchar(max)  NULL,
     [Status] tinyint  NOT NULL,
-    [VorgabeProStunde] decimal(8,3)  NULL,
+    [VorgabeProStunde] decimal(8,3)  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL
 );
 GO
@@ -169,7 +169,8 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [ReparaturBis] datetime  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL,
     [fVerursacher] uniqueidentifier  NOT NULL,
-    [fProtokollant] uniqueidentifier  NOT NULL
+    [fProtokollant] uniqueidentifier  NOT NULL,
+    [InBearbeitung] bit  NOT NULL
 );
 GO
 
@@ -185,7 +186,6 @@ GO
 CREATE TABLE [dbo].[tabAuswertungSet] (
     [Id] uniqueidentifier  NOT NULL,
     [ReportName] nvarchar(120)  NOT NULL,
-    [Filter] nvarchar(max)  NOT NULL,
     [ErstelltName] nvarchar(120)  NOT NULL,
     [ErstelltDatum] datetime  NOT NULL,
     [GeaendertName] nvarchar(120)  NOT NULL,

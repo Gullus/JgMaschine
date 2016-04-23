@@ -15,7 +15,8 @@ namespace JgMaschineLib.DataLogicScanner
       FEHLER,
       PROG,
       MITA,
-      BF2D
+      BF2D,
+      TEST
     }
 
     public enum VorgangProgram
@@ -23,10 +24,13 @@ namespace JgMaschineLib.DataLogicScanner
       FEHLER,
       BAUTEIL,
       BENUTZER,
+      ABMELDUNG,
       COILSTART,
       COIL_ENDE,
       REPASTART,
-      REPA_ENDE
+      REPA_ENDE,
+      WARTSTART,
+      WART_ENDE
     }
 
     private Timer _Timer;
@@ -134,6 +138,7 @@ namespace JgMaschineLib.DataLogicScanner
 
             if (anzZeichen > 0)
             {
+
               var scText = new ScannerText(bufferEmpfang, anzZeichen);
 
               if (_AnzeigeProtokoll)
@@ -160,6 +165,7 @@ namespace JgMaschineLib.DataLogicScanner
     private char _Esc = Convert.ToChar(27);
 
     public string TextEmpfangen { get; set; }
+    public bool MitDisplay { get; set; }
 
     public string ScannerKennung { get { return TextEmpfangen.Substring(0, 13); } }
     public string ScannerVorgangScan { get { return TextEmpfangen.Substring(13, 4); } }
@@ -198,6 +204,8 @@ namespace JgMaschineLib.DataLogicScanner
     {
       this.TextEmpfangen = Encoding.ASCII.GetString(EmpfangsPuffer, 0, AnzahlZeichen);
 
+      Console.WriteLine(this.TextEmpfangen);
+
       if (this.TextEmpfangen.Length < 16)
         FehlerAusgabe("Text zu kurz");
       else
@@ -219,6 +227,27 @@ namespace JgMaschineLib.DataLogicScanner
       }
     }
 
+    public byte[] PufferSendeText()
+    {
+      var sb = new StringBuilder(ScannerKennung);
+
+      if (MitDisplay)
+      {
+        sb.Append(_Esc + "[2J");
+        for (int i = 0; i < _AusgabeZeilen.Length; i++)
+        {
+          sb.Append(_Esc + "[0K" + (_AusgabeZeilen[i].Length > 22 ? _AusgabeZeilen[i].Substring(0, 22) : _AusgabeZeilen[i]) + _Esc + "[G");
+          if (i < _AusgabeZeilen.Length - 1)
+            sb.Append(_Esc + "[G");
+        }
+      }
+
+      sb.Append(_ZusatzText);      
+      sb.Append(Convert.ToChar(13));
+
+      return Encoding.ASCII.GetBytes(sb.ToString());
+    }
+
     public void SendeText(params string[] Zeilen)
     {
       if (_VorgangScan != Scanner.VorgangScanner.FEHLER)
@@ -226,24 +255,6 @@ namespace JgMaschineLib.DataLogicScanner
         for (int i = 0; i < Zeilen.Length; i++)
           _AusgabeZeilen[i] = Zeilen[i];
       }
-    }
-
-    public byte[] PufferSendeText()
-    {
-      var sb = new StringBuilder(ScannerKennung);
-
-      sb.Append(_Esc + "[2J");
-      for (int i = 0; i < _AusgabeZeilen.Length; i++)
-      {
-        sb.Append(_Esc + "[0K" + _AusgabeZeilen[i] + _Esc + "[G");
-        if (i < _AusgabeZeilen.Length - 1)
-          sb.Append(_Esc + "[G");
-      }
-
-      sb.Append(_ZusatzText);      
-      sb.Append(Convert.ToChar(13));
-
-      return Encoding.ASCII.GetBytes(sb.ToString());
     }
 
     public void FehlerAusgabe(params string[] FehlerText)
@@ -256,13 +267,13 @@ namespace JgMaschineLib.DataLogicScanner
         _AusgabeZeilen[i + 1] = FehlerText[i];
 
       var sb = new StringBuilder();
-      for (int i = 0; i < 5; i++)
+      for (int i = 0; i < 4; i++)
       {
         sb.Append(_Esc + "[4q");                       // Klingel
         sb.Append(_Esc + "[8q");                       // Rote LED an
         sb.Append(_Esc + "[5q" + _Esc + "[5q");        // 2 x 100 ms warten
         sb.Append(_Esc + "[9q");                       // Rote LED aus
-        if (i < 4)
+        if (i < 3)
           sb.Append(_Esc + "[5q" + _Esc + "[5q");      // 2 x 100 ms warten
       }
       _ZusatzText = sb.ToString();

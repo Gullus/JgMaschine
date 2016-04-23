@@ -58,14 +58,14 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="MaschinenName" Type="nvarchar" Nullable="false" MaxLength="120" />
     <Property Name="ProtokollName" Type="tinyint" Nullable="false" />
-    <Property Name="MaschinenAdresse" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="PortNummer" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="ScannerNummer" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ComputerAdresse" Type="nvarchar(max)" Nullable="true" />
     <Property Name="PfadDaten" Type="nvarchar(max)" Nullable="true" />
     <Property Name="PfadBediener" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ScannerNummer" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ScannerMitDisplay" Type="bit" Nullable="false" />
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
-    <Property Name="VorgabeProStunde" Type="decimal" Nullable="true" DefaultValue="0" Precision="8" Scale="3" />
+    <Property Name="VorgabeProStunde" Type="decimal" Nullable="false" DefaultValue="0" Precision="8" Scale="3" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="tabBedienerSet">
@@ -145,6 +145,7 @@
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fVerursacher" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fProtokollant" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="InBearbeitung" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="tabStandortSet">
     <Key>
@@ -160,7 +161,6 @@
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ReportName" Type="nvarchar" Nullable="false" MaxLength="120" />
-    <Property Name="Filter" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ErstelltName" Type="nvarchar" Nullable="false" MaxLength="120" />
     <Property Name="ErstelltDatum" Type="datetime" Nullable="false" />
     <Property Name="GeaendertName" Type="nvarchar" Nullable="false" MaxLength="120" />
@@ -349,18 +349,18 @@
           <NavigationProperty Name="sDaten" Relationship="JgModel.tabMaschinetabDaten" FromRole="tabMaschine" ToRole="tabDaten" />
           <Property Name="MaschinenName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="ProtokollName" Type="JgModel.EnumProtokollName" Nullable="false" />
-          <Property Name="MaschinenAdresse" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="PortNummer" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="ScannerNummer" Type="String" Nullable="false" />
+          <Property Name="ComputerAdresse" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="PfadDaten" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="PfadBediener" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ScannerNummer" Type="String" Nullable="true" />
+          <Property Name="ScannerMitDisplay" Type="Boolean" Nullable="false" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Status" Type="JgModel.EnumStatusMaschine" Nullable="false" />
           <NavigationProperty Name="sAnmeldungen" Relationship="JgModel.tabMaschinetabAnmeldung" FromRole="tabMaschine" ToRole="tabAnmeldung" />
           <NavigationProperty Name="sReparaturen" Relationship="JgModel.tabMaschinetabReparatur" FromRole="tabMaschine" ToRole="tabReparatur" />
           <NavigationProperty Name="eProtokoll" Relationship="JgModel.tabMaschinetabProtokoll" FromRole="tabMaschine" ToRole="tabProtokoll" />
           <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabMaschine" FromRole="tabMaschine" ToRole="tabStandort" />
-          <Property Name="VorgabeProStunde" Type="Decimal" Scale="3" Precision="8" DefaultValue="0" />
+          <Property Name="VorgabeProStunde" Type="Decimal" Scale="3" Precision="8" DefaultValue="0" Nullable="false" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
         </EntityType>
         <EntityType Name="tabBediener">
@@ -500,6 +500,7 @@
           <NavigationProperty Name="eVerursacher" Relationship="JgModel.tabBedienertabReparatur" FromRole="tabReparatur" ToRole="tabBediener" />
           <NavigationProperty Name="eProtokollant" Relationship="JgModel.tabBedienertabReparatur1" FromRole="tabReparatur" ToRole="tabBediener" />
           <NavigationProperty Name="eMaschine" Relationship="JgModel.tabMaschinetabReparatur" FromRole="tabReparatur" ToRole="tabMaschine" />
+          <Property Name="InBearbeitung" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="tabBedienertabReparatur">
           <End Type="JgModel.tabBediener" Role="tabBediener" Multiplicity="1" />
@@ -598,7 +599,6 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="ReportName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
-          <Property Name="Filter" Type="String" Nullable="false" />
           <Property Name="ErstelltName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="ErstelltDatum" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="GeaendertName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
@@ -607,11 +607,9 @@
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
         <EnumType Name="EnumReperaturEreigniss" UnderlyingType="Byte">
-          <Member Name="Wartung_geplant" Value="0" />
-          <Member Name="Wartung_ungeplant" Value="1" />
-          <Member Name="Reparatur_geplant" Value="2" />
-          <Member Name="Reparatur_ungeplant" Value="3" />
-          <Member Name="Stillegung" Value="4" />
+          <Member Name="Wartung" Value="0" />
+          <Member Name="Coilwechsel" Value="1" />
+          <Member Name="Reparatur" Value="2" />
         </EnumType>
         <EnumType Name="EnumVorgangAnmeldung" UnderlyingType="Byte">
           <Member Name="Angemeldet" Value="0" />
@@ -643,11 +641,11 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="MaschinenName" ColumnName="MaschinenName" />
           <ScalarProperty Name="ProtokollName" ColumnName="ProtokollName" />
-          <ScalarProperty Name="MaschinenAdresse" ColumnName="MaschinenAdresse" />
-          <ScalarProperty Name="PortNummer" ColumnName="PortNummer" />
-          <ScalarProperty Name="ScannerNummer" ColumnName="ScannerNummer" />
+          <ScalarProperty Name="ComputerAdresse" ColumnName="ComputerAdresse" />
           <ScalarProperty Name="PfadDaten" ColumnName="PfadDaten" />
           <ScalarProperty Name="PfadBediener" ColumnName="PfadBediener" />
+          <ScalarProperty Name="ScannerNummer" ColumnName="ScannerNummer" />
+          <ScalarProperty Name="ScannerMitDisplay" ColumnName="ScannerMitDisplay" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="VorgabeProStunde" ColumnName="VorgabeProStunde" />
@@ -735,6 +733,7 @@
           <ScalarProperty Name="fMaschine" ColumnName="fMaschine" />
           <ScalarProperty Name="fVerursacher" ColumnName="fVerursacher" />
           <ScalarProperty Name="fProtokollant" ColumnName="fProtokollant" />
+          <ScalarProperty Name="InBearbeitung" ColumnName="InBearbeitung" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -752,7 +751,6 @@
         <MappingFragment StoreEntitySet="tabAuswertungSet">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="ReportName" ColumnName="ReportName" />
-          <ScalarProperty Name="Filter" ColumnName="Filter" />
           <ScalarProperty Name="ErstelltName" ColumnName="ErstelltName" />
           <ScalarProperty Name="ErstelltDatum" ColumnName="ErstelltDatum" />
           <ScalarProperty Name="GeaendertName" ColumnName="GeaendertName" />

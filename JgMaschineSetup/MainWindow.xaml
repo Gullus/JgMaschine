@@ -111,7 +111,7 @@
                                 <DropShadowEffect/>
                             </Button.Effect>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgRefresh.ico" Margin="5">
+                                <Image Source="Bilder\_JgRefresh.ico" Margin="5">
                                     <Image.Effect>
                                         <DropShadowEffect/>
                                     </Image.Effect>
@@ -229,10 +229,10 @@
                             <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
                             <DataGridTextColumn Binding="{Binding BtLaenge}" Header="Laenge" Width="70" MinWidth="70"/>
                             <DataGridTextColumn Binding="{Binding BtGewicht}" Header="Gewicht" Width="80" MinWidth="80" CellStyle="{StaticResource ResourceKey=CellRightAlign}"/>
-                            <DataGridTextColumn Binding="{Binding BauteilNummer}" Header="Nummer" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding BauteilBezeichnung}" Header="Bauteil" Width="*" MinWidth="120"/>
-                            <DataGridTextColumn Binding="{Binding BtAuftrag}" Header="Auftrag" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding BtPosition}" Header="Position" Width="70" MinWidth="70"/>
+                            <!--<DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Nummer" Width="70" MinWidth="70"/>-->
+                            <DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Bauteil" Width="*" MinWidth="120"/>
+                            <DataGridTextColumn Binding="{Binding Auftrag}" Header="Auftrag" Width="70" MinWidth="70"/>
+                            <DataGridTextColumn Binding="{Binding NummerPosition}" Header="Position" Width="70" MinWidth="70"/>
                             <DataGridTextColumn Binding="{Binding Bediener}" Header="Bediener" Width="100" MinWidth="100"/>
                         </DataGrid.Columns>
                     </DataGrid>

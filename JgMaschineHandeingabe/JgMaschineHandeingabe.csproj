@@ -127,6 +127,18 @@
       <Name>JgMaschineLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgSettings.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgRefresh.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgCancel.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgCheck.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

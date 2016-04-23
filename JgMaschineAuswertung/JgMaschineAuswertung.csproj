@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JgMaschineAuswertung</RootNamespace>
     <AssemblyName>JgMaschineAuswertung</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -110,6 +110,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Hilfen\InitScannerDatalocig.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Hilfen\InitScannerDatalocig.xlsx" />
+    <None Include="Hilfen\InitScannerDatalocig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Hilfen\InitScannerDatalocig.frx" />
+    <None Include="Hilfen\ScannerbefehleMaschinenbetrieb.frx" />
+    <None Include="Hilfen\ScannerbefehleMaschinenbetrieb.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\JgMaschineData.tabAuswertung.datasource" />
     <None Include="Properties\Settings.settings">
@@ -137,25 +149,31 @@
     </SplashScreen>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\JgProperties.ico" />
+    <Resource Include="Bilder\JgProperties.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\JgDownload.ico" />
+    <Resource Include="Bilder\JgDownload.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\JgPrint.ico" />
+    <Resource Include="Bilder\JgPrint.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\JgSave.ico" />
+    <Resource Include="Bilder\JgSave.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\JgNew.ico" />
+    <Resource Include="Bilder\JgNew.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\JgClose.ico" />
+    <Resource Include="Bilder\JgClose.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\JgPreview.ico" />
+    <Resource Include="Bilder\JgPreview.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hilfen\InitScannerDatalocig.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgSettings.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

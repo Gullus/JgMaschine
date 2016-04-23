@@ -41,7 +41,7 @@
             <ListBox.Resources>
                 <DataTemplate x:Key="dtMaschinenKey">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgSettings.ico" Width="50"/>
+                        <Image Source="Bilder\JgSettings.ico" Width="50"/>
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding MaschinenName}" FontSize="16" FontWeight="Bold" />
                             <ListBox ItemsSource="{Binding sAktuelleBediener}" DisplayMemberPath="Name" IsEnabled="False" Width="150"/>
@@ -55,60 +55,6 @@
         </ListBox>
 
         <TabControl Grid.Column="1" TabStripPlacement="Right" Margin="10,5,5,5" Grid.RowSpan="2">
-
-            <!--<TabControl.Resources>
-                <Style TargetType="TabItem">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="TabItem">
-                                <Grid Name="Panel">
-                                    <Border BorderBrush="Gray" BorderThickness="1" />
-                                    <ContentPresenter x:Name="ContentSite"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        ContentSource="Header"
-                                        Margin="10,2"/>
-                                </Grid>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Panel" Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                    <GradientStop Color="#FFFF4040" Offset="0.021"/>
-                                                    <GradientStop Color="#FFFFD8D8" Offset="1"/>
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                    -->
-            <!--<Trigger Property="IsSelected" Value="False">
-                                        <Setter TargetName="Panel" Property="Background" >
-                                            <Setter.Value>
-                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                    <GradientStop Color="#FF665FFF" Offset="0.188"/>
-                                                    <GradientStop Color="#FFCACCFF" Offset="0.845"/>
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Panel" Property="Background" >
-                                            <Setter.Value>
-                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                    <GradientStop Color="#FF3C94FF" Offset="0"/>
-                                                    <GradientStop Color="White" Offset="1"/>
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-          
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </TabControl.Resources>-->
-
             <TabItem Header=" Anmeldung " Width="100"  Height="50">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
@@ -137,7 +83,7 @@
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgRefresh.ico" Margin="5" Height="30">
+                            <Image Source="Bilder\JgRefresh.ico" Margin="5" Height="30">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>
@@ -203,7 +149,7 @@
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\JgNew.ico" Margin="5">
+                            <Image Source="Bilder\JgNew.ico" Margin="5">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>
@@ -217,7 +163,7 @@
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="C:\Entwicklung\JgMaschine\JgMaschineLib\Bilder\Jgedit.ico" Margin="5">
+                            <Image Source="Bilder\JgEdit.ico" Margin="5">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>

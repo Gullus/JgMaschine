@@ -72,40 +72,40 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bilder\JgCalendar.ico" />
-    <Content Include="Bilder\JgCancel.ico" />
-    <Content Include="Bilder\JgCheck.ico" />
-    <Content Include="Bilder\JgCopy v2.ico" />
-    <Content Include="Bilder\JgForward.ico" />
-    <Content Include="Bilder\JgHardDisk.ico" />
-    <Content Include="Bilder\JgAdd.ico" />
-    <Content Include="Bilder\JgClose.ico" />
+    <Resource Include="Bilder\JgCalendar.ico" />
+    <Resource Include="Bilder\JgCancel.ico" />
+    <Resource Include="Bilder\JgCheck.ico" />
+    <Resource Include="Bilder\JgCopy v2.ico" />
+    <Resource Include="Bilder\JgForward.ico" />
+    <Resource Include="Bilder\JgHardDisk.ico" />
+    <Resource Include="Bilder\JgAdd.ico" />
+    <Resource Include="Bilder\JgClose.ico" />
     <Content Include="Bilder\JgCopy.ico" />
-    <Content Include="Bilder\JgDelete.ico" />
-    <Content Include="Bilder\JgDownload.ico" />
-    <Content Include="Bilder\JgEdit.ico" />
-    <Content Include="Bilder\JgInformation.ico" />
-    <Content Include="Bilder\JgKey.ico" />
-    <Content Include="Bilder\JgOpen.ico" />
-    <Content Include="Bilder\JgPause.ico" />
-    <Content Include="Bilder\JgPerson.ico" />
-    <Content Include="Bilder\JgRefresh.ico" />
-    <Content Include="Bilder\JgRename.ico" />
-    <Content Include="Bilder\JgSave.ico" />
-    <Content Include="Bilder\JgSearch.ico" />
-    <Content Include="Bilder\JgSettings.ico" />
-    <Content Include="Bilder\JgSynchronize.ico" />
-    <Content Include="Bilder\JgUndo.ico" />
-    <Content Include="Bilder\JgNew.ico" />
-    <Content Include="Bilder\JgNext.ico" />
-    <Content Include="Bilder\JgPreview.ico">
+    <Resource Include="Bilder\JgDelete.ico" />
+    <Resource Include="Bilder\JgDownload.ico" />
+    <Resource Include="Bilder\JgEdit.ico" />
+    <Resource Include="Bilder\JgInformation.ico" />
+    <Resource Include="Bilder\JgKey.ico" />
+    <Resource Include="Bilder\JgOpen.ico" />
+    <Resource Include="Bilder\JgPause.ico" />
+    <Resource Include="Bilder\JgPerson.ico" />
+    <Resource Include="Bilder\JgRefresh.ico" />
+    <Resource Include="Bilder\JgRename.ico" />
+    <Resource Include="Bilder\JgSave.ico" />
+    <Resource Include="Bilder\JgSearch.ico" />
+    <Resource Include="Bilder\JgSettings.ico" />
+    <Resource Include="Bilder\JgSynchronize.ico" />
+    <Resource Include="Bilder\JgUndo.ico" />
+    <Resource Include="Bilder\JgNew.ico" />
+    <Resource Include="Bilder\JgNext.ico" />
+    <Resource Include="Bilder\JgPreview.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Bilder\JgPrint.ico" />
-    <Content Include="Bilder\JgProperties.ico" />
-    <Content Include="Bilder\JgRemove.ico" />
-    <Content Include="Bilder\JgTextDocument.ico" />
-    <Content Include="Bilder\JgUpload.ico" />
+    </Resource>
+    <Resource Include="Bilder\JgPrint.ico" />
+    <Resource Include="Bilder\JgProperties.ico" />
+    <Resource Include="Bilder\JgRemove.ico" />
+    <Resource Include="Bilder\JgTextDocument.ico" />
+    <Resource Include="Bilder\JgUpload.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SqlVerbindung\FormDatenbankVerbindung.resx">

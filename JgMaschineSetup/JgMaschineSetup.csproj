@@ -197,12 +197,10 @@
     <Resource Include="Bilder\JgOpen.ico" />
     <Resource Include="Bilder\JgPause.ico" />
     <Resource Include="Bilder\JgPerson.ico" />
-    <Resource Include="Bilder\JgPreview.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Bilder\JgPreview.ico" />
     <Resource Include="Bilder\JgPrint.ico" />
     <Resource Include="Bilder\JgProperties.ico" />
-    <Resource Include="Bilder\JgRefresh.ico" />
+    <Resource Include="Bilder\_JgRefresh.ico" />
     <Resource Include="Bilder\JgRemove.ico" />
     <Resource Include="Bilder\JgRename.ico" />
     <Resource Include="Bilder\JgSave.ico" />

@@ -29,18 +29,18 @@
         <Label Content="_Vorname" Target="{Binding ElementName=tbVorname}" Style="{StaticResource ResourceKey=StyleLabel}"/>
         <TextBox x:Name="tbVorname" Style="{StaticResource StyleTextBox}" Grid.Column="1" Grid.ColumnSpan="3">
             <Binding Path="VorName" UpdateSourceTrigger="PropertyChanged">
-                <Binding.ValidationRules>
+                <!--<Binding.ValidationRules>
                     <vRules:KontrFeldNichtLeer/>
-                </Binding.ValidationRules>
+                </Binding.ValidationRules>-->
             </Binding>
         </TextBox>
 
         <Label Content="_Nachname" Target="{Binding ElementName=tbNachname}" Style="{StaticResource ResourceKey=StyleLabel}" Grid.Row="1"/>
         <TextBox x:Name="tbNachname" Grid.Column="1" Grid.Row="1" Margin="3" Grid.ColumnSpan="3">
             <Binding Path="NachName" UpdateSourceTrigger="PropertyChanged">
-                <Binding.ValidationRules>
+                <!--<Binding.ValidationRules>
                     <vRules:KontrFeldNichtLeer/>
-                </Binding.ValidationRules>
+                </Binding.ValidationRules>-->
             </Binding>
         </TextBox>
 
