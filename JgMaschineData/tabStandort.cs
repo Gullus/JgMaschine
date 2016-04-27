@@ -18,13 +18,19 @@ namespace JgMaschineData
         public tabStandort()
         {
             this.sMaschinen = new HashSet<tabMaschine>();
+            this.sArbeitszeiten = new HashSet<tabArbeitszeit>();
+            this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
         public string Bezeichnung { get; set; }
         public string Bemerkung { get; set; }
     
+        public DatenAbgleich DatenAbgleich { get; set; }
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabMaschine> sMaschinen { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabArbeitszeit> sArbeitszeiten { get; set; }
     }
 }

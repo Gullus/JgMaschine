@@ -18,9 +18,11 @@ namespace JgMaschineData
         public tabMaschine()
         {
             this.VorgabeProStunde = 0m;
-            this.sDaten = new HashSet<tabDaten>();
-            this.sAnmeldungen = new HashSet<tabAnmeldung>();
+            this.sDaten = new HashSet<tabBauteil>();
+            this.sAnmeldungen = new HashSet<tabAnmeldungMaschine>();
             this.sReparaturen = new HashSet<tabReparatur>();
+            this.sAktuelleBediener = new HashSet<tabBediener>();
+            this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
@@ -36,13 +38,17 @@ namespace JgMaschineData
         public decimal VorgabeProStunde { get; set; }
         public System.Guid fStandort { get; set; }
     
+        public DatenAbgleich DatenAbgleich { get; set; }
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabDaten> sDaten { get; set; }
+        public virtual ICollection<tabBauteil> sDaten { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabAnmeldung> sAnmeldungen { get; set; }
+        public virtual ICollection<tabAnmeldungMaschine> sAnmeldungen { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabReparatur> sReparaturen { get; set; }
         public virtual tabProtokoll eProtokoll { get; set; }
         public virtual tabStandort eStandort { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabBediener> sAktuelleBediener { get; set; }
     }
 }

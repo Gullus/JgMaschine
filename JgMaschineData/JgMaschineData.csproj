@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatenAbgleich.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EnumProtokollName.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
@@ -59,16 +62,16 @@
     <Compile Include="EnumStatusBediener.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EnumStatusDatenabgleich.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EnumStatusMaschine.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EnumStatusProtkoll.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EnumVorgangAnmeldung.cs">
-      <DependentUpon>JgModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="KlassenErweiterungen.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="JgModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -85,16 +88,19 @@
       <DependentUpon>JgModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tabAnmeldung.cs">
+    <Compile Include="tabAnmeldungMaschine.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabArbeitszeit.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="tabAuswertung.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="tabBediener.cs">
+    <Compile Include="tabBauteil.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="tabDaten.cs">
+    <Compile Include="tabBediener.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="tabMaschine.cs">
@@ -132,6 +138,20 @@
       <DependentUpon>JgModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\DatenAbgleich.datasource" />
+    <None Include="Properties\DataSources\JgModelContainer.datasource" />
+    <None Include="Properties\DataSources\tabAnmeldungMaschine.datasource" />
+    <None Include="Properties\DataSources\tabArbeitszeit.datasource" />
+    <None Include="Properties\DataSources\tabAuswertung.datasource" />
+    <None Include="Properties\DataSources\tabBauteil.datasource" />
+    <None Include="Properties\DataSources\tabBediener.datasource" />
+    <None Include="Properties\DataSources\tabBedienerMetaData.datasource" />
+    <None Include="Properties\DataSources\tabMaschine.datasource" />
+    <None Include="Properties\DataSources\tabMaschineMetaData.datasource" />
+    <None Include="Properties\DataSources\tabProtokoll.datasource" />
+    <None Include="Properties\DataSources\tabProtokollMetaData.datasource" />
+    <None Include="Properties\DataSources\tabReparatur.datasource" />
+    <None Include="Properties\DataSources\tabStandort.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="JgModel.edmx.sql" />

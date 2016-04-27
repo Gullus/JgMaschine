@@ -14,15 +14,23 @@ namespace JgMaschineData
     
     public partial class tabReparatur
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tabReparatur()
+        {
+            this.DatenAbgleich = new DatenAbgleich();
+        }
+    
         public System.Guid Id { get; set; }
+        public System.DateTime VorgangBeginn { get; set; }
+        public System.DateTime VorgangEnde { get; set; }
         public string ProtokollText { get; set; }
         public EnumReperaturEreigniss Ereigniss { get; set; }
-        public System.DateTime ReparaturVon { get; set; }
-        public System.DateTime ReparaturBis { get; set; }
+        public bool IstAktiv { get; set; }
         public System.Guid fMaschine { get; set; }
-        public System.Guid fVerursacher { get; set; }
-        public System.Guid fProtokollant { get; set; }
-        public bool InBearbeitung { get; set; }
+        public Nullable<System.Guid> fVerursacher { get; set; }
+        public Nullable<System.Guid> fProtokollant { get; set; }
+    
+        public DatenAbgleich DatenAbgleich { get; set; }
     
         public virtual tabBediener eVerursacher { get; set; }
         public virtual tabBediener eProtokollant { get; set; }

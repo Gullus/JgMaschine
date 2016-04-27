@@ -1,14 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/21/2016 09:35:17" ReportInfo.Modified="04/22/2016 09:32:36" ReportInfo.CreatorVersion="2016.1.2.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/21/2016 09:35:17" ReportInfo.Modified="04/27/2016 12:50:46" ReportInfo.CreatorVersion="2015.3.1.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+
+  }
+}
+</ScriptText>
   <Dictionary/>
   <ReportPage Name="Page1" RawPaperSize="9" Guides="30.24,695.52,166.32,498.96,362.88">
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="166.32">
       <TextObject Name="Text1" Left="30.24" Top="15.12" Width="665.28" Height="52.92" Text="Firma Johne &amp; Groß GmbH&#13;&#10;Kamenzer Str. 18&#13;&#10;01936 Schwepnitz"/>
       <TextObject Name="Text2" Left="30.24" Top="90.72" Width="665.28" Height="60.48" Text="Sacannerbefehle&#13;&#10;für Maschinenbetrieb" Font="Arial, 18pt, style=Bold" TextFill.Color="RoyalBlue"/>
       <ChildBand Name="Child1" Top="170.32" Width="718.2" Height="189" Border.Lines="Top">
-        <BarcodeObject Name="Barcode5" Left="385.56" Top="37.8" Width="96" Height="96" Text="PROGABMELDUNG" ShowText="false" Zoom="2" AllowExpressions="true" Barcode="Datamatrix" Barcode.SymbolSize="Auto" Barcode.Encoding="Auto" Barcode.CodePage="1252" Barcode.PixelSize="3"/>
-        <TextObject Name="Text7" Left="498.96" Top="37.8" Width="196.56" Height="90.72" Text="Bediener&#13;&#10;Abmelden" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Red"/>
+        <TextObject Name="Text7" Left="498.96" Top="37.8" Width="196.56" Height="90.72" Text="&quot;Scanner&#13;&#10;auschalten&quot;" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Red"/>
         <TextObject Name="Text8" Left="30.24" Top="37.8" Width="332.64" Height="90.72" Text="Anmeldung erfolgt durch einscannen der Personenkarte" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Red"/>
+        <PictureObject Name="Picture1" Left="362.88" Top="37.8" Width="136.08" Height="94.5" Image="iVBORw0KGgoAAAANSUhEUgAAAHYAAAB2CAYAAAAdp2cRAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAL9SURBVHhe7ZFBbsMwDAST//85KQo0vZjaimuRtYVZYG4WzeU83mTLIHbTIHbT/Ip9vV7vx+MR8nw+f7465u7vdugWBbEbdIuC2A26RUHsBt2iIHaDblEQu0G3KIjdoFuUfxPrRv3Pobvb6v2/iXZBLGLjIDYXxA6C2COIDUDsIIjNBbGDIPbIbcRWzByl69CfuP/L9kYsYuMg9ghiB0HsEcQmg9hBEHsEsYMg9ki7WJWuEp+s7uDOc3u7RLsgVgSxgyC2B8Qmg9hBENsDYpNB7CCI7cEWq+guuFq6O+/qQSxiYxB7zSAWsTGIvWYQi9gYxF4zU2Ir5N1hpjuvopsi+h9iBe68im6K6H+IFbjzKropov8hVuDOq+imiP6HWIE7r6KbIvofYgXuvIpuiuh/iBW48yq6KaL/TYlVdJdwGe15dUFuEIvYGMSuA7EGiE2C2HUg1gCxSRC7ji3EuiVW79kttmsmYs0du++liGYi1tyx+16KaCZizR2776WIZiLW3LH7XopoJmLNHbvvpYhmTol1JVSkc88K6V23RKwIYhuD2LkgVgSxjUHsXBArgtjGIHYup8VWlLjKLmqeomLH7DvEiqh5ioods+8QK6LmKSp2zL5DrIiap6jYMfsOsSJqnqJix+w7xIqoeYqKHbPvECui5ikqdsy+mxKrcA72V9xdFKv37BLkBrFmEGsEseeDWDOINYLY80GsGcQaQez5nBZbgXsYxWhmd++ubohFbB+IzYHYIIhtBLE5EBsEsY0gNoct1l2m4p3KakndvRXZmyBW0N1bkb0JYgXdvRXZmyBW0N1bkb0JYgXdvRXZmyBW0N1bkb0JYgXdvRXZm0yJraBCnjtzdSrkZXsjtiCINYLYuXeILQhijSB27h1iC4JYI4ide3da7MplPqnYZZS79M52Q+xNeme7IfYmvbPdEHuT3tluiL1J72w3xN6kd7YbYm/SO9vttFj4fyLpiN0AxG4KYjcFsZuC2E1B7KZIsWSvIHbTIHbTIHbLvN9fPL2K0cEK/LgAAAAASUVORK5CYII="/>
         <ChildBand Name="Child2" Top="363.32" Width="718.2" Height="189" Border.Lines="Top">
           <BarcodeObject Name="Barcode1" Left="52.92" Top="37.8" Width="96" Height="96" Text="PROGREPASTART" ShowText="false" Zoom="2" AllowExpressions="true" Barcode="Datamatrix" Barcode.SymbolSize="Auto" Barcode.Encoding="Auto" Barcode.CodePage="1252" Barcode.PixelSize="3"/>
           <BarcodeObject Name="Barcode2" Left="385.56" Top="37.8" Width="96" Height="96" Text="PROGREPA_ENDE" ShowText="false" Zoom="2" AllowExpressions="true" Barcode="Datamatrix" Barcode.SymbolSize="Auto" Barcode.Encoding="Auto" Barcode.CodePage="1252" Barcode.PixelSize="3"/>

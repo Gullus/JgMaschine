@@ -17,9 +17,12 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabBediener()
         {
-            this.sAnmeldungen = new HashSet<tabAnmeldung>();
+            this.sAnmeldungen = new HashSet<tabAnmeldungMaschine>();
             this.sReparaturVerursacher = new HashSet<tabReparatur>();
             this.sReparaturProtokollanten = new HashSet<tabReparatur>();
+            this.sArbeitszeiten = new HashSet<tabArbeitszeit>();
+            this.sBauteile = new HashSet<tabBauteil>();
+            this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
@@ -28,13 +31,20 @@ namespace JgMaschineData
         public string Bemerkung { get; set; }
         public string MatchCode { get; set; }
         public EnumStatusBediener Status { get; set; }
-        public Nullable<System.Guid> fAktuelleMaschine { get; set; }
+        public Nullable<System.Guid> fAktuellAngemeldet { get; set; }
+    
+        public DatenAbgleich DatenAbgleich { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabAnmeldung> sAnmeldungen { get; set; }
+        public virtual ICollection<tabAnmeldungMaschine> sAnmeldungen { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabReparatur> sReparaturVerursacher { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabReparatur> sReparaturProtokollanten { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabArbeitszeit> sArbeitszeiten { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabBauteil> sBauteile { get; set; }
+        public virtual tabMaschine eAktuelleAnmeldungMaschine { get; set; }
     }
 }

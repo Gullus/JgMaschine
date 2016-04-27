@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace JgMaschineSetup
 {
@@ -15,101 +16,82 @@ namespace JgMaschineSetup
   public partial class MainWindow : Window
   {
     private JgModelContainer _Db;
-    private CollectionViewSource _VsMaschine { get { return (CollectionViewSource)this.FindResource("vsMaschinen"); } }
-    private CollectionViewSource _VsBediener { get { return (CollectionViewSource)this.FindResource("vsBediener"); } }
-    private CollectionViewSource _VsDaten { get { return (CollectionViewSource)this.FindResource("vsDaten"); } }
-    private CollectionViewSource _VsStandort { get { return (CollectionViewSource)this.FindResource("vsStandort"); } }
+ 
+    private JgMaschineLib.JgListe<JgMaschineData.tabMaschine> _ListeMaschinen;
+    private JgMaschineLib.JgListe<JgMaschineData.tabStandort> _ListeStandorte;
+    private JgMaschineLib.JgListe<JgMaschineData.tabBediener> _ListeBediener;
 
     public MainWindow()
     {
       InitializeComponent();
-      dtpAuswertungVon.SelectedDate = DateTime.Today.AddDays(-7);
-      dtpAuswertungBis.SelectedDate = DateTime.Today;
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
       _Db = new JgMaschineData.JgModelContainer();
 
-      _VsMaschine.Source = await _Db.tabMaschineSet.OrderBy(o => o.MaschinenName).ToListAsync();
-      _VsMaschine.View.CurrentChanged += ViewMaschine_CurrentChanged;
-      ViewMaschine_CurrentChanged(null, null);
+      var standorte = await _Db.tabStandortSet.Where(w => w.DatenAbgleich.Status != EnumStatusDatenabgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToListAsync();
+      var dv = (CollectionViewSource)this.FindResource("vsStandort");
+      _ListeStandorte = new JgMaschineLib.JgListe<tabStandort>(_Db, standorte, dv, dgStandort);
 
-      _VsBediener.Source = await _Db.tabBedienerSet.ToListAsync();
-      _VsStandort.Source = await _Db.tabStandortSet.ToListAsync();
+      var bediener = await _Db.tabBedienerSet.Where(w => w.DatenAbgleich.Status != EnumStatusDatenabgleich.Geloescht).OrderBy(o => o.NachName).ToListAsync();
+      dv = (CollectionViewSource)this.FindResource("vsBediener");
+      _ListeBediener = new JgMaschineLib.JgListe<tabBediener>(_Db, bediener, dv, dgBediener);
+
+      var maschinen = await _Db.tabMaschineSet.OrderBy(o => o.MaschinenName).ToListAsync();
+      dv = (CollectionViewSource)this.FindResource("vsMaschinen");
+      _ListeMaschinen = new JgMaschineLib.JgListe<tabMaschine>(_Db, maschinen, dv, dgMaschine);
 
       cbStatusBediener.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusBediener));
 
       InitCommands();
     }
 
-    void ViewMaschine_CurrentChanged(object sender, EventArgs e)
-    {
-      if (_VsMaschine.View.CurrentItem != null)
-      {
-        var idMaschine = (_VsMaschine.View.CurrentItem as JgMaschineData.tabMaschine).Id;
-        DateTime datVom = (DateTime)dtpAuswertungVon.SelectedDate, datBis = ((DateTime)(dtpAuswertungBis.SelectedDate)).AddDays(1);
-        _VsDaten.Source = _Db.tabDatenSet.Where(w => (w.fMaschine == idMaschine) && (w.DatumStart >= datVom) && (w.DatumStart < datBis)).OrderBy(o => o.DatumStart).ToList();
-      }
-    }
-
     public void InitCommands()
     {
       CommandBindings.Add(new CommandBinding(MyCommands.MaschineBearbeiten, (sen, erg) =>
       {
-        var form = new FormMaschinenOptionen(_Db, (tabMaschine)_VsMaschine.View.CurrentItem);
+        var form = new FormMaschinenOptionen(_Db, _ListeMaschinen.AktDatensatz);
         if (!form.ShowDialog() ?? false)
-        {
-          _Db.Entry(form.Maschine).Reload();
-          _VsMaschine.View.Refresh();
-        }
-        _Db.SaveChanges();
+          _ListeMaschinen.Reload(_Db);
       },
       (sen, erg) =>
       {
-        erg.CanExecute = !_VsMaschine.View.IsEmpty;
+        erg.CanExecute = !_ListeMaschinen.IsEmpty;
       }));
 
       CommandBindings.Add(new CommandBinding(MyCommands.BedienerBeabeiten, (sen, erg) =>
       {
-        var form = new JgMaschineSetup.Fenster.FormBediener(_Db, (tabBediener)_VsBediener.View.CurrentItem);
+        var form = new JgMaschineSetup.Fenster.FormBediener(_Db, _ListeBediener.AktDatensatz);
         if (!form.ShowDialog() ?? false)
-        {
-          _Db.Entry(form.Bediener).Reload();
-          _VsBediener.View.Refresh();
-        }
-        _Db.SaveChanges();
+          _ListeBediener.Reload(_Db);
       }, (sen, erg) =>
       {
-        erg.CanExecute = !_VsBediener.View.IsEmpty;
+        erg.CanExecute = !_ListeBediener.IsEmpty;
       }));
 
       CommandBindings.Add(new CommandBinding(MyCommands.StandortBearbeiten, (sen, erg) =>
       {
-        var form = new JgMaschineSetup.Fenster.FormStandort(_Db, (tabStandort)_VsStandort.View.CurrentItem);
+        var form = new JgMaschineSetup.Fenster.FormStandort(_Db, _ListeStandorte.AktDatensatz);
         if (!form.ShowDialog() ?? false)
-        {
-          _Db.Entry(form.Standort).Reload();
-          _VsStandort.View.Refresh();
-        }
-        _Db.SaveChanges();
+          _ListeStandorte.Reload(_Db);
       }
       , (sen, erg) =>
       {
-        erg.CanExecute = !_VsStandort.View.IsEmpty;
+        erg.CanExecute = !_ListeStandorte.IsEmpty;
       }));
 
       CommandBindings.Add(new CommandBinding(MyCommands.ProtokollBearbeiten, (sen, erg) =>
       {
-        var maschine = (tabMaschine)_VsMaschine.View.CurrentItem;
-        var form = new FormProtokollOptionen(_Db, maschine.eProtokoll);
+        var form = new FormProtokollOptionen(_Db, _ListeMaschinen.AktDatensatz.eProtokoll);
         if (!form.ShowDialog() ?? false)
+        {
           _Db.Entry(form.Protokoll).Reload();
-
-        _Db.SaveChanges();
+          JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabProtokoll>(_Db, form.Protokoll, EnumStatusDatenabgleich.Geaendert);
+        }
       }, (sen, erg) =>
       {
-        erg.CanExecute = !_VsMaschine.View.IsEmpty && ((_VsMaschine.View.CurrentItem as JgMaschineData.tabMaschine).ProtokollName != EnumProtokollName.Handbiegung);
+        erg.CanExecute = !_ListeMaschinen.IsEmpty;
       }));
 
       // CommandBindings.Add(new CommandBinding(MyCommands.ReportBenutzerBearbeiten, ReportBenutzerExecute));
@@ -119,24 +101,14 @@ namespace JgMaschineSetup
     {
       var form = new JgMaschineSetup.Fenster.FormStandort(_Db, null);
       if (form.ShowDialog() ?? false)
-      {
-        _Db.tabStandortSet.Add(form.Standort);
-        _Db.SaveChanges();
-        _VsStandort.Source = _Db.tabStandortSet.ToList();
-        _VsStandort.View.MoveCurrentTo(form.Standort);
-      }
+        _ListeStandorte.Add(form.Standort);
     }
 
     private void ButtonNeuerBediener_Click(object sender, RoutedEventArgs e)
     {
       var form = new JgMaschineSetup.Fenster.FormBediener(_Db, null);
       if (form.ShowDialog() ?? false)
-      {
-        _Db.tabBedienerSet.Add(form.Bediener);
-        _Db.SaveChanges();
-        _VsBediener.Source = _Db.tabBedienerSet.ToList();
-        _VsBediener.View.MoveCurrentTo(form.Bediener);
-      }
+        _ListeBediener.Add(form.Bediener);
     }
 
     private void ButtonNeueMaschine_Click(object sender, RoutedEventArgs e)
@@ -150,9 +122,8 @@ namespace JgMaschineSetup
       var form = new FormMaschinenOptionen(_Db, null);
       if (form.ShowDialog() ?? false)
       {
-        _Db.tabMaschineSet.Add(form.Maschine);
-        _Db.SaveChanges();
-
+        _ListeMaschinen.Add(form.Maschine);
+        
         var prot = new tabProtokoll()
         { 
           Id = form.Maschine.Id,
@@ -163,11 +134,7 @@ namespace JgMaschineSetup
           ProtokollText = "Protokoll erstellt",
           Status = JgMaschineData.EnumStatusProtkoll.Offen
         };
-        _Db.tabProtokollSet.Add(prot);
-        _Db.SaveChanges();
-
-        _VsMaschine.Source = _Db.tabMaschineSet.ToList();
-        _VsMaschine.View.MoveCurrentTo(form.Maschine);
+        JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabProtokoll>(_Db, prot, EnumStatusDatenabgleich.Neu);
       }
     }
 
@@ -176,12 +143,7 @@ namespace JgMaschineSetup
       _Db.SaveChanges();
       foreach (var entity in _Db.ChangeTracker.Entries())
         entity.Reload();
-      CollectionViewSource.GetDefaultView(gridMaschinen.ItemsSource).Refresh();
-    }
-
-    private void btnAuswertungStarten_Click(object sender, RoutedEventArgs e)
-    {
-      ViewMaschine_CurrentChanged(null, null);
+      CollectionViewSource.GetDefaultView(dgMaschine.ItemsSource).Refresh();
     }
 
     private void Window_Closed(object sender, EventArgs e)

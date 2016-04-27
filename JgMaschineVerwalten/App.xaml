@@ -3,22 +3,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style TargetType="{x:Type Label}">
-            <Style.Setters>
-                <Setter Property="FontWeight" Value="Bold" />
-            </Style.Setters>
-        </Style>
-
-        <Style TargetType="{x:Type DatePicker}">
-            <Style.Setters>
-                <Setter Property="Margin" Value="3, 0 , 3, 0" />
-                <Setter Property="Height" Value="24" />
-            </Style.Setters>
-        </Style>
-
-        <Style TargetType="{x:Type ComboBox}">
+        <Style TargetType="{x:Type Button}" >
             <Style.Setters>
                 <Setter Property="Margin" Value="3" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}" >
+            <Style.Setters>
+                <Setter Property="Margin" Value="3" />
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="StyleTextBoxReadOnly" TargetType="{x:Type TextBox}" >
+            <Style.Setters>
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="IsReadOnly" Value="False" />
+                <Setter Property="Background" Value="#FFF5F9FD" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type Label}" >
+            <Style.Setters>
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="FontWeight" Value="Bold" />
             </Style.Setters>
         </Style>
 
@@ -32,6 +40,19 @@
                 <Setter Property="EnableRowVirtualization" Value="True" />
                 <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected" />
                 <Setter Property="Background" Value="White" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type DatePicker}">
+            <Style.Setters>
+                <Setter Property="Margin" Value="3, 0 , 3, 0" />
+                <Setter Property="Height" Value="24" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type ComboBox}">
+            <Style.Setters>
+                <Setter Property="Margin" Value="3" />
             </Style.Setters>
         </Style>
 

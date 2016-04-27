@@ -16,21 +16,24 @@ namespace JgMaschineLib.DataLogicScanner
       PROG,
       MITA,
       BF2D,
-      TEST
+      TEST,
+      SCHALTER
     }
 
     public enum VorgangProgram
     {
       FEHLER,
       BAUTEIL,
-      BENUTZER,
+      ANMELDUNG,
       ABMELDUNG,
       COILSTART,
       COIL_ENDE,
       REPASTART,
       REPA_ENDE,
       WARTSTART,
-      WART_ENDE
+      WART_ENDE,
+      SCHALTER,
+      TEST
     }
 
     private Timer _Timer;
@@ -171,12 +174,14 @@ namespace JgMaschineLib.DataLogicScanner
     public string ScannerVorgangScan { get { return TextEmpfangen.Substring(13, 4); } }
     public string ScannerVorgangProgramm { get { return TextEmpfangen.Substring(17, 9); } }
 
-    public string ScannerKoerper 
+    public string ScannerKoerper
     {
       get
       {
-        if (_VorgangScan == Scanner.VorgangScanner.PROG)
+        if (IstProgMita(_VorgangScan))
           return TextEmpfangen.Substring(26);
+        else if (_VorgangScan == Scanner.VorgangScanner.SCHALTER)
+          return TextEmpfangen[14].ToString();
         else
           return TextEmpfangen.Substring(17);
       }
@@ -202,11 +207,15 @@ namespace JgMaschineLib.DataLogicScanner
 
     public ScannerText(byte[] EmpfangsPuffer, int AnzahlZeichen)
     {
+      MitDisplay = true;
       this.TextEmpfangen = Encoding.ASCII.GetString(EmpfangsPuffer, 0, AnzahlZeichen);
 
-      Console.WriteLine(this.TextEmpfangen);
-
-      if (this.TextEmpfangen.Length < 16)
+      if ((this.TextEmpfangen.Length == 16) && (this.TextEmpfangen[13] == 'S'))
+      {
+        VorgangScan = Scanner.VorgangScanner.SCHALTER;
+        Console.WriteLine("Schalter getrückt: {0}", ScannerKoerper);
+      }
+      else if (this.TextEmpfangen.Length < 17)
         FehlerAusgabe("Text zu kurz");
       else
       {
@@ -217,10 +226,15 @@ namespace JgMaschineLib.DataLogicScanner
           switch (_VorgangScan)
           {
             case Scanner.VorgangScanner.BF2D: _VorgangProgramm = Scanner.VorgangProgram.BAUTEIL; break;
-            case Scanner.VorgangScanner.MITA: _VorgangProgramm = Scanner.VorgangProgram.BENUTZER; break;
+            case Scanner.VorgangScanner.FEHLER: _VorgangProgramm = Scanner.VorgangProgram.FEHLER; break;
+            case Scanner.VorgangScanner.SCHALTER: _VorgangProgramm = Scanner.VorgangProgram.SCHALTER; break;
+            case Scanner.VorgangScanner.TEST: _VorgangProgramm = Scanner.VorgangProgram.TEST; break;
             default:
-              if (!Enum.TryParse<Scanner.VorgangProgram>(ScannerVorgangProgramm, true, out _VorgangProgramm))
-                FehlerAusgabe("Prog. Vorgang falsch.", "Wert: " + ScannerVorgangProgramm);
+              if (IstProgMita(_VorgangScan))
+              {
+                if (!Enum.TryParse<Scanner.VorgangProgram>(ScannerVorgangProgramm, true, out _VorgangProgramm))
+                  FehlerAusgabe("Prog. Vorgang falsch.", "Wert: " + ScannerVorgangProgramm);
+              }
               break;
           }
         }
@@ -242,7 +256,7 @@ namespace JgMaschineLib.DataLogicScanner
         }
       }
 
-      sb.Append(_ZusatzText);      
+      sb.Append(_ZusatzText);
       sb.Append(Convert.ToChar(13));
 
       return Encoding.ASCII.GetBytes(sb.ToString());
@@ -260,7 +274,6 @@ namespace JgMaschineLib.DataLogicScanner
     public void FehlerAusgabe(params string[] FehlerText)
     {
       _VorgangScan = Scanner.VorgangScanner.FEHLER;
-
       _AusgabeZeilen[0] = "    - F E H L E R -";
 
       for (int i = 0; i < FehlerText.Length; i++)
@@ -277,6 +290,11 @@ namespace JgMaschineLib.DataLogicScanner
           sb.Append(_Esc + "[5q" + _Esc + "[5q");      // 2 x 100 ms warten
       }
       _ZusatzText = sb.ToString();
+    }
+
+    public bool IstProgMita(Scanner.VorgangScanner Vorgang)
+    {
+      return (VorgangScan == Scanner.VorgangScanner.PROG) || (_VorgangScan == Scanner.VorgangScanner.MITA);
     }
   }
 }

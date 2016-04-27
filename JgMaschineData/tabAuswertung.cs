@@ -14,6 +14,12 @@ namespace JgMaschineData
     
     public partial class tabAuswertung
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tabAuswertung()
+        {
+            this.DatenAbgleich = new DatenAbgleich();
+        }
+    
         public System.Guid Id { get; set; }
         public string ReportName { get; set; }
         public string ErstelltName { get; set; }
@@ -22,5 +28,7 @@ namespace JgMaschineData
         public System.DateTime GeaendertDatum { get; set; }
         public byte[] Report { get; set; }
         public string Bemerkung { get; set; }
+    
+        public DatenAbgleich DatenAbgleich { get; set; }
     }
 }

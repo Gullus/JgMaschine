@@ -10,11 +10,16 @@
     Title="Anmeldung u. Maschinendaten" Height="549" Width="1218" Loaded="Window_Loaded" Closed="Window_Closed">
 
     <Window.Resources>
+        <CollectionViewSource x:Key="vsArbeitszeitAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
+
+        <CollectionViewSource x:Key="vsAnmeldungAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsAnmeldungAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
+
         <CollectionViewSource x:Key="vsMaschine" d:DesignSource="{d:DesignInstance {x:Type data:tabMaschine}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsReparatur" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsAnmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldung}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsUmmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldung}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
     </Window.Resources>
 
     <Grid DataContext="{StaticResource vsMaschine}" Margin="5">
@@ -55,13 +60,13 @@
         </ListBox>
 
         <TabControl Grid.Column="1" TabStripPlacement="Right" Margin="10,5,5,5" Grid.RowSpan="2">
-            <TabItem Header=" Anmeldung " Width="100"  Height="50">
+            <TabItem Header=" Arbeitszeit " Width="100"  Height="50">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="*" />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -71,42 +76,49 @@
                         <ColumnDefinition Width="140"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Content="_Matchcode" />
-                    <TextBox x:Name="MatchCoode" Grid.Column="1" Margin="3"/>
+                    <Label Content="Name" Grid.Row="0" />
+                    <ComboBox x:Name="cmbBenutzerAnmeldungArbeitszeit" Grid.Column="1" Grid.Row="0" DisplayMemberPath="Name" SelectedValuePath="Id" />
+                    <Button Content="Anmelden" Command="{x:Static comands:MyCommands.ManuelleAnmeldungBediener}" Grid.Column="2" Grid.Row="0" Margin="3" />
 
-                    <Label Content="Name" Grid.Row="1" />
-                    <ComboBox x:Name="cmbAnmeldung" Grid.Column="1" Grid.Row="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
-                    <Button Content="Anmelden" Command="{x:Static comands:MyCommands.ManuelleAnmeldungBediener}" Grid.Column="2" Grid.Row="1" Margin="3" />
-
-                    <Button Grid.Column="4" Grid.RowSpan="2" Margin="5" Click="btnTabellenAktualisieren_Click" >
+                    <Button  Grid.Row="0" Grid.Column="4" Click="btnTabellenAktualisieren_Click" >
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="Bilder\JgRefresh.ico" Margin="5" Height="30">
+                            <Image Source="Bilder\JgRefresh.ico" Margin="2" Height="12">
                                 <Image.Effect>
                                     <DropShadowEffect/>
                                 </Image.Effect>
                             </Image>
-                            <TextBlock Text="Tabellen aktualisieren" VerticalAlignment="Center" TextWrapping="Wrap" Width="100"/>
+                            <TextBlock Text="aktualisieren" VerticalAlignment="Center" TextWrapping="Wrap" Width="100"/>
                         </StackPanel>
                     </Button>
 
-                    <Label Content="Anmeldungen" Grid.Row="2"/>
-                    <DataGrid x:Name="dgAnmeldungen" IsReadOnly="True" Grid.ColumnSpan="4" ItemsSource="{Binding Source={StaticResource vsAnmeldung}}" Margin="3" Grid.Row="2" Grid.Column="1" >
+                    <Label Content="Angemeldet" Grid.Row="1"/>
+                    <DataGrid x:Name="dgArbeitszeitAktuell" IsReadOnly="True" Grid.ColumnSpan="4" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAktuell}}" Margin="3" Grid.Row="1" Grid.Column="1" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
                             <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Anmeldung" Width="90" MinWidth="90"/>
-                            <DataGridTextColumn Binding="{Binding Ummeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Ummeldung" Width="90" MinWidth="90"/>
-                            <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="Maschine" Width="*" MinWidth="100"/>
 
-                            <DataGridTemplateColumn Header="Ummeldung" Width="80">
+                            <DataGridTemplateColumn Header="Abmelden" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{x:Static comands:MyCommands.BedienerUmmelden}" Content="ummelden" Margin="1"/>
+                                        <Button Command="{x:Static comands:MyCommands.ManuelleAbmeldungBediener}" Content="abmelden" Margin="1"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Label Content="A_nmeldungen" Target="{Binding ElementName=dgUmmeldungen}" Grid.Row="2" />
+                    <Grid Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="2">
+                        
+                    </Grid>
+                    <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Margin="3" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
+                            <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Anmeldung" Width="90" MinWidth="90"/>
+                            <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Anmeldung" Width="90" MinWidth="90"/>
 
                             <DataGridTemplateColumn Header="Abmeldung" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -115,20 +127,62 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <Label Content="_Ummeldungen" Target="{Binding ElementName=dgUmmeldungen}" Grid.Row="3" />
-                    <DataGrid x:Name="dgUmmeldungen" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsUmmeldung}}" Margin="3" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Anmeldung , StringFormat={}{0:dd.MM.yy HH:mm}}" Header="Anmeldung" Width="90"/>
-                            <DataGridTextColumn Binding="{Binding Ummeldung , StringFormat={}{0:dd.MM.yy HH:mm}}" Header="Ummeldung" Width="90"/>
-                            <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="Maschine" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
+
+            <TabItem Header=" Anmeldungen " Width="100"  Height="50">
+
+            </TabItem>
+
+            <TabItem Header=" Bauteile " Width="100"  Height="50">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dgDaten" Grid.Row="1" ItemsSource="{Binding Source={StaticResource vsBauteil}}" Margin="7, 0, 7, 7" IsReadOnly="True" >
+                        <DataGrid.Effect>
+                            <DropShadowEffect/>
+                        </DataGrid.Effect>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding DatumStart, StringFormat={}{0:dd.MM HH:mm:ss}}" Header="Start" Width="90" MinWidth="90"/>
+                            <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat={}{0:dd.MM HH:mm:ss}}" Header="Ende" Width="90" MinWidth="90"/>
+                            <DataGridTextColumn Binding="{Binding BtAnzahl}" Header="Stück" Width="70" MinWidth="70"/>
+                            <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
+                            <DataGridTextColumn Binding="{Binding BtLaenge}" Header="Laenge" Width="70" MinWidth="70"/>
+                            <DataGridTextColumn Binding="{Binding BtGewicht}" Header="Gewicht" Width="80" MinWidth="80" CellStyle="{StaticResource ResourceKey=CellRightAlign}"/>
+                            <!--<DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Nummer" Width="70" MinWidth="70"/>-->
+                            <DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Bauteil" Width="*" MinWidth="120"/>
+                            <DataGridTextColumn Binding="{Binding Auftrag}" Header="Auftrag" Width="70" MinWidth="70"/>
+                            <DataGridTextColumn Binding="{Binding NummerPosition}" Header="Position" Width="70" MinWidth="70"/>
+                            <DataGridTextColumn Binding="{Binding Bediener}" Header="Bediener" Width="100" MinWidth="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Auswerung von"/>
+                        <DatePicker x:Name="dtpAuswertungVon" Margin="3"/>
+                        <Label Content="bis"/>
+                        <DatePicker x:Name="dtpAuswertungBis" Margin="3"/>
+                        <Button x:Name="btnAuswertungStarten" Width="100">
+                            <Button.Effect>
+                                <DropShadowEffect/>
+                            </Button.Effect>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Bilder\JgSearch.ico" Height="15"/>
+                                <TextBlock Text="Suchen" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+
+            </TabItem>
+
 
             <TabItem Header=" Reparaturen " Width="100" Height="50">
                 <Grid Margin="5">

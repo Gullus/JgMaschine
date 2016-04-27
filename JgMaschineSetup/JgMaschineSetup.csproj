@@ -137,11 +137,14 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\JgMaschineData.DatenAbgleich.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.JgModelContainer.datasource" />
-    <None Include="Properties\DataSources\JgMaschineData.tabAnmeldung.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungMaschine.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabArbeitszeit.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAuswertung.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabBauteil.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBediener.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBedienerMetaData.datasource" />
-    <None Include="Properties\DataSources\JgMaschineData.tabDaten.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabMaschine.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabMaschineMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabProtokoll.datasource" />
@@ -211,6 +214,7 @@
     <Resource Include="Bilder\JgUndo.ico" />
     <Resource Include="Bilder\JgUpload.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

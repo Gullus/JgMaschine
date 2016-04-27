@@ -11,10 +11,10 @@ namespace JgMaschineData
 {
     using System;
     
-    public enum EnumVorgangAnmeldung : byte
+    public partial class DatenAbgleich
     {
-        Angemeldet = 0,
-        Umgemeldet = 1,
-        Abgemeldet = 2
+        public System.DateTime Datum { get; set; }
+        public EnumStatusDatenabgleich Status { get; set; }
+        public string Bearbeiter { get; set; }
     }
 }

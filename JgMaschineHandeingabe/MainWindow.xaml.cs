@@ -45,7 +45,7 @@ namespace JgMaschineHandeingabe
       if (_VsMaschine.View.CurrentItem != null)
       {
         var maschine = (JgMaschineData.tabMaschine)_VsMaschine.View.CurrentItem;
-        _VsDaten.Source = _Db.tabDatenSet.Where(w => w.fMaschine == maschine.Id).OrderByDescending(o => o.Id).Take(10).ToList();
+        _VsDaten.Source = _Db.tabBauteilSet.Where(w => w.fMaschine == maschine.Id).OrderByDescending(o => o.Id).Take(10).ToList();
       }
     }
 
@@ -88,7 +88,7 @@ namespace JgMaschineHandeingabe
           case -2: tbAntwortServer.Text = "Position nicht in JG Data gefunden !"; break;
           default :
             tbAntwortServer.Text = "OK !";
-            (_VsDaten.View.SourceCollection as List<JgMaschineData.tabDaten>).Insert(0, _Db.tabDatenSet.Find(zurueck));
+            (_VsDaten.View.SourceCollection as List<JgMaschineData.tabBauteil>).Insert(0, _Db.tabBauteilSet.Find(zurueck));
             _VsDaten.View.Refresh();
             _VsDaten.View.MoveCurrentToFirst();
             break;

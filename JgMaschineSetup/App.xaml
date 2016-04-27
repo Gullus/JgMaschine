@@ -4,13 +4,13 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-        <Style x:Key="StyleButton" TargetType="{x:Type Button}" >
+        <Style TargetType="{x:Type Button}" >
             <Style.Setters>
                 <Setter Property="Margin" Value="3" />
             </Style.Setters>
         </Style>
 
-        <Style x:Key="StyleTextBox" TargetType="{x:Type TextBox}" >
+        <Style TargetType="{x:Type TextBox}" >
             <Style.Setters>
                 <Setter Property="Margin" Value="3" />
             </Style.Setters>
@@ -24,29 +24,16 @@
             </Style.Setters>
         </Style>
 
-        <Style x:Key="StyleLabel" TargetType="{x:Type Label}" >
+        <Style TargetType="{x:Type Label}" >
             <Style.Setters>
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Style.Setters>
         </Style>
-        
-        <Style x:Key="StyleTextBlock" TargetType="{x:Type TextBlock}" >
-            <Style.Setters>
-                <Setter Property="Margin" Value="5" />
-            </Style.Setters>
-        </Style>
-
-        <Style x:Key="StyleInfo" TargetType="{x:Type TextBlock}" >
-            <Style.Setters>
-                <Setter Property="Margin" Value="3, 0, 3 , 5" />
-                <Setter Property="FontStyle" Value="Italic" />
-                <Setter Property="Foreground" Value="Gray" />
-            </Style.Setters>
-        </Style>
 
         <Style TargetType="{x:Type DataGrid}">
             <Style.Setters>
+                <Setter Property="Margin" Value="3" />
                 <Setter Property="GridLinesVisibility" Value="Vertical" />
                 <Setter Property="AutoGenerateColumns" Value="False" />
                 <Setter Property="VerticalGridLinesBrush" Value="#FFD8D8D8" />
@@ -55,6 +42,19 @@
                 <Setter Property="EnableRowVirtualization" Value="True" />
                 <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected" />
                 <Setter Property="Background" Value="White" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type DatePicker}">
+            <Style.Setters>
+                <Setter Property="Margin" Value="3, 0 , 3, 0" />
+                <Setter Property="Height" Value="24" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type ComboBox}">
+            <Style.Setters>
+                <Setter Property="Margin" Value="3" />
             </Style.Setters>
         </Style>
 

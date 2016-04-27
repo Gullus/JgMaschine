@@ -29,12 +29,13 @@ namespace JgMaschineData
     
         public virtual DbSet<tabMaschine> tabMaschineSet { get; set; }
         public virtual DbSet<tabBediener> tabBedienerSet { get; set; }
-        public virtual DbSet<tabDaten> tabDatenSet { get; set; }
-        public virtual DbSet<tabAnmeldung> tabAnmeldungSet { get; set; }
+        public virtual DbSet<tabBauteil> tabBauteilSet { get; set; }
+        public virtual DbSet<tabAnmeldungMaschine> tabAnmeldungMaschineSet { get; set; }
         public virtual DbSet<tabProtokoll> tabProtokollSet { get; set; }
         public virtual DbSet<tabReparatur> tabReparaturSet { get; set; }
         public virtual DbSet<tabStandort> tabStandortSet { get; set; }
         public virtual DbSet<tabAuswertung> tabAuswertungSet { get; set; }
+        public virtual DbSet<tabArbeitszeit> tabArbeitszeitSet { get; set; }
     
         public virtual ObjectResult<Nullable<int>> BauteilInDaten(Nullable<System.DateTime> datum, Nullable<int> idPosition, Nullable<int> idMaschine)
         {

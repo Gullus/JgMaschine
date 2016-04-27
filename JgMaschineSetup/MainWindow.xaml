@@ -12,7 +12,7 @@
     <Window.Resources>
         <CollectionViewSource x:Key="vsMaschinen" d:DesignSource="{d:DesignInstance {x:Type xData:tabMaschine}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type xData:tabBediener}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsDaten" d:DesignSource="{d:DesignInstance {x:Type xData:tabDaten}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsBauteil" d:DesignSource="{d:DesignInstance {x:Type xData:tabBauteil}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsStandort" d:DesignSource="{d:DesignInstance {x:Type xData:tabStandort}, CreateList=True}"/>
     </Window.Resources>
 
@@ -25,7 +25,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="gridMaschinen" ItemsSource="{Binding}" Margin="3, 3, 8, 5" IsReadOnly="True" >
+        <DataGrid x:Name="dgMaschine" ItemsSource="{Binding}" Margin="3, 3, 8, 5" IsReadOnly="True" >
             <DataGrid.Effect>
                 <DropShadowEffect/>
             </DataGrid.Effect>
@@ -37,7 +37,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <TabControl Grid.Column="1" Margin="3">
-            <TabItem Header=" Informationen " Foreground="DarkBlue" Height="30">
+            <TabItem Header=" Maschinen " Foreground="DarkBlue" Height="30">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7"/>
@@ -57,20 +57,20 @@
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="7"/>
                     </Grid.RowDefinitions>
-                    <Label Content="Standort" Style="{StaticResource StyleLabel}" Grid.Column="1" Grid.Row="1"/>
+                    <Label Content="Standort" Grid.Column="1" Grid.Row="1"/>
                     <TextBox Style="{StaticResource StyleTextBoxReadOnly}" Text="{Binding eStandort.Bezeichnung}" Grid.Column="2" Grid.Row="1" />
 
-                    <Label Content="Maschine" Style="{StaticResource StyleLabel}" Grid.Column="1" Grid.Row="2" Height="26" VerticalAlignment="Top" />
+                    <Label Content="Maschine" Grid.Column="1" Grid.Row="2" Height="26" VerticalAlignment="Top" />
                     <TextBox Style="{StaticResource StyleTextBoxReadOnly}" Text="{Binding MaschinenName}" Grid.Column="2" Grid.Row="2" />
 
-                    <Label Content="Protokoll" Style="{StaticResource StyleLabel}" Grid.Column="3" Grid.Row="1"/>
+                    <Label Content="Protokoll" Grid.Column="3" Grid.Row="1"/>
                     <TextBox Text="{Binding ProtokollName}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="4" Grid.Row="1" />
 
-                    <Label Content="Status" Style="{StaticResource StyleLabel}" Grid.Column="3" Grid.Row="2"/>
+                    <Label Content="Status" Grid.Column="3" Grid.Row="2"/>
                     <TextBox Text="{Binding Status}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="4" Grid.Row="2"/>
 
-                    <Label Content="Bemerkung" Style="{StaticResource StyleLabel}" Grid.Column="1" Grid.Row="3" />
-                    <TextBox Style="{StaticResource StyleTextBox}" Text="{Binding Bemerkung}" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                    <Label Content="Bemerkung" Grid.Column="1" Grid.Row="3" />
+                    <TextBox Text="{Binding Bemerkung}" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
 
                     <Grid Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" >
                         <Grid.ColumnDefinitions>
@@ -80,7 +80,7 @@
                             <ColumnDefinition Width="140"/>
                             <ColumnDefinition Width="140"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="2" Style="{StaticResource StyleButton}" Click="ButtonNeueMaschine_Click">
+                        <Button Grid.Column="2" Click="ButtonNeueMaschine_Click">
                             <Button.Effect>
                                 <DropShadowEffect/>
                             </Button.Effect>
@@ -93,7 +93,7 @@
                                 <TextBlock Text="Neue Maschine" VerticalAlignment="Center" TextWrapping="Wrap" Width="70"/>
                             </StackPanel>
                         </Button>
-                        <Button Grid.Column="3" Style="{StaticResource StyleButton}" Command="{x:Static comand:MyCommands.MaschineBearbeiten}">
+                        <Button Grid.Column="3" Command="{x:Static comand:MyCommands.MaschineBearbeiten}">
                             <Button.Effect>
                                 <DropShadowEffect/>
                             </Button.Effect>
@@ -106,7 +106,7 @@
                                 <TextBlock Text="Maschine bearbeiten" VerticalAlignment="Center" TextWrapping="Wrap" Width="70" />
                             </StackPanel>
                         </Button>
-                        <Button Grid.Column="1" Style="{StaticResource StyleButton}" Click="ButtonDatenAktualisieren_Click" >
+                        <Button Grid.Column="1" Click="ButtonDatenAktualisieren_Click" >
                             <Button.Effect>
                                 <DropShadowEffect/>
                             </Button.Effect>
@@ -120,7 +120,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Grid.Column="4" Style="{StaticResource StyleButton}" Command="{x:Static comand:MyCommands.ProtokollBearbeiten}">
+                        <Button Grid.Column="4" Command="{x:Static comand:MyCommands.ProtokollBearbeiten}">
                             <Button.Effect>
                                 <DropShadowEffect/>
                             </Button.Effect>
@@ -164,40 +164,40 @@
                                     <ColumnDefinition Width="80"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Content="Auswertungsverlauf" Style="{StaticResource StyleLabel}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3">
+                                <Label Content="Auswertungsverlauf" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3">
                                     <Label.Effect>
                                         <DropShadowEffect Opacity="0.5"/>
                                     </Label.Effect>
                                 </Label>
-                                <Label Content="Start" Style="{StaticResource StyleLabel}" Grid.Column="2" Grid.Row="2"/>
+                                <Label Content="Start" Grid.Column="2" Grid.Row="2"/>
                                 <TextBox Text="{Binding eProtokoll.AuswertungStart, StringFormat={}{0:dd.MM.yy HH:mm:ss.fff}}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="3" Grid.Row="2"/>
-                                <Label Content="Ende" Style="{StaticResource StyleLabel}" Grid.Column="2" Grid.Row="3"/>
+                                <Label Content="Ende" Grid.Column="2" Grid.Row="3"/>
                                 <TextBox Text="{Binding eProtokoll.AuswertungEnde, StringFormat={}{0:dd.MM.yy HH:mm:ss.fff}}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="3" Grid.Row="3"/>
-                                <Label Content="Laufzeit" Style="{StaticResource StyleLabel}" Grid.Column="2" Grid.Row="4"/>
+                                <Label Content="Laufzeit" Grid.Column="2" Grid.Row="4"/>
                                 <TextBox Text="{Binding eProtokoll.Laufzeit}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="3" Grid.Row="4"/>
 
-                                <Label Content="Status" Style="{StaticResource StyleLabel}" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="2">
+                                <Label Content="Status" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="2">
                                     <Label.Effect>
                                         <DropShadowEffect Opacity="0.5"/>
                                     </Label.Effect>
                                 </Label>
                                 <TextBox Text="{Binding eProtokoll.Status}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="3" Grid.Row="7"/>
 
-                                <Label Content="Anzahl Fehler" Style="{StaticResource StyleLabel}" Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2">
+                                <Label Content="Anzahl Fehler" Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2">
                                     <Label.Effect>
                                         <DropShadowEffect Opacity="0.5"/>
                                     </Label.Effect>
                                 </Label>
-                                <Label Content="Verbindung Maschine" Style="{StaticResource StyleLabel}" Grid.Column="5" Grid.Row="2"/>
+                                <Label Content="Verbindung Maschine" Grid.Column="5" Grid.Row="2"/>
                                 <TextBox Text="{Binding eProtokoll.FehlerVerbindungMaschine}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="6" Grid.Row="2"/>
-                                <Label Content="Pfad zur Maschine" Style="{StaticResource StyleLabel}" Grid.Column="5" Grid.Row="3"/>
+                                <Label Content="Pfad zur Maschine"  Grid.Column="5" Grid.Row="3"/>
                                 <TextBox Text="{Binding eProtokoll.FehlerPfadZurMaschine}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="6" Grid.Row="3"/>
-                                <Label Content="Daten Import" Style="{StaticResource StyleLabel}" Grid.Column="5" Grid.Row="4"/>
+                                <Label Content="Daten Import" Grid.Column="5" Grid.Row="4"/>
                                 <TextBox Text="{Binding eProtokoll.FehlerDatenImport}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="6" Grid.Row="4"/>
-                                <Label Content="Speicherung in Db" Style="{StaticResource StyleLabel}" Grid.Column="5" Grid.Row="5"/>
+                                <Label Content="Speicherung in Db" Grid.Column="5" Grid.Row="5"/>
                                 <TextBox Text="{Binding eProtokoll.FehlerDatenSpeichern}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="6" Grid.Row="5"/>
 
-                                <Label Content="Anzahl Durchläufe" Style="{StaticResource StyleLabel}" Grid.Column="4" Grid.Row="7" Grid.ColumnSpan="2" >
+                                <Label Content="Anzahl Durchläufe" Grid.Column="4" Grid.Row="7" Grid.ColumnSpan="2" >
                                     <Label.Effect>
                                         <DropShadowEffect Opacity="0.5"/>
                                     </Label.Effect>
@@ -206,52 +206,6 @@
                             </Grid>
                         </TabItem>
                     </TabControl>
-                </Grid>
-            </TabItem>
-
-            <TabItem Header=" Daten " Foreground="DarkBlue">
-                <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dgDaten" Grid.Row="1" ItemsSource="{Binding Source={StaticResource vsDaten}}" Margin="7, 0, 7, 7" IsReadOnly="True" >
-                        <DataGrid.Effect>
-                            <DropShadowEffect/>
-                        </DataGrid.Effect>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding DatumStart, StringFormat={}{0:dd.MM HH:mm:ss}}" Header="Start" Width="90" MinWidth="90"/>
-                            <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat={}{0:dd.MM HH:mm:ss}}" Header="Ende" Width="90" MinWidth="90"/>
-                            <DataGridTextColumn Binding="{Binding BtAnzahl}" Header="Stück" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
-                            <DataGridTextColumn Binding="{Binding BtLaenge}" Header="Laenge" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding BtGewicht}" Header="Gewicht" Width="80" MinWidth="80" CellStyle="{StaticResource ResourceKey=CellRightAlign}"/>
-                            <!--<DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Nummer" Width="70" MinWidth="70"/>-->
-                            <DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Bauteil" Width="*" MinWidth="120"/>
-                            <DataGridTextColumn Binding="{Binding Auftrag}" Header="Auftrag" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding NummerPosition}" Header="Position" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding Bediener}" Header="Bediener" Width="100" MinWidth="100"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <Label Content="Auswerung von" Style="{StaticResource StyleLabel}"/>
-                        <DatePicker x:Name="dtpAuswertungVon" Margin="3"/>
-                        <Label Content="bis" Style="{StaticResource StyleLabel}"/>
-                        <DatePicker x:Name="dtpAuswertungBis" Margin="3"/>
-                        <Button x:Name="btnAuswertungStarten" Click="btnAuswertungStarten_Click" Style="{StaticResource StyleButton}" Width="100">
-                            <Button.Effect>
-                                <DropShadowEffect/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgSearch.ico" Height="15"/>
-                                <TextBlock Text="Suchen" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-
                 </Grid>
             </TabItem>
 
@@ -296,14 +250,14 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Label Content="Status" Style="{StaticResource StyleLabel}"/>
+                        <Label Content="Status"/>
                         <ComboBox Name="cbStatusBediener" SelectedItem="{Binding Status}" Margin="3" Grid.Column="1" />
 
-                        <Label Content="Bemerkung" Style="{StaticResource StyleLabel}" Grid.Row="1"/>
-                        <TextBox Style="{StaticResource StyleTextBox}" Text="{Binding Bemerkung}" Grid.Row="2" Grid.ColumnSpan="2" Height="150"/>
+                        <Label Content="Bemerkung"  Grid.Row="1"/>
+                        <TextBox Text="{Binding Bemerkung}" Grid.Row="2" Grid.ColumnSpan="2" Height="150"/>
                     </Grid>
 
-                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="4" Click="ButtonNeuerBediener_Click" Grid.ColumnSpan="2">
+                    <Button Grid.Column="2" Grid.Row="4" Click="ButtonNeuerBediener_Click" Grid.ColumnSpan="2">
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>
@@ -317,7 +271,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="5" Command="{x:Static comand:MyCommands.BedienerBeabeiten}" Grid.ColumnSpan="2">
+                    <Button Grid.Column="2" Grid.Row="5" Command="{x:Static comand:MyCommands.BedienerBeabeiten}" Grid.ColumnSpan="2">
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>
@@ -367,11 +321,11 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Label Content="Bemerkung" Style="{StaticResource StyleLabel}"/>
-                        <TextBox Text="{Binding Bemerkung}" Style="{StaticResource StyleTextBox}" Grid.Row="1" TextWrapping="Wrap" Height="150"/>
+                        <Label Content="Bemerkung" />
+                        <TextBox Text="{Binding Bemerkung}" Grid.Row="1" TextWrapping="Wrap" Height="150"/>
                     </Grid>
 
-                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="3" Click="ButtonNeuerStandort_Click">
+                    <Button Grid.Column="2" Grid.Row="3" Click="ButtonNeuerStandort_Click">
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>
@@ -385,7 +339,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource StyleButton}" Grid.Column="2" Grid.Row="4" Command="{x:Static comand:MyCommands.StandortBearbeiten}">
+                    <Button Grid.Column="2" Grid.Row="4" Command="{x:Static comand:MyCommands.StandortBearbeiten}">
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>

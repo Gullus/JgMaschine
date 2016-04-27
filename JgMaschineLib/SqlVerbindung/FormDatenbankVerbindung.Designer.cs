@@ -41,7 +41,7 @@
       // 
       this.tableLayoutPanel1.ColumnCount = 2;
       this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
       this.tableLayoutPanel1.Controls.Add(this.pgConnectionString, 0, 0);
       this.tableLayoutPanel1.Controls.Add(this.btnTesten, 1, 1);
       this.tableLayoutPanel1.Controls.Add(this.btnEintragen, 1, 3);
@@ -67,7 +67,7 @@
       this.pgConnectionString.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
       this.pgConnectionString.Name = "pgConnectionString";
       this.tableLayoutPanel1.SetRowSpan(this.pgConnectionString, 5);
-      this.pgConnectionString.Size = new System.Drawing.Size(385, 526);
+      this.pgConnectionString.Size = new System.Drawing.Size(365, 526);
       this.pgConnectionString.TabIndex = 0;
       // 
       // btnTesten
@@ -75,12 +75,12 @@
       this.btnTesten.Dock = System.Windows.Forms.DockStyle.Fill;
       this.btnTesten.Image = ((System.Drawing.Image)(resources.GetObject("btnTesten.Image")));
       this.btnTesten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnTesten.Location = new System.Drawing.Point(403, 393);
+      this.btnTesten.Location = new System.Drawing.Point(383, 393);
       this.btnTesten.Name = "btnTesten";
       this.btnTesten.Padding = new System.Windows.Forms.Padding(5);
-      this.btnTesten.Size = new System.Drawing.Size(134, 35);
+      this.btnTesten.Size = new System.Drawing.Size(154, 35);
       this.btnTesten.TabIndex = 1;
-      this.btnTesten.Text = "&Verbindung testen";
+      this.btnTesten.Text = "  &Verbindung testen";
       this.btnTesten.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.btnTesten.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.btnTesten.UseVisualStyleBackColor = true;
@@ -91,12 +91,12 @@
       this.btnEintragen.Dock = System.Windows.Forms.DockStyle.Fill;
       this.btnEintragen.Image = ((System.Drawing.Image)(resources.GetObject("btnEintragen.Image")));
       this.btnEintragen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnEintragen.Location = new System.Drawing.Point(403, 454);
+      this.btnEintragen.Location = new System.Drawing.Point(383, 454);
       this.btnEintragen.Name = "btnEintragen";
       this.btnEintragen.Padding = new System.Windows.Forms.Padding(5);
-      this.btnEintragen.Size = new System.Drawing.Size(134, 35);
+      this.btnEintragen.Size = new System.Drawing.Size(154, 35);
       this.btnEintragen.TabIndex = 2;
-      this.btnEintragen.Text = "&Eintragen";
+      this.btnEintragen.Text = "  &Eintragen";
       this.btnEintragen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.btnEintragen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.btnEintragen.UseVisualStyleBackColor = true;
@@ -108,12 +108,12 @@
       this.btnAbbrechen.Dock = System.Windows.Forms.DockStyle.Fill;
       this.btnAbbrechen.Image = ((System.Drawing.Image)(resources.GetObject("btnAbbrechen.Image")));
       this.btnAbbrechen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnAbbrechen.Location = new System.Drawing.Point(403, 495);
+      this.btnAbbrechen.Location = new System.Drawing.Point(383, 495);
       this.btnAbbrechen.Name = "btnAbbrechen";
       this.btnAbbrechen.Padding = new System.Windows.Forms.Padding(5);
-      this.btnAbbrechen.Size = new System.Drawing.Size(134, 35);
+      this.btnAbbrechen.Size = new System.Drawing.Size(154, 35);
       this.btnAbbrechen.TabIndex = 3;
-      this.btnAbbrechen.Text = "&Abbrechen";
+      this.btnAbbrechen.Text = "  &Abbrechen";
       this.btnAbbrechen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.btnAbbrechen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.btnAbbrechen.UseVisualStyleBackColor = true;

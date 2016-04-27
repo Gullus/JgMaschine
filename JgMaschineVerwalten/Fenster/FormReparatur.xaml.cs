@@ -27,9 +27,9 @@ namespace JgMaschineVerwalten.Fenster
         _Reparatur = new JgMaschineData.tabReparatur()
         {
           Id = Guid.NewGuid(),
-          ReparaturVon = DateTime.Now,
-          ReparaturBis = DateTime.Now,
-          InBearbeitung = true
+          VorgangBeginn = DateTime.Now,
+          VorgangEnde = DateTime.Now,
+          IstAktiv = true
         };
       }
     }
@@ -43,15 +43,15 @@ namespace JgMaschineVerwalten.Fenster
       cmbProtokollant.ItemsSource = bediener;
 
       var dz = (JgDatumZeit)this.FindResource("dzReparaturVon");
-      dz.DatumZeit = _Reparatur.ReparaturVon;
+      dz.DatumZeit = _Reparatur.VorgangBeginn;
       dz.NeuerWert = (dat) =>
       {
-        _Reparatur.ReparaturVon = dat;
+        _Reparatur.VorgangBeginn = dat;
       };
 
       dz = (JgDatumZeit)this.FindResource("dzReparaturBis");
-      dz.DatumZeit = _Reparatur.ReparaturBis;
-      dz.NeuerWert = (dat) => { _Reparatur.ReparaturBis = dat; };
+      dz.DatumZeit = _Reparatur.VorgangEnde;
+      dz.NeuerWert = (dat) => { _Reparatur.VorgangEnde = dat; };
 
       gridReparatur.DataContext = _Reparatur;
     }

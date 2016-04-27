@@ -110,6 +110,19 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\JgMaschineData.JgModelContainer.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungMaschine.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabArbeitszeit.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAuswertung.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabBauteil.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabBediener.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabBedienerMetaData.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabMaschine.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabMaschineMetaData.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabProtokoll.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabProtokollMetaData.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabReparatur.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabStandort.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

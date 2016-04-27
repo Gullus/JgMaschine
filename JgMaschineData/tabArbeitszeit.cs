@@ -12,31 +12,28 @@ namespace JgMaschineData
     using System;
     using System.Collections.Generic;
     
-    public partial class tabAnmeldung
+    public partial class tabArbeitszeit
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tabAnmeldung()
+        public tabArbeitszeit()
         {
             this.ManuelleAnmeldung = true;
             this.ManuelleAbmeldung = true;
-            this.sUmmeldungen = new HashSet<tabAnmeldung>();
+            this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
-        public EnumVorgangAnmeldung Vorgang { get; set; }
         public System.DateTime Anmeldung { get; set; }
-        public Nullable<System.DateTime> Ummeldung { get; set; }
-        public Nullable<System.DateTime> Abmeldung { get; set; }
+        public System.DateTime Abmeldung { get; set; }
         public bool ManuelleAnmeldung { get; set; }
         public bool ManuelleAbmeldung { get; set; }
+        public bool IstAktiv { get; set; }
         public System.Guid fBediener { get; set; }
-        public System.Guid fMaschine { get; set; }
-        public Nullable<System.Guid> fUmmeldung { get; set; }
+        public System.Guid fStandort { get; set; }
     
-        public virtual tabMaschine eMaschine { get; set; }
+        public DatenAbgleich DatenAbgleich { get; set; }
+    
         public virtual tabBediener eBediener { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabAnmeldung> sUmmeldungen { get; set; }
-        public virtual tabAnmeldung eUmmeldungZuAnmeldung { get; set; }
+        public virtual tabStandort eStandort { get; set; }
     }
 }

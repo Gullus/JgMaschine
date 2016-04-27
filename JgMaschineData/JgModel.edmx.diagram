@@ -5,24 +5,28 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1f8757055d2a477f966ead49ef7f3c84" Name="JgDiagramm" ZoomLevel="100" DisplayType="true" >
-        <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.5" PointX="5.875" PointY="6.25" />
-        <EntityTypeShape EntityType="JgModel.tabBediener" Width="2.5" PointX="5.875" PointY="10.875" />
-        <EntityTypeShape EntityType="JgModel.tabDaten" Width="2.5" PointX="9.125" PointY="4.75" />
+        <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.375" PointX="5.875" PointY="7.125" />
+        <EntityTypeShape EntityType="JgModel.tabBediener" Width="8.125" PointX="5.875" PointY="12.75" />
+        <EntityTypeShape EntityType="JgModel.tabBauteil" Width="4.875" PointX="6.75" PointY="1.75" />
         <AssociationConnector Association="JgModel.tabMaschinetabDaten" />
-        <EntityTypeShape EntityType="JgModel.tabAnmeldung" Width="2.5" PointX="9.125" PointY="9.5" />
+        <EntityTypeShape EntityType="JgModel.tabAnmeldungMaschine" Width="2" PointX="8.875" PointY="8.625" />
         <AssociationConnector Association="JgModel.tabMaschinetabAnmeldung" />
         <AssociationConnector Association="JgModel.tabBedienertabAnmeldung" />
-        <EntityTypeShape EntityType="JgModel.tabProtokoll" Width="2.5" PointX="2.5" PointY="4.875" />
-        <EntityTypeShape EntityType="JgModel.tabReparatur" Width="2.5" PointX="2.5" PointY="8.75" />
+        <EntityTypeShape EntityType="JgModel.tabProtokoll" Width="2.5" PointX="2.5" PointY="6.375" />
+        <EntityTypeShape EntityType="JgModel.tabReparatur" Width="2.5" PointX="2.5" PointY="10.625" />
         <AssociationConnector Association="JgModel.tabBedienertabReparatur" />
         <AssociationConnector Association="JgModel.tabBedienertabReparatur1" />
         <AssociationConnector Association="JgModel.tabMaschinetabReparatur" ManuallyRouted="false" >
         </AssociationConnector>
         <AssociationConnector Association="JgModel.tabMaschinetabProtokoll" />
-        <EntityTypeShape EntityType="JgModel.tabStandort" Width="2.625" PointX="5.875" PointY="3.75" />
+        <EntityTypeShape EntityType="JgModel.tabStandort" Width="1.875" PointX="12.125" PointY="6.125" />
         <AssociationConnector Association="JgModel.tabStandorttabMaschine" />
-        <EntityTypeShape EntityType="JgModel.tabAuswertung" Width="2.5" PointX="2.5" PointY="12.375" />
-        <AssociationConnector Association="JgModel.tabAnmeldungtabAnmeldung" />
+        <EntityTypeShape EntityType="JgModel.tabAuswertung" Width="2.5" PointX="3.375" PointY="2.875" />
+        <EntityTypeShape EntityType="JgModel.tabArbeitszeit" Width="1.875" PointX="12.125" PointY="9" />
+        <AssociationConnector Association="JgModel.tabBedienertabArbeitszeit" />
+        <AssociationConnector Association="JgModel.tabBauteiltabBediener" />
+        <AssociationConnector Association="JgModel.tabMaschinetabBediener" />
+        <AssociationConnector Association="JgModel.tabStandorttabArbeitszeit1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

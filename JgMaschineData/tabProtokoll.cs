@@ -22,6 +22,7 @@ namespace JgMaschineData
             this.FehlerPfadZurMaschine = 0;
             this.FehlerDatenImport = 0;
             this.FehlerDatenSpeichern = 0;
+            this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
@@ -36,6 +37,8 @@ namespace JgMaschineData
         public int FehlerPfadZurMaschine { get; set; }
         public int FehlerDatenImport { get; set; }
         public int FehlerDatenSpeichern { get; set; }
+    
+        public DatenAbgleich DatenAbgleich { get; set; }
     
         public virtual tabMaschine eMaschine { get; set; }
     }

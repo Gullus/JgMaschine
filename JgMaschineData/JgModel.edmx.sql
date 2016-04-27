@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/21/2016 16:24:09
+-- Date Created: 04/26/2016 11:45:41
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -18,13 +18,13 @@ GO
 -- --------------------------------------------------
 
 IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabDaten]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[tabDatenSet] DROP CONSTRAINT [FK_tabMaschinetabDaten];
+    ALTER TABLE [dbo].[tabBauteilSet] DROP CONSTRAINT [FK_tabMaschinetabDaten];
 GO
 IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabAnmeldung]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[tabAnmeldungSet] DROP CONSTRAINT [FK_tabMaschinetabAnmeldung];
+    ALTER TABLE [dbo].[tabAnmeldungMaschineSet] DROP CONSTRAINT [FK_tabMaschinetabAnmeldung];
 GO
 IF OBJECT_ID(N'[dbo].[FK_tabBedienertabAnmeldung]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[tabAnmeldungSet] DROP CONSTRAINT [FK_tabBedienertabAnmeldung];
+    ALTER TABLE [dbo].[tabAnmeldungMaschineSet] DROP CONSTRAINT [FK_tabBedienertabAnmeldung];
 GO
 IF OBJECT_ID(N'[dbo].[FK_tabBedienertabReparatur]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabReparaturSet] DROP CONSTRAINT [FK_tabBedienertabReparatur];
@@ -41,8 +41,20 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_tabStandorttabMaschine]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabMaschineSet] DROP CONSTRAINT [FK_tabStandorttabMaschine];
 GO
-IF OBJECT_ID(N'[dbo].[FK_tabAnmeldungtabAnmeldung]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[tabAnmeldungSet] DROP CONSTRAINT [FK_tabAnmeldungtabAnmeldung];
+IF OBJECT_ID(N'[dbo].[FK_tabBedienertabArbeitszeit]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabArbeitszeitSet] DROP CONSTRAINT [FK_tabBedienertabArbeitszeit];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabBauteiltabBediener_tabBauteil]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabBauteiltabBediener] DROP CONSTRAINT [FK_tabBauteiltabBediener_tabBauteil];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabBauteiltabBediener_tabBediener]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabBauteiltabBediener] DROP CONSTRAINT [FK_tabBauteiltabBediener_tabBediener];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabBediener]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabBedienerSet] DROP CONSTRAINT [FK_tabMaschinetabBediener];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitszeit1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabArbeitszeitSet] DROP CONSTRAINT [FK_tabStandorttabArbeitszeit1];
 GO
 
 -- --------------------------------------------------
@@ -55,11 +67,11 @@ GO
 IF OBJECT_ID(N'[dbo].[tabBedienerSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabBedienerSet];
 GO
-IF OBJECT_ID(N'[dbo].[tabDatenSet]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[tabDatenSet];
+IF OBJECT_ID(N'[dbo].[tabBauteilSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabBauteilSet];
 GO
-IF OBJECT_ID(N'[dbo].[tabAnmeldungSet]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[tabAnmeldungSet];
+IF OBJECT_ID(N'[dbo].[tabAnmeldungMaschineSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabAnmeldungMaschineSet];
 GO
 IF OBJECT_ID(N'[dbo].[tabProtokollSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabProtokollSet];
@@ -72,6 +84,12 @@ IF OBJECT_ID(N'[dbo].[tabStandortSet]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[tabAuswertungSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabAuswertungSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabArbeitszeitSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabArbeitszeitSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabBauteiltabBediener]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabBauteiltabBediener];
 GO
 
 -- --------------------------------------------------
@@ -91,6 +109,9 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [Bemerkung] nvarchar(max)  NULL,
     [Status] tinyint  NOT NULL,
     [VorgabeProStunde] decimal(8,3)  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL
 );
 GO
@@ -103,12 +124,15 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [Bemerkung] nvarchar(max)  NULL,
     [MatchCode] nvarchar(120)  NULL,
     [Status] tinyint  NOT NULL,
-    [fAktuelleMaschine] uniqueidentifier  NULL
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [fAktuellAngemeldet] uniqueidentifier  NULL
 );
 GO
 
--- Creating table 'tabDatenSet'
-CREATE TABLE [dbo].[tabDatenSet] (
+-- Creating table 'tabBauteilSet'
+CREATE TABLE [dbo].[tabBauteilSet] (
     [Id] uniqueidentifier  NOT NULL,
     [DatumStart] datetime  NOT NULL,
     [DatumEnde] datetime  NOT NULL,
@@ -124,22 +148,26 @@ CREATE TABLE [dbo].[tabDatenSet] (
     [NummerPosition] nvarchar(10)  NULL,
     [Buegelname] nvarchar(120)  NULL,
     [IstHandeingabe] bit  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL
 );
 GO
 
--- Creating table 'tabAnmeldungSet'
-CREATE TABLE [dbo].[tabAnmeldungSet] (
+-- Creating table 'tabAnmeldungMaschineSet'
+CREATE TABLE [dbo].[tabAnmeldungMaschineSet] (
     [Id] uniqueidentifier  NOT NULL,
-    [Vorgang] tinyint  NOT NULL,
     [Anmeldung] datetime  NOT NULL,
-    [Ummeldung] datetime  NULL,
     [Abmeldung] datetime  NULL,
     [ManuelleAnmeldung] bit  NOT NULL,
     [ManuelleAbmeldung] bit  NOT NULL,
+    [IstAktiv] bit  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
-    [fMaschine] uniqueidentifier  NOT NULL,
-    [fUmmeldung] uniqueidentifier  NULL
+    [fMaschine] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -156,21 +184,27 @@ CREATE TABLE [dbo].[tabProtokollSet] (
     [FehlerVerbindungMaschine] int  NOT NULL,
     [FehlerPfadZurMaschine] int  NOT NULL,
     [FehlerDatenImport] int  NOT NULL,
-    [FehlerDatenSpeichern] int  NOT NULL
+    [FehlerDatenSpeichern] int  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'tabReparaturSet'
 CREATE TABLE [dbo].[tabReparaturSet] (
     [Id] uniqueidentifier  NOT NULL,
+    [VorgangBeginn] datetime  NOT NULL,
+    [VorgangEnde] datetime  NOT NULL,
     [ProtokollText] nvarchar(max)  NULL,
     [Ereigniss] tinyint  NOT NULL,
-    [ReparaturVon] datetime  NOT NULL,
-    [ReparaturBis] datetime  NOT NULL,
+    [IstAktiv] bit  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL,
-    [fVerursacher] uniqueidentifier  NOT NULL,
-    [fProtokollant] uniqueidentifier  NOT NULL,
-    [InBearbeitung] bit  NOT NULL
+    [fVerursacher] uniqueidentifier  NULL,
+    [fProtokollant] uniqueidentifier  NULL
 );
 GO
 
@@ -178,7 +212,10 @@ GO
 CREATE TABLE [dbo].[tabStandortSet] (
     [Id] uniqueidentifier  NOT NULL,
     [Bezeichnung] nvarchar(120)  NOT NULL,
-    [Bemerkung] nvarchar(120)  NULL
+    [Bemerkung] nvarchar(120)  NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -191,7 +228,33 @@ CREATE TABLE [dbo].[tabAuswertungSet] (
     [GeaendertName] nvarchar(120)  NOT NULL,
     [GeaendertDatum] datetime  NOT NULL,
     [Report] varbinary(max)  NULL,
-    [Bemerkung] nvarchar(max)  NULL
+    [Bemerkung] nvarchar(max)  NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'tabArbeitszeitSet'
+CREATE TABLE [dbo].[tabArbeitszeitSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Anmeldung] datetime  NOT NULL,
+    [Abmeldung] datetime  NOT NULL,
+    [ManuelleAnmeldung] bit  NOT NULL,
+    [ManuelleAbmeldung] bit  NOT NULL,
+    [IstAktiv] bit  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [fBediener] uniqueidentifier  NOT NULL,
+    [fStandort] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'tabBauteiltabBediener'
+CREATE TABLE [dbo].[tabBauteiltabBediener] (
+    [sBauteile_Id] uniqueidentifier  NOT NULL,
+    [sBediener_Id] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -211,15 +274,15 @@ ADD CONSTRAINT [PK_tabBedienerSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'tabDatenSet'
-ALTER TABLE [dbo].[tabDatenSet]
-ADD CONSTRAINT [PK_tabDatenSet]
+-- Creating primary key on [Id] in table 'tabBauteilSet'
+ALTER TABLE [dbo].[tabBauteilSet]
+ADD CONSTRAINT [PK_tabBauteilSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'tabAnmeldungSet'
-ALTER TABLE [dbo].[tabAnmeldungSet]
-ADD CONSTRAINT [PK_tabAnmeldungSet]
+-- Creating primary key on [Id] in table 'tabAnmeldungMaschineSet'
+ALTER TABLE [dbo].[tabAnmeldungMaschineSet]
+ADD CONSTRAINT [PK_tabAnmeldungMaschineSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -247,12 +310,24 @@ ADD CONSTRAINT [PK_tabAuswertungSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
+-- Creating primary key on [Id] in table 'tabArbeitszeitSet'
+ALTER TABLE [dbo].[tabArbeitszeitSet]
+ADD CONSTRAINT [PK_tabArbeitszeitSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [sBauteile_Id], [sBediener_Id] in table 'tabBauteiltabBediener'
+ALTER TABLE [dbo].[tabBauteiltabBediener]
+ADD CONSTRAINT [PK_tabBauteiltabBediener]
+    PRIMARY KEY CLUSTERED ([sBauteile_Id], [sBediener_Id] ASC);
+GO
+
 -- --------------------------------------------------
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [fMaschine] in table 'tabDatenSet'
-ALTER TABLE [dbo].[tabDatenSet]
+-- Creating foreign key on [fMaschine] in table 'tabBauteilSet'
+ALTER TABLE [dbo].[tabBauteilSet]
 ADD CONSTRAINT [FK_tabMaschinetabDaten]
     FOREIGN KEY ([fMaschine])
     REFERENCES [dbo].[tabMaschineSet]
@@ -262,12 +337,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_tabMaschinetabDaten'
 CREATE INDEX [IX_FK_tabMaschinetabDaten]
-ON [dbo].[tabDatenSet]
+ON [dbo].[tabBauteilSet]
     ([fMaschine]);
 GO
 
--- Creating foreign key on [fMaschine] in table 'tabAnmeldungSet'
-ALTER TABLE [dbo].[tabAnmeldungSet]
+-- Creating foreign key on [fMaschine] in table 'tabAnmeldungMaschineSet'
+ALTER TABLE [dbo].[tabAnmeldungMaschineSet]
 ADD CONSTRAINT [FK_tabMaschinetabAnmeldung]
     FOREIGN KEY ([fMaschine])
     REFERENCES [dbo].[tabMaschineSet]
@@ -277,12 +352,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_tabMaschinetabAnmeldung'
 CREATE INDEX [IX_FK_tabMaschinetabAnmeldung]
-ON [dbo].[tabAnmeldungSet]
+ON [dbo].[tabAnmeldungMaschineSet]
     ([fMaschine]);
 GO
 
--- Creating foreign key on [fBediener] in table 'tabAnmeldungSet'
-ALTER TABLE [dbo].[tabAnmeldungSet]
+-- Creating foreign key on [fBediener] in table 'tabAnmeldungMaschineSet'
+ALTER TABLE [dbo].[tabAnmeldungMaschineSet]
 ADD CONSTRAINT [FK_tabBedienertabAnmeldung]
     FOREIGN KEY ([fBediener])
     REFERENCES [dbo].[tabBedienerSet]
@@ -292,7 +367,7 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_tabBedienertabAnmeldung'
 CREATE INDEX [IX_FK_tabBedienertabAnmeldung]
-ON [dbo].[tabAnmeldungSet]
+ON [dbo].[tabAnmeldungMaschineSet]
     ([fBediener]);
 GO
 
@@ -365,19 +440,73 @@ ON [dbo].[tabMaschineSet]
     ([fStandort]);
 GO
 
--- Creating foreign key on [fUmmeldung] in table 'tabAnmeldungSet'
-ALTER TABLE [dbo].[tabAnmeldungSet]
-ADD CONSTRAINT [FK_tabAnmeldungtabAnmeldung]
-    FOREIGN KEY ([fUmmeldung])
-    REFERENCES [dbo].[tabAnmeldungSet]
+-- Creating foreign key on [fBediener] in table 'tabArbeitszeitSet'
+ALTER TABLE [dbo].[tabArbeitszeitSet]
+ADD CONSTRAINT [FK_tabBedienertabArbeitszeit]
+    FOREIGN KEY ([fBediener])
+    REFERENCES [dbo].[tabBedienerSet]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_tabAnmeldungtabAnmeldung'
-CREATE INDEX [IX_FK_tabAnmeldungtabAnmeldung]
-ON [dbo].[tabAnmeldungSet]
-    ([fUmmeldung]);
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabBedienertabArbeitszeit'
+CREATE INDEX [IX_FK_tabBedienertabArbeitszeit]
+ON [dbo].[tabArbeitszeitSet]
+    ([fBediener]);
+GO
+
+-- Creating foreign key on [sBauteile_Id] in table 'tabBauteiltabBediener'
+ALTER TABLE [dbo].[tabBauteiltabBediener]
+ADD CONSTRAINT [FK_tabBauteiltabBediener_tabBauteil]
+    FOREIGN KEY ([sBauteile_Id])
+    REFERENCES [dbo].[tabBauteilSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [sBediener_Id] in table 'tabBauteiltabBediener'
+ALTER TABLE [dbo].[tabBauteiltabBediener]
+ADD CONSTRAINT [FK_tabBauteiltabBediener_tabBediener]
+    FOREIGN KEY ([sBediener_Id])
+    REFERENCES [dbo].[tabBedienerSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabBauteiltabBediener_tabBediener'
+CREATE INDEX [IX_FK_tabBauteiltabBediener_tabBediener]
+ON [dbo].[tabBauteiltabBediener]
+    ([sBediener_Id]);
+GO
+
+-- Creating foreign key on [fAktuellAngemeldet] in table 'tabBedienerSet'
+ALTER TABLE [dbo].[tabBedienerSet]
+ADD CONSTRAINT [FK_tabMaschinetabBediener]
+    FOREIGN KEY ([fAktuellAngemeldet])
+    REFERENCES [dbo].[tabMaschineSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabMaschinetabBediener'
+CREATE INDEX [IX_FK_tabMaschinetabBediener]
+ON [dbo].[tabBedienerSet]
+    ([fAktuellAngemeldet]);
+GO
+
+-- Creating foreign key on [fStandort] in table 'tabArbeitszeitSet'
+ALTER TABLE [dbo].[tabArbeitszeitSet]
+ADD CONSTRAINT [FK_tabStandorttabArbeitszeit1]
+    FOREIGN KEY ([fStandort])
+    REFERENCES [dbo].[tabStandortSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabStandorttabArbeitszeit1'
+CREATE INDEX [IX_FK_tabStandorttabArbeitszeit1]
+ON [dbo].[tabArbeitszeitSet]
+    ([fStandort]);
 GO
 
 -- --------------------------------------------------

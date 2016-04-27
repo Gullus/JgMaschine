@@ -12,10 +12,10 @@ namespace JgMaschineData
     using System;
     using System.Collections.Generic;
     
-    public partial class tabDaten
+    public partial class tabBauteil
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tabDaten()
+        public tabBauteil()
         {
             this.IdStahlPosition = -1;
             this.IdStahlBauteil = -1;
@@ -23,6 +23,8 @@ namespace JgMaschineData
             this.BtLaenge = -1;
             this.BtGewicht = -1;
             this.BtDurchmesser = -1;
+            this.sBediener = new HashSet<tabBediener>();
+            this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
@@ -42,6 +44,10 @@ namespace JgMaschineData
         public bool IstHandeingabe { get; set; }
         public System.Guid fMaschine { get; set; }
     
+        public DatenAbgleich DatenAbgleich { get; set; }
+    
         public virtual tabMaschine eMaschine { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabBediener> sBediener { get; set; }
     }
 }

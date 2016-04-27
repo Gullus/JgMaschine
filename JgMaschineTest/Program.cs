@@ -18,12 +18,24 @@ namespace JgMaschineTest
 
       using (var db = new JgModelContainer())
       {
-        var ma = db.tabMaschineSet.FirstOrDefault();
-        Console.WriteLine(ma.MaschinenName);
+        Console.WriteLine(Convert.ToChar(13));
+       
       }
 
       Console.WriteLine("Fertsch");
       Console.ReadKey();
+    }
+
+    private static void AddDs<T>(T Datensatz)
+      where T : class
+    {
+      using (var db = new JgModelContainer())
+      {
+        var g = db.Set<T>();
+        var jj = db.Entry<T>(Datensatz);
+        g.Add(jj.Entity);
+        db.SaveChanges();
+      }
     }
 
 
