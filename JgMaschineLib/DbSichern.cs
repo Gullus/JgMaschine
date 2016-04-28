@@ -28,6 +28,8 @@ namespace JgMaschineLib
       abgl.CurrentValue.Status = Status;
       abgl.CurrentValue.Bearbeiter = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 
+      var fehler = ds.GetValidationResult();
+
       if (Status == JgMaschineData.EnumStatusDatenabgleich.Neu)
         ent.Add(ds.Entity);
 

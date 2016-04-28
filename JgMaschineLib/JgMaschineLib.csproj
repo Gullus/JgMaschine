@@ -80,6 +80,9 @@
     <Compile Include="TcpIpKomponenten\TcpIpServer.cs" />
     <Compile Include="TcpIpKomponenten\TcpIpStamm.cs" />
     <Compile Include="Zeit\DatumZeit.cs" />
+    <Compile Include="Zeit\FormAuswahlDatumVonBis.xaml.cs">
+      <DependentUpon>FormAuswahlDatumVonBis.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Zeit\FormAuswahlDatumZeit.xaml.cs">
       <DependentUpon>FormAuswahlDatumZeit.xaml</DependentUpon>
     </Compile>
@@ -130,6 +133,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Zeit\FormAuswahlDatumVonBis.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Zeit\FormAuswahlDatumZeit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,8 +1,7 @@
 ﻿using JgMaschineLib.DataLogicScanner;
 using System;
 using System.Linq;
-using System.Data.Entity;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace JgMaschineScanner
 {
@@ -18,14 +17,17 @@ namespace JgMaschineScanner
 
   public class ScannerTest
   {
+    private JgMaschineData.JgModelContainer _Db;
+    private Scanner.VorgangProgram[] _IstStart = { Scanner.VorgangProgram.WARTSTART, Scanner.VorgangProgram.REPASTART, Scanner.VorgangProgram.COILSTART };
+
     public void Start()
     {
       string adresse = "192.168.1.59";
       int port = 51000;
-      using (var db = new JgMaschineData.JgModelContainer())
-      {
-        db.tabStandortSet.FirstOrDefault();
-      }
+
+      _Db = new JgMaschineData.JgModelContainer();
+      _Db.tabStandortSet.FirstOrDefault();
+
       Scanner sc = new Scanner(adresse, port, ScannerCommunication, true);
     }
 
@@ -39,17 +41,35 @@ namespace JgMaschineScanner
       return maschine;
     }
 
-    private async void ScannerCommunication(ScannerText e)
+    private void ScannerCommunication(ScannerText e)
     {
-      switch (e.VorgangScan)
+      #region Sannertext in Datei eintragen
+
+      //var dat = (@"C:\Users\jg\Desktop\ScannerBeispiele.txt");
+      //using (StreamWriter sw = File.AppendText(dat))
+      //{
+      //  sw.WriteLine(e.TextEmpfangen);
+      //}
+
+      #endregion
+
+      var maschine = SucheMaschine(_Db, e);
+
+      if (maschine != null)
       {
-        case Scanner.VorgangScanner.BF2D:
-          using (var db = new JgMaschineData.JgModelContainer())
-          {
-            var maschine = SucheMaschine(db, e);
-            if (maschine != null)
+
+        switch (e.VorgangScan)
+        {
+          case Scanner.VorgangScanner.BF2D:
+
+            if (maschine.sAktuelleBediener.FirstOrDefault() == null)
+              e.FehlerAusgabe(" ", "Es sind keine Bediener", "angemeldet !");
+            else
             {
+              e.SendeText(" ", "  - Bauteil O K -");
+
               var bauteil = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
+
               Console.WriteLine("Maschine: {0}", maschine.MaschinenName);
               Console.WriteLine("Project:  {0}  Anzahl: {1} Gewicht: {2}", bauteil.ProjektNummer, bauteil.Anzahl, bauteil.Gewicht * 1000);
               Console.WriteLine();
@@ -69,149 +89,160 @@ namespace JgMaschineScanner
                 IdStahlPosition = 1,
                 IdStahlBauteil = 1,
 
-                DatumEnde = DateTime.Now,
-                DatumStart = DateTime.Now
+                DatumStart = DateTime.Now,
+                DatumEnde = DateTime.Now
               };
-              db.tabBauteilSet.Add(datensatz);
 
-              e.SendeText(" ", "  - Bauteil O K -");
-
-              await db.SaveChangesAsync();
+              JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabBauteil>(_Db, datensatz, JgMaschineData.EnumStatusDatenabgleich.Neu);
             }
-          }
-          break;
+            break;
+          case Scanner.VorgangScanner.MITA:
 
-        case Scanner.VorgangScanner.MITA:
-          using (var db = new JgMaschineData.JgModelContainer())
-          {
-            var maschine = SucheMaschine(db, e);
-            if (maschine != null)
+            var mitarb = _Db.tabBedienerSet.Find(Guid.Parse(e.ScannerKoerper));
+            if (mitarb == null)
+              e.FehlerAusgabe("Mitarbeiter falsch!", " ", "MA: " + maschine.MaschinenName);
+            else
             {
-              var mitarb = db.tabBedienerSet.Find(Guid.Parse(e.ScannerKoerper));
-              if (mitarb == null)
-                e.FehlerAusgabe("Mitarbeiter falsch!", "Scanner: " + e.ScannerKennung, "hhhh asdasdasasd 23967");
-              else
+              if (e.VorgangProgramm == Scanner.VorgangProgram.ANMELDUNG)
               {
-                Console.WriteLine("Vorgang:     {0}", e.VorgangProgramm);
-                Console.WriteLine("Maschine:    {0}", maschine.MaschinenName);
-                Console.WriteLine("Mitarbeiter: {0} {1}", mitarb.VorName, mitarb.NachName);
-                Console.WriteLine();
+                bool anmeldungErstellen = true;
+                if (mitarb.fAktuellAngemeldet != null)
+                {
+                  if (mitarb.fAktuellAngemeldet == maschine.Id)
+                  {
+                    e.FehlerAusgabe("Sie sind bereits an", "MA: " + maschine.MaschinenName, "angemeldet !");
+                    anmeldungErstellen = false;
+                  }
+                  else
+                  {
+                    var anmeldung = _Db.tabAnmeldungMaschineSet.FirstOrDefault(f => (f.fMaschine == mitarb.fAktuellAngemeldet) && (f.fBediener == mitarb.Id) && f.IstAktiv);
+                    if (anmeldung != null)
+                    {
+                      anmeldung.Abmeldung = DateTime.Now;
+                      anmeldung.ManuelleAbmeldung = false;
+                      anmeldung.IstAktiv = false;
 
-                string anzeige = "- A N M E L D U N G -";
-                if (e.VorgangProgramm == Scanner.VorgangProgram.ABMELDUNG)
-                  anzeige = "- A B M E L D U N G -";
-                e.SendeText(" ", anzeige, string.Format("{0}", maschine.MaschinenName), string.Format("{0} {1}", mitarb.VorName, mitarb.NachName));
+                      // speichervorgang muss vor nächster Speicherung abgeschlossen sein.
+
+                      JgMaschineLib.DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+                      _Db.SaveChanges();
+                    }
+                  }
+                }
+
+                if (anmeldungErstellen)
+                {
+                  e.SendeText(" ", "- A N M E L D U N G -", string.Format("{0}", maschine.MaschinenName), mitarb.Name);
+
+                  mitarb.eAktuelleAnmeldungMaschine = maschine;
+
+                  var anmeldung = new JgMaschineData.tabAnmeldungMaschine()
+                  {
+                    Id = Guid.NewGuid(),
+                    Anmeldung = DateTime.Now,
+                    eBediener = mitarb,
+                    eMaschine = maschine,
+                    IstAktiv = true,
+                    ManuelleAnmeldung = false,
+                    Abmeldung = DateTime.Now,
+                    ManuelleAbmeldung = false
+                  };
+
+                  JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Neu);
+                }
               }
-            }
-          }
-          break;
-        case Scanner.VorgangScanner.PROG:
-          using (var db = new JgMaschineData.JgModelContainer())
-          {
-            var maschine = SucheMaschine(db, e);
+              else // Abmeldung
+              {
+                if (mitarb.eAktuelleAnmeldungMaschine == null)
+                  e.FehlerAusgabe(" ", "Sie sind an keiner", "Maschine angemeldet !");
+                else
+                {
+                  e.SendeText(" ", "- A B M E L D U N G -", " ", mitarb.Name,  "MA: " + maschine.MaschinenName);
 
-            if (maschine != null)
+                  mitarb.eAktuelleAnmeldungMaschine = null;
+
+                  var anmeldung = _Db.tabAnmeldungMaschineSet.FirstOrDefault(f => (f.fMaschine == maschine.Id) && (f.fBediener == mitarb.Id) && f.IstAktiv);
+                  if (anmeldung != null)
+                  {
+                    anmeldung.Abmeldung = DateTime.Now;
+                    anmeldung.ManuelleAbmeldung = false;
+                    anmeldung.IstAktiv = false;
+
+                    JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+                  }
+                }
+              }
+              Console.WriteLine("Vorgang:     {0}", e.VorgangProgramm);
+              Console.WriteLine("Maschine:    {0}", maschine.MaschinenName);
+              Console.WriteLine("Mitarbeiter: {0} {1}", mitarb.VorName, mitarb.NachName);
+              Console.WriteLine();
+            }
+
+            break;
+          case Scanner.VorgangScanner.PROG:
+            if (_IstStart.Contains(e.VorgangProgramm))
             {
-              JgMaschineData.tabReparatur reparatur = null;
+              var ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur;
 
               switch (e.VorgangProgramm)
               {
-                case Scanner.VorgangProgram.ABMELDUNG:
-                  Console.WriteLine("Abmelung von Maschine {0}", maschine.MaschinenName);
-                  break;
-
-                case Scanner.VorgangProgram.WARTSTART:
-                  Console.WriteLine("Wartung Start");
-
-                  reparatur = new JgMaschineData.tabReparatur()
-                  {
-                    Id = Guid.NewGuid(),
-                    eMaschine = maschine,
-                    IstAktiv = true,
-                    VorgangBeginn = DateTime.Now,
-                    VorgangEnde = DateTime.Now,
-                    Ereigniss = JgMaschineData.EnumReperaturEreigniss.Wartung
-                  };
-                  JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
-
-                  break;
-                case Scanner.VorgangProgram.WART_ENDE:
-                  Console.WriteLine("Wartung Ende");
-
-                  reparatur = maschine.sReparaturen.FirstOrDefault(f => f.IstAktiv && (f.Ereigniss == JgMaschineData.EnumReperaturEreigniss.Wartung));
-                  if (reparatur != null)
-                  {
-                    reparatur.IstAktiv = false;
-                    reparatur.VorgangEnde = DateTime.Now;
-                  };
-                  JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
-                  break;
-
-                case Scanner.VorgangProgram.COILSTART:
-                  Console.WriteLine("Coilwechsel Start");
-
-                  reparatur = new JgMaschineData.tabReparatur()
-                  {
-                    Id = Guid.NewGuid(),
-                    eMaschine = maschine,
-                    IstAktiv = true,
-                    VorgangBeginn = DateTime.Now,
-                    VorgangEnde = DateTime.Now,
-                    Ereigniss = JgMaschineData.EnumReperaturEreigniss.Coilwechsel
-                  };
-                  JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
-
-                  break;
-                case Scanner.VorgangProgram.COIL_ENDE:
-                  Console.WriteLine("Coilwechsel Ende");
-
-                  reparatur = maschine.sReparaturen.FirstOrDefault(f => f.IstAktiv && (f.Ereigniss == JgMaschineData.EnumReperaturEreigniss.Coilwechsel));
-                  if (reparatur != null)
-                  {
-                    reparatur.IstAktiv = false;
-                    reparatur.VorgangEnde = DateTime.Now;
-                  };
-                  JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
-                  break;
-                  
-                case Scanner.VorgangProgram.REPASTART:
-                  Console.WriteLine("Reparatur Start");
-
-                  //reparatur = new JgMaschineData.tabReparatur()
-                  //{
-                  //  Id = Guid.NewGuid(),
-                  //  eMaschine = maschine,
-                  //  InBearbeitung = true,
-                  //  ReparaturVon = DateTime.Now,
-                  //  Ereigniss = JgMaschineData.EnumReperaturEreigniss.Reparatur
-                  //};
-                  //db.tabReparaturSet.Add(reparatur);
-
-                  break;
-                case Scanner.VorgangProgram.REPA_ENDE:
-                  Console.WriteLine("Reparatur Ende");
-
-                  //reparatur = maschine.sReparaturen.FirstOrDefault(f => f.InBearbeitung && (f.Ereigniss == JgMaschineData.EnumReperaturEreigniss.Reparatur));
-                  //if (reparatur != null)
-                  //{
-                  //  reparatur.InBearbeitung = false;
-                  //  reparatur.ReparaturBis = DateTime.Now;
-                  //};
-
-                  break;
-                default:
-                  break;
+                case Scanner.VorgangProgram.REPASTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
+                case Scanner.VorgangProgram.WARTSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
+                case Scanner.VorgangProgram.COILSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
               }
 
-              //await db.SaveChangesAsync();
+              var reparatur = _Db.tabReparaturSet.FirstOrDefault(f => (f.fMaschine == maschine.Id) && f.IstAktiv && (f.Ereigniss == ereignis));
 
-              break;
+              if (reparatur != null)
+                e.FehlerAusgabe("Vorgang: ", string.Format("- {0} -", ereignis), "bereits angemeldet !");
+              else
+              {
+                e.SendeText("Beginn Vorgang: ", string.Format("- {0} -", ereignis), "MA: " + maschine.MaschinenName);
+
+                reparatur = new JgMaschineData.tabReparatur()
+                {
+                  Id = Guid.NewGuid(),
+                  eMaschine = maschine,
+                  IstAktiv = true,
+                  VorgangBeginn = DateTime.Now,
+                  VorgangEnde = DateTime.Now,
+                  Ereigniss = ereignis
+                };
+
+                JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
+              }
             }
-          }
-          break;
+            else
+            {
+              var ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur;
 
-        default: // Fehler
-          break;
+              switch (e.VorgangProgramm)
+              {
+                case Scanner.VorgangProgram.REPA_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
+                case Scanner.VorgangProgram.WART_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
+                case Scanner.VorgangProgram.COIL_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
+              }
+
+              var reparatur = maschine.sReparaturen.FirstOrDefault(f => f.IstAktiv && (f.Ereigniss == ereignis));
+              if (reparatur == null)
+              {
+                e.FehlerAusgabe("Kein Vorgang", string.Format("- {0} -", ereignis), "angemeldet !");
+              }
+              else
+              {
+                e.SendeText("Vorgang beendet: ", string.Format("- {0} -", ereignis), "MA: " + maschine.MaschinenName);
+
+                reparatur.IstAktiv = false;
+                reparatur.VorgangEnde = DateTime.Now;
+
+                JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+              };
+            }
+            break;
+
+          default: // Fehler
+            break;
+        }
       }
 
       Console.WriteLine();

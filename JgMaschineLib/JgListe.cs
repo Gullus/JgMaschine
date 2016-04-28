@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Windows;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -16,21 +18,69 @@ namespace JgMaschineLib
     private CollectionViewSource _ViewSource;
     private JgMaschineData.JgModelContainer _Db;
 
-    public bool IsEmpty { get { return this.Count == 0; } }
+    private IQueryable<T> _MyQuery = null;
+    public IQueryable<T> MyQuery
+    {
+      get { return _MyQuery; }
+      set
+      {
+        _MyQuery = value;
+        DatenGenerieren();
+      }
+    }
 
+    public bool IsEmpty { get { return this.Count == 0; } }
     public T AktDatensatz { get { return (T)_ViewSource.View.CurrentItem; } }
 
-    public JgListe(JgMaschineData.JgModelContainer Db, IEnumerable<T> Items, CollectionViewSource MeineViewSource, params DataGrid[] MeineTabellen)
+    public JgListe(JgMaschineData.JgModelContainer Db, IQueryable<T> MyQuery, CollectionViewSource MyViewSource, params DataGrid[] MyTabels)
+    {
+      _Db = Db;
+      _MyQuery = MyQuery;
+      _ViewSource = MyViewSource;
+      _ListeTabellen = MyTabels;
+    }
+
+    public async Task<int> Init()
+    {
+      await DatenGenerierenAsync();
+      InitClass();
+      return 0;
+    }
+
+    public async void DatenGenerieren()
+    {
+      await DatenGenerierenAsync();
+    }
+
+    public async Task<int> DatenGenerierenAsync()
+    {
+      Items.Clear();
+      var daten = await MyQuery.ToListAsync();
+      isInRange = true;
+      foreach (T item in daten)
+        Add(item);
+      isInRange = false;
+
+      OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+      return 0;
+    }
+
+    public JgListe(JgMaschineData.JgModelContainer Db, IEnumerable<T> Items, CollectionViewSource MyViewSource, params DataGrid[] MyTabels)
       : base(Items)
     {
       _Db = Db;
-      _ViewSource = MeineViewSource;
-      _ListeTabellen = MeineTabellen;
+      _ViewSource = MyViewSource;
+      _ListeTabellen = MyTabels;
+      InitClass();
+    }
 
-      PropertyChanged  += (sen, erg) =>
-      {
-        MessageBox.Show("Geaendert: " + erg.PropertyName);
-      };
+    private void InitClass()
+    {
+      //PropertyChanged  += (sen, erg) =>
+      //{
+      //  MessageBox.Show("Geaendert: " + erg.PropertyName);
+      //};
 
       CollectionChanged += (sen, erg) =>
       {
@@ -132,6 +182,11 @@ namespace JgMaschineLib
       var abgl = neu.Member<JgMaschineData.DatenAbgleich>("DatenAbgleich");
       JgMaschineLib.DbSichern.AbgleichEintragen(abgl.CurrentValue, Status);
       await _Db.SaveChangesAsync();
+    }
+
+    public void Refresh()
+    {
+      _ViewSource.View.Refresh();
     }
   }
 }

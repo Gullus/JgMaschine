@@ -16,6 +16,11 @@ namespace JgMaschineTest
     static void Main(string[] args)
     {
 
+      int i = 1;
+      Console.WriteLine(i.ToString("D2"));
+
+
+
       using (var db = new JgModelContainer())
       {
         Console.WriteLine(Convert.ToChar(13));

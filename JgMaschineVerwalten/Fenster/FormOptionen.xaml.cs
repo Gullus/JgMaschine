@@ -6,7 +6,11 @@ namespace JgMaschineVerwalten.Fenster
 {
   public partial class FormOptionen : Window
   {
- 
+    public JgMaschineData.tabStandort StandOrt
+    {
+      get { return (JgMaschineData.tabStandort)cmbStandort.SelectedItem; }
+    }
+
     public FormOptionen(JgMaschineData.JgModelContainer _Db)
     {
       InitializeComponent();

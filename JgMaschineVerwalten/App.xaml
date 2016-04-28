@@ -32,6 +32,7 @@
 
         <Style TargetType="{x:Type DataGrid}">
             <Style.Setters>
+                <Setter Property="Margin" Value="3" />
                 <Setter Property="GridLinesVisibility" Value="Vertical" />
                 <Setter Property="AutoGenerateColumns" Value="False" />
                 <Setter Property="VerticalGridLinesBrush" Value="#FFD8D8D8" />

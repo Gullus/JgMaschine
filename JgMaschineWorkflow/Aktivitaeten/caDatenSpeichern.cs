@@ -7,14 +7,14 @@ namespace JgMaschineWorkflow.Aktivitaeten
 
   public sealed class caDatenSpeichern : CodeActivity
   {
-    public InArgument<List<JgMaschineData.tabDaten>> ListeDaten { get; set; }
+    public InArgument<List<JgMaschineData.tabBauteil>> ListeDaten { get; set; }
     public OutArgument<bool> IstFehler { get; set; }
     public OutArgument<string> ProtokollText { get; set; }
 
     protected override void Execute(CodeActivityContext context)
     {
       string protokoll = "";
-      List<JgMaschineData.tabDaten> daten = context.GetValue(this.ListeDaten); 
+      List<JgMaschineData.tabBauteil> daten = context.GetValue(this.ListeDaten); 
       
       bool istFeher = false;
 
@@ -22,7 +22,7 @@ namespace JgMaschineWorkflow.Aktivitaeten
       {
         using(var db = new JgMaschineData.JgModelContainer())
         {
-          db.tabDatenSet.AddRange(daten);          
+          db.tabBauteilSet.AddRange(daten);          
           db.SaveChanges();
           protokoll += string.Format("Daten erfolgreich in DB gespeichert !");
         }
