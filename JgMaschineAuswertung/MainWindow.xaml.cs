@@ -28,7 +28,7 @@ namespace JgMaschineAuswertung
     {
       _Db = new JgMaschineData.JgModelContainer();
 
-      var auswertungen = await _Db.tabAuswertungSet.OrderBy(o => o.ReportName).ToListAsync();
+      var auswertungen = await _Db.tabAuswertungSet.Where(w => w.FilterAuswertung == JgMaschineData.EnumFilterAuswertung.Allgemein).OrderBy(o => o.ReportName).ToListAsync();
       var vs = (System.Windows.Data.CollectionViewSource)FindResource("vsAuswertung");
       _ListeAuswertungen = new JgMaschineLib.JgListe<JgMaschineData.tabAuswertung>(_Db, auswertungen, vs, dgAuswertung);
 
@@ -69,6 +69,7 @@ namespace JgMaschineAuswertung
         {
           string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
           form.Auswertung.Id = Guid.NewGuid();
+          form.Auswertung.FilterAuswertung = JgMaschineData.EnumFilterAuswertung.Allgemein;
           form.Auswertung.ErstelltDatum = DateTime.Now;
           form.Auswertung.ErstelltName = username;
 

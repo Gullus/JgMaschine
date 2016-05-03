@@ -21,7 +21,7 @@
         <AssociationConnector Association="JgModel.tabMaschinetabProtokoll" />
         <EntityTypeShape EntityType="JgModel.tabStandort" Width="1.875" PointX="12.125" PointY="6.125" />
         <AssociationConnector Association="JgModel.tabStandorttabMaschine" />
-        <EntityTypeShape EntityType="JgModel.tabAuswertung" Width="2.5" PointX="3.375" PointY="2.875" />
+        <EntityTypeShape EntityType="JgModel.tabAuswertung" Width="2.5" PointX="3.25" PointY="2.625" />
         <EntityTypeShape EntityType="JgModel.tabArbeitszeit" Width="1.875" PointX="12.125" PointY="9" />
         <AssociationConnector Association="JgModel.tabBedienertabArbeitszeit" />
         <AssociationConnector Association="JgModel.tabBauteiltabBediener" />

@@ -163,16 +163,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JgMaschineData\JgMaschineData.csproj">
-      <Project>{a37f084e-2543-4ff2-a664-03830189ff4e}</Project>
-      <Name>JgMaschineData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JgMaschineLib\JgMaschineLib.csproj">
-      <Project>{69d6b7e0-6ddc-49a5-a44f-d6bfd607aed3}</Project>
-      <Name>JgMaschineLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="JgSettings.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -214,7 +204,16 @@
     <Resource Include="Bilder\JgUndo.ico" />
     <Resource Include="Bilder\JgUpload.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\JgMaschineData\JgMaschineData.csproj">
+      <Project>{6bc109e0-7e70-46eb-9137-5e60e8074ccc}</Project>
+      <Name>JgMaschineData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JgMaschineLib\JgMaschineLib.csproj">
+      <Project>{69d6b7e0-6ddc-49a5-a44f-d6bfd607aed3}</Project>
+      <Name>JgMaschineLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

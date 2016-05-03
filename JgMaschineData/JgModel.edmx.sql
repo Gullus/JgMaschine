@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/26/2016 11:45:41
+-- Date Created: 05/03/2016 11:44:56
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -229,6 +229,7 @@ CREATE TABLE [dbo].[tabAuswertungSet] (
     [GeaendertDatum] datetime  NOT NULL,
     [Report] varbinary(max)  NULL,
     [Bemerkung] nvarchar(max)  NULL,
+    [FilterAuswertung] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL

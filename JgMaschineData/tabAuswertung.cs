@@ -28,6 +28,7 @@ namespace JgMaschineData
         public System.DateTime GeaendertDatum { get; set; }
         public byte[] Report { get; set; }
         public string Bemerkung { get; set; }
+        public EnumFilterAuswertung FilterAuswertung { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     }

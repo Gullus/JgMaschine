@@ -43,6 +43,7 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FastReport, Version=2015.3.1.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -63,6 +64,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Fenster\FormNeuerReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Fenster\FormOptionen.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -80,6 +85,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\MyCommands.cs" />
+    <Compile Include="Fenster\FormNeuerReport.xaml.cs">
+      <DependentUpon>FormNeuerReport.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Fenster\FormOptionen.xaml.cs">
       <DependentUpon>FormOptionen.xaml</DependentUpon>
     </Compile>
@@ -134,7 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JgMaschineData\JgMaschineData.csproj">
-      <Project>{a37f084e-2543-4ff2-a664-03830189ff4e}</Project>
+      <Project>{6bc109e0-7e70-46eb-9137-5e60e8074ccc}</Project>
       <Name>JgMaschineData</Name>
     </ProjectReference>
     <ProjectReference Include="..\JgMaschineLib\JgMaschineLib.csproj">
@@ -165,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Bilder\JgAdd.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgTextDocument.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

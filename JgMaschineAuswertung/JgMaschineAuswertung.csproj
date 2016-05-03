@@ -110,6 +110,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="BenutzerAusweis.frx" />
     <None Include="Hilfen\InitScannerDatalocig.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -135,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JgMaschineData\JgMaschineData.csproj">
-      <Project>{a37f084e-2543-4ff2-a664-03830189ff4e}</Project>
+      <Project>{6bc109e0-7e70-46eb-9137-5e60e8074ccc}</Project>
       <Name>JgMaschineData</Name>
     </ProjectReference>
     <ProjectReference Include="..\JgMaschineLib\JgMaschineLib.csproj">

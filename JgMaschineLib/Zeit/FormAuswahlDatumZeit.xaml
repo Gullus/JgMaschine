@@ -4,7 +4,7 @@
     xmlns:ec="http://schemas.microsoft.com/expression/2010/controls" 
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit"    
     x:Class="JgMaschineLib.Zeit.FormAuswahlDatumZeit"
-    Title="Terminabfrage" Height="206" Width="415" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False">
+    Title="Terminabfrage" Height="206" Width="415" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
 
     <Window.Resources>
         <libZeit:JgDatumZeit x:Key="dzUmmeldung" />
@@ -30,10 +30,10 @@
         <Label Content="_Datum" Grid.Row="1" Target="{Binding ElementName=dtpDatum}"/>
         <DatePicker x:Name="dtpDatum" Grid.Column="1" Grid.Row="1" SelectedDate="{Binding Source={StaticResource dzUmmeldung}, Path=Datum}" Margin="3"/>
 
-        <Label Content="_Stunde" Target="{Binding ElementName=tbStunde}" Grid.Column="2" Grid.Row="1" />
+        <Label Content="_Stunde" Target="{Binding ElementName=tbStunde}" Grid.Column="2" Grid.Row="1" FontWeight="Normal" FontStyle="Italic" />
         <ComboBox x:Name="cmbStunde" SelectedValue="{Binding Source={StaticResource dzUmmeldung}, Path=Stunde }" ItemsSource="{Binding Source={StaticResource dzUmmeldung}, Path=VorgabeStunden}" Grid.Column="3" Grid.Row="1" Margin="3" ItemStringFormat="{}{0:D2}"/>
 
-        <Label Content="_Minute"  Target="{Binding ElementName=tbMinute}" Grid.Column="4" Grid.Row="1" />
+        <Label Content="_Minute"  Target="{Binding ElementName=tbMinute}" Grid.Column="4" Grid.Row="1" FontWeight="Normal" FontStyle="Italic" />
         <ComboBox x:Name="cmbMinute" SelectedValue="{Binding Source={StaticResource dzUmmeldung}, Path=Minute }" ItemsSource="{Binding Source={StaticResource dzUmmeldung}, Path=VorgabeMinuten}" Grid.Column="5" Grid.Row="1" Margin="3" ItemStringFormat="{}{0:D2}"/>
 
         <Button Grid.Column="2" Grid.Row="2" IsCancel="True" Margin="5" Grid.ColumnSpan="2" >

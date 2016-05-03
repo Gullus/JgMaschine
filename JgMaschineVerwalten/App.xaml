@@ -58,7 +58,12 @@
         </Style>
 
         <Style x:Key="CellRightAlign">
-            <Setter Property="Control.HorizontalAlignment" Value="Right" />
+            <Setter Property="TextBlock.TextAlignment" Value="Right" />
         </Style>
+
+        <Style x:Key="CellRightCenter">
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        </Style>
+
     </Application.Resources>
 </Application>

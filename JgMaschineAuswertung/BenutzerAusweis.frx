@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/26/2016 14:30:43" ReportInfo.Modified="04/26/2016 15:07:17" ReportInfo.CreatorVersion="2015.3.1.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqhnGuwybM0qDa+e0+aevQvDDXyZnyp2WIRUgXUZfPsr99Yy7/mx7nplWTVBUy43BLM42iWndO5xmMeWvPg1PXKO3x9OG45hMxbpzN74s2UkCBn+HhHcrWf0+7TQbB6gsyoft15NveCx+MeG2KF+kOh1oROj+tDiT89jJEBtTBwpWygYJvlf7jBejMYRlKE7sm">
+      <TableDataSource Name="Table" Alias="tabBediener" DataType="System.Int32" Enabled="true" SelectCommand="SELECT 'MITA' + 'ANMELDUNG' + CAST(Id AS nvarchar(100)) IdAnmeldung,&#13;&#10;  'MITA' + 'ABMELDUNG' + CAST(Id AS nvarchar(100)) IdAbmeldung,&#13;&#10;	NachName, VorName&#13;&#10;FROM  tabBedienerSet">
+        <Column Name="IdAnmeldung" DataType="System.String"/>
+        <Column Name="IdAbmeldung" DataType="System.String"/>
+        <Column Name="NachName" DataType="System.String"/>
+        <Column Name="VorName" DataType="System.String"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="SqlVerbindung" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Guides="359.1">
+    <DataBand Name="Data1" Width="718.2" Height="151.2" DataSource="Table">
+      <BarcodeObject Name="Barcode1" Left="11.25" Top="9.45" Width="36" Height="36" DataColumn="tabBediener.IdAnmeldung" ShowText="false" AllowExpressions="true" Barcode="Datamatrix" Barcode.SymbolSize="Auto" Barcode.Encoding="Auto" Barcode.CodePage="1252" Barcode.PixelSize="3"/>
+      <BarcodeObject Name="Barcode2" Left="378" Top="9.45" Width="36" Height="36" DataColumn="tabBediener.IdAbmeldung" ShowText="false" AllowExpressions="true" Barcode="Datamatrix" Barcode.SymbolSize="Auto" Barcode.Encoding="Auto" Barcode.CodePage="1252" Barcode.PixelSize="3"/>
+      <TextObject Name="Text1" Left="113.4" Top="56.7" Width="226.8" Height="18.9" Text="[tabBediener.VorName]"/>
+      <TextObject Name="Text2" Left="113.4" Top="75.6" Width="226.8" Height="18.9" Text="[tabBediener.NachName]"/>
+      <TextObject Name="Text3" Left="113.4" Top="9.45" Width="226.8" Height="28.35" Text="Anmeldung" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+      <TextObject Name="Text4" Left="472.5" Top="66.15" Width="226.8" Height="18.9" Text="[tabBediener.VorName]"/>
+      <TextObject Name="Text5" Left="472.5" Top="85.05" Width="226.8" Height="18.9" Text="[tabBediener.NachName]"/>
+      <TextObject Name="Text6" Left="472.5" Top="9.45" Width="226.8" Height="28.35" Text="Abmeldung" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+    </DataBand>
+  </ReportPage>
+</Report>

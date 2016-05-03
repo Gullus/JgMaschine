@@ -204,6 +204,7 @@
     <Property Name="GeaendertDatum" Type="datetime" Nullable="false" />
     <Property Name="Report" Type="varbinary(max)" Nullable="true" />
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="FilterAuswertung" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
@@ -739,6 +740,7 @@
           <Property Name="GeaendertDatum" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Report" Type="Binary" Nullable="true" MaxLength="Max" FixedLength="false" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="FilterAuswertung" Type="JgModel.EnumFilterAuswertung" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
         </EntityType>
         <EnumType Name="EnumReperaturEreigniss" UnderlyingType="Byte">
@@ -812,6 +814,13 @@
           <Member Name="Geaendert" Value="1" />
           <Member Name="Geloescht" Value="2" />
           <Member Name="Ok" Value="3" />
+        </EnumType>
+        <EnumType Name="EnumFilterAuswertung" UnderlyingType="Byte">
+          <Member Name="Allgemein" Value="0" />
+          <Member Name="Arbeitszeit" Value="1" />
+          <Member Name="Anmeldung" Value="2" />
+          <Member Name="Bauteil" Value="3" />
+          <Member Name="Reparatur" Value="4" />
         </EnumType>
       </Schema>
     </edmx:ConceptualModels>
@@ -974,6 +983,7 @@
           <ScalarProperty Name="GeaendertDatum" ColumnName="GeaendertDatum" />
           <ScalarProperty Name="Report" ColumnName="Report" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
+          <ScalarProperty Name="FilterAuswertung" ColumnName="FilterAuswertung" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
