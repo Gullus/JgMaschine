@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineAuswertung", "JgMaschineAuswertung\JgMaschineAuswertung.csproj", "{7191D4C9-A789-4EC1-B120-2C745781E817}"
 EndProject
@@ -48,13 +48,11 @@ Global
 		{7191D4C9-A789-4EC1-B120-2C745781E817}.Release|x86.ActiveCfg = Release|Any CPU
 		{7191D4C9-A789-4EC1-B120-2C745781E817}.Release|x86.Build.0 = Release|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Debug|x86.Build.0 = Debug|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C68584B4-43F6-4AEB-BCEF-8575BF4CB4E8}.Release|x86.ActiveCfg = Release|Any CPU
@@ -103,8 +101,6 @@ Global
 		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Debug|x86.Build.0 = Debug|Any CPU
 		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Debug|x86.Deploy.0 = Debug|Any CPU
 		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7788B87B-C888-47FA-B902-C72D8D3FB7FC}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
@@ -152,7 +148,6 @@ Global
 		{E7F5A1E1-EF74-42A9-830E-3CD27060CEDD}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{E7F5A1E1-EF74-42A9-830E-3CD27060CEDD}.Debug|x86.Build.0 = Debug|Any CPU
 		{E7F5A1E1-EF74-42A9-830E-3CD27060CEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7F5A1E1-EF74-42A9-830E-3CD27060CEDD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7F5A1E1-EF74-42A9-830E-3CD27060CEDD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E7F5A1E1-EF74-42A9-830E-3CD27060CEDD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E7F5A1E1-EF74-42A9-830E-3CD27060CEDD}.Release|x86.ActiveCfg = Release|Any CPU

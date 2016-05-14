@@ -24,7 +24,6 @@
         <CollectionViewSource x:Key="vsReparaturAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsReparaturAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
 
-        <CollectionViewSource x:Key="vsBauteilAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabBauteil}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsBauteilAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabBauteil}, CreateList=True}"/>
 
         <libZeit:JgDatumZeit x:Key="dzArbeitszeitVon" />
@@ -191,7 +190,7 @@
                                 <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
                                 <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzArbeitszeitBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
 
-                                <Button x:Name="btnArbeitszeitAktuallisieren1" Grid.Column="12" Click="btnAuswahlArbeitszeitAktualisieren_Click" >
+                                <Button x:Name="btnArbeitszeitAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
                                     </Button.Effect>
@@ -370,7 +369,7 @@
                                 <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
                                 <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzAnmeldungBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
 
-                                <Button x:Name="btnAnmeldungAktuallisieren" Grid.Column="12" Click="btnAuswahlArbeitszeitAktualisieren_Click" >
+                                <Button x:Name="btnAnmeldungAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
                                     </Button.Effect>
@@ -496,7 +495,7 @@
                     <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
                     <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzBauteilBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
 
-                    <Button x:Name="btnBauteilAktuallisieren" Grid.Column="12" Click="btnAuswahlArbeitszeitAktualisieren_Click" >
+                    <Button x:Name="btnBauteilAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
                         <Button.Effect>
                             <DropShadowEffect Color="Silver"/>
                         </Button.Effect>
@@ -506,7 +505,7 @@
                         </StackPanel>
                     </Button>
 
-                    <DataGrid x:Name="dgBauteilAuswahl" Grid.Row="2" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAktuell}}" IsReadOnly="True" >
+                    <DataGrid x:Name="dgBauteilAuswahl" Grid.Row="2" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBauteilAuswahl}}" IsReadOnly="True" >
                         <DataGrid.Effect>
                             <DropShadowEffect/>
                         </DataGrid.Effect>
@@ -700,7 +699,7 @@
                                 <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
                                 <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzReparaturBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
 
-                                <Button x:Name="btnReparaturAktuallisieren" Grid.Column="12" Click="btnAuswahlArbeitszeitAktualisieren_Click" >
+                                <Button x:Name="btnReparaturAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
                                     </Button.Effect>

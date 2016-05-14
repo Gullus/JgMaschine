@@ -1,8 +1,8 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JgMaschineSetup.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JgMaschineTest.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Portnummer" Type="System.Int32" Scope="User">
+    <Setting Name="PortNummer" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">51000</Value>
     </Setting>
     <Setting Name="Adresse" Type="System.String" Scope="User">

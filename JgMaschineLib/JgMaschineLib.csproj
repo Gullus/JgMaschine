@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="DbSichern.cs" />
     <Compile Include="JgListe.cs" />
+    <Compile Include="Scanner\DataLogicScanner.cs" />
     <Compile Include="SqlVerbindung\DatenbankVerbindungen.cs" />
     <Compile Include="SqlVerbindung\FormDatenbankVerbindung.cs">
       <SubType>Form</SubType>
@@ -73,7 +74,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Scanner\DataLogicScanner.cs" />
+    <Compile Include="Scanner\Scanner.cs" />
     <Compile Include="Stahl\BvbsDatenaustausch.cs" />
     <Compile Include="TcpIpKomponenten\Helper.cs" />
     <Compile Include="TcpIpKomponenten\TcpIpClient.cs" />

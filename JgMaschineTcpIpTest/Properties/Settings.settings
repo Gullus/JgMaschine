@@ -11,9 +11,6 @@
     <Setting Name="ClientSendeText1" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ClientRueckantwortVomServer" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="ClientAnzeigeZeichen" Type="System.String" Scope="User">
       <Value Profile="(Default)">String</Value>
     </Setting>

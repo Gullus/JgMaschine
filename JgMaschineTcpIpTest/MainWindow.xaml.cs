@@ -1,10 +1,8 @@
-﻿using JgMaschineLib;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace JgMaschineTcpIpTest
 {
@@ -45,11 +43,6 @@ namespace JgMaschineTcpIpTest
       Properties.Settings.Default.Save();
     }
 
-    private void RadioButton_Click(object sender, RoutedEventArgs e)
-    {
-      tbRueckmeldung2.Text = JgMaschineLib.TcpIp.Helper.AnzeigeZeichen(tbRueckmeldung1.Text, _AnzeigeArtText);
-    }
-
     private void btnServerStarten_Click(object sender, RoutedEventArgs e)
     {
       ServerStarten();
@@ -64,6 +57,7 @@ namespace JgMaschineTcpIpTest
       }
 
       tbRueckmeldung1.Text = AnzeigeText + System.Environment.NewLine + tbRueckmeldung1.Text;
+      tbRueckmeldung2.Text = JgMaschineLib.TcpIp.Helper.AnzeigeZeichen(AnzeigeText, _AnzeigeArtText);
     }
 
     private async void ServerStarten()

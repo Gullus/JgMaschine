@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,7 +35,7 @@ namespace JgMaschineTcpIpTest
       InitializeComponent();
     }
 
-    private void Button_Click(object sender, RoutedEventArgs e)
+    private void btnTextAnServerSenden_Click(object sender, RoutedEventArgs e)
     {
       string txtSenden = Properties.Settings.Default.ClientSendeText1;
       switch (Convert.ToByte((sender as Button).Tag))
@@ -47,10 +46,11 @@ namespace JgMaschineTcpIpTest
       TextSenden(txtSenden);
     }
 
+
     private void Anzeige(string AnzeigeText, params object[] AnzeigeWerte)
     {
       tbRueckmeldung1.Text = string.Format(AnzeigeText, AnzeigeWerte) + System.Environment.NewLine + tbRueckmeldung1.Text;
-      tbRueckmeldung2.Text = JgMaschineLib.TcpIp.Helper.AnzeigeZeichen(tbRueckmeldung1.Text, _AnzeigeArtText);
+      tbRueckmeldung2.Text = JgMaschineLib.TcpIp.Helper.AnzeigeZeichen(AnzeigeText, _AnzeigeArtText);
     }
 
     private async void TextSenden(string SendeText)
@@ -59,57 +59,35 @@ namespace JgMaschineTcpIpTest
 
       await _NetworkStream.WriteAsync(senden, 0, senden.Length);
       Anzeige("Daten an Sever gesendet...");
+    }
 
-      if (Properties.Settings.Default.ClientRueckantwortVomServer)
+    private async void btnClientStarten_Click(object sender, RoutedEventArgs e)
+    {
+      try
+      {
+        _Client = new TcpClient(Properties.Settings.Default.ClientAdresseServer, Properties.Settings.Default.ClientPortServer);
+        _NetworkStream = _Client.GetStream();
+        Anzeige("Mir Server verbunden...");
+      }
+      catch (Exception f)
+      {
+        tbRueckmeldung1.Text += f.Message;
+        return;
+      }
+
+      while (true)
       {
         var buffer = new byte[4096];
         var anzahlZeichen = await _NetworkStream.ReadAsync(buffer, 0, buffer.Length);
-
-        var zurueck = JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen);
-        Anzeige(zurueck);
+        Anzeige($"{anzahlZeichen} Zeichen vom Server empfangen.");
+        Anzeige(JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen));
       }
-
     }
 
     private void btnClientBeenden_Click(object sender, RoutedEventArgs e)
     {
-      if (_Client != null)
-      {
-        btnClientBeenden.Content = "Client starten";
-        _Client.Close();
-        _NetworkStream.Close();
-        _Client = null;
-        tbRueckmeldung1.Text = "Von Server getrennt.";
-      }
-      else
-      {
-        btnClientBeenden.Content = "Client beenden";
-        _Client = new TcpClient(Properties.Settings.Default.ClientAdresseServer, Properties.Settings.Default.ClientPortServer);
-        _NetworkStream = _Client.GetStream();
-        tbRueckmeldung1.Text = "Mir Server verbunden...";
-      }
-    }
-
-    private void RadioButton_Click(object sender, RoutedEventArgs e)
-    {
-      tbRueckmeldung2.Text = JgMaschineLib.TcpIp.Helper.AnzeigeZeichen(tbRueckmeldung1.Text, _AnzeigeArtText);
-    }
-
-    private void btnWarteAufAction_Click(object sender, RoutedEventArgs e)
-    {
-      using (var client = new TcpClient())
-      {
-        client.Connect(Properties.Settings.Default.ClientAdresseServer, Properties.Settings.Default.ClientPortServer);
-        using (var networkStream = client.GetStream())
-        {
-          while (true)
-          {
-            var buffer = new byte[4096];
-            var anzahlZeichen = networkStream.Read(buffer, 0, buffer.Length);
-            MessageBox.Show(string.Format("{0} Daten vom Server empfangen. Text: {1} ...", anzahlZeichen, JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen)));
-          }
-        }
-      }
+      _Client.Close();
+      Anzeige("Von Server getrennt.");
     }
   }
 }

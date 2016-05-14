@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JgMaschineLib.Scanner
+namespace JgMaschineTest
 {
   public delegate void ScannerTextDelegate(DataLogicScannerText e);
 
@@ -76,7 +78,7 @@ namespace JgMaschineLib.Scanner
       }
 
       if (result.Status == IPStatus.Success)
-        Protokoll("Ping erfolgreich.");
+        Protokoll("Pink erfolgreich.");
       else
         Protokoll("Ping fehlgeschlagen mit IPStatus: {0}", result.Status);
 
@@ -85,6 +87,7 @@ namespace JgMaschineLib.Scanner
 
     public void Start()
     {
+
       while (true)
       {
         if (!istPingOk())
@@ -119,7 +122,7 @@ namespace JgMaschineLib.Scanner
 
               while (true)
               {
-                Thread.Sleep(5000);
+                Thread.Sleep(20000);
                 if (ct.IsCancellationRequested)
                   break;
 
@@ -140,7 +143,7 @@ namespace JgMaschineLib.Scanner
               {
                 anzZeichen = _NetStream.Read(bufferEmpfang, 0, bufferEmpfang.Length);
               }
-              catch (ObjectDisposedException)  // beim schließen des Streams tritt ein Fehler auf. Kein Lösung dafür gefunden.
+              catch (ObjectDisposedException)         // beim schließen des Streams tritt ein Fehler auf. Kein Lösung dafür gefunden.
               { }
               catch (Exception f)
               {
@@ -173,7 +176,6 @@ namespace JgMaschineLib.Scanner
             else
             {
               _Client.Close();
-              _NetStream.Dispose();
               break;
             }
           }
@@ -317,3 +319,5 @@ namespace JgMaschineLib.Scanner
     }
   }
 }
+
+

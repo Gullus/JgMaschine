@@ -1,4 +1,4 @@
-﻿using JgMaschineLib.DataLogicScanner;
+﻿using JgMaschineLib.Scanner;
 using System;
 using System.Linq;
 using System.IO;
@@ -18,20 +18,21 @@ namespace JgMaschineScanner
   public class ScannerTest
   {
     private JgMaschineData.JgModelContainer _Db;
-    private Scanner.VorgangProgram[] _IstStart = { Scanner.VorgangProgram.WARTSTART, Scanner.VorgangProgram.REPASTART, Scanner.VorgangProgram.COILSTART };
+    private DataLogicScanner.VorgangProgram[] _IstStart = { DataLogicScanner.VorgangProgram.WARTSTART, DataLogicScanner.VorgangProgram.REPASTART, DataLogicScanner.VorgangProgram.COILSTART };
 
     public void Start()
     {
-      string adresse = "192.168.1.59";
-      int port = 51000;
+      string adresse = Properties.Settings.Default.Adresse;
+      int port = Properties.Settings.Default.Portnummer;
 
       _Db = new JgMaschineData.JgModelContainer();
       _Db.tabStandortSet.FirstOrDefault();
 
-      Scanner sc = new Scanner(adresse, port, ScannerCommunication, true);
+      var scDataLogic = new DataLogicScanner(adresse, port, ScannerCommunication, true);
+      scDataLogic.Start();
     }
 
-    private JgMaschineData.tabMaschine SucheMaschine(JgMaschineData.JgModelContainer Db, ScannerText e)
+    private JgMaschineData.tabMaschine SucheMaschine(JgMaschineData.JgModelContainer Db, DataLogicScannerText e)
     {
       var maschine = Db.tabMaschineSet.FirstOrDefault(f => f.ScannerNummer == e.ScannerKennung);
       if (maschine == null)
@@ -41,7 +42,7 @@ namespace JgMaschineScanner
       return maschine;
     }
 
-    private void ScannerCommunication(ScannerText e)
+    private void ScannerCommunication(DataLogicScannerText e)
     {
       #region Sannertext in Datei eintragen
 
@@ -60,7 +61,7 @@ namespace JgMaschineScanner
 
         switch (e.VorgangScan)
         {
-          case Scanner.VorgangScanner.BF2D:
+          case DataLogicScanner.VorgangScanner.BF2D:
 
             if (maschine.sAktuelleBediener.FirstOrDefault() == null)
               e.FehlerAusgabe(" ", "Es sind keine Bediener", "angemeldet !");
@@ -80,7 +81,7 @@ namespace JgMaschineScanner
                 eMaschine = maschine,
                 BtAnzahl = Convert.ToInt32(bauteil.Anzahl),
                 BtDurchmesser = Convert.ToInt32(bauteil.Durchmesser),
-                BtGewicht = Convert.ToInt32(bauteil.Gewicht),
+                BtGewicht = Convert.ToInt32(bauteil.Gewicht * 1000),
                 BtLaenge = Convert.ToInt32(bauteil.Laenge),
                 NummerBauteil = bauteil.ProjektNummer,
 
@@ -96,14 +97,14 @@ namespace JgMaschineScanner
               JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabBauteil>(_Db, datensatz, JgMaschineData.EnumStatusDatenabgleich.Neu);
             }
             break;
-          case Scanner.VorgangScanner.MITA:
+          case DataLogicScanner.VorgangScanner.MITA:
 
             var mitarb = _Db.tabBedienerSet.Find(Guid.Parse(e.ScannerKoerper));
             if (mitarb == null)
               e.FehlerAusgabe("Mitarbeiter falsch!", " ", "MA: " + maschine.MaschinenName);
             else
             {
-              if (e.VorgangProgramm == Scanner.VorgangProgram.ANMELDUNG)
+              if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.ANMELDUNG)
               {
                 bool anmeldungErstellen = true;
                 if (mitarb.fAktuellAngemeldet != null)
@@ -179,16 +180,16 @@ namespace JgMaschineScanner
             }
 
             break;
-          case Scanner.VorgangScanner.PROG:
+          case DataLogicScanner.VorgangScanner.PROG:
             if (_IstStart.Contains(e.VorgangProgramm))
             {
               var ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur;
 
               switch (e.VorgangProgramm)
               {
-                case Scanner.VorgangProgram.REPASTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
-                case Scanner.VorgangProgram.WARTSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
-                case Scanner.VorgangProgram.COILSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
+                case DataLogicScanner.VorgangProgram.REPASTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
+                case DataLogicScanner.VorgangProgram.WARTSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
+                case DataLogicScanner.VorgangProgram.COILSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
               }
 
               var reparatur = _Db.tabReparaturSet.FirstOrDefault(f => (f.fMaschine == maschine.Id) && f.IstAktiv && (f.Ereigniss == ereignis));
@@ -218,9 +219,9 @@ namespace JgMaschineScanner
 
               switch (e.VorgangProgramm)
               {
-                case Scanner.VorgangProgram.REPA_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
-                case Scanner.VorgangProgram.WART_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
-                case Scanner.VorgangProgram.COIL_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
+                case DataLogicScanner.VorgangProgram.REPA_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
+                case DataLogicScanner.VorgangProgram.WART_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
+                case DataLogicScanner.VorgangProgram.COIL_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
               }
 
               var reparatur = maschine.sReparaturen.FirstOrDefault(f => f.IstAktiv && (f.Ereigniss == ereignis));

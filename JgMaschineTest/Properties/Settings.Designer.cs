@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JgMaschineSetup.Properties {
+namespace JgMaschineTest.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -26,12 +26,12 @@ namespace JgMaschineSetup.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("51000")]
-        public int Portnummer {
+        public int PortNummer {
             get {
-                return ((int)(this["Portnummer"]));
+                return ((int)(this["PortNummer"]));
             }
             set {
-                this["Portnummer"] = value;
+                this["PortNummer"] = value;
             }
         }
         

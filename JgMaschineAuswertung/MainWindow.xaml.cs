@@ -1,12 +1,11 @@
 ﻿using JgMaschineAuswertung.Commands;
 using System;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Data.Entity;
 
 namespace JgMaschineAuswertung
 {

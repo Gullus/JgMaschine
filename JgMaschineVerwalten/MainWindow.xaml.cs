@@ -421,10 +421,16 @@ namespace JgMaschineVerwalten
       }
     }
 
-    private void btnAuswahlArbeitszeitAktualisieren_Click(object sender, RoutedEventArgs e)
+    private void btnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
     {
-      if (sender == btnArbeitszeitAktuallisieren1)
+      if (sender == btnArbeitszeitAuswahl)
         _ListeArbeitszeitAuswahl.DatenGenerieren();
+      else if (sender == btnAnmeldungAuswahl)
+        _ListeAnmeldungAuswahl.DatenGenerieren();
+      else if (sender == btnBauteilAuswahl)
+        _ListeBauteilAuswahl.DatenGenerieren();
+      else if (sender == btnReparaturAuswahl)
+        _ListeReparaturAuswahl.DatenGenerieren();
     }
 
     #endregion
