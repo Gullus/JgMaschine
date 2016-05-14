@@ -40,6 +40,8 @@ namespace JgMaschineLib.Scanner
     private string _Adresse = "";
     private int _Port = 0;
 
+    private const string _FehlerDatenEmpfang = "#[SCANNERFEHLER]#";
+
     private bool _AnzeigeProtokoll = false;
 
     private TcpClient _Client;
@@ -119,7 +121,7 @@ namespace JgMaschineLib.Scanner
 
               while (true)
               {
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
                 if (ct.IsCancellationRequested)
                   break;
 
@@ -140,12 +142,15 @@ namespace JgMaschineLib.Scanner
               {
                 anzZeichen = _NetStream.Read(bufferEmpfang, 0, bufferEmpfang.Length);
               }
-              catch (ObjectDisposedException)  // beim schließen des Streams tritt ein Fehler auf. Kein Lösung dafür gefunden.
-              { }
               catch (Exception f)
               {
-                Protokoll("Fehler beim Empfang der Daten.\r\nGrund: " + f.Message);
-                throw f;
+                _NetStream.Close();
+                _NetStream.Dispose();
+                if (! ct.IsCancellationRequested)
+                {
+                  Protokoll("Fehler beim Empfang der Daten.\r\nGrund: " + f.Message);
+                  return _FehlerDatenEmpfang;
+                }
               }
 
               return Encoding.ASCII.GetString(bufferEmpfang, 0, anzZeichen);
@@ -158,7 +163,12 @@ namespace JgMaschineLib.Scanner
             if (taskScannen.IsCompleted)
             {
               var textEmpfangen = taskScannen.Result;
-              if (textEmpfangen.Length > 0)
+              if (textEmpfangen == _FehlerDatenEmpfang)
+              {
+                _Client.Close();
+                break;
+              }
+              else if (textEmpfangen.Length > 0)
               {
                 var scText = new DataLogicScannerText(textEmpfangen);
 
@@ -173,7 +183,6 @@ namespace JgMaschineLib.Scanner
             else
             {
               _Client.Close();
-              _NetStream.Dispose();
               break;
             }
           }
