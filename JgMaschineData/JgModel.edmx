@@ -68,6 +68,10 @@
       <End Role="tabStandort" EntitySet="tabStandortSet" />
       <End Role="tabArbeitszeit" EntitySet="tabArbeitszeitSet" />
     </AssociationSet>
+    <AssociationSet Name="tabStandorttabBediener" Association="JgModel.Store.tabStandorttabBediener">
+      <End Role="tabStandort" EntitySet="tabStandortSet" />
+      <End Role="tabBediener" EntitySet="tabBedienerSet" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="tabMaschineSet">
     <Key>
@@ -103,6 +107,7 @@
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
     <Property Name="fAktuellAngemeldet" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="tabBauteilSet">
     <Key>
@@ -123,6 +128,8 @@
     <Property Name="NummerPosition" Type="nvarchar" Nullable="true" MaxLength="10" />
     <Property Name="Buegelname" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="IstHandeingabe" Type="bit" Nullable="false" />
+    <Property Name="AnzahlBediener" Type="tinyint" Nullable="false" />
+    <Property Name="AnzahlBiegungen" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
@@ -375,6 +382,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="tabStandorttabBediener">
+    <End Role="tabStandort" Type="JgModel.Store.tabStandortSet" Multiplicity="1" />
+    <End Role="tabBediener" Type="JgModel.Store.tabBedienerSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tabStandort">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabBediener">
+        <PropertyRef Name="fStandort" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_tabBauteiltabBediener_tabBauteil">
     <End Role="tabBauteil" Type="JgModel.Store.tabBauteilSet" Multiplicity="1" />
     <End Role="tabBauteiltabBediener" Type="JgModel.Store.tabBauteiltabBediener" Multiplicity="*" />
@@ -466,6 +485,10 @@
             <End Role="tabStandort" EntitySet="tabStandortSet" />
             <End Role="tabArbeitszeit" EntitySet="tabArbeitszeitSet" />
           </AssociationSet>
+          <AssociationSet Name="tabStandorttabBediener" Association="JgModel.tabStandorttabBediener">
+            <End Role="tabStandort" EntitySet="tabStandortSet" />
+            <End Role="tabBediener" EntitySet="tabBedienerSet" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tabMaschine">
           <Key>
@@ -509,6 +532,8 @@
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fAktuellAngemeldet" Type="Guid" Nullable="true" />
           <NavigationProperty Name="eAktuelleAnmeldungMaschine" Relationship="JgModel.tabMaschinetabBediener" FromRole="tabBediener" ToRole="tabMaschine" />
+          <Property Name="fStandort" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabBediener" FromRole="tabBediener" ToRole="tabStandort" />
         </EntityType>
         <EntityType Name="tabBauteil">
           <Key>
@@ -529,6 +554,8 @@
           <Property Name="NummerPosition" Type="String" Nullable="true" MaxLength="10" Unicode="true" FixedLength="false" />
           <Property Name="Buegelname" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="IstHandeingabe" Type="Boolean" Nullable="false" />
+          <Property Name="AnzahlBediener" Type="Byte" Nullable="false" />
+          <Property Name="AnzahlBiegungen" Type="Byte" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eMaschine" Relationship="JgModel.tabMaschinetabDaten" FromRole="tabDaten" ToRole="tabMaschine" />
@@ -715,6 +742,7 @@
           <NavigationProperty Name="sMaschinen" Relationship="JgModel.tabStandorttabMaschine" FromRole="tabStandort" ToRole="tabMaschine" />
           <NavigationProperty Name="sArbeitszeiten" Relationship="JgModel.tabStandorttabArbeitszeit1" FromRole="tabStandort" ToRole="tabArbeitszeit" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
+          <NavigationProperty Name="sBediener" Relationship="JgModel.tabStandorttabBediener" FromRole="tabStandort" ToRole="tabBediener" />
         </EntityType>
         <Association Name="tabStandorttabMaschine">
           <End Type="JgModel.tabStandort" Role="tabStandort" Multiplicity="1" />
@@ -822,6 +850,18 @@
           <Member Name="Bauteil" Value="3" />
           <Member Name="Reparatur" Value="4" />
         </EnumType>
+        <Association Name="tabStandorttabBediener">
+          <End Type="JgModel.tabStandort" Role="tabStandort" Multiplicity="1" />
+          <End Type="JgModel.tabBediener" Role="tabBediener" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tabStandort">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabBediener">
+              <PropertyRef Name="fStandort" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -866,6 +906,7 @@
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
           </ComplexProperty>
           <ScalarProperty Name="fAktuellAngemeldet" ColumnName="fAktuellAngemeldet" />
+          <ScalarProperty Name="fStandort" ColumnName="fStandort" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -887,6 +928,8 @@
           <ScalarProperty Name="NummerPosition" ColumnName="NummerPosition" />
           <ScalarProperty Name="Buegelname" ColumnName="Buegelname" />
           <ScalarProperty Name="IstHandeingabe" ColumnName="IstHandeingabe" />
+          <ScalarProperty Name="AnzahlBediener" ColumnName="AnzahlBediener" />
+          <ScalarProperty Name="AnzahlBiegungen" ColumnName="AnzahlBiegungen" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

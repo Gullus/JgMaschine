@@ -42,6 +42,8 @@ namespace JgMaschineData
         public string NummerPosition { get; set; }
         public string Buegelname { get; set; }
         public bool IstHandeingabe { get; set; }
+        public byte AnzahlBediener { get; set; }
+        public byte AnzahlBiegungen { get; set; }
         public System.Guid fMaschine { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }

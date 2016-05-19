@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" DoublePass="true" ReportInfo.Created="05/17/2016 10:41:35" ReportInfo.Modified="05/17/2016 17:33:04" ReportInfo.CreatorVersion="2015.3.1.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+    private void Form1_Shown(object sender, EventArgs e)
+    {
+      DateTime dd = DateTime.Today.Date;
+      dtpAuswertungVon.Value = dd.AddDays(-30);
+      dtpAuswertungBis.Value = dd;
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqhnGuwybM0qDa+e0+aevQvDDXyZnyp2WIRUgXUZfPsr99Yy7/mx7nplWTVBUy43BLM42iWndO5xmMeWvPg1PXKO3x9OG45hMxbpzN74s2UkCBn+HhHcrWf0+7TQbB6gsyoft15NveCx+MeG2KF+kOh1oROj+tDiT89jJEBtTBwpX4pjUxAm31JRC+LeMeeEKX">
+      <TableDataSource Name="Table" Alias="tabDaten" DataType="System.Int32" Enabled="true" SelectCommand="-- DECLARE @DatumVon datetime, @DatumBis datetime&#13;&#10;-- SET @DatumVon = '01.01.2016'&#13;&#10;-- SET @DatumBis = '31.12.2016'&#13;&#10;&#13;&#10;SELECT maschine.MaschinenName, CAST(bauteil.DatumStart AS Date) AS Datum,  &#13;&#10;  (bediener.NachName + ', ' + bediener.VorName) AS BedienerName, &#13;&#10;	  &#13;&#10;  SUM(bauteil.BtGewicht / bauteil.AnzahlBediener / 1000.00) &#13;&#10;  AS GewichtProBediener,&#13;&#10;&#13;&#10;  (SELECT SUM(DATEDIFF(SECOND, anmeldung.Anmeldung, anmeldung.Abmeldung)) / 3600.0&#13;&#10;    FROM tabAnmeldungMaschineSet AS anmeldung&#13;&#10;    WHERE (anmeldung.fBediener = bediener.Id) AND (anmeldung.fMaschine = maschine.Id) &#13;&#10;      AND (CAST(anmeldung.Anmeldung AS DATE) = CAST(bauteil.DatumStart AS Date)))&#13;&#10;  AS SumStunden&#13;&#10;&#13;&#10;FROM tabMaschineSet AS maschine RIGHT OUTER JOIN&#13;&#10;  tabBauteilSet AS bauteil ON maschine.Id = bauteil.fMaschine LEFT OUTER JOIN&#13;&#10;  tabBauteiltabBediener AS bauteilBediener INNER JOIN&#13;&#10;  tabBedienerSet AS bediener ON bauteilBediener.sBediener_Id = bediener.Id ON bauteil.Id = bauteilBediener.sBauteile_Id&#13;&#10;&#13;&#10;WHERE (CAST(bauteil.DatumStart AS Date) &gt;= @DatumVon) AND (CAST(bauteil.DatumStart AS Date) &lt;= @DatumBis)&#13;&#10;&#13;&#10;GROUP BY bediener.Id, maschine.Id, maschine.MaschinenName, CAST(bauteil.DatumStart AS Date), bediener.NachName + ', ' + bediener.VorName">
+        <Column Name="MaschinenName" DataType="System.String"/>
+        <Column Name="Datum" DataType="System.DateTime"/>
+        <Column Name="BedienerName" DataType="System.String"/>
+        <Column Name="GewichtProBediener" DataType="System.Decimal"/>
+        <Column Name="SumStunden" DataType="System.Decimal"/>
+        <Column Name="Durchschnitt" DataType="System.Decimal" PropName="Column1" Format="Currency" Calculated="true" Expression="[tabDaten.SumStunden] / [tabDaten.GewichtProBediener]"/>
+        <CommandParameter Name="@DatumVon" DataType="4" Expression="dtpAuswertungVon.Value" DefaultValue="01.01.2016"/>
+        <CommandParameter Name="@DatumBis" DataType="4" Expression="dtpAuswertungBis.Value" DefaultValue="31.12.2016"/>
+      </TableDataSource>
+      <TableDataSource Name="tabStandortSet" DataType="System.Int32" Enabled="true" TableName="tabStandortSet">
+        <Column Name="Id" DataType="System.Guid"/>
+        <Column Name="Bezeichnung" DataType="System.String"/>
+        <Column Name="Bemerkung" DataType="System.String"/>
+        <Column Name="DatenAbgleich_Datum" DataType="System.DateTime"/>
+        <Column Name="DatenAbgleich_Status" DataType="System.Int32"/>
+        <Column Name="DatenAbgleich_Bearbeiter" DataType="System.String"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Guides="9.45">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="271.38">
+      <MatrixObject Name="Matrix1" Left="9.45" Top="56.7" Width="340.2" Height="204.08" Border.Lines="Bottom" Border.BottomLine.Style="Dot" FixedRows="1" FixedColumns="3" DataSource="Table">
+        <MatrixColumns>
+          <Header Expression="[tabDaten.Datum]"/>
+        </MatrixColumns>
+        <MatrixRows>
+          <Header Expression="[tabDaten.MaschinenName]"/>
+          <Header Expression="[tabDaten.BedienerName]"/>
+        </MatrixRows>
+        <MatrixCells>
+          <Cell Expression="[tabDaten.GewichtProBediener]"/>
+          <Cell Expression="[tabDaten.SumStunden]"/>
+          <Cell Expression="[tabDaten.Durchschnitt]" Function="Avg"/>
+        </MatrixCells>
+        <TableColumn Name="Column1" MinWidth="75.6" MaxWidth="75.6" Width="75.6" AutoSize="true"/>
+        <TableColumn Name="Column2" MinWidth="75.6" MaxWidth="75.6" Width="75.6" AutoSize="true"/>
+        <TableColumn Name="Column3" MinWidth="56.7" MaxWidth="56.7" Width="56.7" AutoSize="true"/>
+        <TableColumn Name="Column4" MinWidth="56.7" MaxWidth="56.7" Width="56.7" AutoSize="true"/>
+        <TableColumn Name="Column5" MinWidth="75.6" MaxWidth="75.6" Width="75.6" AutoSize="true"/>
+        <TableRow Name="Row1" MinHeight="30.24" MaxHeight="30.24" Height="30.24" AutoSize="true">
+          <TableCell Name="Cell1" Border.Lines="Bottom" Text="Maschine" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="Bottom" Text="Bediener" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold, Italic"/>
+          <TableCell Name="Cell7" Border.Lines="Bottom" HorzAlign="Center" VertAlign="Center"/>
+          <TableCell Name="Cell10" Border.Lines="Bottom" Text="[Datum]" Format="Custom" Format.Format="dd.MM" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt"/>
+          <TableCell Name="Cell17" Border.Lines="Left, Bottom" Text="Summe" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+        <TableRow Name="Row2" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell3" Border.Lines="Bottom" Text="[MaschinenName]" HorzAlign="Center" VertAlign="Center" Angle="270" RowSpan="6"/>
+          <TableCell Name="Cell4" Border.Lines="Bottom" Border.BottomLine.Style="Dot" Text="[BedienerName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt" RowSpan="3"/>
+          <TableCell Name="Cell8" Border.Lines="Right" Border.RightLine.Style="Dot" Text="t" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold, Italic"/>
+          <TableCell Name="Cell11" Text="[GewichtProBediener]" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell18" Border.Lines="Left" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row3" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell5"/>
+          <TableCell Name="Cell6"/>
+          <TableCell Name="Cell9" Border.Lines="Right" Border.RightLine.Style="Dot" Text="h" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold, Italic"/>
+          <TableCell Name="Cell12" Text="[SumStunden]" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell19" Border.Lines="Left" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row4" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell13"/>
+          <TableCell Name="Cell14"/>
+          <TableCell Name="Cell15" Border.Lines="Right, Bottom" Border.RightLine.Style="Dot" Border.BottomLine.Style="Dot" Text="Ø" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold, Italic"/>
+          <TableCell Name="Cell16" Border.Lines="Bottom" Border.BottomLine.Style="Dot" Text="[Durchschnitt]" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt, style=Italic"/>
+          <TableCell Name="Cell20" Border.Lines="Left, Bottom" Border.BottomLine.Style="Dot" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt, style=Bold, Italic"/>
+        </TableRow>
+        <TableRow Name="Row5" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell21"/>
+          <TableCell Name="Cell22" Border.Lines="Bottom" Text="Summe&#13;&#10;Maschine" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold, Italic" RowSpan="3"/>
+          <TableCell Name="Cell23" Border.Lines="Right" Border.RightLine.Style="Dot" Text="Σ t" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold"/>
+          <TableCell Name="Cell24" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell25" Border.Lines="Left" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row6" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell26"/>
+          <TableCell Name="Cell27"/>
+          <TableCell Name="Cell28" Border.Lines="Right" Border.RightLine.Style="Dot" Text="Σ h" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold"/>
+          <TableCell Name="Cell29" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell30" Border.Lines="Left" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row7" Height="30.56" AutoSize="true">
+          <TableCell Name="Cell31"/>
+          <TableCell Name="Cell32"/>
+          <TableCell Name="Cell33" Border.Lines="Right, Bottom" Border.RightLine.Style="Dot" Text="Σ Ø" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold"/>
+          <TableCell Name="Cell34" Border.Lines="Bottom" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell35" Border.Lines="Left, Bottom" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row8" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell36" Text="Summe&#13;&#10;Standort" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold" ColSpan="2" RowSpan="3"/>
+          <TableCell Name="Cell37"/>
+          <TableCell Name="Cell38" Border.Lines="Right" Border.RightLine.Style="Dot" Text="Σ t" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold"/>
+          <TableCell Name="Cell39" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell40" Border.Lines="Left" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row9" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell41"/>
+          <TableCell Name="Cell42"/>
+          <TableCell Name="Cell43" Border.Lines="Right" Border.RightLine.Style="Dot" Text="Σ h" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold"/>
+          <TableCell Name="Cell44" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell45" Border.Lines="Left" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row10" Height="17.91" AutoSize="true">
+          <TableCell Name="Cell46"/>
+          <TableCell Name="Cell47"/>
+          <TableCell Name="Cell48" Border.Lines="Right" Border.RightLine.Style="Dot" Text="Σ Ø" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold"/>
+          <TableCell Name="Cell49" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+          <TableCell Name="Cell50" Border.Lines="Left" Format="Number" Format.UseLocale="true" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+        </TableRow>
+      </MatrixObject>
+      <TextObject Name="Text1" Left="9.45" Top="9.45" Width="463.05" Height="18.9" Text="Maschinenstatistik - [cmbStandort.Text]" Font="Arial, 12pt, style=Bold"/>
+      <TextObject Name="Text2" Left="9.45" Top="28.35" Width="463.05" Height="18.9" Text="Auswertung vom: [dtpAuswertungVon.Value] - [dtpAuswertungBis.Value] ">
+        <Formats>
+          <CustomFormat Format="dd.MM"/>
+          <CustomFormat Format="dd.MM.yyyy"/>
+        </Formats>
+      </TextObject>
+    </ReportTitleBand>
+    <PageFooterBand Name="PageFooter1" Top="275.38" Width="1047.06" Height="37.8">
+      <TextObject Name="Text3" Left="9.45" Top="9.45" Width="406.35" Height="18.9" Text="Maschinenstatistik - [cmbStandort.Text]" Font="Arial, 9pt"/>
+      <TextObject Name="Text4" Left="415.8" Top="9.45" Width="151.2" Height="18.9" Text="[PageNofM]" HorzAlign="Center" Font="Arial, 9pt"/>
+      <TextObject Name="Text5" Left="567" Top="9.45" Width="463.05" Height="18.9" Text="[Date]" HorzAlign="Right" Font="Arial, 9pt"/>
+    </PageFooterBand>
+  </ReportPage>
+  <DialogPage Name="Form1" Width="366" Height="210" AcceptButton="btnOk" CancelButton="btnCancel" Text="Abfrage Zeitraum Auswertung" LoadEvent="Form1_Load" ShownEvent="Form1_Shown">
+    <ButtonControl Name="btnOk" Left="194" Top="150" Anchor="Bottom, Right" Font="Tahoma, 8pt" TabIndex="0" Text="OK" DialogResult="OK"/>
+    <ButtonControl Name="btnCancel" Left="277" Top="150" Anchor="Bottom, Right" Font="Tahoma, 8pt" TabIndex="1" Text="Abbrechen" DialogResult="Cancel"/>
+    <LabelControl Name="Label1" Left="24" Top="24" Width="187" Height="13" Font="Tahoma, 8.25pt, style=Bold, Underline" TabIndex="2" Text="Auswertung Maschinen - täglich"/>
+    <LabelControl Name="Label2" Left="24" Top="55" Width="53" Height="13" Font="Tahoma, 8pt" TabIndex="3" Text="Standort:"/>
+    <LabelControl Name="Label3" Left="24" Top="91" Width="92" Height="13" Font="Tahoma, 8pt" TabIndex="3" Text="Auswertung vom:"/>
+    <LabelControl Name="Label4" Left="24" Top="119" Width="85" Height="13" Font="Tahoma, 8pt" TabIndex="3" Text="Auswertung bis:" ClickEvent="Label4_Click"/>
+    <ComboBoxControl Name="cmbStandort" Left="116" Top="52" Width="237" Font="Tahoma, 8pt" TabIndex="4" Text="ComboBox" DataColumn="tabStandortSet.Bezeichnung" DropDownWidth="233" ItemHeight="13" Sorted="true"/>
+    <DateTimePickerControl Name="dtpAuswertungVon" Left="116" Top="88" Width="236" Font="Tahoma, 8pt" TabIndex="6" Value="05/17/2016 10:59:54"/>
+    <DateTimePickerControl Name="dtpAuswertungBis" Left="116" Top="116" Width="236" Font="Tahoma, 8pt" TabIndex="7" Value="05/17/2016 10:59:59"/>
+  </DialogPage>
+</Report>

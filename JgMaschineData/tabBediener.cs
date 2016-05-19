@@ -32,6 +32,7 @@ namespace JgMaschineData
         public string MatchCode { get; set; }
         public EnumStatusBediener Status { get; set; }
         public Nullable<System.Guid> fAktuellAngemeldet { get; set; }
+        public System.Guid fStandort { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     
@@ -46,5 +47,6 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabBauteil> sBauteile { get; set; }
         public virtual tabMaschine eAktuelleAnmeldungMaschine { get; set; }
+        public virtual tabStandort eStandort { get; set; }
     }
 }

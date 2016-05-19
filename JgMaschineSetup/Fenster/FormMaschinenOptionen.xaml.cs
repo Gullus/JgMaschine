@@ -33,7 +33,7 @@ namespace JgMaschineSetup
 
       gridMaschine.DataContext = _Maschine;
 
-      cmbStandort.ItemsSource = _Db.tabStandortSet.ToList();
+      cmbStandort.ItemsSource = _Db.tabStandortSet.OrderBy(o => o.Bezeichnung).ToList();
       cmbProtokolle.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumProtokollName));
       cmbStatus.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusMaschine));
     }

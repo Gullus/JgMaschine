@@ -15,9 +15,7 @@ using System.Windows.Shapes;
 
 namespace JgMaschineSetup.Fenster
 {
-  /// <summary>
-  /// Interaktionslogik für FormBediener.xaml
-  /// </summary>
+
   public partial class FormBediener : Window
   {
     private JgModelContainer _Db;
@@ -48,6 +46,7 @@ namespace JgMaschineSetup.Fenster
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       gridBediener.DataContext = _Bediener;
+      cmbStandort.ItemsSource = _Db.tabStandortSet.OrderBy(o => o.Bezeichnung).ToList();
     }
 
     private void ButtonOk_Click(object sender, RoutedEventArgs e)
