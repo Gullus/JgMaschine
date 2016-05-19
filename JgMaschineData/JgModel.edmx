@@ -16,10 +16,6 @@
     <EntitySet Name="tabAuswertungSet" EntityType="JgModel.Store.tabAuswertungSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabArbeitszeitSet" EntityType="JgModel.Store.tabArbeitszeitSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabBauteiltabBediener" EntityType="JgModel.Store.tabBauteiltabBediener" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="tabMaschinetabDaten" Association="JgModel.Store.tabMaschinetabDaten">
-      <End Role="tabMaschine" EntitySet="tabMaschineSet" />
-      <End Role="tabDaten" EntitySet="tabBauteilSet" />
-    </AssociationSet>
     <AssociationSet Name="tabMaschinetabAnmeldung" Association="JgModel.Store.tabMaschinetabAnmeldung">
       <End Role="tabMaschine" EntitySet="tabMaschineSet" />
       <End Role="tabAnmeldung" EntitySet="tabAnmeldungMaschineSet" />
@@ -72,6 +68,14 @@
       <End Role="tabStandort" EntitySet="tabStandortSet" />
       <End Role="tabBediener" EntitySet="tabBedienerSet" />
     </AssociationSet>
+    <AssociationSet Name="tabBauteiltabMaschine" Association="JgModel.Store.tabBauteiltabMaschine">
+      <End Role="tabBauteil" EntitySet="tabBauteilSet" />
+      <End Role="tabMaschine" EntitySet="tabMaschineSet" />
+    </AssociationSet>
+    <AssociationSet Name="tabBauteiltabMaschine1" Association="JgModel.Store.tabBauteiltabMaschine1">
+      <End Role="tabBauteil" EntitySet="tabBauteilSet" />
+      <End Role="tabMaschine" EntitySet="tabMaschineSet" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="tabMaschineSet">
     <Key>
@@ -92,6 +96,7 @@
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="fLetztesBauteil" Type="uniqueidentifier" Nullable="true" />
   </EntityType>
   <EntityType Name="tabBedienerSet">
     <Key>
@@ -240,20 +245,6 @@
     <Property Name="sBauteile_Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="sBediener_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
-  <Association Name="tabMaschinetabDaten">
-    <End Role="tabMaschine" Type="JgModel.Store.tabMaschineSet" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="tabDaten" Type="JgModel.Store.tabBauteilSet" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="tabMaschine">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="tabDaten">
-        <PropertyRef Name="fMaschine" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="tabMaschinetabAnmeldung">
     <End Role="tabMaschine" Type="JgModel.Store.tabMaschineSet" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -394,6 +385,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="tabBauteiltabMaschine">
+    <End Role="tabBauteil" Type="JgModel.Store.tabBauteilSet" Multiplicity="0..1" />
+    <End Role="tabMaschine" Type="JgModel.Store.tabMaschineSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tabBauteil">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabMaschine">
+        <PropertyRef Name="fLetztesBauteil" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="tabBauteiltabMaschine1">
+    <End Role="tabBauteil" Type="JgModel.Store.tabBauteilSet" Multiplicity="*" />
+    <End Role="tabMaschine" Type="JgModel.Store.tabMaschineSet" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="tabMaschine">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabBauteil">
+        <PropertyRef Name="fMaschine" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_tabBauteiltabBediener_tabBauteil">
     <End Role="tabBauteil" Type="JgModel.Store.tabBauteilSet" Multiplicity="1" />
     <End Role="tabBauteiltabBediener" Type="JgModel.Store.tabBauteiltabBediener" Multiplicity="*" />
@@ -426,10 +441,6 @@
           <EntitySet Name="tabMaschineSet" EntityType="JgModel.tabMaschine" />
           <EntitySet Name="tabBedienerSet" EntityType="JgModel.tabBediener" />
           <EntitySet Name="tabBauteilSet" EntityType="JgModel.tabBauteil" />
-          <AssociationSet Name="tabMaschinetabDaten" Association="JgModel.tabMaschinetabDaten">
-            <End Role="tabMaschine" EntitySet="tabMaschineSet" />
-            <End Role="tabDaten" EntitySet="tabBauteilSet" />
-          </AssociationSet>
           <EntitySet Name="tabAnmeldungMaschineSet" EntityType="JgModel.tabAnmeldungMaschine" />
           <AssociationSet Name="tabMaschinetabAnmeldung" Association="JgModel.tabMaschinetabAnmeldung">
             <End Role="tabMaschine" EntitySet="tabMaschineSet" />
@@ -489,13 +500,20 @@
             <End Role="tabStandort" EntitySet="tabStandortSet" />
             <End Role="tabBediener" EntitySet="tabBedienerSet" />
           </AssociationSet>
+          <AssociationSet Name="tabBauteiltabMaschine" Association="JgModel.tabBauteiltabMaschine">
+            <End Role="tabBauteil" EntitySet="tabBauteilSet" />
+            <End Role="tabMaschine" EntitySet="tabMaschineSet" />
+          </AssociationSet>
+          <AssociationSet Name="tabBauteiltabMaschine1" Association="JgModel.tabBauteiltabMaschine1">
+            <End Role="tabBauteil" EntitySet="tabBauteilSet" />
+            <End Role="tabMaschine" EntitySet="tabMaschineSet" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tabMaschine">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="sDaten" Relationship="JgModel.tabMaschinetabDaten" FromRole="tabMaschine" ToRole="tabDaten" />
           <Property Name="MaschinenName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="ProtokollName" Type="JgModel.EnumProtokollName" Nullable="false" />
           <Property Name="ComputerAdresse" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -513,6 +531,9 @@
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
           <NavigationProperty Name="sAktuelleBediener" Relationship="JgModel.tabMaschinetabBediener" FromRole="tabMaschine" ToRole="tabBediener" />
+          <Property Name="fLetztesBauteil" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="eLetztesBauteil" Relationship="JgModel.tabBauteiltabMaschine" FromRole="tabMaschine" ToRole="tabBauteil" />
+          <NavigationProperty Name="sBauteile" Relationship="JgModel.tabBauteiltabMaschine1" FromRole="tabMaschine" ToRole="tabBauteil" />
         </EntityType>
         <EntityType Name="tabBediener">
           <Key>
@@ -558,23 +579,10 @@
           <Property Name="AnzahlBiegungen" Type="Byte" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="eMaschine" Relationship="JgModel.tabMaschinetabDaten" FromRole="tabDaten" ToRole="tabMaschine" />
           <NavigationProperty Name="sBediener" Relationship="JgModel.tabBauteiltabBediener" FromRole="tabBauteil" ToRole="tabBediener" />
+          <NavigationProperty Name="eBauteilAktuell" Relationship="JgModel.tabBauteiltabMaschine" FromRole="tabBauteil" ToRole="tabMaschine" />
+          <NavigationProperty Name="eMaschine" Relationship="JgModel.tabBauteiltabMaschine1" FromRole="tabBauteil" ToRole="tabMaschine" />
         </EntityType>
-        <Association Name="tabMaschinetabDaten">
-          <End Type="JgModel.tabMaschine" Role="tabMaschine" Multiplicity="1" >
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="JgModel.tabBauteil" Role="tabDaten" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tabMaschine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="tabDaten">
-              <PropertyRef Name="fMaschine" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="tabAnmeldungMaschine">
           <Key>
             <PropertyRef Name="Id" />
@@ -862,6 +870,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="tabBauteiltabMaschine">
+          <End Type="JgModel.tabBauteil" Role="tabBauteil" Multiplicity="0..1" />
+          <End Type="JgModel.tabMaschine" Role="tabMaschine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tabBauteil">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabMaschine">
+              <PropertyRef Name="fLetztesBauteil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tabBauteiltabMaschine1">
+          <End Type="JgModel.tabBauteil" Role="tabBauteil" Multiplicity="*" />
+          <End Type="JgModel.tabMaschine" Role="tabMaschine" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="tabMaschine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabBauteil">
+              <PropertyRef Name="fMaschine" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -888,6 +920,7 @@
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
           </ComplexProperty>
           <ScalarProperty Name="fStandort" ColumnName="fStandort" />
+          <ScalarProperty Name="fLetztesBauteil" ColumnName="fLetztesBauteil" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

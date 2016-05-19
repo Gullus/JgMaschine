@@ -4,11 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1f8757055d2a477f966ead49ef7f3c84" Name="JgDiagramm" ZoomLevel="100" DisplayType="true" >
-        <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.375" PointX="5.875" PointY="7.125" />
+      <Diagram DiagramId="1f8757055d2a477f966ead49ef7f3c84" Name="JgDiagramm" ZoomLevel="55" DisplayType="true" >
+        <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.375" PointX="5.875" PointY="7" />
         <EntityTypeShape EntityType="JgModel.tabBediener" Width="9.625" PointX="5.875" PointY="12.75" />
-        <EntityTypeShape EntityType="JgModel.tabBauteil" Width="2.875" PointX="6.875" PointY="1.375" />
-        <AssociationConnector Association="JgModel.tabMaschinetabDaten" />
+        <EntityTypeShape EntityType="JgModel.tabBauteil" Width="3.875" PointX="5.875" PointY="1" />
         <EntityTypeShape EntityType="JgModel.tabAnmeldungMaschine" Width="2" PointX="9.75" PointY="8.625" />
         <AssociationConnector Association="JgModel.tabMaschinetabAnmeldung" />
         <AssociationConnector Association="JgModel.tabBedienertabAnmeldung" />
@@ -21,13 +20,15 @@
         <AssociationConnector Association="JgModel.tabMaschinetabProtokoll" />
         <EntityTypeShape EntityType="JgModel.tabStandort" Width="3.75" PointX="11.75" PointY="5.625" />
         <AssociationConnector Association="JgModel.tabStandorttabMaschine" />
-        <EntityTypeShape EntityType="JgModel.tabAuswertung" Width="2.5" PointX="3.25" PointY="2.625" />
+        <EntityTypeShape EntityType="JgModel.tabAuswertung" Width="2.5" PointX="2.5" PointY="2.75" />
         <EntityTypeShape EntityType="JgModel.tabArbeitszeit" Width="1.875" PointX="13.625" PointY="8.875" />
         <AssociationConnector Association="JgModel.tabBedienertabArbeitszeit" />
         <AssociationConnector Association="JgModel.tabBauteiltabBediener" />
         <AssociationConnector Association="JgModel.tabMaschinetabBediener" />
         <AssociationConnector Association="JgModel.tabStandorttabArbeitszeit1" />
         <AssociationConnector Association="JgModel.tabStandorttabBediener" />
+        <AssociationConnector Association="JgModel.tabBauteiltabMaschine" />
+        <AssociationConnector Association="JgModel.tabBauteiltabMaschine1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

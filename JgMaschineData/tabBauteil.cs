@@ -24,6 +24,7 @@ namespace JgMaschineData
             this.BtGewicht = -1;
             this.BtDurchmesser = -1;
             this.sBediener = new HashSet<tabBediener>();
+            this.eBauteilAktuell = new HashSet<tabMaschine>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
@@ -48,8 +49,10 @@ namespace JgMaschineData
     
         public DatenAbgleich DatenAbgleich { get; set; }
     
-        public virtual tabMaschine eMaschine { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabBediener> sBediener { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabMaschine> eBauteilAktuell { get; set; }
+        public virtual tabMaschine eMaschine { get; set; }
     }
 }

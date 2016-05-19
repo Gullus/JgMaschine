@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/17/2016 10:13:24
--- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
+-- Date Created: 05/19/2016 13:28:08
+-- Generated from EDMX file: D:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -55,6 +55,9 @@ IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabBediener]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitszeit1]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabArbeitszeitSet] DROP CONSTRAINT [FK_tabStandorttabArbeitszeit1];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabStandorttabBediener]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabBedienerSet] DROP CONSTRAINT [FK_tabStandorttabBediener];
 GO
 
 -- --------------------------------------------------
@@ -112,7 +115,8 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
-    [fStandort] uniqueidentifier  NOT NULL
+    [fStandort] uniqueidentifier  NOT NULL,
+    [fLetztesBauteil] uniqueidentifier  NULL
 );
 GO
 
@@ -330,21 +334,6 @@ GO
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [fMaschine] in table 'tabBauteilSet'
-ALTER TABLE [dbo].[tabBauteilSet]
-ADD CONSTRAINT [FK_tabMaschinetabDaten]
-    FOREIGN KEY ([fMaschine])
-    REFERENCES [dbo].[tabMaschineSet]
-        ([Id])
-    ON DELETE CASCADE ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_tabMaschinetabDaten'
-CREATE INDEX [IX_FK_tabMaschinetabDaten]
-ON [dbo].[tabBauteilSet]
-    ([fMaschine]);
-GO
-
 -- Creating foreign key on [fMaschine] in table 'tabAnmeldungMaschineSet'
 ALTER TABLE [dbo].[tabAnmeldungMaschineSet]
 ADD CONSTRAINT [FK_tabMaschinetabAnmeldung]
@@ -526,6 +515,36 @@ GO
 CREATE INDEX [IX_FK_tabStandorttabBediener]
 ON [dbo].[tabBedienerSet]
     ([fStandort]);
+GO
+
+-- Creating foreign key on [fLetztesBauteil] in table 'tabMaschineSet'
+ALTER TABLE [dbo].[tabMaschineSet]
+ADD CONSTRAINT [FK_tabBauteiltabMaschine]
+    FOREIGN KEY ([fLetztesBauteil])
+    REFERENCES [dbo].[tabBauteilSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabBauteiltabMaschine'
+CREATE INDEX [IX_FK_tabBauteiltabMaschine]
+ON [dbo].[tabMaschineSet]
+    ([fLetztesBauteil]);
+GO
+
+-- Creating foreign key on [fMaschine] in table 'tabBauteilSet'
+ALTER TABLE [dbo].[tabBauteilSet]
+ADD CONSTRAINT [FK_tabBauteiltabMaschine1]
+    FOREIGN KEY ([fMaschine])
+    REFERENCES [dbo].[tabMaschineSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabBauteiltabMaschine1'
+CREATE INDEX [IX_FK_tabBauteiltabMaschine1]
+ON [dbo].[tabBauteilSet]
+    ([fMaschine]);
 GO
 
 -- --------------------------------------------------
