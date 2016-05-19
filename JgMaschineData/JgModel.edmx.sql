@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/19/2016 13:28:08
--- Generated from EDMX file: D:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
+-- Date Created: 05/19/2016 17:40:55
+-- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -17,9 +17,6 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabDaten]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[tabBauteilSet] DROP CONSTRAINT [FK_tabMaschinetabDaten];
-GO
 IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabAnmeldung]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabAnmeldungMaschineSet] DROP CONSTRAINT [FK_tabMaschinetabAnmeldung];
 GO
@@ -58,6 +55,12 @@ IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitszeit1]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_tabStandorttabBediener]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabBedienerSet] DROP CONSTRAINT [FK_tabStandorttabBediener];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabBauteiltabMaschine]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabMaschineSet] DROP CONSTRAINT [FK_tabBauteiltabMaschine];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabBauteiltabMaschine1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabBauteilSet] DROP CONSTRAINT [FK_tabBauteiltabMaschine1];
 GO
 
 -- --------------------------------------------------
