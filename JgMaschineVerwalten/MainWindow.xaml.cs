@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace JgMaschineVerwalten
 {
@@ -32,8 +33,8 @@ namespace JgMaschineVerwalten
     private JgDatumZeit _DzAnmeldungBis { get { return (JgDatumZeit)this.FindResource("dzAnmeldungBis"); } }
     private CollectionViewSource _VsBenutzerAnmeldung { get { return (CollectionViewSource)FindResource("vsAnmeldungBenutzer"); } }
 
-    private JgDatumZeit _DzBauteilVon { get { return (JgDatumZeit)this.FindResource("dzReparaturVon"); } }
-    private JgDatumZeit _DzBauteilBis { get { return (JgDatumZeit)this.FindResource("dzReparaturBis"); } }
+    private JgDatumZeit _DzBauteilVon { get { return (JgDatumZeit)this.FindResource("dzBauteilVon"); } }
+    private JgDatumZeit _DzBauteilBis { get { return (JgDatumZeit)this.FindResource("dzBauteilBis"); } }
     private JgMaschineLib.JgListe<JgMaschineData.tabBauteil> _ListeBauteilAuswahl;
 
     private JgDatumZeit _DzReparaturVon { get { return (JgDatumZeit)this.FindResource("dzReparaturVon"); } }
@@ -41,7 +42,7 @@ namespace JgMaschineVerwalten
     private JgMaschineLib.JgListe<JgMaschineData.tabReparatur> _ListeReparaturAktuell;
     private JgMaschineLib.JgListe<JgMaschineData.tabReparatur> _ListeReparaturAuswahl;
 
-    private System.Threading.Timer _AktualisierungsTimer;
+    private DispatcherTimer _AktualisierungsTimer;
 
     private FastReport.Report _Report;
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
@@ -83,7 +84,7 @@ namespace JgMaschineVerwalten
 
       IQueryable<JgMaschineData.tabArbeitszeit> iqArbeitszeitAktuell = _Db.tabArbeitszeitSet.Where(w => (w.fStandort == _Standort.Id) && w.IstAktiv).OrderBy(o => o.Anmeldung);
       vs = (CollectionViewSource)FindResource("vsArbeitszeitAktuell");
-      _ListeArbeitszeitAktuell = new JgMaschineLib.JgListe<JgMaschineData.tabArbeitszeit>(_Db, iqArbeitszeitAktuell, vs, dgArbeitszeitAuswahl);
+      _ListeArbeitszeitAktuell = new JgMaschineLib.JgListe<JgMaschineData.tabArbeitszeit>(_Db, iqArbeitszeitAktuell, vs, dgArbeitszeitAktuell);
       await _ListeArbeitszeitAktuell.Init();
 
       _DzArbeitszeitVon.DatumZeit = von;
@@ -117,7 +118,7 @@ namespace JgMaschineVerwalten
       _DzBauteilVon.DatumZeit = von;
       _DzBauteilBis.DatumZeit = bis;
 
-      IQueryable<JgMaschineData.tabBauteil> iqBauteilAuswahl = _Db.tabBauteilSet.Where(w => (w.fMaschine == _ListeMaschinen.AktDatensatz.Id) && (w.DatumStart >= _DzBauteilVon.DatumZeit) && (w.DatumStart <= _DzBauteilBis.DatumZeit)).OrderBy(o => o.DatumStart);
+      IQueryable<JgMaschineData.tabBauteil> iqBauteilAuswahl = _Db.tabBauteilSet.Where(w => (w.fMaschine == _ListeMaschinen.AktDatensatz.Id) && (w.DatumStart >= _DzBauteilVon.DatumZeit) && (w.DatumStart <= _DzBauteilBis.DatumZeit)).OrderBy(o => o.DatumStart).Include(i => i.sBediener);
       vs = (CollectionViewSource)FindResource("vsBauteilAuswahl");
       _ListeBauteilAuswahl = new JgMaschineLib.JgListe<JgMaschineData.tabBauteil>(_Db, iqBauteilAuswahl, vs, dgBauteilAuswahl);
       await _ListeBauteilAuswahl.Init();
@@ -167,10 +168,16 @@ namespace JgMaschineVerwalten
       var auswertungen = await _Db.tabAuswertungSet.Where(w => w.FilterAuswertung != JgMaschineData.EnumFilterAuswertung.Allgemein).ToListAsync();
       cmbDruckArbeitszeit.ItemsSource = auswertungen.Where(w => w.FilterAuswertung == JgMaschineData.EnumFilterAuswertung.Arbeitszeit).Select(s => s.ReportName).OrderBy(o => o);
 
-      _AktualisierungsTimer = new System.Threading.Timer((obj) =>
-      {
-        Dispatcher.Invoke((Action)delegate() { });
-      }, null, 60000, 60000);
+      _AktualisierungsTimer = new DispatcherTimer(DispatcherPriority.Background) { Interval = new TimeSpan(0, 0, 30) };
+      _AktualisierungsTimer.Tick += _AktualisierungsTimer_Tick;
+      _AktualisierungsTimer.Start();
+    }
+
+    private async void _AktualisierungsTimer_Tick(object sender, EventArgs e)
+    {
+      await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
+      await _ListeAnmeldungAktuell.DatenGenerierenAsync();
+      await _ListeReparaturAktuell.DatenGenerierenAsync();
     }
 
     private async void MaschineDatenAktualisieren()
@@ -289,7 +296,7 @@ namespace JgMaschineVerwalten
         anmeldung.ManuelleAbmeldung = true;
         anmeldung.IstAktiv = false;
         JgMaschineLib.DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
-        _Db.SaveChanges();
+        await _Db.SaveChangesAsync();
 
         _ListeMaschinen.Refresh();
 
@@ -305,11 +312,6 @@ namespace JgMaschineVerwalten
 
     #endregion
 
-    private void MaschinenWechseln()
-    {
-      _ListeMaschinen.DatenGenerieren();
-    }
-
     private async void ButtonOptionen_Click(object sender, RoutedEventArgs e)
     {
       Fenster.FormOptionen form = new Fenster.FormOptionen(_Db);
@@ -319,7 +321,7 @@ namespace JgMaschineVerwalten
         tblStandort.Text = _Standort.Bezeichnung;
         await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
         await _ListeArbeitszeitAuswahl.DatenGenerierenAsync();
-        MaschinenWechseln();
+        await _ListeMaschinen.DatenGenerierenAsync();
       }
     }
 
@@ -466,13 +468,16 @@ namespace JgMaschineVerwalten
 
         _AktAuswertung = _Db.tabAuswertungSet.FirstOrDefault(f => (f.ReportName == repName) && (f.FilterAuswertung == auswahl));
 
-        if (_AktAuswertung.Report == null)
-          vorgang = 4;
-        else
+        if (_AktAuswertung != null)
         {
-          MemoryStream mem;
-          mem = new MemoryStream(_AktAuswertung.Report);
-          _Report.Load(mem);
+          if (_AktAuswertung.Report == null)
+            vorgang = 4;
+          else
+          {
+            MemoryStream mem;
+            mem = new MemoryStream(_AktAuswertung.Report);
+            _Report.Load(mem);
+          }
         }
       }
 
@@ -556,6 +561,16 @@ namespace JgMaschineVerwalten
           case 2: _Report.Print(); break;
           case 3: _Report.Design(); break;
         }
+    }
+
+    private async void TabelleAktualisieren_Click(object sender, RoutedEventArgs e)
+    {
+      switch ((sender as Button).Tag.ToString())
+      {
+        case "1": await _ListeArbeitszeitAktuell.DatenGenerierenAsync(); break;
+        case "2": await _ListeAnmeldungAktuell.DatenGenerierenAsync(); break;
+        case "3": await _ListeReparaturAktuell.DatenGenerierenAsync(); break;
+      }
     }
   }
 }

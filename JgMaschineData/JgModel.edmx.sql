@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/03/2016 11:44:56
+-- Date Created: 05/17/2016 10:13:24
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -127,7 +127,8 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
-    [fAktuellAngemeldet] uniqueidentifier  NULL
+    [fAktuellAngemeldet] uniqueidentifier  NULL,
+    [fStandort] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -148,6 +149,8 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [NummerPosition] nvarchar(10)  NULL,
     [Buegelname] nvarchar(120)  NULL,
     [IstHandeingabe] bit  NOT NULL,
+    [AnzahlBediener] tinyint  NOT NULL,
+    [AnzahlBiegungen] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
@@ -507,6 +510,21 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_tabStandorttabArbeitszeit1'
 CREATE INDEX [IX_FK_tabStandorttabArbeitszeit1]
 ON [dbo].[tabArbeitszeitSet]
+    ([fStandort]);
+GO
+
+-- Creating foreign key on [fStandort] in table 'tabBedienerSet'
+ALTER TABLE [dbo].[tabBedienerSet]
+ADD CONSTRAINT [FK_tabStandorttabBediener]
+    FOREIGN KEY ([fStandort])
+    REFERENCES [dbo].[tabStandortSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabStandorttabBediener'
+CREATE INDEX [IX_FK_tabStandorttabBediener]
+ON [dbo].[tabBedienerSet]
     ([fStandort]);
 GO
 

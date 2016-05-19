@@ -90,9 +90,15 @@ namespace JgMaschineScanner
                 IdStahlPosition = 1,
                 IdStahlBauteil = 1,
 
+                AnzahlBediener = (byte)maschine.sAktuelleBediener.Count(),
+                AnzahlBiegungen = (byte)bauteil.ListeGeometrie.Count,
+
                 DatumStart = DateTime.Now,
                 DatumEnde = DateTime.Now
               };
+
+              foreach (var bed in maschine.sAktuelleBediener)
+                datensatz.sBediener.Add(bed);
 
               JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabBauteil>(_Db, datensatz, JgMaschineData.EnumStatusDatenabgleich.Neu);
             }
