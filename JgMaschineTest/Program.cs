@@ -11,6 +11,7 @@ using System.IO;
 using System.Threading;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using JgMaschineLib.Scanner;
 
 namespace JgMaschineTest
 {
@@ -20,8 +21,14 @@ namespace JgMaschineTest
 
     static void Main()
     {
-      var adresse = Properties.Settings.Default.Adresse;
-      var port = Properties.Settings.Default.PortNummer;
+
+      var pr = Properties.Settings.Default;
+      var st = new ScannerProgramm(pr.ScannerAdresse, pr.ScannerPort, pr.Verbindungszeichen, true);
+      Console.ReadKey();
+      st.Close();
+
+      var adresse = Properties.Settings.Default.ScannerAdresse;
+      var port = Properties.Settings.Default.ScannerPort;
 
       try
       {

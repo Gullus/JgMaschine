@@ -23,27 +23,31 @@ namespace JgMaschineTest.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("51000")]
-        public int PortNummer {
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.59")]
+        public string ScannerAdresse {
             get {
-                return ((int)(this["PortNummer"]));
-            }
-            set {
-                this["PortNummer"] = value;
+                return ((string)(this["ScannerAdresse"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.59")]
-        public string Adresse {
+        [global::System.Configuration.DefaultSettingValueAttribute("51000")]
+        public int ScannerPort {
             get {
-                return ((string)(this["Adresse"]));
+                return ((int)(this["ScannerPort"]));
             }
-            set {
-                this["Adresse"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True")]
+        public string Verbindungszeichen {
+            get {
+                return ((string)(this["Verbindungszeichen"]));
             }
         }
     }

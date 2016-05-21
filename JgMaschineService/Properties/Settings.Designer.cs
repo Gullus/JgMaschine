@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JgMaschineScanner.Properties {
+namespace JgMaschineService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -23,27 +23,21 @@ namespace JgMaschineScanner.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("51000")]
-        public int Portnummer {
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.16.1")]
+        public string ScannerAdresse {
             get {
-                return ((int)(this["Portnummer"]));
-            }
-            set {
-                this["Portnummer"] = value;
+                return ((string)(this["ScannerAdresse"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.59")]
-        public string Adresse {
+        [global::System.Configuration.DefaultSettingValueAttribute("5200")]
+        public int ScannerPortnummer {
             get {
-                return ((string)(this["Adresse"]));
-            }
-            set {
-                this["Adresse"] = value;
+                return ((int)(this["ScannerPortnummer"]));
             }
         }
     }

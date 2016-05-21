@@ -57,13 +57,13 @@ namespace JgMaschineLib.Scanner
       _ScannerCom = ScannerText;
     }
 
-    public void Protokoll(string FehlerText, params object[] Felder)
+    private void Protokoll(string FehlerText, params object[] Felder)
     {
       if (_AnzeigeProtokoll)
         Console.WriteLine(FehlerText, Felder);
     }
 
-    public bool istPingOk()
+    private bool istPingOk()
     {
       Ping sender = new Ping();
       PingReply result = null;
@@ -83,6 +83,17 @@ namespace JgMaschineLib.Scanner
         Protokoll("Ping fehlgeschlagen mit IPStatus: {0}", result.Status);
 
       return result.Status == IPStatus.Success;
+    }
+
+    public void Close()
+    {
+      try
+      {
+        _NetStream.Close();
+        _NetStream.Dispose();
+        _Client.Close();
+      }
+      catch { };
     }
 
     public void Start()
