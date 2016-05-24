@@ -1,35 +1,35 @@
-﻿using JgMaschineLib.Scanner;
-using System;
+﻿using System;
 using System.Linq;
-using System.IO;
 
-namespace JgMaschineScanner
+namespace JgMaschineLib.Scanner
 {
-  class Program
+  public class ScannerProgramm
   {
-    static void Main(string[] args)
-    {
-      var st = new ScannerTest();
-      st.Start();
-      Console.ReadKey();
-    }
-  }
+    private bool _ProtokllAnzeigen = true;
 
-  public class ScannerTest
-  {
+    private DataLogicScanner _DlScanner;
     private JgMaschineData.JgModelContainer _Db;
     private DataLogicScanner.VorgangProgram[] _IstStart = { DataLogicScanner.VorgangProgram.WARTSTART, DataLogicScanner.VorgangProgram.REPASTART, DataLogicScanner.VorgangProgram.COILSTART };
 
-    public void Start()
+    public ScannerProgramm(string Adresse, int PortNummer, string VerbindungsString, bool ProtokollAnzeigen = false)
     {
-      string adresse = Properties.Settings.Default.Adresse;
-      int port = Properties.Settings.Default.Portnummer;
-
       _Db = new JgMaschineData.JgModelContainer();
+      _Db.Database.Connection.ConnectionString = VerbindungsString;
       _Db.tabStandortSet.FirstOrDefault();
 
-      var scDataLogic = new DataLogicScanner(adresse, port, ScannerCommunication, true);
-      scDataLogic.Start();
+      _DlScanner = new DataLogicScanner(Adresse, PortNummer, ScannerCommunication, ProtokollAnzeigen);
+      _DlScanner.Start();
+    }
+
+    public void Close()
+    {
+      _DlScanner.Close();
+    }
+
+    private void Protokoll(string Ausgabe, params object[] Werte)
+    {
+      if (_ProtokllAnzeigen)
+        Console.WriteLine(Ausgabe, Werte);
     }
 
     private JgMaschineData.tabMaschine SucheMaschine(JgMaschineData.JgModelContainer Db, DataLogicScannerText e)
@@ -58,7 +58,6 @@ namespace JgMaschineScanner
 
       if (maschine != null)
       {
-
         switch (e.VorgangScan)
         {
           case DataLogicScanner.VorgangScanner.BF2D:
@@ -69,40 +68,69 @@ namespace JgMaschineScanner
             {
               e.SendeText(" ", "  - Bauteil O K -");
 
-              var bauteil = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
+              var btNeu = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
 
-              Console.WriteLine("Maschine: {0}", maschine.MaschinenName);
-              Console.WriteLine("Project:  {0}  Anzahl: {1} Gewicht: {2}", bauteil.ProjektNummer, bauteil.Anzahl, bauteil.Gewicht * 1000);
-              Console.WriteLine();
+              Protokoll("Maschine: {0}", maschine.MaschinenName);
+              Protokoll("Project:  {0}  Anzahl: {1} Gewicht: {2}", btNeu.ProjektNummer, btNeu.Anzahl, btNeu.Gewicht * 1000);
+              Protokoll(" ");
 
-              var datensatz = new JgMaschineData.tabBauteil()
+              var neuesBauteilErstellen = true;
+
+              if (maschine.eLetztesBauteil != null)
               {
-                Id = Guid.NewGuid(),
-                eMaschine = maschine,
-                BtAnzahl = Convert.ToInt32(bauteil.Anzahl),
-                BtDurchmesser = Convert.ToInt32(bauteil.Durchmesser),
-                BtGewicht = Convert.ToInt32(bauteil.Gewicht * 1000),
-                BtLaenge = Convert.ToInt32(bauteil.Laenge),
-                NummerBauteil = bauteil.ProjektNummer,
+                var letztesBt = maschine.eLetztesBauteil;
+                letztesBt.DatumEnde = DateTime.Now;
+                DbSichern.AbgleichEintragen(letztesBt.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
 
-                IstHandeingabe = false,
+                neuesBauteilErstellen = (letztesBt.NummerBauteil != btNeu.ProjektNummer)
+                  || (letztesBt.BtDurchmesser != btNeu.Durchmesser)
+                  || (letztesBt.BtGewicht != (btNeu.Gewicht * 1000))
+                  || (letztesBt.BtLaenge != btNeu.Laenge);
+              }
 
-                IdStahlPosition = 1,
-                IdStahlBauteil = 1,
+              if (neuesBauteilErstellen)
+              {
+                var btInDatenBank = _Db.tabBauteilSet.FirstOrDefault(f => ((f.NummerBauteil == btNeu.ProjektNummer)
+                  && (f.BtDurchmesser == btNeu.Durchmesser)
+                  && (f.BtGewicht == btNeu.Gewicht)
+                  && (f.BtLaenge == btNeu.Laenge)));
 
-                AnzahlBediener = (byte)maschine.sAktuelleBediener.Count(),
-                AnzahlBiegungen = (byte)bauteil.ListeGeometrie.Count,
+                if (btInDatenBank != null)
+                  e.FehlerAusgabe("Bauteil bereits am", btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm"), "gefertigt.");
+                else
+                {
+                  var btNeuErstellt = new JgMaschineData.tabBauteil()
+                  {
+                    Id = Guid.NewGuid(),
+                    eMaschine = maschine,
+                    BtAnzahl = Convert.ToInt32(btNeu.Anzahl),
+                    BtDurchmesser = Convert.ToInt32(btNeu.Durchmesser),
+                    BtGewicht = Convert.ToInt32(btNeu.Gewicht * 1000),
+                    BtLaenge = Convert.ToInt32(btNeu.Laenge),
+                    NummerBauteil = btNeu.ProjektNummer,
 
-                DatumStart = DateTime.Now,
-                DatumEnde = DateTime.Now
-              };
+                    IstHandeingabe = false,
 
-              foreach (var bed in maschine.sAktuelleBediener)
-                datensatz.sBediener.Add(bed);
+                    IdStahlPosition = 1,
+                    IdStahlBauteil = 1,
 
-              JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabBauteil>(_Db, datensatz, JgMaschineData.EnumStatusDatenabgleich.Neu);
+                    AnzahlBediener = (byte)maschine.sAktuelleBediener.Count(),
+                    AnzahlBiegungen = (byte)btNeu.ListeGeometrie.Count,
+
+                    DatumStart = DateTime.Now,
+                    DatumEnde = DateTime.Now
+                  };
+
+                  foreach (var bed in maschine.sAktuelleBediener)
+                    btNeuErstellt.sBediener.Add(bed);
+
+                  maschine.eLetztesBauteil = btNeuErstellt;
+                  DbSichern.DsSichern<JgMaschineData.tabBauteil>(_Db, btNeuErstellt, JgMaschineData.EnumStatusDatenabgleich.Neu);
+                }
+              }
             }
             break;
+
           case DataLogicScanner.VorgangScanner.MITA:
 
             var mitarb = _Db.tabBedienerSet.Find(Guid.Parse(e.ScannerKoerper));
@@ -131,7 +159,7 @@ namespace JgMaschineScanner
 
                       // speichervorgang muss vor nächster Speicherung abgeschlossen sein.
 
-                      JgMaschineLib.DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+                      DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
                       _Db.SaveChanges();
                     }
                   }
@@ -155,7 +183,7 @@ namespace JgMaschineScanner
                     ManuelleAbmeldung = false
                   };
 
-                  JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Neu);
+                  DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Neu);
                 }
               }
               else // Abmeldung
@@ -164,7 +192,7 @@ namespace JgMaschineScanner
                   e.FehlerAusgabe(" ", "Sie sind an keiner", "Maschine angemeldet !");
                 else
                 {
-                  e.SendeText(" ", "- A B M E L D U N G -", " ", mitarb.Name,  "MA: " + maschine.MaschinenName);
+                  e.SendeText(" ", "- A B M E L D U N G -", " ", mitarb.Name, "MA: " + maschine.MaschinenName);
 
                   mitarb.eAktuelleAnmeldungMaschine = null;
 
@@ -175,14 +203,14 @@ namespace JgMaschineScanner
                     anmeldung.ManuelleAbmeldung = false;
                     anmeldung.IstAktiv = false;
 
-                    JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+                    DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
                   }
                 }
               }
-              Console.WriteLine("Vorgang:     {0}", e.VorgangProgramm);
-              Console.WriteLine("Maschine:    {0}", maschine.MaschinenName);
-              Console.WriteLine("Mitarbeiter: {0} {1}", mitarb.VorName, mitarb.NachName);
-              Console.WriteLine();
+              Protokoll("Vorgang:     {0}", e.VorgangProgramm);
+              Protokoll("Maschine:    {0}", maschine.MaschinenName);
+              Protokoll("Mitarbeiter: {0} {1}", mitarb.VorName, mitarb.NachName);
+              Protokoll(" ");
             }
 
             break;
@@ -216,7 +244,7 @@ namespace JgMaschineScanner
                   Ereigniss = ereignis
                 };
 
-                JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
+                DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
               }
             }
             else
@@ -242,8 +270,12 @@ namespace JgMaschineScanner
                 reparatur.IstAktiv = false;
                 reparatur.VorgangEnde = DateTime.Now;
 
-                JgMaschineLib.DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+                DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
               };
+
+              Protokoll("Vorgang:     {0}", e.VorgangProgramm);
+              Protokoll("Maschine:    {0}", maschine.MaschinenName);
+              Protokoll(" ");
             }
             break;
 
@@ -251,8 +283,6 @@ namespace JgMaschineScanner
             break;
         }
       }
-
-      Console.WriteLine();
     }
   }
 }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
-[assembly: AssemblyTitle("JgMaschineScanner")]
+[assembly: AssemblyTitle("JgMaschineDienst")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("JgMaschineScanner")]
+[assembly: AssemblyProduct("JgMaschineDienst")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
-[assembly: Guid("ac89b8ac-dd69-48f8-8ce8-f17e0aafdbf0")]
+[assembly: Guid("e9cd4ff4-b336-4e43-ac8d-4b8b573d0afa")]
 
 // Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
 //
