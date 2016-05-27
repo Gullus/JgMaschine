@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/19/2016 17:40:55
+-- Date Created: 05/24/2016 11:20:20
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -107,10 +107,11 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [Id] uniqueidentifier  NOT NULL,
     [MaschinenName] nvarchar(120)  NOT NULL,
     [ProtokollName] tinyint  NOT NULL,
-    [ComputerAdresse] nvarchar(max)  NULL,
-    [PfadDaten] nvarchar(max)  NULL,
-    [PfadBediener] nvarchar(max)  NULL,
-    [ScannerNummer] nvarchar(max)  NULL,
+    [MaschineAdresse] nvarchar(100)  NULL,
+    [MaschinePortnummer] int  NULL,
+    [PfadDaten] nvarchar(255)  NULL,
+    [PfadBediener] nvarchar(255)  NULL,
+    [ScannerNummer] nvarchar(20)  NULL,
     [ScannerMitDisplay] bit  NOT NULL,
     [Bemerkung] nvarchar(max)  NULL,
     [Status] tinyint  NOT NULL,

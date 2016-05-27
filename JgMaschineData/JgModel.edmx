@@ -84,10 +84,11 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="MaschinenName" Type="nvarchar" Nullable="false" MaxLength="120" />
     <Property Name="ProtokollName" Type="tinyint" Nullable="false" />
-    <Property Name="ComputerAdresse" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="PfadDaten" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="PfadBediener" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="ScannerNummer" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="MaschineAdresse" Type="nvarchar" Nullable="true" MaxLength="100" />
+    <Property Name="MaschinePortnummer" Type="int" Nullable="true" />
+    <Property Name="PfadDaten" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="PfadBediener" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="ScannerNummer" Type="nvarchar" Nullable="true" MaxLength="20" />
     <Property Name="ScannerMitDisplay" Type="bit" Nullable="false" />
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
@@ -516,10 +517,11 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="MaschinenName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="ProtokollName" Type="JgModel.EnumProtokollName" Nullable="false" />
-          <Property Name="ComputerAdresse" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="PfadDaten" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="PfadBediener" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="ScannerNummer" Type="String" Nullable="true" />
+          <Property Name="MaschineAdresse" Type="String" Nullable="true" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="MaschinePortnummer" Type="Int32" Nullable="true" />
+          <Property Name="PfadDaten" Type="String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="PfadBediener" Type="String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ScannerNummer" Type="String" Nullable="true" FixedLength="false" MaxLength="20" />
           <Property Name="ScannerMitDisplay" Type="Boolean" Nullable="false" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Status" Type="JgModel.EnumStatusMaschine" Nullable="false" />
@@ -906,7 +908,8 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="MaschinenName" ColumnName="MaschinenName" />
           <ScalarProperty Name="ProtokollName" ColumnName="ProtokollName" />
-          <ScalarProperty Name="ComputerAdresse" ColumnName="ComputerAdresse" />
+          <ScalarProperty Name="MaschineAdresse" ColumnName="MaschineAdresse" />
+          <ScalarProperty Name="MaschinePortnummer" ColumnName="MaschinePortnummer" />
           <ScalarProperty Name="PfadDaten" ColumnName="PfadDaten" />
           <ScalarProperty Name="PfadBediener" ColumnName="PfadBediener" />
           <ScalarProperty Name="ScannerNummer" ColumnName="ScannerNummer" />

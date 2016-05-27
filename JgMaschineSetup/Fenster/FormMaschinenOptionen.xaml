@@ -6,7 +6,7 @@
     xmlns:xData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules"
     mc:Ignorable="d" x:Class="JgMaschineSetup.FormMaschinenOptionen"
-    Title="Maschinen Optionen" Height="406.16" Width="636.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
+    Title="Maschinen Optionen" Height="480.71" Width="528.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
         ShowInTaskbar="False" Icon="/JgMaschineSetup;component/JgSettings.ico" ResizeMode="NoResize" 
         FocusManager.FocusedElement="{Binding ElementName=cmbStandort}">
     <Window.Resources>
@@ -26,7 +26,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -51,11 +52,11 @@
         <Label Content="_Protokoll Maschine" Target="{Binding ElementName=cmbProtokolle}" Grid.Row="2"/>
         <ComboBox Name="cmbProtokolle" Margin="3" SelectedItem="{Binding ProtokollName}"  Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" ToolTip="Das Protokoll, mit welchem das Programm das Programm in der Maschine die Daten abfragt."/>
 
-        <Label Content="_Maschinenadresse" Target="{Binding ElementName=tbMaschinenAdresse}" Grid.Row="3"/>
-        <TextBox x:Name="tbMaschinenAdresse" Text="{Binding MaschinenAdresse}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
+        <Label Content="_Maschine Adresse" Target="{Binding ElementName=tbMaschinenAdresse}" Grid.Row="3"/>
+        <TextBox x:Name="tbMaschinenAdresse" Text="{Binding MaschineAdresse}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
 
-        <Label Content="_Portnummer" Target="{Binding ElementName=tbPortnummer}" Grid.Row="4"/>
-        <TextBox x:Name="tbPortnummer" Text="{Binding PortNummer}" Grid.Column="1" Grid.Row="4" />
+        <Label Content="Maschine _Port" Target="{Binding ElementName=tbPortnummer}" Grid.Row="4"/>
+        <TextBox x:Name="tbPortnummer" Text="{Binding MaschinePortnummer}" Grid.Column="1" Grid.Row="4" />
 
         <Label Content="_Scannernummer" Target="{Binding ElementName=tbScannernummer}" Grid.Row="5"/>
         <TextBox x:Name="tbScannernummer" Text="{Binding ScannerNummer}" Grid.Column="1" Grid.Row="5" />
@@ -90,9 +91,12 @@
         <TextBox x:Name="tbVorgabeProStunde" Text="{Binding VorgabeProStunde}" Grid.Column="1" Grid.Row="9" />
 
         <Label Content="S_tatus Maschine" Target="{Binding ElementName=cmbStatus}" Grid.Row="10"/>
-        <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}"  Grid.Column="1" Grid.Row="10"/>
+        <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="10"/>
 
-        <Button Grid.Column="2" Grid.Row="12" IsCancel="True">
+        <Label Content="_Bemerkung" Target="{Binding ElementName=cmbStatus}" Grid.Row="11"/>
+        <TextBox x:Name="tbBemerkung" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="4" Grid.RowSpan="2" Text="{Binding Bemerkung}" />
+
+        <Button Grid.Column="2" Grid.Row="13" IsCancel="True">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
@@ -105,7 +109,7 @@
                 <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
-        <Button Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="12" IsDefault="True" Click="ButtonOk_Click">
+        <Button Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="13" IsDefault="True" Click="ButtonOk_Click">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>

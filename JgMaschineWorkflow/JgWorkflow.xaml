@@ -1,7 +1,7 @@
 ﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="JgMaschineWorkflow.JgWorkflow"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
- xmlns:j="clr-namespace:JgMaschineData;assembly=JgDataMaschineData"
+ xmlns:j="clr-namespace:JgMaschineData;assembly=JgMaschineData"
  xmlns:local="clr-namespace:JgMaschineWorkflow.Aktivitaeten"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
@@ -70,9 +70,9 @@
             </ActivityAction.Argument>
             <Flowchart DisplayName="Maschine importieren" sap2010:WorkflowViewState.IdRef="Flowchart_2">
               <Flowchart.Variables>
-                <Variable x:TypeArguments="scg:List(j:tabDaten)" Name="ListeDaten">
+                <Variable x:TypeArguments="scg:List(j:tabBauteil)" Name="ListeDaten">
                   <Variable.Default>
-                    <mca:CSharpValue x:TypeArguments="scg:List(j:tabDaten)">new List&lt;tabDaten&gt;()</mca:CSharpValue>
+                    <mca:CSharpValue x:TypeArguments="scg:List(j:tabBauteil)">new List&lt;tabBauteil&gt;()</mca:CSharpValue>
                   </Variable.Default>
                 </Variable>
               </Flowchart.Variables>
@@ -120,10 +120,10 @@
                           </Assign>
                           <FlowStep.Next>
                             <FlowStep x:Name="__ReferenceID43" sap2010:WorkflowViewState.IdRef="FlowStep_12">
-                              <local:caMachineOnline DisplayName="Ist Machine Offline" sap2010:WorkflowViewState.IdRef="caMachineOnline_1">
+                              <local:caMachineOnline DisplayName="Ist Machine Offline" sap2010:WorkflowViewState.IdRef="caMachineOnline">
                                 <local:caMachineOnline.ComputerAdresse>
                                   <InArgument x:TypeArguments="x:String">
-                                    <mca:CSharpValue x:TypeArguments="x:String">Maschine.MaschinenAdresse</mca:CSharpValue>
+                                    <mca:CSharpValue x:TypeArguments="x:String">Maschine.MaschineAdresse</mca:CSharpValue>
                                   </InArgument>
                                 </local:caMachineOnline.ComputerAdresse>
                                 <local:caMachineOnline.IstFehler>
@@ -186,7 +186,7 @@
                                               </Assign>
                                               <FlowStep.Next>
                                                 <FlowStep x:Name="__ReferenceID55" sap2010:WorkflowViewState.IdRef="FlowStep_52">
-                                                  <local:caProtokollSpeichern sap2010:WorkflowViewState.IdRef="caProtokollSpeichern_2">
+                                                  <local:caProtokollSpeichern sap2010:WorkflowViewState.IdRef="caProtokollSpeichern">
                                                     <local:caProtokollSpeichern.ListeMaschinen>
                                                       <InArgument x:TypeArguments="j:tabMaschine[]">
                                                         <mca:CSharpValue x:TypeArguments="j:tabMaschine[]">ListeMaschinen</mca:CSharpValue>
@@ -327,15 +327,15 @@
                                                           </Assign>
                                                           <FlowStep.Next>
                                                             <FlowStep x:Name="__ReferenceID47" sap2010:WorkflowViewState.IdRef="FlowStep_8">
-                                                              <local:caDatenSpeichern DisplayName="DatenSpeichern" sap2010:WorkflowViewState.IdRef="caDatenSpeichern_1">
+                                                              <local:caDatenSpeichern DisplayName="DatenSpeichern" sap2010:WorkflowViewState.IdRef="caDatenSpeichern">
                                                                 <local:caDatenSpeichern.IstFehler>
                                                                   <OutArgument x:TypeArguments="x:Boolean">
                                                                     <mca:CSharpReference x:TypeArguments="x:Boolean">Maschine.Abbruch</mca:CSharpReference>
                                                                   </OutArgument>
                                                                 </local:caDatenSpeichern.IstFehler>
                                                                 <local:caDatenSpeichern.ListeDaten>
-                                                                  <InArgument x:TypeArguments="scg:List(j:tabDaten)">
-                                                                    <mca:CSharpValue x:TypeArguments="scg:List(j:tabDaten)">ListeDaten</mca:CSharpValue>
+                                                                  <InArgument x:TypeArguments="scg:List(j:tabBauteil)">
+                                                                    <mca:CSharpValue x:TypeArguments="scg:List(j:tabBauteil)">ListeDaten</mca:CSharpValue>
                                                                   </InArgument>
                                                                 </local:caDatenSpeichern.ListeDaten>
                                                                 <local:caDatenSpeichern.ProtokollText>
@@ -560,7 +560,7 @@
                                                                 <FlowStep x:Name="__ReferenceID7" sap2010:WorkflowViewState.IdRef="FlowStep_33">
                                                                   <TryCatch DisplayName="Importtext in Datensaetze" sap2010:WorkflowViewState.IdRef="TryCatch_1">
                                                                     <TryCatch.Variables>
-                                                                      <Variable x:TypeArguments="j:tabDaten" Name="ds" />
+                                                                      <Variable x:TypeArguments="j:tabBauteil" Name="ds" />
                                                                       <Variable x:TypeArguments="s:String[]" Name="Felder" />
                                                                     </TryCatch.Variables>
                                                                     <TryCatch.Try>
@@ -578,13 +578,13 @@
                                                                             <Sequence sap2010:WorkflowViewState.IdRef="Sequence_9">
                                                                               <Assign DisplayName="Neuen Datensatz erstellen" sap2010:WorkflowViewState.IdRef="Assign_22">
                                                                                 <Assign.To>
-                                                                                  <OutArgument x:TypeArguments="j:tabDaten">
-                                                                                    <mca:CSharpReference x:TypeArguments="j:tabDaten">ds</mca:CSharpReference>
+                                                                                  <OutArgument x:TypeArguments="j:tabBauteil">
+                                                                                    <mca:CSharpReference x:TypeArguments="j:tabBauteil">ds</mca:CSharpReference>
                                                                                   </OutArgument>
                                                                                 </Assign.To>
                                                                                 <Assign.Value>
-                                                                                  <InArgument x:TypeArguments="j:tabDaten">
-                                                                                    <mca:CSharpValue x:TypeArguments="j:tabDaten">new tabDaten() { Id = Guid.NewGuid(), fMaschine = Maschine.Id }</mca:CSharpValue>
+                                                                                  <InArgument x:TypeArguments="j:tabBauteil">
+                                                                                    <mca:CSharpValue x:TypeArguments="j:tabBauteil">new tabBauteil() { Id = Guid.NewGuid(), fMaschine = Maschine.Id }</mca:CSharpValue>
                                                                                   </InArgument>
                                                                                 </Assign.Value>
                                                                               </Assign>
@@ -736,14 +736,14 @@
                                                                                   <InArgument x:TypeArguments="x:String">Pos</InArgument>
                                                                                 </Assign.Value>
                                                                               </Assign>
-                                                                              <AddToCollection x:TypeArguments="j:tabDaten" DisplayName="Ds in Datenliste" sap2010:WorkflowViewState.IdRef="AddToCollection`1_1">
+                                                                              <AddToCollection x:TypeArguments="j:tabBauteil" DisplayName="Ds in Datenliste" sap2010:WorkflowViewState.IdRef="AddToCollection`1_1">
                                                                                 <AddToCollection.Item>
-                                                                                  <InArgument x:TypeArguments="j:tabDaten">
-                                                                                    <mca:CSharpValue x:TypeArguments="j:tabDaten">ds</mca:CSharpValue>
+                                                                                  <InArgument x:TypeArguments="j:tabBauteil">
+                                                                                    <mca:CSharpValue x:TypeArguments="j:tabBauteil">ds</mca:CSharpValue>
                                                                                   </InArgument>
                                                                                 </AddToCollection.Item>
-                                                                                <InArgument x:TypeArguments="scg:ICollection(j:tabDaten)">
-                                                                                  <mca:CSharpValue x:TypeArguments="scg:ICollection(j:tabDaten)">ListeDaten</mca:CSharpValue>
+                                                                                <InArgument x:TypeArguments="scg:ICollection(j:tabBauteil)">
+                                                                                  <mca:CSharpValue x:TypeArguments="scg:ICollection(j:tabBauteil)">ListeDaten</mca:CSharpValue>
                                                                                 </InArgument>
                                                                               </AddToCollection>
                                                                             </Sequence>
@@ -1044,7 +1044,7 @@
                                                                                       </ActivityAction.Argument>
                                                                                       <Sequence DisplayName="Vorgang für jeden Datensatz" sap2010:WorkflowViewState.IdRef="Sequence_13">
                                                                                         <Sequence.Variables>
-                                                                                          <Variable x:TypeArguments="j:tabDaten" Name="NeuerDatensatz" />
+                                                                                          <Variable x:TypeArguments="j:tabBauteil" Name="NeuerDatensatz" />
                                                                                         </Sequence.Variables>
                                                                                         <Assign DisplayName="Felder splitten" sap2010:WorkflowViewState.IdRef="Assign_41">
                                                                                           <Assign.To>
@@ -1068,13 +1068,13 @@
                                                                                             <Sequence DisplayName="Felder in Daten eintragen" sap2010:WorkflowViewState.IdRef="Sequence_14">
                                                                                               <Assign DisplayName="Neuen Datensatz erstellen" sap2010:WorkflowViewState.IdRef="Assign_43">
                                                                                                 <Assign.To>
-                                                                                                  <OutArgument x:TypeArguments="j:tabDaten">
-                                                                                                    <mca:CSharpReference x:TypeArguments="j:tabDaten">NeuerDatensatz</mca:CSharpReference>
+                                                                                                  <OutArgument x:TypeArguments="j:tabBauteil">
+                                                                                                    <mca:CSharpReference x:TypeArguments="j:tabBauteil">NeuerDatensatz</mca:CSharpReference>
                                                                                                   </OutArgument>
                                                                                                 </Assign.To>
                                                                                                 <Assign.Value>
-                                                                                                  <InArgument x:TypeArguments="j:tabDaten">
-                                                                                                    <mca:CSharpValue x:TypeArguments="j:tabDaten">new tabDaten()</mca:CSharpValue>
+                                                                                                  <InArgument x:TypeArguments="j:tabBauteil">
+                                                                                                    <mca:CSharpValue x:TypeArguments="j:tabBauteil">new tabBauteil()</mca:CSharpValue>
                                                                                                   </InArgument>
                                                                                                 </Assign.Value>
                                                                                               </Assign>
@@ -1431,7 +1431,7 @@
                                                                             <FlowStep x:Name="__ReferenceID39" sap2010:WorkflowViewState.IdRef="FlowStep_89">
                                                                               <TryCatch DisplayName="Daten Importieren" sap2010:WorkflowViewState.IdRef="TryCatch_10">
                                                                                 <TryCatch.Variables>
-                                                                                  <Variable x:TypeArguments="j:tabDaten" Name="ds" />
+                                                                                  <Variable x:TypeArguments="j:tabBauteil" Name="ds" />
                                                                                   <Variable x:TypeArguments="s:DateTime" Name="LfsDatum" />
                                                                                   <Variable x:TypeArguments="x:String" Name="tempString" />
                                                                                 </TryCatch.Variables>
@@ -1496,13 +1496,13 @@
                                                                                             <Sequence sap2010:WorkflowViewState.IdRef="Sequence_44">
                                                                                               <Assign DisplayName="Datensatz erstellen" sap2010:WorkflowViewState.IdRef="Assign_117">
                                                                                                 <Assign.To>
-                                                                                                  <OutArgument x:TypeArguments="j:tabDaten">
-                                                                                                    <mca:CSharpReference x:TypeArguments="j:tabDaten">ds</mca:CSharpReference>
+                                                                                                  <OutArgument x:TypeArguments="j:tabBauteil">
+                                                                                                    <mca:CSharpReference x:TypeArguments="j:tabBauteil">ds</mca:CSharpReference>
                                                                                                   </OutArgument>
                                                                                                 </Assign.To>
                                                                                                 <Assign.Value>
-                                                                                                  <InArgument x:TypeArguments="j:tabDaten">
-                                                                                                    <mca:CSharpValue x:TypeArguments="j:tabDaten">new tabDaten() { Id = Guid.NewGuid(), IstHandeingabe = true }</mca:CSharpValue>
+                                                                                                  <InArgument x:TypeArguments="j:tabBauteil">
+                                                                                                    <mca:CSharpValue x:TypeArguments="j:tabBauteil">new tabBauteil() { Id = Guid.NewGuid(), IstHandeingabe = true }</mca:CSharpValue>
                                                                                                   </InArgument>
                                                                                                 </Assign.Value>
                                                                                               </Assign>
@@ -1654,14 +1654,14 @@
                                                                                                   <InArgument x:TypeArguments="x:String">NB</InArgument>
                                                                                                 </Assign.Value>
                                                                                               </Assign>
-                                                                                              <AddToCollection x:TypeArguments="j:tabDaten" DisplayName="AddToCollection&lt;tabDaten&gt;" sap2010:WorkflowViewState.IdRef="AddToCollection`1_4">
+                                                                                              <AddToCollection x:TypeArguments="j:tabBauteil" DisplayName="AddToCollection&lt;tabBauteil&gt;" sap2010:WorkflowViewState.IdRef="AddToCollection`1_4">
                                                                                                 <AddToCollection.Item>
-                                                                                                  <InArgument x:TypeArguments="j:tabDaten">
-                                                                                                    <mca:CSharpValue x:TypeArguments="j:tabDaten">ds</mca:CSharpValue>
+                                                                                                  <InArgument x:TypeArguments="j:tabBauteil">
+                                                                                                    <mca:CSharpValue x:TypeArguments="j:tabBauteil">ds</mca:CSharpValue>
                                                                                                   </InArgument>
                                                                                                 </AddToCollection.Item>
-                                                                                                <InArgument x:TypeArguments="scg:ICollection(j:tabDaten)">
-                                                                                                  <mca:CSharpValue x:TypeArguments="scg:ICollection(j:tabDaten)">ListeDaten</mca:CSharpValue>
+                                                                                                <InArgument x:TypeArguments="scg:ICollection(j:tabBauteil)">
+                                                                                                  <mca:CSharpValue x:TypeArguments="scg:ICollection(j:tabBauteil)">ListeDaten</mca:CSharpValue>
                                                                                                 </InArgument>
                                                                                               </AddToCollection>
                                                                                             </Sequence>
@@ -1739,13 +1739,13 @@
                                                                                             <FlowStep x:Name="__ReferenceID34" sap2010:WorkflowViewState.IdRef="FlowStep_81">
                                                                                               <Assign DisplayName="alte Datensätze löschen" sap2010:WorkflowViewState.IdRef="Assign_74">
                                                                                                 <Assign.To>
-                                                                                                  <OutArgument x:TypeArguments="scg:List(j:tabDaten)">
-                                                                                                    <mca:CSharpReference x:TypeArguments="scg:List(j:tabDaten)">ListeDaten</mca:CSharpReference>
+                                                                                                  <OutArgument x:TypeArguments="scg:List(j:tabBauteil)">
+                                                                                                    <mca:CSharpReference x:TypeArguments="scg:List(j:tabBauteil)">ListeDaten</mca:CSharpReference>
                                                                                                   </OutArgument>
                                                                                                 </Assign.To>
                                                                                                 <Assign.Value>
-                                                                                                  <InArgument x:TypeArguments="scg:List(j:tabDaten)">
-                                                                                                    <mca:CSharpValue x:TypeArguments="scg:List(j:tabDaten)">ListeDaten.Where(w =&gt; w.DatumStart &gt; Maschine.eProtokoll.LetztePositionDatum).ToList()</mca:CSharpValue>
+                                                                                                  <InArgument x:TypeArguments="scg:List(j:tabBauteil)">
+                                                                                                    <mca:CSharpValue x:TypeArguments="scg:List(j:tabBauteil)">ListeDaten.Where(w =&gt; w.DatumStart &gt; Maschine.eProtokoll.LetztePositionDatum).ToList()</mca:CSharpValue>
                                                                                                   </InArgument>
                                                                                                 </Assign.Value>
                                                                                               </Assign>
