@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Configuration.Install;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 
 namespace JgMaschineDienst
 {
@@ -17,6 +11,7 @@ namespace JgMaschineDienst
   {
     static void Main()
     {
+      var s = "allo Ballo";
       EintragLog("Service gestartet", EventLogEntryType.Information);
       JgMaschieService.Run(new JgMaschieService());
       EintragLog("Sevice beendet", EventLogEntryType.Information);
