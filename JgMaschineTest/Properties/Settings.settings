@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ScannerAdresse" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">192.168.1.59</Value>
+      <Value Profile="(Default)">192.168.1.30</Value>
     </Setting>
     <Setting Name="ScannerPort" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">51000</Value>

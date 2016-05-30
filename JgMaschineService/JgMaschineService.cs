@@ -11,7 +11,6 @@ namespace JgMaschineDienst
   {
     static void Main()
     {
-      var s = "allo Ballo";
       EintragLog("Service gestartet", EventLogEntryType.Information);
       JgMaschieService.Run(new JgMaschieService());
       EintragLog("Sevice beendet", EventLogEntryType.Information);

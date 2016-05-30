@@ -110,12 +110,12 @@ namespace JgMaschineTcpIpTest.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ServerSendeText {
+        public string ServerSendeTextAutomatisch {
             get {
-                return ((string)(this["ServerSendeText"]));
+                return ((string)(this["ServerSendeTextAutomatisch"]));
             }
             set {
-                this["ServerSendeText"] = value;
+                this["ServerSendeTextAutomatisch"] = value;
             }
         }
         
@@ -128,6 +128,42 @@ namespace JgMaschineTcpIpTest.Properties {
             }
             set {
                 this["ServerAnzeigeZeichen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ServerSendeText1 {
+            get {
+                return ((string)(this["ServerSendeText1"]));
+            }
+            set {
+                this["ServerSendeText1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ServerSendeText2 {
+            get {
+                return ((string)(this["ServerSendeText2"]));
+            }
+            set {
+                this["ServerSendeText2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ServerSendeText3 {
+            get {
+                return ((string)(this["ServerSendeText3"]));
+            }
+            set {
+                this["ServerSendeText3"] = value;
             }
         }
     }
