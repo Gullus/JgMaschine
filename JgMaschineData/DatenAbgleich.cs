@@ -13,8 +13,14 @@ namespace JgMaschineData
     
     public partial class DatenAbgleich
     {
+        public DatenAbgleich()
+        {
+            this.Geloescht = false;
+        }
+    
         public System.DateTime Datum { get; set; }
         public EnumStatusDatenabgleich Status { get; set; }
         public string Bearbeiter { get; set; }
+        public bool Geloescht { get; set; }
     }
 }

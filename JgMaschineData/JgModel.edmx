@@ -96,6 +96,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fLetztesBauteil" Type="uniqueidentifier" Nullable="true" />
   </EntityType>
@@ -112,6 +113,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fAktuellAngemeldet" Type="uniqueidentifier" Nullable="true" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
@@ -139,6 +141,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="tabAnmeldungMaschineSet">
@@ -154,6 +157,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
@@ -176,6 +180,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="tabReparaturSet">
     <Key>
@@ -190,9 +195,11 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fVerursacher" Type="uniqueidentifier" Nullable="true" />
     <Property Name="fProtokollant" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="CoilwechselAnzahl" Type="int" Nullable="true" />
   </EntityType>
   <EntityType Name="tabStandortSet">
     <Key>
@@ -204,6 +211,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="tabAuswertungSet">
     <Key>
@@ -221,6 +229,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="tabArbeitszeitSet">
     <Key>
@@ -235,6 +244,7 @@
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
@@ -671,6 +681,7 @@
           <NavigationProperty Name="eVerursacher" Relationship="JgModel.tabBedienertabReparatur" FromRole="tabReparatur" ToRole="tabBediener" />
           <NavigationProperty Name="eProtokollant" Relationship="JgModel.tabBedienertabReparatur1" FromRole="tabReparatur" ToRole="tabBediener" />
           <NavigationProperty Name="eMaschine" Relationship="JgModel.tabMaschinetabReparatur" FromRole="tabReparatur" ToRole="tabMaschine" />
+          <Property Name="CoilwechselAnzahl" Type="Int32" Nullable="true" />
         </EntityType>
         <Association Name="tabBedienertabReparatur">
           <End Type="JgModel.tabBediener" Role="tabBediener" Multiplicity="0..1" />
@@ -822,6 +833,7 @@
           <Property Type="DateTime" Name="Datum" Nullable="false" />
           <Property Type="JgModel.EnumStatusDatenabgleich" Name="Status" Nullable="false" />
           <Property Type="String" Name="Bearbeiter" Nullable="false" />
+          <Property Type="Boolean" Name="Geloescht" Nullable="false" DefaultValue="False" />
         </ComplexType>
         <Association Name="tabMaschinetabBediener">
           <End Type="JgModel.tabMaschine" Role="tabMaschine" Multiplicity="0..1" />
@@ -921,6 +933,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fStandort" ColumnName="fStandort" />
           <ScalarProperty Name="fLetztesBauteil" ColumnName="fLetztesBauteil" />
@@ -940,6 +953,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fAktuellAngemeldet" ColumnName="fAktuellAngemeldet" />
           <ScalarProperty Name="fStandort" ColumnName="fStandort" />
@@ -970,6 +984,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fMaschine" ColumnName="fMaschine" />
         </MappingFragment>
@@ -988,6 +1003,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fBediener" ColumnName="fBediener" />
           <ScalarProperty Name="fMaschine" ColumnName="fMaschine" />
@@ -1013,6 +1029,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
         </MappingFragment>
       </EntityTypeMapping>
@@ -1030,10 +1047,12 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fMaschine" ColumnName="fMaschine" />
           <ScalarProperty Name="fVerursacher" ColumnName="fVerursacher" />
           <ScalarProperty Name="fProtokollant" ColumnName="fProtokollant" />
+          <ScalarProperty Name="CoilwechselAnzahl" ColumnName="CoilwechselAnzahl" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1047,6 +1066,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
         </MappingFragment>
       </EntityTypeMapping>
@@ -1067,6 +1087,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
         </MappingFragment>
       </EntityTypeMapping>
@@ -1084,6 +1105,7 @@
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fBediener" ColumnName="fBediener" />
           <ScalarProperty Name="fStandort" ColumnName="fStandort" />

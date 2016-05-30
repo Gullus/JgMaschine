@@ -29,6 +29,7 @@ namespace JgMaschineData
         public System.Guid fMaschine { get; set; }
         public Nullable<System.Guid> fVerursacher { get; set; }
         public Nullable<System.Guid> fProtokollant { get; set; }
+        public Nullable<int> CoilwechselAnzahl { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     

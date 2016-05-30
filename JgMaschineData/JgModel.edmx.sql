@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/24/2016 11:20:20
+-- Date Created: 05/30/2016 11:21:33
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -119,6 +119,7 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL,
     [fLetztesBauteil] uniqueidentifier  NULL
 );
@@ -135,6 +136,7 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fAktuellAngemeldet] uniqueidentifier  NULL,
     [fStandort] uniqueidentifier  NOT NULL
 );
@@ -162,6 +164,7 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL
 );
 GO
@@ -177,6 +180,7 @@ CREATE TABLE [dbo].[tabAnmeldungMaschineSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL
 );
@@ -198,7 +202,8 @@ CREATE TABLE [dbo].[tabProtokollSet] (
     [FehlerDatenSpeichern] int  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
 
@@ -213,9 +218,11 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL,
     [fVerursacher] uniqueidentifier  NULL,
-    [fProtokollant] uniqueidentifier  NULL
+    [fProtokollant] uniqueidentifier  NULL,
+    [CoilwechselAnzahl] int  NULL
 );
 GO
 
@@ -226,7 +233,8 @@ CREATE TABLE [dbo].[tabStandortSet] (
     [Bemerkung] nvarchar(120)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
 
@@ -243,7 +251,8 @@ CREATE TABLE [dbo].[tabAuswertungSet] (
     [FilterAuswertung] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL
+    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
 
@@ -258,6 +267,7 @@ CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL
 );
