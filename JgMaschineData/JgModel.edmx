@@ -190,6 +190,7 @@
     <Property Name="VorgangBeginn" Type="datetime" Nullable="false" />
     <Property Name="VorgangEnde" Type="datetime" Nullable="false" />
     <Property Name="ProtokollText" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="CoilwechselAnzahl" Type="tinyint" Nullable="true" />
     <Property Name="Ereigniss" Type="tinyint" Nullable="false" />
     <Property Name="IstAktiv" Type="bit" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
@@ -199,7 +200,6 @@
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fVerursacher" Type="uniqueidentifier" Nullable="true" />
     <Property Name="fProtokollant" Type="uniqueidentifier" Nullable="true" />
-    <Property Name="CoilwechselAnzahl" Type="int" Nullable="true" />
   </EntityType>
   <EntityType Name="tabStandortSet">
     <Key>
@@ -672,6 +672,7 @@
           <Property Name="VorgangBeginn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="VorgangEnde" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ProtokollText" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="CoilwechselAnzahl" Type="Byte" Nullable="true" />
           <Property Name="Ereigniss" Type="JgModel.EnumReperaturEreigniss" Nullable="false" />
           <Property Name="IstAktiv" Type="Boolean" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
@@ -681,7 +682,6 @@
           <NavigationProperty Name="eVerursacher" Relationship="JgModel.tabBedienertabReparatur" FromRole="tabReparatur" ToRole="tabBediener" />
           <NavigationProperty Name="eProtokollant" Relationship="JgModel.tabBedienertabReparatur1" FromRole="tabReparatur" ToRole="tabBediener" />
           <NavigationProperty Name="eMaschine" Relationship="JgModel.tabMaschinetabReparatur" FromRole="tabReparatur" ToRole="tabMaschine" />
-          <Property Name="CoilwechselAnzahl" Type="Int32" Nullable="true" />
         </EntityType>
         <Association Name="tabBedienertabReparatur">
           <End Type="JgModel.tabBediener" Role="tabBediener" Multiplicity="0..1" />
@@ -1041,6 +1041,7 @@
           <ScalarProperty Name="VorgangBeginn" ColumnName="VorgangBeginn" />
           <ScalarProperty Name="VorgangEnde" ColumnName="VorgangEnde" />
           <ScalarProperty Name="ProtokollText" ColumnName="ProtokollText" />
+          <ScalarProperty Name="CoilwechselAnzahl" ColumnName="CoilwechselAnzahl" />
           <ScalarProperty Name="Ereigniss" ColumnName="Ereigniss" />
           <ScalarProperty Name="IstAktiv" ColumnName="IstAktiv" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
@@ -1052,7 +1053,6 @@
           <ScalarProperty Name="fMaschine" ColumnName="fMaschine" />
           <ScalarProperty Name="fVerursacher" ColumnName="fVerursacher" />
           <ScalarProperty Name="fProtokollant" ColumnName="fProtokollant" />
-          <ScalarProperty Name="CoilwechselAnzahl" ColumnName="CoilwechselAnzahl" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

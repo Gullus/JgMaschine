@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/30/2016 11:21:33
+-- Date Created: 05/30/2016 11:31:23
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -213,6 +213,7 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [VorgangBeginn] datetime  NOT NULL,
     [VorgangEnde] datetime  NOT NULL,
     [ProtokollText] nvarchar(max)  NULL,
+    [CoilwechselAnzahl] tinyint  NULL,
     [Ereigniss] tinyint  NOT NULL,
     [IstAktiv] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
@@ -221,8 +222,7 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL,
     [fVerursacher] uniqueidentifier  NULL,
-    [fProtokollant] uniqueidentifier  NULL,
-    [CoilwechselAnzahl] int  NULL
+    [fProtokollant] uniqueidentifier  NULL
 );
 GO
 
