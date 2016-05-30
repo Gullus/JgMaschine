@@ -235,6 +235,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="*"/>
                             <DataGridTextColumn Binding="{Binding VorName}" Header="Vorname" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung}" Header="Standort" Width="100"/>
                             <DataGridTextColumn Binding="{Binding Status}" Header="Status" Width="100"/>
                         </DataGrid.Columns>
                     </DataGrid>

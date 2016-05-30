@@ -50,5 +50,26 @@ namespace JgMaschineTest.Properties {
                 return ((string)(this["Verbindungszeichen"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True")]
+        public string VerbindungClient {
+            get {
+                return ((string)(this["VerbindungClient"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschineServer;Integrated Security=Tru" +
+            "e")]
+        public string VerbindungServer {
+            get {
+                return ((string)(this["VerbindungServer"]));
+            }
+        }
     }
 }
