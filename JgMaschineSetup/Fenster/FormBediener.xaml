@@ -6,8 +6,8 @@
     xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules" 
     mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormBediener"
-    Title="Bediener" Height="294" Width="419" Loaded="Window_Loaded" ShowInTaskbar="False" 
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=tbVorname}">
+    Title="Bediener" Height="294" Width="419" Loaded="Window_Loaded" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" 
+      Topmost="True" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=tbVorname}">
     <Window.Resources>
        
     </Window.Resources>

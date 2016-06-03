@@ -17,6 +17,7 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabBauteil()
         {
+            this.IstVorfertigung = false;
             this.IdStahlPosition = -1;
             this.IdStahlBauteil = -1;
             this.BtAnzahl = -1;
@@ -31,6 +32,7 @@ namespace JgMaschineData
         public System.Guid Id { get; set; }
         public System.DateTime DatumStart { get; set; }
         public System.DateTime DatumEnde { get; set; }
+        public bool IstVorfertigung { get; set; }
         public int IdStahlPosition { get; set; }
         public int IdStahlBauteil { get; set; }
         public int BtAnzahl { get; set; }
@@ -45,6 +47,7 @@ namespace JgMaschineData
         public bool IstHandeingabe { get; set; }
         public byte AnzahlBediener { get; set; }
         public byte AnzahlBiegungen { get; set; }
+        public string Geometrie { get; set; }
         public System.Guid fMaschine { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }

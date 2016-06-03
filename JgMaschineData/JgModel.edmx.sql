@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/30/2016 11:31:23
+-- Date Created: 05/31/2016 11:40:01
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -107,6 +107,7 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [Id] uniqueidentifier  NOT NULL,
     [MaschinenName] nvarchar(120)  NOT NULL,
     [ProtokollName] tinyint  NOT NULL,
+    [IstStangenschneider] bit  NOT NULL,
     [MaschineAdresse] nvarchar(100)  NULL,
     [MaschinePortnummer] int  NULL,
     [PfadDaten] nvarchar(255)  NULL,
@@ -147,6 +148,7 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [Id] uniqueidentifier  NOT NULL,
     [DatumStart] datetime  NOT NULL,
     [DatumEnde] datetime  NOT NULL,
+    [IstVorfertigung] bit  NOT NULL,
     [IdStahlPosition] int  NOT NULL,
     [IdStahlBauteil] int  NOT NULL,
     [BtAnzahl] int  NOT NULL,
@@ -161,6 +163,7 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [IstHandeingabe] bit  NOT NULL,
     [AnzahlBediener] tinyint  NOT NULL,
     [AnzahlBiegungen] tinyint  NOT NULL,
+    [Geometrie] nvarchar(max)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,

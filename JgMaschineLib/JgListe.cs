@@ -32,6 +32,8 @@ namespace JgMaschineLib
     public bool IsEmpty { get { return this.Count == 0; } }
     public T AktDatensatz { get { return (T)_ViewSource.View.CurrentItem; } }
 
+    private bool IstInit = false;
+
     public JgListe(JgMaschineData.JgModelContainer Db, IQueryable<T> MyQuery, CollectionViewSource MyViewSource, params DataGrid[] MyTabels)
     {
       _Db = Db;
@@ -40,16 +42,14 @@ namespace JgMaschineLib
       _ListeTabellen = MyTabels;
     }
 
-    public async Task<int> Init()
-    {
-      await DatenGenerierenAsync();
-      InitClass();
-      return 0;
-    }
-
     public async void DatenGenerieren()
     {
       await DatenGenerierenAsync();
+    }
+
+    public void ListClear()
+    {
+      this.Items.Clear();
     }
 
     public async Task<int> DatenGenerierenAsync()
@@ -62,6 +62,12 @@ namespace JgMaschineLib
       isInRange = false;
 
       OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+      if (!IstInit)
+      {
+        IstInit = true;
+        InitClass(); 
+      }
 
       return 0;
     }
@@ -91,19 +97,20 @@ namespace JgMaschineLib
           case NotifyCollectionChangedAction.Add:
             foreach (T ds in erg.NewItems)
             {
-              var neu = _Db.Entry<T>(ds);
-              var abgl = neu.Member<JgMaschineData.DatenAbgleich>("DatenAbgleich");
+              var entNeu = _Db.Entry<T>(ds);
+              var abgl = entNeu.Property<JgMaschineData.DatenAbgleich>("DatenAbgleich");
               JgMaschineLib.DbSichern.AbgleichEintragen(abgl.CurrentValue, JgMaschineData.EnumStatusDatenabgleich.Neu);
-              ent.Add(neu.Entity);
+              ent.Add(entNeu.Entity);
             }
             _Db.SaveChanges();
             break;
           case NotifyCollectionChangedAction.Remove:
             foreach (T ds in erg.OldItems)
             {
-              var geloescht = _Db.Entry<T>(ds);
-              var abgl = geloescht.Member<JgMaschineData.DatenAbgleich>("DatenAbgleich");
-              JgMaschineLib.DbSichern.AbgleichEintragen(abgl.CurrentValue, JgMaschineData.EnumStatusDatenabgleich.Geloescht);
+              var entGeloescht = _Db.Entry<T>(ds);
+              var abgl = entGeloescht.Property<JgMaschineData.DatenAbgleich>("DatenAbgleich");
+              abgl.CurrentValue.Geloescht = true; 
+              JgMaschineLib.DbSichern.AbgleichEintragen(abgl.CurrentValue, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
             }
             _Db.SaveChanges();
             break;

@@ -84,6 +84,7 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="MaschinenName" Type="nvarchar" Nullable="false" MaxLength="120" />
     <Property Name="ProtokollName" Type="tinyint" Nullable="false" />
+    <Property Name="IstStangenschneider" Type="bit" Nullable="false" />
     <Property Name="MaschineAdresse" Type="nvarchar" Nullable="true" MaxLength="100" />
     <Property Name="MaschinePortnummer" Type="int" Nullable="true" />
     <Property Name="PfadDaten" Type="nvarchar" Nullable="true" MaxLength="255" />
@@ -124,6 +125,7 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="DatumStart" Type="datetime" Nullable="false" />
     <Property Name="DatumEnde" Type="datetime" Nullable="false" />
+    <Property Name="IstVorfertigung" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="IdStahlPosition" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="IdStahlBauteil" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="BtAnzahl" Type="int" Nullable="false" DefaultValue="-1" />
@@ -138,6 +140,7 @@
     <Property Name="IstHandeingabe" Type="bit" Nullable="false" />
     <Property Name="AnzahlBediener" Type="tinyint" Nullable="false" />
     <Property Name="AnzahlBiegungen" Type="tinyint" Nullable="false" />
+    <Property Name="Geometrie" Type="nvarchar(max)" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
@@ -527,6 +530,11 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="MaschinenName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="ProtokollName" Type="JgModel.EnumProtokollName" Nullable="false" />
+          <Property Name="IstStangenschneider" Type="Boolean" Nullable="false" >
+            <Documentation>
+              <LongDescription>Wenn angehagt, wird das BT bei vorhanden Biegungen  auf IstVorfertigung gesetzt</LongDescription>
+            </Documentation>
+          </Property>
           <Property Name="MaschineAdresse" Type="String" Nullable="true" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="MaschinePortnummer" Type="Int32" Nullable="true" />
           <Property Name="PfadDaten" Type="String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
@@ -575,6 +583,7 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="DatumStart" Type="DateTime" Nullable="false" />
           <Property Name="DatumEnde" Type="DateTime" Nullable="false" />
+          <Property Name="IstVorfertigung" Type="Boolean" Nullable="false" DefaultValue="False" />
           <Property Name="IdStahlPosition" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="IdStahlBauteil" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="BtAnzahl" Type="Int32" Nullable="false" DefaultValue="-1" />
@@ -589,6 +598,7 @@
           <Property Name="IstHandeingabe" Type="Boolean" Nullable="false" />
           <Property Name="AnzahlBediener" Type="Byte" Nullable="false" />
           <Property Name="AnzahlBiegungen" Type="Byte" Nullable="false" />
+          <Property Name="Geometrie" Type="String" Nullable="true" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
           <NavigationProperty Name="sBediener" Relationship="JgModel.tabBauteiltabBediener" FromRole="tabBauteil" ToRole="tabBediener" />
@@ -862,8 +872,7 @@
         <EnumType Name="EnumStatusDatenabgleich" >
           <Member Name="Neu" Value="0" />
           <Member Name="Geaendert" Value="1" />
-          <Member Name="Geloescht" Value="2" />
-          <Member Name="Ok" Value="3" />
+          <Member Name="Abgeglichen" Value="2" />
         </EnumType>
         <EnumType Name="EnumFilterAuswertung" UnderlyingType="Byte">
           <Member Name="Allgemein" Value="0" />
@@ -920,6 +929,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="MaschinenName" ColumnName="MaschinenName" />
           <ScalarProperty Name="ProtokollName" ColumnName="ProtokollName" />
+          <ScalarProperty Name="IstStangenschneider" ColumnName="IstStangenschneider" />
           <ScalarProperty Name="MaschineAdresse" ColumnName="MaschineAdresse" />
           <ScalarProperty Name="MaschinePortnummer" ColumnName="MaschinePortnummer" />
           <ScalarProperty Name="PfadDaten" ColumnName="PfadDaten" />
@@ -966,6 +976,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="DatumStart" ColumnName="DatumStart" />
           <ScalarProperty Name="DatumEnde" ColumnName="DatumEnde" />
+          <ScalarProperty Name="IstVorfertigung" ColumnName="IstVorfertigung" />
           <ScalarProperty Name="IdStahlPosition" ColumnName="IdStahlPosition" />
           <ScalarProperty Name="IdStahlBauteil" ColumnName="IdStahlBauteil" />
           <ScalarProperty Name="BtAnzahl" ColumnName="BtAnzahl" />
@@ -980,6 +991,7 @@
           <ScalarProperty Name="IstHandeingabe" ColumnName="IstHandeingabe" />
           <ScalarProperty Name="AnzahlBediener" ColumnName="AnzahlBediener" />
           <ScalarProperty Name="AnzahlBiegungen" ColumnName="AnzahlBiegungen" />
+          <ScalarProperty Name="Geometrie" ColumnName="Geometrie" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

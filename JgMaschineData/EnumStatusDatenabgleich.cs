@@ -15,7 +15,6 @@ namespace JgMaschineData
     {
         Neu = 0,
         Geaendert = 1,
-        Geloescht = 2,
-        Ok = 3
+        Abgeglichen = 2
     }
 }

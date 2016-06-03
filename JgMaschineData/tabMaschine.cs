@@ -28,6 +28,7 @@ namespace JgMaschineData
         public System.Guid Id { get; set; }
         public string MaschinenName { get; set; }
         public EnumProtokollName ProtokollName { get; set; }
+        public bool IstStangenschneider { get; set; }
         public string MaschineAdresse { get; set; }
         public Nullable<int> MaschinePortnummer { get; set; }
         public string PfadDaten { get; set; }

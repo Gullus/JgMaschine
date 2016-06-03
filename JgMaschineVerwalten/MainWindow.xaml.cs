@@ -26,7 +26,6 @@ namespace JgMaschineVerwalten
     private JgDatumZeit _DzArbeitszeitVon { get { return (JgDatumZeit)this.FindResource("dzArbeitszeitVon"); } }
     private JgDatumZeit _DzArbeitszeitBis { get { return (JgDatumZeit)this.FindResource("dzArbeitszeitBis"); } }
 
-
     private JgMaschineLib.JgListe<JgMaschineData.tabAnmeldungMaschine> _ListeAnmeldungAktuell;
     private JgMaschineLib.JgListe<JgMaschineData.tabAnmeldungMaschine> _ListeAnmeldungAuswahl;
     private JgDatumZeit _DzAnmeldungVon { get { return (JgDatumZeit)this.FindResource("dzAnmeldungVon"); } }
@@ -72,10 +71,10 @@ namespace JgMaschineVerwalten
 
       // Maschine Initialisieren
 
-      IQueryable<JgMaschineData.tabMaschine> iqMaschine = _Db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt)).OrderBy(o => o.MaschinenName);
+      IQueryable<JgMaschineData.tabMaschine> iqMaschine = _Db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt)).Include(i => i.sAktuelleBediener).OrderBy(o => o.MaschinenName);
       var vs = (CollectionViewSource)FindResource("vsMaschine");
       _ListeMaschinen = new JgMaschineLib.JgListe<JgMaschineData.tabMaschine>(_Db, iqMaschine, vs);
-      await _ListeMaschinen.Init();
+      await _ListeMaschinen.DatenGenerierenAsync();
       vs.View.CurrentChanged += (sen, erg) => { MaschineDatenAktualisieren(); };
 
       // Arbeitszeit Initialisieren
@@ -85,7 +84,7 @@ namespace JgMaschineVerwalten
       IQueryable<JgMaschineData.tabArbeitszeit> iqArbeitszeitAktuell = _Db.tabArbeitszeitSet.Where(w => (w.fStandort == _Standort.Id) && w.IstAktiv).OrderBy(o => o.Anmeldung);
       vs = (CollectionViewSource)FindResource("vsArbeitszeitAktuell");
       _ListeArbeitszeitAktuell = new JgMaschineLib.JgListe<JgMaschineData.tabArbeitszeit>(_Db, iqArbeitszeitAktuell, vs, dgArbeitszeitAktuell);
-      await _ListeArbeitszeitAktuell.Init();
+      await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
 
       _DzArbeitszeitVon.DatumZeit = von;
       _DzArbeitszeitBis.DatumZeit = bis;
@@ -93,7 +92,7 @@ namespace JgMaschineVerwalten
       IQueryable<JgMaschineData.tabArbeitszeit> iqArbeitszeitAuswahl = _Db.tabArbeitszeitSet.Where(w => (w.fStandort == _Standort.Id) && (!w.IstAktiv) && (w.Anmeldung >= _DzArbeitszeitVon.DatumZeit) && ((w.Anmeldung <= _DzArbeitszeitBis.DatumZeit))).OrderBy(o => o.Anmeldung);
       vs = (CollectionViewSource)FindResource("vsArbeitszeitAuswahl");
       _ListeArbeitszeitAuswahl = new JgMaschineLib.JgListe<JgMaschineData.tabArbeitszeit>(_Db, iqArbeitszeitAuswahl, vs, dgArbeitszeitAuswahl);
-      await _ListeArbeitszeitAuswahl.Init();
+      await _ListeArbeitszeitAuswahl.DatenGenerierenAsync();
 
       // Anmeldungen initialisieren
 
@@ -103,7 +102,7 @@ namespace JgMaschineVerwalten
       IQueryable<JgMaschineData.tabAnmeldungMaschine> iqAnmeldungAktuell = _Db.tabAnmeldungMaschineSet.Where(w => (maschinenIds.Contains(w.fMaschine)) && w.IstAktiv).OrderBy(o => o.Anmeldung);
       vs = (CollectionViewSource)FindResource("vsAnmeldungAktuell");
       _ListeAnmeldungAktuell = new JgMaschineLib.JgListe<JgMaschineData.tabAnmeldungMaschine>(_Db, iqAnmeldungAktuell, vs, dgAnmeldungAktuell);
-      await _ListeAnmeldungAktuell.Init();
+      await _ListeAnmeldungAktuell.DatenGenerierenAsync();
 
       _DzAnmeldungVon.DatumZeit = von;
       _DzAnmeldungBis.DatumZeit = bis;
@@ -111,7 +110,7 @@ namespace JgMaschineVerwalten
       IQueryable<JgMaschineData.tabAnmeldungMaschine> iqAnmeldungAuswahl = _Db.tabAnmeldungMaschineSet.Where(w => (maschinenIds.Contains(w.fMaschine)) && (!w.IstAktiv) && (w.Anmeldung >= _DzAnmeldungVon.DatumZeit) && ((w.Anmeldung <= _DzAnmeldungBis.DatumZeit))).OrderBy(o => o.Anmeldung);
       vs = (CollectionViewSource)FindResource("vsAnmeldungAuswahl");
       _ListeAnmeldungAuswahl = new JgMaschineLib.JgListe<JgMaschineData.tabAnmeldungMaschine>(_Db, iqAnmeldungAuswahl, vs, dgAnmeldungAuswahl);
-      await _ListeAnmeldungAuswahl.Init();
+      await _ListeAnmeldungAuswahl.DatenGenerierenAsync();
 
       // Bauteile initialisieren
 
@@ -121,14 +120,12 @@ namespace JgMaschineVerwalten
       IQueryable<JgMaschineData.tabBauteil> iqBauteilAuswahl = _Db.tabBauteilSet.Where(w => (w.fMaschine == _ListeMaschinen.AktDatensatz.Id) && (w.DatumStart >= _DzBauteilVon.DatumZeit) && (w.DatumStart <= _DzBauteilBis.DatumZeit)).OrderBy(o => o.DatumStart).Include(i => i.sBediener);
       vs = (CollectionViewSource)FindResource("vsBauteilAuswahl");
       _ListeBauteilAuswahl = new JgMaschineLib.JgListe<JgMaschineData.tabBauteil>(_Db, iqBauteilAuswahl, vs, dgBauteilAuswahl);
-      await _ListeBauteilAuswahl.Init();
 
       // Reparaturen initialisieren 
 
       IQueryable<JgMaschineData.tabReparatur> iqReparaturAktuell = _Db.tabReparaturSet.Where(w => (w.fMaschine == _ListeMaschinen.AktDatensatz.Id) && w.IstAktiv).OrderBy(o => o.VorgangBeginn);
       vs = (CollectionViewSource)FindResource("vsReparaturAktuell");
       _ListeReparaturAktuell = new JgMaschineLib.JgListe<JgMaschineData.tabReparatur>(_Db, iqReparaturAktuell, vs, dgReparaturAktuell);
-      await _ListeReparaturAktuell.Init();
 
       _DzReparaturVon.DatumZeit = von;
       _DzReparaturBis.DatumZeit = bis;
@@ -136,7 +133,13 @@ namespace JgMaschineVerwalten
       IQueryable<JgMaschineData.tabReparatur> iqReparaturAuswahl = _Db.tabReparaturSet.Where(w => (w.fMaschine == _ListeMaschinen.AktDatensatz.Id) && (!w.IstAktiv) && (w.VorgangBeginn >= _DzReparaturVon.DatumZeit) && (w.VorgangBeginn <= _DzReparaturBis.DatumZeit)).OrderBy(o => o.VorgangBeginn);
       vs = (CollectionViewSource)FindResource("vsReparaturAuswahl");
       _ListeReparaturAuswahl = new JgMaschineLib.JgListe<JgMaschineData.tabReparatur>(_Db, iqReparaturAuswahl, vs, dgReparaturAuswahl);
-      await _ListeReparaturAuswahl.Init();
+
+      if (_ListeMaschinen.AktDatensatz != null)
+      {
+        await _ListeBauteilAuswahl.DatenGenerierenAsync();
+        await _ListeReparaturAktuell.DatenGenerierenAsync();
+        await _ListeReparaturAuswahl.DatenGenerierenAsync();
+      }
 
       CommandBindings.Add(new CommandBinding(MyCommands.ReparaturNeu, ExecuteRepataurNeu, CanExecuteRepataurNeu));
       CommandBindings.Add(new CommandBinding(MyCommands.AnmeldungBediener, ExecuteAnmeldungBenutzerAnmeldung, CanExecuteBedienerAngemeldetMaschineVorhanden));
@@ -182,8 +185,18 @@ namespace JgMaschineVerwalten
 
     private async void MaschineDatenAktualisieren()
     {
-      await _ListeReparaturAktuell.DatenGenerierenAsync();
-      await _ListeReparaturAuswahl.DatenGenerierenAsync();
+      if (_ListeMaschinen.AktDatensatz == null)
+      {
+        _ListeBauteilAuswahl.ListClear();
+        _ListeReparaturAktuell.ListClear();
+        _ListeReparaturAuswahl.ListClear();
+      }
+      else
+      {
+        await _ListeBauteilAuswahl.DatenGenerierenAsync();
+        await _ListeReparaturAktuell.DatenGenerierenAsync();
+        await _ListeReparaturAuswahl.DatenGenerierenAsync();
+      }
     }
 
     #region Formular Reparatur

@@ -6,8 +6,8 @@
     xmlns:xData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules"
     mc:Ignorable="d" x:Class="JgMaschineSetup.FormMaschinenOptionen"
-    Title="Maschinen Optionen" Height="480.71" Width="528.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
-        ShowInTaskbar="False" Icon="/JgMaschineSetup;component/JgSettings.ico" ResizeMode="NoResize" 
+    Title="Maschinen Optionen" Height="489.71" Width="528.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
+        ShowInTaskbar="False" Topmost="True" Icon="/JgMaschineSetup;component/JgSettings.ico" ResizeMode="NoResize" 
         FocusManager.FocusedElement="{Binding ElementName=cmbStandort}">
     <Window.Resources>
 
@@ -27,7 +27,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -52,20 +53,22 @@
         <Label Content="_Protokoll Maschine" Target="{Binding ElementName=cmbProtokolle}" Grid.Row="2"/>
         <ComboBox Name="cmbProtokolle" Margin="3" SelectedItem="{Binding ProtokollName}"  Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" ToolTip="Das Protokoll, mit welchem das Programm das Programm in der Maschine die Daten abfragt."/>
 
-        <Label Content="_Maschine Adresse" Target="{Binding ElementName=tbMaschinenAdresse}" Grid.Row="3"/>
-        <TextBox x:Name="tbMaschinenAdresse" Text="{Binding MaschineAdresse}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
+        <CheckBox Margin="5" Content="Maschine ist ein Stangenschneider" IsChecked="{Binding IstStangenschneider}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" ToolTip="Wenn makiert, werden Bauteile mit Biegungen als 'IstVorfertigung' gekennzeichnet." />
 
-        <Label Content="Maschine _Port" Target="{Binding ElementName=tbPortnummer}" Grid.Row="4"/>
-        <TextBox x:Name="tbPortnummer" Text="{Binding MaschinePortnummer}" Grid.Column="1" Grid.Row="4" />
+        <Label Content="_Maschine Adresse" Target="{Binding ElementName=tbMaschinenAdresse}" Grid.Row="4"/>
+        <TextBox x:Name="tbMaschinenAdresse" Text="{Binding MaschineAdresse}" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="3" />
 
-        <Label Content="_Scannernummer" Target="{Binding ElementName=tbScannernummer}" Grid.Row="5"/>
-        <TextBox x:Name="tbScannernummer" Text="{Binding ScannerNummer}" Grid.Column="1" Grid.Row="5" />
+        <Label Content="Maschine _Port" Target="{Binding ElementName=tbPortnummer}" Grid.Row="5"/>
+        <TextBox x:Name="tbPortnummer" Text="{Binding MaschinePortnummer}" Grid.Column="1" Grid.Row="5" />
 
-        <CheckBox x:Name="tbScannerMitDisplay" Margin="5" Content="Scanner hat ein Display" IsChecked="{Binding ScannerMitDisplay}" Grid.Column="1" Grid.Row="6" />
+        <Label Content="_Scannernummer" Target="{Binding ElementName=tbScannernummer}" Grid.Row="6"/>
+        <TextBox x:Name="tbScannernummer" Text="{Binding ScannerNummer}" Grid.Column="1" Grid.Row="6" />
 
-        <Label Content="_Pfad zu Daten" Target="{Binding ElementName=tbPfadDaten}" Grid.Row="7"/>
-        <TextBox Name="tbPfadDaten" Text="{Binding PfadDaten}" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="3" />
-        <Button Name="btnDateiDaten"  Grid.Column="4" Margin="3" Grid.Row="7" Click="ButtonPfad_Click">
+        <CheckBox x:Name="tbScannerMitDisplay" Margin="5" Content="Scanner hat ein Display" IsChecked="{Binding ScannerMitDisplay}" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="3" />
+
+        <Label Content="_Pfad zu Daten" Target="{Binding ElementName=tbPfadDaten}" Grid.Row="8"/>
+        <TextBox Name="tbPfadDaten" Text="{Binding PfadDaten}" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="3" />
+        <Button Name="btnDateiDaten"  Grid.Column="4" Margin="3" Grid.Row="8" Click="ButtonPfad_Click">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
@@ -75,9 +78,9 @@
             </StackPanel>
         </Button>
 
-        <Label Content="Pfad zu _Benutzer" Target="{Binding ElementName=tbPfadBediener}" Grid.Row="8"/>
-        <TextBox x:Name="tbPfadBediener" Text="{Binding PfadBediener}" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="3" />
-        <Button x:Name="btnDateiBediener" Grid.Column="4" Margin="3" Grid.Row="8" Click="ButtonPfad_Click">
+        <Label Content="Pfad zu _Benutzer" Target="{Binding ElementName=tbPfadBediener}" Grid.Row="9"/>
+        <TextBox x:Name="tbPfadBediener" Text="{Binding PfadBediener}" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="3" />
+        <Button x:Name="btnDateiBediener" Grid.Column="4" Margin="3" Grid.Row="9" Click="ButtonPfad_Click">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
@@ -87,16 +90,16 @@
             </StackPanel>
         </Button>
 
-        <Label Content="_Vorgabe pro Stunde" Target="{Binding ElementName=tbVorgabeProStunde}" Grid.Row="9"/>
-        <TextBox x:Name="tbVorgabeProStunde" Text="{Binding VorgabeProStunde}" Grid.Column="1" Grid.Row="9" />
+        <Label Content="_Vorgabe pro Stunde" Target="{Binding ElementName=tbVorgabeProStunde}" Grid.Row="10"/>
+        <TextBox x:Name="tbVorgabeProStunde" Text="{Binding VorgabeProStunde}" Grid.Column="1" Grid.Row="10" />
 
-        <Label Content="S_tatus Maschine" Target="{Binding ElementName=cmbStatus}" Grid.Row="10"/>
-        <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="10"/>
+        <Label Content="S_tatus Maschine" Target="{Binding ElementName=cmbStatus}" Grid.Row="11"/>
+        <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="11"/>
 
-        <Label Content="_Bemerkung" Target="{Binding ElementName=cmbStatus}" Grid.Row="11"/>
-        <TextBox x:Name="tbBemerkung" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="4" Grid.RowSpan="2" Text="{Binding Bemerkung}" />
+        <Label Content="_Bemerkung" Target="{Binding ElementName=cmbStatus}" Grid.Row="12"/>
+        <TextBox x:Name="tbBemerkung" Grid.Column="1" Grid.Row="12" Grid.ColumnSpan="4" Grid.RowSpan="2" Text="{Binding Bemerkung}" />
 
-        <Button Grid.Column="2" Grid.Row="13" IsCancel="True">
+        <Button Grid.Column="2" Grid.Row="14" IsCancel="True">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
@@ -109,7 +112,7 @@
                 <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
-        <Button Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="13" IsDefault="True" Click="ButtonOk_Click">
+        <Button Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="14" IsDefault="True" Click="ButtonOk_Click">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>

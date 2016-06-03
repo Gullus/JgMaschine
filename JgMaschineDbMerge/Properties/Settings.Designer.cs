@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JgMaschineTest.Properties {
+namespace JgMaschineDbMerge.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,39 +25,11 @@ namespace JgMaschineTest.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.22")]
-        public string ScannerAdresse {
-            get {
-                return ((string)(this["ScannerAdresse"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("51000")]
-        public int ScannerPort {
-            get {
-                return ((int)(this["ScannerPort"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True")]
-        public string Verbindungszeichen {
+        public string SqlConnectionClient {
             get {
-                return ((string)(this["Verbindungszeichen"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True")]
-        public string VerbindungClient {
-            get {
-                return ((string)(this["VerbindungClient"]));
+                return ((string)(this["SqlConnectionClient"]));
             }
         }
         
@@ -66,9 +38,9 @@ namespace JgMaschineTest.Properties {
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschineServer;Integrated Security=Tru" +
             "e")]
-        public string VerbindungServer {
+        public string SqlConnectionServer {
             get {
-                return ((string)(this["VerbindungServer"]));
+                return ((string)(this["SqlConnectionServer"]));
             }
         }
     }

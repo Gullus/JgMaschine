@@ -7,7 +7,7 @@
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules"
     mc:Ignorable="d" x:Class="JgMaschineSetup.FormProtokollOptionen"
     Title="Protokoll Optionen" Height="355.784" Width="484.391" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
-        ShowInTaskbar="False" Icon="/JgMaschineSetup;component/JgSettings.ico" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=dtpDatum}">
+        ShowInTaskbar="False" Topmost="True" Icon="/JgMaschineSetup;component/JgSettings.ico" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=dtpDatum}">
     <Window.Resources>
 
     </Window.Resources>

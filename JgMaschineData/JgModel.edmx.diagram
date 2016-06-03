@@ -6,13 +6,13 @@
     <edmx:Diagrams>
       <Diagram DiagramId="1f8757055d2a477f966ead49ef7f3c84" Name="JgDiagramm" ZoomLevel="100" DisplayType="true" >
         <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.375" PointX="5.875" PointY="7" />
-        <EntityTypeShape EntityType="JgModel.tabBediener" Width="8.625" PointX="5.875" PointY="12.875" />
-        <EntityTypeShape EntityType="JgModel.tabBauteil" Width="3.875" PointX="5.875" PointY="1" />
+        <EntityTypeShape EntityType="JgModel.tabBediener" Width="8.625" PointX="5.875" PointY="13.125" />
+        <EntityTypeShape EntityType="JgModel.tabBauteil" Width="3.875" PointX="5.875" PointY="0.75" />
         <EntityTypeShape EntityType="JgModel.tabAnmeldungMaschine" Width="2" PointX="9.5" PointY="8.625" />
         <AssociationConnector Association="JgModel.tabMaschinetabAnmeldung" />
         <AssociationConnector Association="JgModel.tabBedienertabAnmeldung" />
         <EntityTypeShape EntityType="JgModel.tabProtokoll" Width="2.5" PointX="2.5" PointY="6.375" />
-        <EntityTypeShape EntityType="JgModel.tabReparatur" Width="2.5" PointX="2.5" PointY="10.625" />
+        <EntityTypeShape EntityType="JgModel.tabReparatur" Width="2.5" PointX="2.5" PointY="10.875" />
         <AssociationConnector Association="JgModel.tabBedienertabReparatur" />
         <AssociationConnector Association="JgModel.tabBedienertabReparatur1" />
         <AssociationConnector Association="JgModel.tabMaschinetabReparatur" ManuallyRouted="false" >

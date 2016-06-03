@@ -30,15 +30,15 @@ namespace JgMaschineSetup
     {
       _Db = new JgMaschineData.JgModelContainer();
 
-      var standorte = await _Db.tabStandortSet.Where(w => w.DatenAbgleich.Status != EnumStatusDatenabgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToListAsync();
+      var standorte = await _Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToListAsync();
       var dv = (CollectionViewSource)this.FindResource("vsStandort");
       _ListeStandorte = new JgMaschineLib.JgListe<tabStandort>(_Db, standorte, dv, dgStandort);
 
-      var bediener = await _Db.tabBedienerSet.Where(w => w.DatenAbgleich.Status != EnumStatusDatenabgleich.Geloescht).OrderBy(o => o.NachName).ToListAsync();
+      var bediener = await _Db.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToListAsync();
       dv = (CollectionViewSource)this.FindResource("vsBediener");
       _ListeBediener = new JgMaschineLib.JgListe<tabBediener>(_Db, bediener, dv, dgBediener);
 
-      var maschinen = await _Db.tabMaschineSet.OrderBy(o => o.MaschinenName).ToListAsync();
+      var maschinen = await _Db.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.MaschinenName).ToListAsync();
       dv = (CollectionViewSource)this.FindResource("vsMaschinen");
       _ListeMaschinen = new JgMaschineLib.JgListe<tabMaschine>(_Db, maschinen, dv, dgMaschine);
 

@@ -27,26 +27,21 @@ namespace JgMaschineSetup.Fenster
       set { _Bediener = value; }
     }
 
-    public FormBediener()
+    public FormBediener(JgModelContainer Db, tabBediener Bediener)
     {
       InitializeComponent();
-    }
-
-    public FormBediener(JgModelContainer Db, tabBediener Bediener)
-      : this()
-    {
       _Db = Db;
       _Bediener = Bediener;
-      if (_Bediener == null)
-        _Bediener = new tabBediener() { Id = Guid.NewGuid(), Status = EnumStatusBediener.Aktiv };
-
-      cmbStatus.ItemsSource = Enum.GetValues(typeof(EnumStatusBediener));
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+      cmbStatus.ItemsSource = Enum.GetValues(typeof(EnumStatusBediener));
+      cmbStandort.ItemsSource = _Db.tabStandortSet.Where(w => w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
+
+      if (_Bediener == null)
+        _Bediener = new tabBediener() { Id = Guid.NewGuid(), Status = EnumStatusBediener.Aktiv, fStandort = (cmbStandort.Items[0] as tabStandort).Id };
       gridBediener.DataContext = _Bediener;
-      cmbStandort.ItemsSource = _Db.tabStandortSet.OrderBy(o => o.Bezeichnung).ToList();
     }
 
     private void ButtonOk_Click(object sender, RoutedEventArgs e)
