@@ -7,7 +7,7 @@
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules"
     mc:Ignorable="d" x:Class="JgMaschineSetup.FormMaschinenOptionen"
     Title="Maschinen Optionen" Height="489.71" Width="528.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
-        ShowInTaskbar="False" Topmost="True" Icon="/JgMaschineSetup;component/JgSettings.ico" ResizeMode="NoResize" 
+        ShowInTaskbar="False" Topmost="True" Icon="/Properties/JgSettings.ico" ResizeMode="NoResize" 
         FocusManager.FocusedElement="{Binding ElementName=cmbStandort}">
     <Window.Resources>
 

@@ -62,6 +62,22 @@ namespace JgMaschineData
   public partial class tabBediener
   {
     public string Name { get { return this.NachName + ", " + VorName; } }
+  }
 
+  public partial class tabReparaturMetaData
+  { }
+
+  [MetadataType(typeof(tabReparaturMetaData))]
+  public partial class tabReparatur
+  {
+    public string Bediener
+    {
+      get
+      {
+        var ben = this.eMaschine.sAnmeldungen.Where(w => (w.Anmeldung < this.VorgangBeginn) && (w.Abmeldung > this.VorgangBeginn)).Select(s => s.eBediener.NachName + ", " + s.eBediener.VorName).Distinct().ToList();
+        return string.Join("; ", ben); 
+      }
+      set { }
+    }
   }
 }

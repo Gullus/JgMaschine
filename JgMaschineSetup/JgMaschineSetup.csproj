@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>JgSettings.ico</ApplicationIcon>
+    <ApplicationIcon>Properties\JgSettings.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -163,10 +163,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="JgSettings.ico" />
+    <Resource Include="Properties\JgSettings.ico" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="SplashScreen.jpg">
+    <SplashScreen Include="Properties\SplashScreen.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
   </ItemGroup>

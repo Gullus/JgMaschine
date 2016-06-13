@@ -75,5 +75,26 @@ namespace JgMaschineLib
     }
 
     #endregion
+
+    public static string EntferneLetztesZeichen(string Wert, int Anzahl = 1)
+    {
+      if (Wert.Length > Anzahl)
+        return Wert.Substring(0, Wert.Length - Anzahl);
+      else
+        return Wert;
+    }
+
+    public static string ListInString<T>(IEnumerable<T> Liste, string Trennzeichen, string FeldBegrenzer = "")
+    {
+      var sb = new StringBuilder();
+      foreach (var o in Liste)
+        sb.Append($"{FeldBegrenzer}{o.ToString()}{FeldBegrenzer}{Trennzeichen}");
+      return EntferneLetztesZeichen(sb.ToString());
+    }
+
+    public static string DezimalInString(decimal Wert)
+    {
+      return Wert.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    }
   }
 }

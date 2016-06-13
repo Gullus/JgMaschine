@@ -10,7 +10,7 @@ namespace JgMaschineDbMerge
   {
     static void Main(string[] args)
     {
-      var dba = new DatenBankAbgleich(Properties.Settings.Default.SqlConnectionServer, Properties.Settings.Default.SqlConnectionClient);
+      var dba = new DatenBankAbgleich(Properties.Settings.Default.SqlConnectionServer, Properties.Settings.Default.SqlConnectionClient, true);
       Console.WriteLine("Fertsch...");
       Console.ReadKey();
     }
@@ -18,12 +18,14 @@ namespace JgMaschineDbMerge
 
   public class DatenBankAbgleich
   {
-    private string[] _ListeTabellen = new string[] { "tabAuswertungSet", "tabStandortSet", "tabBedienerSet", "tabMaschineSet", "tabProtokollSet", "tabArbeitszeitSet", "tabAnmeldungMaschineSet", "tabBauteilSet" };
+    private string[] _ListeTabellen = new string[] { "tabAuswertungSet", "tabStandortSet", "tabMaschineSet", "tabBedienerSet", "tabProtokollSet", "tabArbeitszeitSet", "tabAnmeldungMaschineSet", "tabBauteilSet" };
     private SqlConnection _ConServer;
     private SqlConnection _ConNiederlassung;
+    private bool _GesamteDatenbank;
 
-    public DatenBankAbgleich(string VerbindungsStringServer, string VerbindungsStringNiederlassung)
+    public DatenBankAbgleich(string VerbindungsStringServer, string VerbindungsStringNiederlassung, bool GesamteDatenbank = false)
     {
+      _GesamteDatenbank = GesamteDatenbank;
       _ConServer = VerbindungOeffnen(VerbindungsStringServer, "Server");
       if (_ConServer == null)
         return;
@@ -48,7 +50,7 @@ namespace JgMaschineDbMerge
       }
       catch (Exception f)
       {
-        Protokoll($"Fehler beim DbMerge in Tabelle {tabNameFehler}. {f.Message}");
+        Protokoll($"Fehler beim DbMerge in Tabelle '{tabNameFehler}'.\n\rGrund: {f.Message}");
       }
       finally
       {
@@ -63,7 +65,13 @@ namespace JgMaschineDbMerge
       var sendAnNach = new StringBuilder();
 
       var dmVon = new DatenMatrix(Felder);
-      var sq = $"SELECT * FROM {Tabelle} WHERE DatenAbgleich_Status <> 2";
+
+      byte statusAbgleich = 2;
+      if (_GesamteDatenbank)
+        statusAbgleich = 100;
+
+      var sq = $"SELECT * FROM {Tabelle} WHERE DatenAbgleich_Status < {statusAbgleich}";
+
       var com = new SqlCommand(sq, ConVon);
       var reader = com.ExecuteReader();
 
@@ -75,7 +83,7 @@ namespace JgMaschineDbMerge
         return;
 
       var dmNach = new DatenMatrix(Felder);
-      var idis = DatenInKommaliste(dmVon.ListeDaten.Keys.ToArray());
+      var idis = JgMaschineLib.Helper.ListInString<string>(dmVon.ListeDaten.Keys.ToArray(), ",", "'");
       sq = $"SELECT * FROM {Tabelle} WHERE Id IN ({idis})";
       com = new SqlCommand(sq, ConNach);
       reader = com.ExecuteReader();
@@ -137,43 +145,39 @@ namespace JgMaschineDbMerge
           }
           string felder = string.Join(",", Felder);
 
-          sendAnNach.AppendLine($"INSERT INTO {Tabelle} ({felder}) VALUES ({EntferneLetztesZeichen(sb.ToString())})");
+          sendAnNach.AppendLine($"INSERT INTO {Tabelle} ({felder}) VALUES ({JgMaschineLib.Helper.EntferneLetztesZeichen(sb.ToString())})");
           sendAnVon.AppendLine($"UPDATE {Tabelle} SET DatenAbgleich_Status = 2 WHERE Id = {dmVon.GetString((object[])dsVon.Value, "Id")}");
         }
       }
 
-      var transServer = _ConServer.BeginTransaction();
-      var transNiederlassung = _ConNiederlassung.BeginTransaction();
+      var transVon = ConVon.BeginTransaction();
+      var transNach = ConNach.BeginTransaction();
 
       try
       {
         com = new SqlCommand(sendAnVon.ToString(), ConVon);
+        com.Transaction = transVon;
         com.ExecuteNonQuery();
 
         com = new SqlCommand(sendAnNach.ToString(), ConNach);
+        com.Transaction = transNach;
         com.ExecuteNonQuery();
 
-        transServer.Commit();
-        transNiederlassung.Commit();
+        transVon.Commit();
+        transNach.Commit();
+
+        Console.WriteLine($"Tabelle {Tabelle} erfolgreich eingetragen.");
       }
       catch (Exception f)
       {
-        transServer.Rollback();
-        transNiederlassung.Rollback();
+        transVon.Rollback();
+        transNach.Rollback();
 
         throw new Exception($"Fehler beim eintragen der Daten in die Datenbank. \r\nGrund: {f.Message}");
       }
 
       if (Tabelle == "tabBauteilSet")
-        N_N_Verbindung(ConVon, ConNach, Tabelle, idis);
-    }
-
-    public string DatenInKommaliste(object[] Vorgabe)
-    {
-      var sb = new StringBuilder();
-      foreach (var ob in Vorgabe)
-        sb.Append($"'{ob}', ");
-      return EntferneLetztesZeichen(sb.ToString(), 2);
+        N_N_Verbindung(ConVon, ConNach, "tabBauteiltabBediener", idis);
     }
 
     public string[] FelderAuslesen(SqlConnection Verbindung, string TabellenName)
@@ -211,18 +215,10 @@ namespace JgMaschineDbMerge
       Console.WriteLine(ProtokollText);
     }
 
-    public string EntferneLetztesZeichen(string Wert, int Anzahl = 1)
-    {
-      if (Wert.Length == 0)
-        return "";
-      else
-        return Wert.Substring(0, Wert.Length - Anzahl);
-    }
-
     public void N_N_Verbindung(SqlConnection ConVon, SqlConnection conNach, string TabName, string IdisListeIdVon)
     {
       var felder = FelderAuslesen(ConVon, TabName);
-      var sq = $"SELECT * FROM {TabName} WHERE ID IN ({IdisListeIdVon})";
+      var sq = $"SELECT * FROM {TabName} WHERE {felder[0]} IN ({IdisListeIdVon})";
 
       var lVon = new SortedSet<string>();
       var lNach = new SortedSet<string>();
@@ -239,20 +235,25 @@ namespace JgMaschineDbMerge
         lNach.Add(reader[0].ToString() + ";" + reader[1].ToString());
       reader.Close();
 
+      string felderNamen = string.Join(",", felder);
+
       var sbNach = new StringBuilder();
       foreach (var ds in lVon)
       {
         if (!lNach.Contains(ds))
-          sbNach.AppendLine($"INSERT INTO {TabName} VALUES ({ds.Substring(0, 36)}, {ds.Substring(38)})");
+          sbNach.AppendLine($"INSERT INTO {TabName} ({felderNamen}) VALUES (N'{ds.Substring(0, 36)}', N'{ds.Substring(37)}')");
       }
       foreach (var ds in lNach)
       {
         if (!lVon.Contains(ds))
-          sbNach.AppendLine($"DELETE FROM {TabName} WHERE ({felder[0]} =  {ds.Substring(0, 36)}) AND ({felder[1]} = {ds.Substring(38)})");
+          sbNach.AppendLine($"DELETE FROM {TabName} WHERE ({felder[0]} = N'{ds.Substring(0, 36)}') AND ({felder[1]} = N'{ds.Substring(37)}')");
       }
 
-      com = new SqlCommand(sbNach.ToString(), conNach);
-      com.ExecuteNonQuery();
+      if (sbNach.ToString() != "")
+      {
+        com = new SqlCommand(sbNach.ToString(), conNach);
+        com.ExecuteNonQuery();
+      }
     }
   }
 
@@ -302,10 +303,16 @@ namespace JgMaschineDbMerge
       if (wert is System.Boolean)
         return Convert.ToBoolean(wert) ? "1" : "0";
 
+      if (wert is System.Decimal)
+        return JgMaschineLib.Helper.DezimalInString((System.Decimal)wert);
+
       if ((wert is System.String) || (wert is System.Guid) || (wert is System.DateTime))
         return $"N'{wert}'";
-      else
-        return wert.ToString();
+
+      if (wert is byte[])
+        return "0x" + BitConverter.ToString((byte[])wert).Replace("-", string.Empty);
+
+      return wert.ToString();
     }
   }
 }

@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>JgPrint.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -110,7 +113,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="BenutzerAusweis.frx" />
+    <None Include="Hilfen\BenutzerAusweis.frx" />
     <None Include="Hilfen\InitScannerDatalocig.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -145,7 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="SplashScreen.jpg">
+    <SplashScreen Include="Properties\SplashScreen.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
   </ItemGroup>
@@ -181,6 +184,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Bilder\JgCancel.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Properties\JgPrint.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="JgPrint.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

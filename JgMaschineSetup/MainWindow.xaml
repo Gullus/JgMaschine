@@ -249,13 +249,15 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <Label Content="Status"/>
                         <ComboBox Name="cbStatusBediener" SelectedItem="{Binding Status}" Margin="3" Grid.Column="1" />
+                        <TextBox Grid.Row="1" Text="{Binding Id}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.ColumnSpan="3" />
 
-                        <Label Content="Bemerkung"  Grid.Row="1"/>
-                        <TextBox Text="{Binding Bemerkung}" Grid.Row="2" Grid.ColumnSpan="2" Height="150"/>
+                        <Label Content="Bemerkung"  Grid.Row="2"/>
+                        <TextBox Text="{Binding Bemerkung}" Grid.Row="3" Grid.ColumnSpan="2" Height="150"/>
                     </Grid>
 
                     <Button Grid.Column="2" Grid.Row="4" Click="ButtonNeuerBediener_Click" Grid.ColumnSpan="2">

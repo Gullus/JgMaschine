@@ -21,6 +21,13 @@ namespace JgMaschineTest
   {
     static void Main()
     {
+      double d = 763552.965;
+      Console.WriteLine(d.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+      // Culture.InvariantCulture
+
+      Console.ReadKey();
+      return;
 
       var pr = Properties.Settings.Default;
       var st = new ScannerProgramm(pr.ScannerAdresse, pr.ScannerPort, pr.Verbindungszeichen, true);

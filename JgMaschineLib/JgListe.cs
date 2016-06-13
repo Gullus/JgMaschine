@@ -15,6 +15,7 @@ namespace JgMaschineLib
   {
     private bool isInRange = false;
     private DataGrid[] _ListeTabellen;
+
     private CollectionViewSource _ViewSource;
     private JgMaschineData.JgModelContainer _Db;
 
@@ -30,7 +31,22 @@ namespace JgMaschineLib
     }
 
     public bool IsEmpty { get { return this.Count == 0; } }
-    public T AktDatensatz { get { return (T)_ViewSource.View.CurrentItem; } }
+    public T AktDatensatz
+    {
+      get
+      {
+        if ((_ViewSource != null) && (_ViewSource.View != null))
+          return (T)_ViewSource.View.CurrentItem;
+        else
+          return null;
+      }
+    }
+
+    public CollectionViewSource ViewSource
+    {
+      get { return _ViewSource; }
+      set { _ViewSource = value; }
+    }
 
     private bool IstInit = false;
 
@@ -66,7 +82,7 @@ namespace JgMaschineLib
       if (!IstInit)
       {
         IstInit = true;
-        InitClass(); 
+        InitClass();
       }
 
       return 0;
@@ -83,11 +99,6 @@ namespace JgMaschineLib
 
     private void InitClass()
     {
-      //PropertyChanged  += (sen, erg) =>
-      //{
-      //  MessageBox.Show("Geaendert: " + erg.PropertyName);
-      //};
-
       CollectionChanged += (sen, erg) =>
       {
         var ent = _Db.Set<T>();
@@ -109,7 +120,7 @@ namespace JgMaschineLib
             {
               var entGeloescht = _Db.Entry<T>(ds);
               var abgl = entGeloescht.Property<JgMaschineData.DatenAbgleich>("DatenAbgleich");
-              abgl.CurrentValue.Geloescht = true; 
+              abgl.CurrentValue.Geloescht = true;
               JgMaschineLib.DbSichern.AbgleichEintragen(abgl.CurrentValue, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
             }
             _Db.SaveChanges();

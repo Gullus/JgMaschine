@@ -4,6 +4,7 @@ using System;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -75,7 +76,7 @@ namespace JgMaschineVerwalten
       var vs = (CollectionViewSource)FindResource("vsMaschine");
       _ListeMaschinen = new JgMaschineLib.JgListe<JgMaschineData.tabMaschine>(_Db, iqMaschine, vs);
       await _ListeMaschinen.DatenGenerierenAsync();
-      vs.View.CurrentChanged += (sen, erg) => { MaschineDatenAktualisieren(); };
+      vs.View.CurrentChanged += (sen, erg) => MaschineDatenAktualisieren();
 
       // Arbeitszeit Initialisieren
 
@@ -180,7 +181,8 @@ namespace JgMaschineVerwalten
     {
       await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
       await _ListeAnmeldungAktuell.DatenGenerierenAsync();
-      await _ListeReparaturAktuell.DatenGenerierenAsync();
+      if (_ListeMaschinen.AktDatensatz != null)
+        await _ListeReparaturAktuell.DatenGenerierenAsync();
     }
 
     private async void MaschineDatenAktualisieren()

@@ -63,6 +63,7 @@ namespace JgMaschineLib.Scanner
 
       #endregion
 
+      _Db = new JgMaschineData.JgModelContainer();
       var maschine = SucheMaschine(_Db, e);
 
       if (maschine != null)
@@ -290,6 +291,9 @@ namespace JgMaschineLib.Scanner
                   VorgangEnde = DateTime.Now,
                   Ereigniss = ereignis
                 };
+
+                if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.COILSTART)
+                  reparatur.CoilwechselAnzahl = Convert.ToByte(e.ScannerKoerper);
 
                 DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
               }

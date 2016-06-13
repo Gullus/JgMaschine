@@ -7,7 +7,8 @@
     xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:comands="clr-namespace:JgMaschineVerwalten.Commands"
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" Loaded="Window_Loaded" Closed="Window_Closed">
 
     <Window.Resources>
@@ -38,7 +39,7 @@
 
         <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
         <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
-        
+
 
     </Window.Resources>
 
@@ -628,7 +629,7 @@
                             <TabItem.Effect>
                                 <DropShadowEffect Color="Silver"/>
                             </TabItem.Effect>
-                            <Grid Margin="5">
+                            <Grid Margin="5" DataContext="{StaticResource vsReparaturAktuell}" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="160"/>
                                     <ColumnDefinition/>
@@ -664,16 +665,29 @@
                                 </Button>
 
                                 <Grid Grid.Row="3" Grid.ColumnSpan="4">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Content="Protokolltext" />
-                                    <TextBox IsReadOnly="True" Grid.Column="1" Text="{Binding Source={StaticResource vsReparaturAktuell}, Path=ProtokollText}"/>
+                                    <Label Content="Anzahl Coils" />
+                                    <TextBox Grid.Column="1" Text="{Binding CoilwechselAnzahl}" Style="{DynamicResource StyleTextBoxReadOnly}" />
+                                    <Label Content="Bediener" Grid.Column="2" />
+                                    <TextBox Grid.Column="4" Style="{DynamicResource StyleTextBoxReadOnly}" Text="{Binding Bediener, Mode=OneWay}" />
+
+                                    <Label Content="Protokolltext" Grid.Row="1" />
+                                    <TextBox IsReadOnly="True" Grid.Column="1" Text="{Binding ProtokollText}" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="3" Style="{DynamicResource StyleTextBoxReadOnly}"/>
                                 </Grid>
 
-                                <DataGrid x:Name="dgReparaturAktuell" Grid.Row="2" ItemsSource="{Binding Source={StaticResource vsReparaturAktuell}}" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True">
+
+                                <DataGrid x:Name="dgReparaturAktuell" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
                                         <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
@@ -706,7 +720,7 @@
                                 <DropShadowEffect Color="Silver"/>
                             </TabItem.Effect>
 
-                            <Grid Margin="5">
+                            <Grid Margin="5" DataContext="{StaticResource vsReparaturAuswahl}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="100"/>
@@ -728,7 +742,6 @@
                                     <RowDefinition Height="5" />
                                     <RowDefinition />
                                     <RowDefinition Height="160" />
-                                    <RowDefinition Height="50"/>
                                 </Grid.RowDefinitions>
                                 <Label Content="Auswahl vom"/>
                                 <DatePicker Grid.Column="1" SelectedDate="{Binding Source={StaticResource dzReparaturVon}, Path=Datum}"/>
@@ -755,16 +768,28 @@
                                 </Button>
 
                                 <Grid Grid.Row="3" Grid.ColumnSpan="14">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Content="Protokolltext"/>
-                                    <TextBox IsReadOnly="True" Grid.Column="1" Text="{Binding Source={StaticResource vsReparaturAuswahl}, Path=ProtokollText}" />
+                                    <Label Content="Anzahl Coils" />
+                                    <TextBox Grid.Column="1" Text="{Binding CoilwechselAnzahl}" Style="{DynamicResource StyleTextBoxReadOnly}"/>
+                                    <Label Content="Bediener" Grid.Column="2" />
+                                    <TextBox Text="{Binding Bediener}" Grid.Column="3" Style="{DynamicResource StyleTextBoxReadOnly}" />
+
+                                    <Label Content="Protokolltext" Grid.Row="1" />
+                                    <TextBox IsReadOnly="True" Text="{Binding ProtokollText}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Style="{DynamicResource StyleTextBoxReadOnly}" Grid.ColumnSpan="3" />
                                 </Grid>
 
-                                <DataGrid x:Name="dgReparaturAuswahl" Grid.Row="2" ItemsSource="{Binding Source={StaticResource vsReparaturAuswahl}}" Grid.ColumnSpan="14" AutoGenerateColumns="False" IsReadOnly="True">
+                                <DataGrid x:Name="dgReparaturAuswahl" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="14" AutoGenerateColumns="False" IsReadOnly="True">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
                                         <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
