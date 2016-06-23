@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JgMaschineTest.Properties {
+namespace JgMaschineServiceTest.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,7 +25,7 @@ namespace JgMaschineTest.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.221")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.20")]
         public string ScannerAdresse {
             get {
                 return ((string)(this["ScannerAdresse"]));
@@ -34,7 +34,7 @@ namespace JgMaschineTest.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("51000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5100")]
         public int ScannerPort {
             get {
                 return ((int)(this["ScannerPort"]));
@@ -45,30 +45,27 @@ namespace JgMaschineTest.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True")]
-        public string Verbindungszeichen {
+        public string DbVerbindung {
             get {
-                return ((string)(this["Verbindungszeichen"]));
+                return ((string)(this["DbVerbindung"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True")]
-        public string VerbindungClient {
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\EVG\\EINGABE\\PROD\\")]
+        public string EvgPfadProduktionsListe {
             get {
-                return ((string)(this["VerbindungClient"]));
+                return ((string)(this["EvgPfadProduktionsListe"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschineServer;Integrated Security=Tru" +
-            "e")]
-        public string VerbindungServer {
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\EVG\\EINGABE\\HOST\\PB.H_M")]
+        public string EvgFileProduktionsAuftrag {
             get {
-                return ((string)(this["VerbindungServer"]));
+                return ((string)(this["EvgFileProduktionsAuftrag"]));
             }
         }
     }

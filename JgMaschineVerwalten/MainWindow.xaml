@@ -1,5 +1,4 @@
 ﻿<Window
-    x:Class="JgMaschineVerwalten.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:lib="clr-namespace:JgMaschineLib;assembly=JgMaschineLib"
@@ -8,19 +7,27 @@
     xmlns:comands="clr-namespace:JgMaschineVerwalten.Commands"
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
+    x:Class="JgMaschineVerwalten.MainWindow"
+    mc:Ignorable="d"
     Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" Loaded="Window_Loaded" Closed="Window_Closed">
 
     <Window.Resources>
         <CollectionViewSource x:Key="vsMaschine" d:DesignSource="{d:DesignInstance {x:Type data:tabMaschine}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
+
+        <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+        <CollectionViewSource x:Key="vsAuswertungAnmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+        <CollectionViewSource x:Key="vsAuswertungBauteil" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+        <CollectionViewSource x:Key="vsAuswertungReparatur" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+
+        <CollectionViewSource x:Key="vsBedienerArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsBedienerAnmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
 
         <CollectionViewSource x:Key="vsArbeitszeitAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
 
         <CollectionViewSource x:Key="vsAnmeldungAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsAnmeldungAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsAnmeldungBenutzer" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
 
         <CollectionViewSource x:Key="vsReparaturAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsReparaturAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
@@ -39,8 +46,6 @@
 
         <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
         <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
-
-
     </Window.Resources>
 
     <Grid DataContext="{StaticResource vsMaschine}" Margin="5">
@@ -126,7 +131,7 @@
                                     <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Mitarbeiter" />
-                                <ComboBox x:Name="cmbBenutzerArbeitszeit" DisplayMemberPath="Name" SelectedValuePath="Id" Grid.Column="1"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerArbeitszeit}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
                                 <Button Click="ArbeitszeitAnmeldung_Click" Grid.Column="2">
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
@@ -150,7 +155,7 @@
                                 <DataGrid x:Name="dgArbeitszeitAktuell" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAktuell}}" Grid.Row="2" Grid.ColumnSpan="5">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightCenter}"/>
+                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightCenter}"/>
 
                                         <DataGridTemplateColumn Header="Abmelden" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -191,34 +196,34 @@
                                 </Grid.RowDefinitions>
 
                                 <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Source={StaticResource dzArbeitszeitVon}, Path=Datum}"/>
+                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitVon}}"/>
                                 <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Source={StaticResource dzArbeitszeitVon}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
                                 <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Source={StaticResource dzArbeitszeitVon}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
 
                                 <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Source={StaticResource dzArbeitszeitBis}, Path=Datum}" />
+                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitBis}}" />
                                 <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Source={StaticResource dzArbeitszeitBis}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
                                 <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzArbeitszeitBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
-                                <Button x:Name="btnArbeitszeitAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
+                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="1" >
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
                                     </Button.Effect>
                                     <StackPanel Orientation="Horizontal" >
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" />
-                                        <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
+                                        <TextBlock Text=" aktualisieren" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
 
                                 <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Anmeldung" Width="90" MinWidth="90"/>
-                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Abmeldung" Width="90" MinWidth="90"/>
+                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90"/>
+                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Abmeldung" Width="90" MinWidth="90"/>
 
                                         <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -244,7 +249,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
-                        <ComboBox x:Name="cmbDruckArbeitszeit" Grid.Column="1"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungArbeitszeit}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
                         <Button Click="btnDrucken_Click" Grid.Column="2" Tag="11">
                             <Button.Effect>
                                 <DropShadowEffect Color="Silver"/>
@@ -316,7 +321,7 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Content="Mitarbeiter" />
-                                <ComboBox ItemsSource="{Binding Source={StaticResource vsAnmeldungBenutzer}}" Grid.Column="1" DisplayMemberPath="eBediener.Name" SelectedValuePath="Id" />
+                                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerAnmeldung}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
                                 <Button Command="{x:Static comands:MyCommands.AnmeldungBediener}" Grid.Column="2">
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
@@ -341,7 +346,7 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Angemeldete Bediener" Width="*" MinWidth="120"/>
                                         <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="an Maschine" Width="*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
 
                                         <DataGridTemplateColumn Header="Abmelden" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -381,20 +386,20 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Source={StaticResource dzAnmeldungVon}, Path=Datum}"/>
+                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungVon}}"/>
                                 <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Source={StaticResource dzAnmeldungVon}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
                                 <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Source={StaticResource dzAnmeldungVon}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
 
                                 <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Source={StaticResource dzAnmeldungBis}, Path=Datum}" />
+                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungBis}}" />
                                 <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Source={StaticResource dzAnmeldungBis}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
                                 <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzAnmeldungBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
-                                <Button x:Name="btnAnmeldungAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
+                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="2" >
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
                                     </Button.Effect>
@@ -408,8 +413,8 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="*" MinWidth="120"/>
                                         <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="an Maschine" Width="*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Abmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Abmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
 
                                         <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -435,7 +440,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
-                        <ComboBox x:Name="cmbDruckAnmeldung" Grid.Column="1"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungAnmeldung}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
                         <Button Click="btnDrucken_Click" Grid.Column="2" Tag="21">
                             <Button.Effect>
                                 <DropShadowEffect Color="Silver"/>
@@ -463,7 +468,7 @@
                                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="44">
+                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="24">
                             <Button.Effect>
                                 <DropShadowEffect Color="Silver"/>
                             </Button.Effect>
@@ -508,20 +513,20 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label Content="Auswahl vom"/>
-                    <DatePicker Grid.Column="1" SelectedDate="{Binding Source={StaticResource dzBauteilVon}, Path=Datum}"/>
+                    <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilVon}}"/>
                     <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="3" SelectedValue="{Binding Source={StaticResource dzBauteilVon}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                    <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
                     <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="5" SelectedValue="{Binding Source={StaticResource dzBauteilVon}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                    <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
 
                     <Label Content="Bis" Grid.Column="6" />
-                    <DatePicker Grid.Column="7" SelectedDate="{Binding Source={StaticResource dzBauteilBis}, Path=Datum}" />
+                    <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilBis}}" />
                     <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="9" SelectedValue="{Binding Source={StaticResource dzBauteilBis}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                    <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
                     <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzBauteilBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                    <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
-                    <Button x:Name="btnBauteilAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
+                    <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="3">
                         <Button.Effect>
                             <DropShadowEffect Color="Silver"/>
                         </Button.Effect>
@@ -532,12 +537,9 @@
                     </Button>
 
                     <DataGrid x:Name="dgBauteilAuswahl" Grid.Row="2" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBauteilAuswahl}}" IsReadOnly="True" >
-                        <DataGrid.Effect>
-                            <DropShadowEffect/>
-                        </DataGrid.Effect>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding DatumStart, StringFormat={}{0:dd.MM HH:mm:ss}}" Header="Start" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-                            <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat={}{0:dd.MM HH:mm:ss}}" Header="Ende" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                            <DataGridTextColumn Binding="{Binding DatumStart, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Start" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                            <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Ende" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
                             <DataGridTextColumn Binding="{Binding BtAnzahl}" Header="Stück" Width="70" MinWidth="70"/>
                             <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
                             <DataGridTextColumn Binding="{Binding BtLaenge}" Header="Laenge" Width="70" MinWidth="70"/>
@@ -562,14 +564,14 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
-                        <ComboBox x:Name="cmbDruckBauteil" Grid.Column="1"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungBauteil}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
                         <Button Click="btnDrucken_Click" Grid.Column="2" Tag="31">
                             <Button.Effect>
                                 <DropShadowEffect Color="Silver"/>
                             </Button.Effect>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
+                                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                             </StackPanel>
                         </Button>
                         <Button Click="btnDrucken_Click" Grid.Column="3" Tag="32">
@@ -601,10 +603,7 @@
                         </Button>
 
                     </Grid>
-                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="15" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsBedienerBauteil}}" Grid.Row="3" RowDetailsVisibilityMode="VisibleWhenSelected">
-                        <DataGrid.Effect>
-                            <DropShadowEffect/>
-                        </DataGrid.Effect>
+                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBedienerBauteil}}" Grid.Row="3">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding VorName}" Header="Vorname" Width="160"/>
                             <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="160"/>
@@ -654,7 +653,7 @@
                                     </StackPanel>
                                 </Button>
 
-                                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="3">
+                                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="4">
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
                                     </Button.Effect>
@@ -687,13 +686,14 @@
                                 </Grid>
 
 
-                                <DataGrid x:Name="dgReparaturAktuell" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True">
+                                <DataGrid x:Name="dgReparaturAktuell" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="4" IsReadOnly="True">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
-                                        <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
+                                        <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" CellStyle="{DynamicResource CellRightCenter}" />
+                                        <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
+                                        <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                                         <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
-                                        <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat={}{0:dd.MM.yy HH:mm} }" />
-                                        <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat={}{0:dd.MM.yy HH:mm} }" />
+                                        <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
+                                        <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
 
                                         <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -744,20 +744,20 @@
                                     <RowDefinition Height="160" />
                                 </Grid.RowDefinitions>
                                 <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Source={StaticResource dzReparaturVon}, Path=Datum}"/>
+                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturVon}}"/>
                                 <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Source={StaticResource dzReparaturVon}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
                                 <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Source={StaticResource dzReparaturVon}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitVon}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
 
                                 <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Source={StaticResource dzReparaturBis}, Path=Datum}" />
+                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturBis}}" />
                                 <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Source={StaticResource dzReparaturBis}, Path=Stunde}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeStunden}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
                                 <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Source={StaticResource dzReparaturBis}, Path=Minute}" ItemsSource="{Binding Source={StaticResource dzArbeitszeitBis}, Path=VorgabeMinuten}" ItemStringFormat="{}{0:D2}"/>
+                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
-                                <Button x:Name="btnReparaturAuswahl" Grid.Column="12" Click="btnAuswahlAktualisieren_Click" >
+                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="4"> 
                                     <Button.Effect>
                                         <DropShadowEffect Color="Silver"/>
                                     </Button.Effect>
@@ -789,13 +789,13 @@
                                     <TextBox IsReadOnly="True" Text="{Binding ProtokollText}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Style="{DynamicResource StyleTextBoxReadOnly}" Grid.ColumnSpan="3" />
                                 </Grid>
 
-                                <DataGrid x:Name="dgReparaturAuswahl" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="14" AutoGenerateColumns="False" IsReadOnly="True">
+                                <DataGrid x:Name="dgReparaturAuswahl" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="14" IsReadOnly="True">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
-                                        <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat={}{0:dd.MM.yy HH:mm} }" CellStyle="{DynamicResource CellRightCenter}" />
+                                        <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
+                                        <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                                         <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
-                                        <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat={}{0:dd.MM.yy HH:mm} }" />
-                                        <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat={}{0:dd.MM.yy HH:mm} }" />
+                                        <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
+                                        <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
 
                                         <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -821,7 +821,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
-                        <ComboBox x:Name="cmbDruckReparatur" Grid.Column="1"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungReparatur}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
                         <Button Click="btnDrucken_Click" Grid.Column="2" Tag="41">
                             <Button.Effect>
                                 <DropShadowEffect Color="Silver"/>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Configuration.Install;
 using System.Diagnostics;
 using System.ServiceProcess;
@@ -9,7 +10,7 @@ namespace JgMaschineDienst
 {
   public class JgMaschieService : ServiceBase
   {
-    static void Main()
+    private static void Main()
     {
       EintragLog("Service gestartet", EventLogEntryType.Information);
       JgMaschieService.Run(new JgMaschieService());

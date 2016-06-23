@@ -19,7 +19,7 @@
         <Style x:Key="StyleTextBoxReadOnly" TargetType="{x:Type TextBox}" >
             <Style.Setters>
                 <Setter Property="Margin" Value="3" />
-                <Setter Property="IsReadOnly" Value="False" />
+                <Setter Property="IsReadOnly" Value="True" />
                 <Setter Property="Background" Value="#FFF5F9FD" />
             </Style.Setters>
         </Style>

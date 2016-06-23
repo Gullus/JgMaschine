@@ -6,15 +6,14 @@
     xmlns:xData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules"
     mc:Ignorable="d" x:Class="JgMaschineSetup.FormProtokollOptionen"
-    Title="Protokoll Optionen" Height="355.784" Width="484.391" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
-        ShowInTaskbar="False" Topmost="True" Icon="/JgMaschineSetup;component/JgSettings.ico" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=dtpDatum}">
+    Title="Protokoll Optionen" Height="299.784" Width="513.391" WindowStartupLocation="CenterOwner" 
+        ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=dtpDatum}">
     <Window.Resources>
 
     </Window.Resources>
 
     <Grid Name="gridProtokoll" Margin="7" DataContext="{x:Type xData:tabProtokoll}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
@@ -31,30 +30,30 @@
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="120"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Diese Werten werden automatisch vom Programm belegt und sollten nicht geändert werden!" Margin="4" Grid.Column="1" Grid.Row="0" Foreground="#FF9C9797" Grid.ColumnSpan="3" TextWrapping="Wrap" TextAlignment="Center" />
+        <TextBlock Text="Diese Werten werden automatisch vom Programm belegt und sollten nicht geändert werden!" Margin="8" Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" TextWrapping="Wrap" TextAlignment="Center" />
 
-        <Label Content="Datum letzte _Datei" Target="{Binding ElementName=dtpDatumDatei}" Grid.Row="1" Height="30" VerticalAlignment="Top"/>
-        <DatePicker x:Name="dtpDatumDatei" SelectedDate="{Binding LetzteDateiDatum}" Grid.Column="1" Grid.Row="1" Margin="3" Grid.ColumnSpan="3"/>
+        <Label Content="Datum letzte _Datei" Target="{Binding ElementName=dtpDatumDatei}"/>
+        <DatePicker x:Name="dtpDatumDatei" SelectedDate="{Binding LetzteDateiDatum}" Grid.Column="1" Margin="3"/>
 
-        <Label Content="Datum letzte _Position" Target="{Binding ElementName=dtpDatumPosition}" Grid.Row="2" Height="30" VerticalAlignment="Top"/>
-        <DatePicker x:Name="dtpDatumPosition" SelectedDate="{Binding LetztePositionDatum}" Grid.Column="1" Grid.Row="2" Margin="3" Grid.ColumnSpan="3"/>
+        <Label Content="Datum letzte _Position" Target="{Binding ElementName=dtpDatumPosition}" Grid.Row="1"/>
+        <DatePicker x:Name="dtpDatumPosition" SelectedDate="{Binding LetztePositionDatum}" Grid.Column="1" Grid.Row="1" Margin="3" />
 
-        <Label Content="_Anzahl Durchläufe" Target="{Binding ElementName=tban}" Grid.Row="3" Height="30" VerticalAlignment="Top"/>
-        <TextBox x:Name="tbAnzahlDurchlaufe" Text="{Binding AnzahlDurchlauf}" Grid.Column="1" Grid.Row="3" Margin="3"/>
+        <Label Content="_Anzahl Durchläufe" Target="{Binding ElementName=tban}" Grid.Row="2" Height="30" VerticalAlignment="Top"/>
+        <TextBox x:Name="tbAnzahlDurchlaufe" Text="{Binding AnzahlDurchlauf}" Grid.Column="1" Grid.Row="2" />
 
-        <Label Content="Fehler _Verbindung" Target="{Binding ElementName=tbFehlerVerbindung}" Grid.Row="4" Height="30" VerticalAlignment="Top"/>
-        <TextBox x:Name="tbFehlerVerbindung" Text="{Binding FehlerVerbindungMaschine}" Grid.Column="1" Grid.Row="4" Margin="3"/>
+        <Label Content="Fehler _Verbindung" Target="{Binding ElementName=tbFehlerVerbindung}" Grid.Row="3" />
+        <TextBox x:Name="tbFehlerVerbindung" Text="{Binding FehlerVerbindungMaschine}" Grid.Column="1" Grid.Row="3" />
 
-        <Label Content="Fehler _Pfad" Target="{Binding ElementName=tbFehlerPfad }" Grid.Row="5" Height="30" VerticalAlignment="Top"/>
-        <TextBox x:Name="tbFehlerPfad" Text="{Binding FehlerPfadZurMaschine}" Grid.Column="1" Grid.Row="5" Margin="3"/>
+        <Label Content="Fehler _Pfad" Target="{Binding ElementName=tbFehlerPfad }" Grid.Row="4"/>
+        <TextBox x:Name="tbFehlerPfad" Text="{Binding FehlerPfadZurMaschine}" Grid.Column="1" Grid.Row="4"/>
 
-        <Label Content="Fehler _Import" Target="{Binding ElementName=tbFehlerImport }" Grid.Row="6" Height="30" VerticalAlignment="Top"/>
-        <TextBox x:Name="tbFehlerImport" Text="{Binding FehlerDatenImport}" Grid.Column="1" Grid.Row="6" Margin="3"/>
+        <Label Content="Fehler _Import" Target="{Binding ElementName=tbFehlerImport }" Grid.Row="5"/>
+        <TextBox x:Name="tbFehlerImport" Text="{Binding FehlerDatenImport}" Grid.Column="1" Grid.Row="5"/>
 
-        <Label Content="Fehler _Speichern" Target="{Binding ElementName=tbFehlerSpeichern }" Grid.Row="7" Height="30" VerticalAlignment="Top"/>
-        <TextBox x:Name="tbFehlerSpeichern" Text="{Binding FehlerDatenSpeichern}" Grid.Column="1" Grid.Row="7" Margin="3"/>
+        <Label Content="Fehler _Speichern" Target="{Binding ElementName=tbFehlerSpeichern }" Grid.Row="6"/>
+        <TextBox x:Name="tbFehlerSpeichern" Text="{Binding FehlerDatenSpeichern}" Grid.Column="1" Grid.Row="6"/>
 
-        <Button Grid.Column="2" Grid.Row="9" IsCancel="True">
+        <Button Grid.Column="2" Grid.Row="8" IsCancel="True">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
@@ -67,7 +66,7 @@
                 <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
-        <Button Grid.Column="3" Grid.Row="9" IsDefault="True" Click="ButtonOk_Click">
+        <Button Grid.Column="3" Grid.Row="8" IsDefault="True" Click="ButtonOk_Click">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>

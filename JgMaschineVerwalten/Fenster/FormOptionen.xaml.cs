@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -11,10 +12,10 @@ namespace JgMaschineVerwalten.Fenster
       get { return (JgMaschineData.tabStandort)cmbStandort.SelectedItem; }
     }
 
-    public FormOptionen(JgMaschineData.JgModelContainer _Db)
+    public FormOptionen(IEnumerable<JgMaschineData.tabStandort> Standorte)
     {
       InitializeComponent();
-      cmbStandort.ItemsSource = _Db.tabStandortSet.OrderBy(o => o.Bezeichnung).ToList();
+      cmbStandort.ItemsSource = Standorte;
       cmbStandort.SelectedValue = Properties.Settings.Default.IdStandort;
     }
 

@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:xData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules"
-    mc:Ignorable="d" x:Class="JgMaschineSetup.FormMaschinenOptionen"
+    mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormMaschinenOptionen"
     Title="Maschinen Optionen" Height="489.71" Width="528.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
         ShowInTaskbar="False" Topmost="True" Icon="/Properties/JgSettings.ico" ResizeMode="NoResize" 
         FocusManager.FocusedElement="{Binding ElementName=cmbStandort}">

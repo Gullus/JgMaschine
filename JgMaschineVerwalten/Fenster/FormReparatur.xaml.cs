@@ -1,5 +1,6 @@
 ﻿using JgMaschineLib.Zeit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -7,53 +8,42 @@ namespace JgMaschineVerwalten.Fenster
 {
   public partial class FormReparatur : Window
   {
-    private JgMaschineData.JgModelContainer _Db;
-    private JgMaschineData.tabReparatur _Reparatur;
-    public JgMaschineData.tabReparatur Reparatur
-    {
-      get { return _Reparatur; }
-      set { _Reparatur = value; }
-    }
+    public JgMaschineData.tabReparatur Reparatur { get; set; }
 
-    public FormReparatur(JgMaschineData.JgModelContainer Db, JgMaschineData.tabReparatur Reparatur)
+    public FormReparatur(JgMaschineData.tabReparatur Reparatur, IEnumerable<JgMaschineData.tabMaschine> Maschinen, IEnumerable<JgMaschineData.tabBediener> Bediener, JgMaschineData.tabMaschine AktuelleMaschine = null)
     {
       InitializeComponent();
 
-      _Db = Db;
+      cmbMaschine.ItemsSource = Maschinen;
+      cmbVerursacher.ItemsSource = Bediener;
+      cmbProtokollant.ItemsSource = Bediener;
+      cmbEreigniss.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumReperaturEreigniss));
 
-      _Reparatur = Reparatur;
-      if (_Reparatur == null)
+      if (Reparatur == null)
       {
-        _Reparatur = new JgMaschineData.tabReparatur()
+        Reparatur = new JgMaschineData.tabReparatur()
         {
           Id = Guid.NewGuid(),
           VorgangBeginn = DateTime.Now,
-          VorgangEnde = DateTime.Now,
+          VorgangEnde = DateTime.Now.AddMinutes(30),
+          fMaschine = AktuelleMaschine.Id,
           IstAktiv = true
         };
       }
+      this.Reparatur = Reparatur;
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      cmbEreigniss.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumReperaturEreigniss));
-
-      var bediener = _Db.tabBedienerSet.Where(w => w.Status == JgMaschineData.EnumStatusBediener.Aktiv).ToList();
-      cmbVerursacher.ItemsSource = bediener;
-      cmbProtokollant.ItemsSource = bediener;
-
       var dz = (JgDatumZeit)this.FindResource("dzReparaturVon");
-      dz.DatumZeit = _Reparatur.VorgangBeginn;
-      dz.NeuerWert = (dat) =>
-      {
-        _Reparatur.VorgangBeginn = dat;
-      };
+      dz.DatumZeit = Reparatur.VorgangBeginn;
+      dz.NeuerWert = (dat) => Reparatur.VorgangBeginn = dat;
 
       dz = (JgDatumZeit)this.FindResource("dzReparaturBis");
-      dz.DatumZeit = _Reparatur.VorgangEnde;
-      dz.NeuerWert = (dat) => { _Reparatur.VorgangEnde = dat; };
+      dz.DatumZeit = Reparatur.VorgangEnde;
+      dz.NeuerWert = (dat) => { Reparatur.VorgangEnde = dat; };
 
-      gridReparatur.DataContext = _Reparatur;
+      gridReparatur.DataContext = Reparatur;
     }
 
     private void ButtonOk_Click(object sender, RoutedEventArgs e)

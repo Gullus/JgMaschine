@@ -29,48 +29,53 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="21.859"/>
         </Grid.RowDefinitions>
-        <Label Content="_Rep.-beginn" Target="{Binding ElementName=dtpRepVon}" Grid.Row="0"/>
-        <DatePicker x:Name="dtpRepVon" SelectedDate="{Binding Source={StaticResource dzReparaturVon}, Path=Datum}" Grid.Column="1" Grid.Row="0" Margin="3,2"/>
 
-        <Label Content="_Stunde" Grid.Column="2" Grid.Row="0" FontWeight="Normal" FontStyle="Italic" />
-        <ComboBox x:Name="cmbStunde1" SelectedValue="{Binding Source={StaticResource dzReparaturVon}, Path=Stunde }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeStunden}" Grid.Column="3" ItemStringFormat="{}{0:D2}"/>
+        <Label Content="Maschine" Target="{Binding ElementName=cmbMaschine}" />
+        <ComboBox x:Name="cmbMaschine" SelectedValue="{Binding fMaschine}" SelectedValuePath="Id" DisplayMemberPath="MaschinenName" Grid.Column="1" Grid.ColumnSpan="3"/>
 
-        <Label Content="_Minute" Grid.Column="4" Grid.Row="0" FontWeight="Normal" FontStyle="Italic" />
-        <ComboBox x:Name="cmbMinute1" SelectedValue="{Binding Source={StaticResource dzReparaturVon}, Path=Minute }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeMinuten}" Grid.Column="5" ItemStringFormat="{}{0:D2}"/>
-
-        <Button Content="aktuelle Zeit" Grid.Column="6" Grid.Row="0" Margin="4"/>
-
-        <Label Content="R_ep.-ende" Target="{Binding ElementName=dtpRepBis}" Grid.Row="1"/>
-        <DatePicker x:Name="dtpRepBis" SelectedDate="{Binding Source={StaticResource dzReparaturBis}, Path=Datum}" Grid.Column="1" Grid.Row="1" Margin="3,2"/>
+        <Label Content="_Rep. Beginn" Target="{Binding ElementName=dtpRepVon}" Grid.Row="1"/>
+        <DatePicker x:Name="dtpRepVon" SelectedDate="{Binding Source={StaticResource dzReparaturVon}, Path=Datum}" Grid.Column="1" Grid.Row="1" Margin="3,2"/>
 
         <Label Content="_Stunde" Grid.Column="2" Grid.Row="1" FontWeight="Normal" FontStyle="Italic" />
-        <ComboBox x:Name="cmbStunde2" SelectedValue="{Binding Source={StaticResource dzReparaturBis}, Path=Stunde }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeStunden}" Grid.Column="3" Grid.Row="1" ItemStringFormat="{}{0:D2}"/>
+        <ComboBox x:Name="cmbStunde1" SelectedValue="{Binding Source={StaticResource dzReparaturVon}, Path=Stunde }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeStunden}" Grid.Column="3" ItemStringFormat="{}{0:D2}" Grid.Row="1"/>
 
         <Label Content="_Minute" Grid.Column="4" Grid.Row="1" FontWeight="Normal" FontStyle="Italic" />
-        <ComboBox x:Name="cmbMinute2" SelectedValue="{Binding Source={StaticResource dzReparaturBis}, Path=Minute }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeMinuten}" Grid.Column="5" Grid.Row="1" ItemStringFormat="{}{0:D2}"/>
+        <ComboBox x:Name="cmbMinute1" SelectedValue="{Binding Source={StaticResource dzReparaturVon}, Path=Minute }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeMinuten}" Grid.Column="5" ItemStringFormat="{}{0:D2}" Grid.Row="1"/>
 
         <Button Content="aktuelle Zeit" Grid.Column="6" Grid.Row="1" Margin="4"/>
 
-        <Label Content="_Verursacher" Target="{Binding ElementName=cmbVerursacher}" Grid.Row="3" />
-        <ComboBox x:Name="cmbVerursacher" SelectedValue="{Binding Path=fVerursacher}" DisplayMemberPath="Name" SelectedValuePath="Id" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" />
+        <Label Content="R_ep. Ende" Target="{Binding ElementName=dtpRepBis}" Grid.Row="2"/>
+        <DatePicker x:Name="dtpRepBis" SelectedDate="{Binding Source={StaticResource dzReparaturBis}, Path=Datum}" Grid.Column="1" Grid.Row="2" Margin="3,2"/>
 
-        <Label Content="_Protokollant" Target="{Binding ElementName=cmbProtokollant}" Grid.Row="4" />
-        <ComboBox x:Name="cmbProtokollant" SelectedValue="{Binding Path=fProtokollant}" DisplayMemberPath="Name" SelectedValuePath="Id" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" />
+        <Label Content="_Stunde" Grid.Column="2" Grid.Row="2" FontWeight="Normal" FontStyle="Italic" />
+        <ComboBox x:Name="cmbStunde2" SelectedValue="{Binding Source={StaticResource dzReparaturBis}, Path=Stunde }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeStunden}" Grid.Column="3" Grid.Row="2" ItemStringFormat="{}{0:D2}"/>
 
-        <Label Content="_Ereigniss" Target="{Binding ElementName=cmbEreigniss}" Grid.Row="2" />
-        <ComboBox x:Name="cmbEreigniss" SelectedValue="{Binding Path=Ereigniss}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" />
+        <Label Content="_Minute" Grid.Column="4" Grid.Row="2" FontWeight="Normal" FontStyle="Italic" />
+        <ComboBox x:Name="cmbMinute2" SelectedValue="{Binding Source={StaticResource dzReparaturBis}, Path=Minute }" ItemsSource="{Binding Source={StaticResource dzReparaturVon}, Path=VorgabeMinuten}" Grid.Column="5" Grid.Row="2" ItemStringFormat="{}{0:D2}"/>
 
-        <Label Content="_Bemerkung" Target="{Binding ElementName=tbBemerkung}" Grid.Row="5" />
-        <TextBox x:Name="tbBemerkung" Text="{Binding ProtokollText}" Grid.Column="1" Grid.ColumnSpan="9" Grid.Row="5" Margin="3" SpellCheck.IsEnabled="True" AcceptsTab="True" />
+        <Button Content="aktuelle Zeit" Grid.Column="6" Grid.Row="2" Margin="4"/>
 
-        <Label Content="Anzahl Coils" Grid.Row="6" Target="{Binding ElementName=tbAnzahlCoils}"/>
-        <TextBox x:Name="tbAnzahlCoils" Text="{Binding CoilwechselAnzahl}" Grid.Column="1" Grid.Row="6" />
+        <Label Content="_Verursacher" Target="{Binding ElementName=cmbVerursacher}" Grid.Row="4" />
+        <ComboBox x:Name="cmbVerursacher" SelectedValue="{Binding Path=fVerursacher}" DisplayMemberPath="Name" SelectedValuePath="Id" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" />
 
-        <Button Grid.Column="9" Grid.Row="6" IsDefault="True" Margin="5" Click="ButtonOk_Click" Grid.RowSpan="2">
+        <Label Content="_Protokollant" Target="{Binding ElementName=cmbProtokollant}" Grid.Row="5" />
+        <ComboBox x:Name="cmbProtokollant" SelectedValue="{Binding Path=fProtokollant}" DisplayMemberPath="Name" SelectedValuePath="Id" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="5" />
+
+        <Label Content="_Ereigniss" Target="{Binding ElementName=cmbEreigniss}" Grid.Row="3" />
+        <ComboBox x:Name="cmbEreigniss" SelectedValue="{Binding Path=Ereigniss}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
+
+        <Label Content="_Bemerkung" Target="{Binding ElementName=tbBemerkung}" Grid.Row="6" />
+        <TextBox x:Name="tbBemerkung" Text="{Binding ProtokollText}" Grid.Column="1" Grid.ColumnSpan="9" Grid.Row="6" Margin="3" SpellCheck.IsEnabled="True" AcceptsTab="True" />
+
+        <Label Content="Anzahl Coils" Grid.Row="7" Target="{Binding ElementName=tbAnzahlCoils}"/>
+        <TextBox x:Name="tbAnzahlCoils" Text="{Binding CoilwechselAnzahl}" Grid.Column="1" Grid.Row="7" />
+
+        <Button Grid.Column="9" Grid.Row="7" IsDefault="True" Margin="5" Click="ButtonOk_Click" Grid.RowSpan="2">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
@@ -84,7 +89,7 @@
             </StackPanel>
         </Button>
 
-        <Button Grid.Column="8" Grid.Row="6" IsDefault="True" Margin="5" IsCancel="True" Grid.RowSpan="2">
+        <Button Grid.Column="8" Grid.Row="7" IsDefault="True" Margin="5" IsCancel="True" Grid.RowSpan="2">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>

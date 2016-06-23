@@ -21,18 +21,45 @@ namespace JgMaschineTest
   {
     static void Main()
     {
-      double d = 763552.965;
-      Console.WriteLine(d.ToString(System.Globalization.CultureInfo.InvariantCulture));
+      var db = new JgModelContainer();
+      var cs = db.Database.Connection.ConnectionString;
 
-      // Culture.InvariantCulture
+      //IQueryable iq = new JgMaschineLib.JgList<tabStandort>()
+
+
+      //List<JgMaschineData.tabBediener> lb = null;
+
+      //using (var db = new JgMaschineData.JgModelContainer())
+      //{
+      //  lb = db.tabBedienerSet.ToList();
+
+      //  foreach (var d1 in lb)
+      //    Console.WriteLine($"{d1.Id} {d1.NachName}");
+      //}
+
+      //  //var t = lb[0];
+      //lb[0].NachName = "Juhu99999";
+
+      //using (var db = new JgMaschineData.JgModelContainer())
+      //{
+      //  db.tabBedienerSet.Attach(lb[0]);
+      //  //db.Entry(lb[0]).State = EntityState.Modified;
+      //  db.SaveChanges();
+      //}
+
+      //foreach (var d1 in lb)
+      //  Console.WriteLine($"{d1.Id} {d1.NachName}");
+
+      //using (var db = new JgMaschineData.JgModelContainer())
+      //{
+      //  lb = db.tabBedienerSet.ToList();
+
+      //  foreach (var d1 in lb)
+      //    Console.WriteLine($"{d1.Id} {d1.NachName}");
+      //}
 
       Console.ReadKey();
-      return;
-
-      var pr = Properties.Settings.Default;
-      var st = new ScannerProgramm(pr.ScannerAdresse, pr.ScannerPort, pr.Verbindungszeichen, true);
-      Console.ReadKey();
-      st.Close();
+      //st.Close();
     }
   }
 }

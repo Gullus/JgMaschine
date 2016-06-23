@@ -6,7 +6,7 @@
     xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" 
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules" 
     mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormStandort"
-    Title="Standort bearbeiten" Height="198" Width="439" Loaded="Window_Loaded" ShowInTaskbar="False" ResizeMode="NoResize"
+    Title="Standort bearbeiten" Height="198" Width="439" ShowInTaskbar="False" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" Topmost="True" TabIndex="5" FocusManager.FocusedElement="{Binding ElementName=tbStandort}">
     <Window.Resources>
 

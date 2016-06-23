@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbSichern.cs" />
+    <Compile Include="JgList.cs" />
     <Compile Include="JgListe.cs" />
     <Compile Include="Scanner\DataLogicScanner.cs" />
     <Compile Include="Scanner\ScannerProgramm.cs" />

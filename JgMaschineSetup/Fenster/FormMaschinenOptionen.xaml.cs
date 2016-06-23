@@ -1,57 +1,50 @@
 ﻿using JgMaschineData;
 using System;
+using System.Collections.Generic;
 using System.Windows;
-using System.Linq;
 using System.Windows.Controls;
 
-namespace JgMaschineSetup
+namespace JgMaschineSetup.Fenster
 {
   public partial class FormMaschinenOptionen : Window
   {
-    private JgModelContainer _Db;
+    public tabMaschine Maschine { get; set; }
 
-    private tabMaschine _Maschine;
-    public tabMaschine Maschine
-    {
-      get { return _Maschine; }
-      set { _Maschine = value; }
-    }
-
-    public FormMaschinenOptionen(JgModelContainer Db, tabMaschine Maschine)
+    public FormMaschinenOptionen(tabMaschine Maschine, IEnumerable<tabStandort> Standorte)
     {
       InitializeComponent();
-      _Db = Db;
-      _Maschine = Maschine;
+      this.Maschine = Maschine;
+
+      cmbStandort.ItemsSource = Standorte;
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       cmbStatus.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusMaschine));
       cmbProtokolle.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumProtokollName));
-      cmbStandort.ItemsSource = _Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
 
-      if (_Maschine == null)
-        _Maschine = new tabMaschine() { Id = Guid.NewGuid(), fStandort = (cmbStandort.Items[0] as tabStandort).Id };
-      gridMaschine.DataContext = _Maschine;
-
+      if (Maschine == null)
+        Maschine = new tabMaschine() { Id = Guid.NewGuid(), fStandort = (cmbStandort.Items[0] as tabStandort).Id };
+     
+      gridMaschine.DataContext = Maschine;
     }
 
     private void ButtonPfad_Click(object sender, RoutedEventArgs e)
     {
       System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
-      dialog.SelectedPath = _Maschine.PfadDaten;
+      dialog.SelectedPath = Maschine.PfadDaten;
       if (sender == btnDateiBediener)
-        dialog.SelectedPath = _Maschine.PfadBediener;
+        dialog.SelectedPath = Maschine.PfadBediener;
       if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
       {
         if (sender == btnDateiBediener)
         {
-          _Maschine.PfadBediener = dialog.SelectedPath;
+          Maschine.PfadBediener = dialog.SelectedPath;
           tbPfadBediener.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
         }
         else
         {
-          _Maschine.PfadDaten = dialog.SelectedPath;
+          Maschine.PfadDaten = dialog.SelectedPath;
           tbPfadDaten.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
         }
       }

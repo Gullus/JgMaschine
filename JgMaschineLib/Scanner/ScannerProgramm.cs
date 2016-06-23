@@ -10,6 +10,15 @@ namespace JgMaschineLib.Scanner
   {
     private bool _ProtokllAnzeigen = true;
 
+    public string ScannnerAdresse { get; set; } = "";
+    public int ScannerPortNummer { get; set; } = 0;
+    public string DbVerbindungsString { get; set; } = "";
+
+    public string EvgPfadProduktionsListe { get; set; } = "";
+    public string EvgDateiProduktionsAuftrag { get; set; } = "";
+
+    public bool ProtokollAnzeigen { get; set; } = false;
+
     private class MaschinenDaten
     {
       public string BvbsString { get; set; }
@@ -20,13 +29,13 @@ namespace JgMaschineLib.Scanner
     private JgMaschineData.JgModelContainer _Db;
     private DataLogicScanner.VorgangProgram[] _IstStart = { DataLogicScanner.VorgangProgram.WARTSTART, DataLogicScanner.VorgangProgram.REPASTART, DataLogicScanner.VorgangProgram.COILSTART };
 
-    public ScannerProgramm(string Adresse, int PortNummer, string VerbindungsString, bool ProtokollAnzeigen = false)
+    public ScannerProgramm()
     {
       _Db = new JgMaschineData.JgModelContainer();
-      _Db.Database.Connection.ConnectionString = VerbindungsString;
+      _Db.Database.Connection.ConnectionString = DbVerbindungsString;
       _Db.tabStandortSet.FirstOrDefault();
 
-      _DlScanner = new DataLogicScanner(Adresse, PortNummer, ScannerCommunication, ProtokollAnzeigen);
+      _DlScanner = new DataLogicScanner(ScannnerAdresse, ScannerPortNummer, ScannerCommunication, ProtokollAnzeigen);
       _DlScanner.Start();
     }
 
