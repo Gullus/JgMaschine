@@ -1,10 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace JgMaschineLib
 {
@@ -95,6 +94,23 @@ namespace JgMaschineLib
     public static string DezimalInString(decimal Wert)
     {
       return Wert.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    public static string StringInChar(string KommaString)
+    {
+      string erg = "";
+      var ar = KommaString.Split(new char[] { ',', ';' });
+      foreach (var s in ar)
+        erg += Convert.ToChar(Convert.ToByte(s));
+      return erg;
+    }
+
+    public static string ByteInChar(params byte[] ByteWerte)
+    {
+      string erg = "";
+      foreach (var b in ByteWerte)
+        erg += Convert.ToChar(b);
+      return erg;
     }
   }
 }

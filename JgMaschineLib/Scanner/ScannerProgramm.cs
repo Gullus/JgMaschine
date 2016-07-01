@@ -16,6 +16,7 @@ namespace JgMaschineLib.Scanner
 
     public string EvgPfadProduktionsListe { get; set; } = "";
     public string EvgDateiProduktionsAuftrag { get; set; } = "";
+    public string ServerTextAnmeldung { get; set; } = "";
 
     public bool ProtokollAnzeigen { get; set; } = false;
 
@@ -26,14 +27,22 @@ namespace JgMaschineLib.Scanner
     }
 
     private DataLogicScanner _DlScanner;
-    private JgMaschineData.JgModelContainer _Db;
     private DataLogicScanner.VorgangProgram[] _IstStart = { DataLogicScanner.VorgangProgram.WARTSTART, DataLogicScanner.VorgangProgram.REPASTART, DataLogicScanner.VorgangProgram.COILSTART };
 
     public ScannerProgramm()
+    { }
+
+    public void Start()
     {
-      _Db = new JgMaschineData.JgModelContainer();
-      _Db.Database.Connection.ConnectionString = DbVerbindungsString;
-      _Db.tabStandortSet.FirstOrDefault();
+      Protokoll($"Scanneradresse: {ScannnerAdresse}");
+      Protokoll($"Scannerport {ScannerPortNummer}");
+      Protokoll($"Db Verbindungsstring {DbVerbindungsString}");
+
+      using (var db = new JgMaschineData.JgModelContainer())
+      {
+        db.Database.Connection.ConnectionString = DbVerbindungsString;
+        db.tabStandortSet.FirstOrDefault();
+      }
 
       _DlScanner = new DataLogicScanner(ScannnerAdresse, ScannerPortNummer, ScannerCommunication, ProtokollAnzeigen);
       _DlScanner.Start();
@@ -60,6 +69,295 @@ namespace JgMaschineLib.Scanner
       return maschine;
     }
 
+    private void DatenAnMaschineSenden(JgMaschineData.tabMaschine Maschine, string SendString)
+    {
+      if ((Maschine.ProtokollName == JgMaschineData.EnumProtokollName.Handbiegung) || (string.IsNullOrWhiteSpace(Maschine.MaschineAdresse)))
+        return;
+
+      switch (Maschine.ProtokollName)
+      {
+        case JgMaschineData.EnumProtokollName.Schnell:
+          if (Maschine.MaschinePortnummer != null)
+          {
+            var datenAnMaschine = Task.Factory.StartNew((mDaten) =>
+            {
+              var md = (MaschinenDaten)mDaten;
+              try
+              {
+                Protokoll($"Verbindung mit: {md.Maschine.MaschinenName} auf Port: {md.Maschine.MaschinePortnummer}.");
+                using (var client = new TcpClient(md.Maschine.MaschineAdresse, (int)md.Maschine.MaschinePortnummer))
+                {
+                  client.NoDelay = true;
+                  client.SendTimeout = 1000;
+
+                  Protokoll("Verbindung zur Maschine hergestellt.");
+                  var nwStr = client.GetStream();
+                  var buffer = Encoding.ASCII.GetBytes(md.BvbsString + Convert.ToChar(13) + Convert.ToChar(10));
+                  nwStr.Write(buffer, 0, buffer.Length);
+                  nwStr.Flush();
+                  Protokoll("Daten zu Maschine geschickt.");
+                  client.Close();
+                  Protokoll("Verbindung geschlossen.");
+                }
+              }
+              catch (Exception f)
+              {
+                var fehlerText = $"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\n\rDaten: {md.BvbsString}\n\rFehler: {f.Message}";
+                Protokoll(fehlerText);
+                JgMaschineLib.Helper.InWinProtokoll($"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\n\rDaten: {md.BvbsString}\n\rFehler: {f.Message}", System.Diagnostics.EventLogEntryType.Error);
+              }
+            }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
+          }
+          break;
+
+        case JgMaschineData.EnumProtokollName.Evg:
+          if (Maschine.MaschinePortnummer != null)
+          {
+            var datenAnMaschine = Task.Factory.StartNew((mDaten) =>
+            {
+              var md = (MaschinenDaten)mDaten;
+
+              var maAdresse = string.Format(@"\\{0}\", Maschine.MaschineAdresse);
+              var sd = "Auftrag1.txt";
+
+              // Produktionsliste schreiben 
+
+              string dat = maAdresse + EvgPfadProduktionsListe + sd;
+              try
+              {
+                System.IO.File.WriteAllText(dat, md.BvbsString);
+              }
+              catch (Exception f)
+              {
+                string s = $"Fehler beim schreiben der EVG Produktionsliste in die Maschine {Maschine.MaschinenName} in die Datei {dat}.\n\rGrund: {f.Message}";
+                JgMaschineLib.Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+              }
+
+              // Produktionsauftrag
+
+              dat = maAdresse + EvgDateiProduktionsAuftrag;
+              try
+              {
+                System.IO.File.WriteAllText(maAdresse, sd);
+              }
+              catch (Exception f)
+              {
+                string s = $"Fehler beim schreiben des EVG Produktionsauftrages in die Maschine {Maschine.MaschinenName} in die Datei {dat}.\n\rGrund: {f.Message}";
+                JgMaschineLib.Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+              }
+
+            }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
+          }
+          break;
+      }
+    }
+
+    private void Bf2dEintragen(JgMaschineData.JgModelContainer Db, JgMaschineData.tabMaschine Maschine, DataLogicScannerText e)
+    {
+      var btNeu = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
+
+      Protokoll("Maschine: {0}", Maschine.MaschinenName);
+      Protokoll("Project:  {0}  Anzahl: {1} Gewicht: {2}", btNeu.ProjektNummer, btNeu.Anzahl, btNeu.Gewicht * 1000);
+      Protokoll(" ");
+
+      if (Maschine.eLetztesBauteil != null)
+      {
+        var letztesBt = Maschine.eLetztesBauteil;
+        letztesBt.DatumEnde = DateTime.Now;
+        DbSichern.AbgleichEintragen(letztesBt.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+
+        if ((letztesBt.NummerBauteil == btNeu.ProjektNummer) && (letztesBt.BtDurchmesser == btNeu.Durchmesser)
+          && (letztesBt.BtGewicht == btNeu.GewichtInKg) && (letztesBt.BtLaenge == btNeu.Laenge))
+        {
+          Protokoll("Bauteil erledigt");
+          e.SendeText(" ", " - Bauteil erledigt -");
+          Maschine.eLetztesBauteil = null;
+          DbSichern.DsSichern<JgMaschineData.tabMaschine>(Db, Maschine, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+          return;
+        }
+      }
+
+      DatenAnMaschineSenden(Maschine, btNeu.BvbsString);
+
+      var btInDatenBank = Db.tabBauteilSet.FirstOrDefault(f => ((f.fMaschine == Maschine.Id)
+        && (f.NummerBauteil == btNeu.ProjektNummer)
+        && (f.BtDurchmesser == btNeu.Durchmesser)
+        && (f.BtGewicht == btNeu.GewichtInKg)
+        && (f.BtLaenge == btNeu.Laenge)));
+
+      if (btInDatenBank != null)
+      {
+        Protokoll($"Bauteil bereits am {btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm")} gefertigt.");
+        e.FehlerAusgabe("Bauteil bereits am", btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm"), "gefertigt.");
+      }
+      else
+      {
+        e.SendeText(" ", "  - Bauteil O K -");
+
+        var btNeuErstellt = new JgMaschineData.tabBauteil()
+        {
+          Id = Guid.NewGuid(),
+          eMaschine = Maschine,
+          BtAnzahl = Convert.ToInt32(btNeu.Anzahl),
+          BtDurchmesser = Convert.ToInt32(btNeu.Durchmesser),
+          BtGewicht = btNeu.GewichtInKg,
+          BtLaenge = Convert.ToInt32(btNeu.Laenge),
+          NummerBauteil = btNeu.ProjektNummer,
+
+          IstHandeingabe = false,
+          IstVorfertigung = Maschine.IstStangenschneider && ((byte)btNeu.ListeGeometrie.Count == 0),
+
+          IdStahlPosition = 1,
+          IdStahlBauteil = 1,
+
+          AnzahlBediener = (byte)Maschine.sAktuelleBediener.Count(),
+          AnzahlBiegungen = (byte)btNeu.ListeGeometrie.Count,
+
+          DatumStart = DateTime.Now,
+          DatumEnde = DateTime.Now.AddMinutes(10)
+        };
+
+        foreach (var bed in Maschine.sAktuelleBediener)
+          btNeuErstellt.sBediener.Add(bed);
+
+        Maschine.eLetztesBauteil = btNeuErstellt;
+        Protokoll("Neues Bauteil erstellt.");
+        DbSichern.DsSichern<JgMaschineData.tabBauteil>(Db, btNeuErstellt, JgMaschineData.EnumStatusDatenabgleich.Neu);
+      }
+    }
+
+    private void BedienerEintragen(JgMaschineData.JgModelContainer Db, JgMaschineData.tabMaschine Maschine, JgMaschineData.tabBediener Bediener, DataLogicScannerText e)
+    {
+      var anmeldung = Db.tabAnmeldungMaschineSet.FirstOrDefault(f => (f.fBediener== Bediener.Id) && f.IstAktiv);
+
+      if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.ANMELDUNG)
+      {
+        if (anmeldung != null)
+        {
+          if (anmeldung.eMaschine == Maschine)
+          {
+            Protokoll($"Bediener {Bediener.Name} bereits an Maschine {Maschine.MaschinenName} angemeldet.");
+            e.FehlerAusgabe("Sie sind bereits an", $"MA: {Maschine.MaschinenName}", "angemeldet !");
+            return;
+          }
+          else // Wenn nicht, an der angmeldeten Maschine abmelden.
+          {
+            Protokoll($"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} abmelden.");
+            Protokoll("Benutzer abmelden.");
+            anmeldung.Abmeldung = DateTime.Now;
+            anmeldung.ManuelleAbmeldung = false;
+            anmeldung.IstAktiv = false;
+            DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+            Db.SaveChanges();
+          }
+        }
+
+        e.SendeText(" ", "- A N M E L D U N G -", Maschine.MaschinenName, Bediener.Name);
+
+        Bediener.eAktuelleAnmeldungMaschine = Maschine;
+        Protokoll($"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} anmelden.");
+
+        anmeldung = new JgMaschineData.tabAnmeldungMaschine()
+        {
+          Id = Guid.NewGuid(),
+          Anmeldung = DateTime.Now,
+          eBediener = Bediener,
+          eMaschine = Maschine,
+          IstAktiv = true,
+          ManuelleAnmeldung = false,
+          Abmeldung = DateTime.Now,
+          ManuelleAbmeldung = false
+        };
+
+        DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Neu);
+      }
+      else // Abmeldung
+      {
+        if (anmeldung == null)
+          e.FehlerAusgabe(" ", "Sie sind an keiner", "Maschine angemeldet !");
+        else
+        {
+          e.SendeText(" ", "- A B M E L D U N G -", " ", Bediener.Name, $"MA: {Maschine.MaschinenName}");
+
+          Bediener.eAktuelleAnmeldungMaschine = null;
+
+          anmeldung.Abmeldung = DateTime.Now;
+          anmeldung.ManuelleAbmeldung = false;
+          anmeldung.IstAktiv = false;
+          DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+        }
+
+        Protokoll($"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} abmelden.");
+      }
+    }
+
+    private void ProgrammeEintragen(JgMaschineData.JgModelContainer Db, JgMaschineData.tabMaschine Maschine, DataLogicScannerText e)
+    {
+      if (_IstStart.Contains(e.VorgangProgramm))  // Wenn ein Start ausgelöst wurde
+      {
+        var ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur;
+
+        switch (e.VorgangProgramm)
+        {
+          case DataLogicScanner.VorgangProgram.REPASTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
+          case DataLogicScanner.VorgangProgram.WARTSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
+          case DataLogicScanner.VorgangProgram.COILSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
+        }
+
+        var reparatur = Db.tabReparaturSet.FirstOrDefault(f => (f.fMaschine == Maschine.Id) && f.IstAktiv && (f.Ereigniss == ereignis));
+
+        if (reparatur != null)
+          e.FehlerAusgabe("Vorgang: ", $"- {ereignis} -", "bereits angemeldet !");
+        else
+        {
+          e.SendeText("Beginn Vorgang: ", $"- {ereignis} -", $"MA: {Maschine.MaschinenName}");
+
+          reparatur = new JgMaschineData.tabReparatur()
+          {
+            Id = Guid.NewGuid(),
+            eMaschine = Maschine,
+            IstAktiv = true,
+            VorgangBeginn = DateTime.Now,
+            VorgangEnde = DateTime.Now,
+            Ereigniss = ereignis
+          };
+
+          if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.COILSTART)
+            reparatur.CoilwechselAnzahl = Convert.ToByte(e.ScannerKoerper);
+
+          DbSichern.DsSichern<JgMaschineData.tabReparatur>(Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
+        }
+      }
+      else
+      {
+        var ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur;
+
+        switch (e.VorgangProgramm)
+        {
+          case DataLogicScanner.VorgangProgram.REPA_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
+          case DataLogicScanner.VorgangProgram.WART_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
+          case DataLogicScanner.VorgangProgram.COIL_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
+        }
+
+        var reparatur = Maschine.sReparaturen.FirstOrDefault(f => f.IstAktiv && (f.Ereigniss == ereignis));
+        if (reparatur == null)
+          e.FehlerAusgabe("Kein Vorgang", $"- {ereignis} -", "angemeldet !");
+        else
+        {
+          e.SendeText("Vorgang beendet: ", $"- {ereignis} -", $"MA: {Maschine.MaschinenName}");
+
+          reparatur.IstAktiv = false;
+          reparatur.VorgangEnde = DateTime.Now;
+
+          DbSichern.DsSichern<JgMaschineData.tabReparatur>(Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+        };
+
+        Protokoll("Vorgang:     {0}", e.VorgangProgramm);
+        Protokoll("Maschine:    {0}", Maschine.MaschinenName);
+        Protokoll(" ");
+      }
+    }
+
     private void ScannerCommunication(DataLogicScannerText e)
     {
       #region Sannertext in Datei eintragen
@@ -72,273 +370,56 @@ namespace JgMaschineLib.Scanner
 
       #endregion
 
-      _Db = new JgMaschineData.JgModelContainer();
-      var maschine = SucheMaschine(_Db, e);
-
-      if (maschine != null)
+      if (e.TextEmpfangen == ServerTextAnmeldung)
       {
-        switch (e.VorgangScan)
+        Protokoll("Anmeldung Server: {0}", e.TextEmpfangen);
+        return;
+      }
+
+      using (var db = new JgMaschineData.JgModelContainer())
+      {
+        var maschine = SucheMaschine(db, e);
+
+        if (maschine == null)
+          Protokoll("Maschine nicht gefunden.");
+        else
         {
-          case DataLogicScanner.VorgangScanner.BF2D:
+          switch (e.VorgangScan)
+          {
+            case DataLogicScanner.VorgangScanner.BF2D:
 
-            if (maschine.sAktuelleBediener.FirstOrDefault() == null)
-              e.FehlerAusgabe(" ", "Es ist keine Bediener", "angemeldet !");
-            else
-            {
-              var btNeu = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
-
-              #region Scannerdaten an Maschine senden
-
-              if (string.IsNullOrWhiteSpace(maschine.MaschineAdresse) && (maschine.MaschinePortnummer != null))
+              if (maschine.sAktuelleBediener.FirstOrDefault() == null)
               {
-                var datenAnMaschine = Task.Factory.StartNew((mDaten) =>
-                {
-                  var md = (MaschinenDaten)mDaten;
-
-                  try
-                  {
-                    using (var client = new TcpClient(md.Maschine.MaschineAdresse, (int)md.Maschine.MaschinePortnummer))
-                    {
-                      var nwStr = client.GetStream();
-                      switch (md.Maschine.ProtokollName)
-                      {
-                        case JgMaschineData.EnumProtokollName.Progress:
-                          var buffer = Encoding.ASCII.GetBytes(md.BvbsString);
-                          nwStr.Write(buffer, 0, buffer.Length);
-                          break;
-                        default:
-                          return;
-                      }
-                      nwStr.Close();
-                    }
-                  }
-                  catch (Exception f)
-                  {
-                    JgMaschineLib.Helper.InWinProtokoll($"Fehler beim senden der Bvbs Daten an die Maschine: {maschine.MaschinenName}\n\rDaten: {md.BvbsString}\n\rFehler: {f.Message}", System.Diagnostics.EventLogEntryType.Error);
-                  }
-                }, new MaschinenDaten() { BvbsString = btNeu.BvbsString, Maschine = maschine });
+                e.FehlerAusgabe(" ", "Es ist keine Bediener", "angemeldet !");
+                Protokoll("Kein Bediener angemeldet.");
               }
+              else
+                Bf2dEintragen(db, maschine, e);
+              break;
 
-              #endregion
+            case DataLogicScanner.VorgangScanner.MITA:
 
-              Protokoll("Maschine: {0}", maschine.MaschinenName);
-              Protokoll("Project:  {0}  Anzahl: {1} Gewicht: {2}", btNeu.ProjektNummer, btNeu.Anzahl, btNeu.Gewicht * 1000);
-              Protokoll(" ");
-
-              var neuesBauteilErstellen = true;
-
-              if (maschine.eLetztesBauteil != null)
+              var mitarb = db.tabBedienerSet.FirstOrDefault(f => f.MatchCode == e.ScannerKoerper);
+              if (mitarb == null)
               {
-                var letztesBt = maschine.eLetztesBauteil;
-                letztesBt.DatumEnde = DateTime.Now;
-                DbSichern.AbgleichEintragen(letztesBt.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
-
-                neuesBauteilErstellen = (letztesBt.NummerBauteil != btNeu.ProjektNummer)
-                  || (letztesBt.BtDurchmesser != btNeu.Durchmesser)
-                  || (letztesBt.BtGewicht != (btNeu.Gewicht * 1000))
-                  || (letztesBt.BtLaenge != btNeu.Laenge);
-
-                if (!neuesBauteilErstellen)
-                  e.SendeText(" ", " - Bauteil erledigt -");
+                e.FehlerAusgabe("Bediener unbekannt!", " ", $"MA: {maschine.MaschinenName}", e.ScannerKoerper);
+                Protokoll($"Bediener unbekannt MA: {maschine.MaschinenName} Anz. Zeichen: {e.ScannerKoerper.Length} Matchcode: {e.ScannerKoerper} ");
               }
-
-              if (neuesBauteilErstellen)
-              {
-                var btInDatenBank = _Db.tabBauteilSet.FirstOrDefault(f => ((f.fMaschine == maschine.Id)
-                  && (f.NummerBauteil == btNeu.ProjektNummer)
-                  && (f.BtDurchmesser == btNeu.Durchmesser)
-                  && (f.BtGewicht == btNeu.Gewicht)
-                  && (f.BtLaenge == btNeu.Laenge)));
-
-                if (btInDatenBank != null)
-                  e.FehlerAusgabe("Bauteil bereits am", btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm"), "gefertigt.");
-                else
-                {
-                  e.SendeText(" ", "  - Bauteil O K -");
-
-                  var btNeuErstellt = new JgMaschineData.tabBauteil()
-                  {
-                    Id = Guid.NewGuid(),
-                    eMaschine = maschine,
-                    BtAnzahl = Convert.ToInt32(btNeu.Anzahl),
-                    BtDurchmesser = Convert.ToInt32(btNeu.Durchmesser),
-                    BtGewicht = Convert.ToInt32(btNeu.Gewicht * 1000),
-                    BtLaenge = Convert.ToInt32(btNeu.Laenge),
-                    NummerBauteil = btNeu.ProjektNummer,
-
-                    IstHandeingabe = false,
-
-                    IdStahlPosition = 1,
-                    IdStahlBauteil = 1,
-
-                    AnzahlBediener = (byte)maschine.sAktuelleBediener.Count(),
-                    AnzahlBiegungen = (byte)btNeu.ListeGeometrie.Count,
-
-                    DatumStart = DateTime.Now,
-                    DatumEnde = DateTime.Now
-                  };
-
-                  foreach (var bed in maschine.sAktuelleBediener)
-                    btNeuErstellt.sBediener.Add(bed);
-
-                  maschine.eLetztesBauteil = btNeuErstellt;
-                  DbSichern.DsSichern<JgMaschineData.tabBauteil>(_Db, btNeuErstellt, JgMaschineData.EnumStatusDatenabgleich.Neu);
-                }
-              }
-            }
-            break;
-
-          case DataLogicScanner.VorgangScanner.MITA:
-
-            var mitarb = _Db.tabBedienerSet.Find(Guid.Parse(e.ScannerKoerper));
-            if (mitarb == null)
-              e.FehlerAusgabe("Mitarbeiter unbekannt!", " ", $"MA: {maschine.MaschinenName}", e.ScannerKoerper);
-            else
-            {
-              if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.ANMELDUNG)
-              {
-                bool anmeldungErstellen = true;
-                if (mitarb.fAktuellAngemeldet != null)
-                {
-                  if (mitarb.fAktuellAngemeldet == maschine.Id)
-                  {
-                    e.FehlerAusgabe("Sie sind bereits an", $"MA: {maschine.MaschinenName}", "angemeldet !");
-                    anmeldungErstellen = false;
-                  }
-                  else
-                  {
-                    var anmeldung = _Db.tabAnmeldungMaschineSet.FirstOrDefault(f => (f.fMaschine == mitarb.fAktuellAngemeldet) && (f.fBediener == mitarb.Id) && f.IstAktiv);
-                    if (anmeldung != null)
-                    {
-                      anmeldung.Abmeldung = DateTime.Now;
-                      anmeldung.ManuelleAbmeldung = false;
-                      anmeldung.IstAktiv = false;
-
-                      // speichervorgang muss vor nächster Speicherung abgeschlossen sein.
-
-                      DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
-                      _Db.SaveChanges();
-                    }
-                  }
-                }
-
-                if (anmeldungErstellen)
-                {
-                  e.SendeText(" ", "- A N M E L D U N G -", maschine.MaschinenName, mitarb.Name);
-
-                  mitarb.eAktuelleAnmeldungMaschine = maschine;
-
-                  var anmeldung = new JgMaschineData.tabAnmeldungMaschine()
-                  {
-                    Id = Guid.NewGuid(),
-                    Anmeldung = DateTime.Now,
-                    eBediener = mitarb,
-                    eMaschine = maschine,
-                    IstAktiv = true,
-                    ManuelleAnmeldung = false,
-                    Abmeldung = DateTime.Now,
-                    ManuelleAbmeldung = false
-                  };
-
-                  DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Neu);
-                }
-              }
-              else // Abmeldung
-              {
-                if (mitarb.eAktuelleAnmeldungMaschine == null)
-                  e.FehlerAusgabe(" ", "Sie sind an keiner", "Maschine angemeldet !");
-                else
-                {
-                  e.SendeText(" ", "- A B M E L D U N G -", " ", mitarb.Name, $"MA: {maschine.MaschinenName}");
-
-                  mitarb.eAktuelleAnmeldungMaschine = null;
-
-                  var anmeldung = _Db.tabAnmeldungMaschineSet.FirstOrDefault(f => (f.fMaschine == maschine.Id) && (f.fBediener == mitarb.Id) && f.IstAktiv);
-                  if (anmeldung != null)
-                  {
-                    anmeldung.Abmeldung = DateTime.Now;
-                    anmeldung.ManuelleAbmeldung = false;
-                    anmeldung.IstAktiv = false;
-
-                    DbSichern.DsSichern<JgMaschineData.tabAnmeldungMaschine>(_Db, anmeldung, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
-                  }
-                }
-              }
-              Protokoll("Vorgang:     {0}", e.VorgangProgramm);
-              Protokoll("Maschine:    {0}", maschine.MaschinenName);
-              Protokoll("Mitarbeiter: {0} {1}", mitarb.VorName, mitarb.NachName);
-              Protokoll(" ");
-            }
-
-            break;
-          case DataLogicScanner.VorgangScanner.PROG:
-            if (_IstStart.Contains(e.VorgangProgramm))  // Wenn ein Start ausgelöst wurde
-            {
-              var ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur;
-
-              switch (e.VorgangProgramm)
-              {
-                case DataLogicScanner.VorgangProgram.REPASTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
-                case DataLogicScanner.VorgangProgram.WARTSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
-                case DataLogicScanner.VorgangProgram.COILSTART: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
-              }
-
-              var reparatur = _Db.tabReparaturSet.FirstOrDefault(f => (f.fMaschine == maschine.Id) && f.IstAktiv && (f.Ereigniss == ereignis));
-
-              if (reparatur != null)
-                e.FehlerAusgabe("Vorgang: ", $"- {ereignis} -", "bereits angemeldet !");
               else
               {
-                e.SendeText("Beginn Vorgang: ", $"- {ereignis} -", $"MA: {maschine.MaschinenName}");
-
-                reparatur = new JgMaschineData.tabReparatur()
-                {
-                  Id = Guid.NewGuid(),
-                  eMaschine = maschine,
-                  IstAktiv = true,
-                  VorgangBeginn = DateTime.Now,
-                  VorgangEnde = DateTime.Now,
-                  Ereigniss = ereignis
-                };
-
-                if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.COILSTART)
-                  reparatur.CoilwechselAnzahl = Convert.ToByte(e.ScannerKoerper);
-
-                DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Neu);
+                BedienerEintragen(db, maschine, mitarb, e);
+                Protokoll($"Bediener MA: {maschine.MaschinenName} Anz. Zeichen: {e.ScannerKoerper.Length} Matchcode: {e.ScannerKoerper} ");
               }
-            }
-            else
-            {
-              var ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur;
+              break;
 
-              switch (e.VorgangProgramm)
-              {
-                case DataLogicScanner.VorgangProgram.REPA_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Reparatur; break;
-                case DataLogicScanner.VorgangProgram.WART_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Wartung; break;
-                case DataLogicScanner.VorgangProgram.COIL_ENDE: ereignis = JgMaschineData.EnumReperaturEreigniss.Coilwechsel; break;
-              }
+            case DataLogicScanner.VorgangScanner.PROG:
+              ProgrammeEintragen(db, maschine, e);
+              break;
 
-              var reparatur = maschine.sReparaturen.FirstOrDefault(f => f.IstAktiv && (f.Ereigniss == ereignis));
-              if (reparatur == null)
-                e.FehlerAusgabe("Kein Vorgang", $"- {ereignis} -", "angemeldet !");
-              else
-              {
-                e.SendeText("Vorgang beendet: ", $"- {ereignis} -", $"MA: {maschine.MaschinenName}");
-
-                reparatur.IstAktiv = false;
-                reparatur.VorgangEnde = DateTime.Now;
-
-                DbSichern.DsSichern<JgMaschineData.tabReparatur>(_Db, reparatur, JgMaschineData.EnumStatusDatenabgleich.Geaendert);
-              };
-
-              Protokoll("Vorgang:     {0}", e.VorgangProgramm);
-              Protokoll("Maschine:    {0}", maschine.MaschinenName);
-              Protokoll(" ");
-            }
-            break;
-
-          default: // Fehler
-            break;
+            default:
+              Protokoll("Vorgang Scanner unbekannt.");
+              break;
+          }
         }
       }
     }

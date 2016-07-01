@@ -1,11 +1,13 @@
-﻿using JgMaschineAuswertung.Commands;
-using System;
+﻿using System;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
 using System.Windows.Input;
+using JgMaschineAuswertung.Commands;
+using JgMaschineLib;
 
 namespace JgMaschineAuswertung
 {
@@ -14,9 +16,8 @@ namespace JgMaschineAuswertung
     private FastReport.Report _Report;
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
-    private JgMaschineData.JgModelContainer _Db;
     private string _FileSqlVerbindung = "JgMaschineSqlVerbindung.Xml";
-    private JgMaschineLib.JgListe<JgMaschineData.tabAuswertung> _ListeAuswertungen;
+    private JgList<JgMaschineData.tabAuswertung> _ListeAuswertungen;
 
     public MainWindow()
     {
@@ -25,11 +26,10 @@ namespace JgMaschineAuswertung
 
     private async void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
     {
-      _Db = new JgMaschineData.JgModelContainer();
-
-      var auswertungen = await _Db.tabAuswertungSet.Where(w => w.FilterAuswertung == JgMaschineData.EnumFilterAuswertung.Allgemein).OrderBy(o => o.ReportName).ToListAsync();
-      var vs = (System.Windows.Data.CollectionViewSource)FindResource("vsAuswertung");
-      _ListeAuswertungen = new JgMaschineLib.JgListe<JgMaschineData.tabAuswertung>(_Db, auswertungen, vs, dgAuswertung);
+      _ListeAuswertungen = new JgList<JgMaschineData.tabAuswertung>((CollectionViewSource)FindResource("vsAuswertung"));
+      _ListeAuswertungen.MyQuery = _ListeAuswertungen.Db.tabAuswertungSet.Where(w => w.FilterAuswertung == JgMaschineData.EnumFilterAuswertung.Allgemein).OrderBy(o => o.ReportName);
+      _ListeAuswertungen.ListeTabellen = new System.Windows.Controls.DataGrid[] { dgAuswertung };
+      await _ListeAuswertungen.DatenGenerierenAsync();
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -63,7 +63,7 @@ namespace JgMaschineAuswertung
     {
       CommandBindings.Add(new CommandBinding(MyCommands.ReportNeu, (sen, erg) =>
       {
-        JgMaschineAuswertung.Fenster.FormAuswertungBearbeiten form = new Fenster.FormAuswertungBearbeiten(null);
+        Fenster.FormAuswertungBearbeiten form = new Fenster.FormAuswertungBearbeiten(null);
         if (form.ShowDialog() ?? false)
         {
           string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;

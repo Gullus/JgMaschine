@@ -25,7 +25,7 @@ namespace JgMaschineServiceTest.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.22")]
         public string ScannerAdresse {
             get {
                 return ((string)(this["ScannerAdresse"]));
@@ -34,7 +34,7 @@ namespace JgMaschineServiceTest.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("51000")]
         public int ScannerPort {
             get {
                 return ((int)(this["ScannerPort"]));
@@ -66,6 +66,18 @@ namespace JgMaschineServiceTest.Properties {
         public string EvgFileProduktionsAuftrag {
             get {
                 return ((string)(this["EvgFileProduktionsAuftrag"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Antwort vom Server")]
+        public string ServerTextAnmeldung {
+            get {
+                return ((string)(this["ServerTextAnmeldung"]));
+            }
+            set {
+                this["ServerTextAnmeldung"] = value;
             }
         }
     }

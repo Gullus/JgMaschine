@@ -15,8 +15,11 @@ namespace JgMaschineServiceTest
         DbVerbindungsString = pr.DbVerbindung,
         ProtokollAnzeigen = true,
         EvgPfadProduktionsListe = pr.EvgPfadProduktionsListe,
-        EvgDateiProduktionsAuftrag = pr.EvgFileProduktionsAuftrag
+        EvgDateiProduktionsAuftrag = pr.EvgFileProduktionsAuftrag,
+        ServerTextAnmeldung = pr.ServerTextAnmeldung
       };
+
+      st.Start();
 
       Console.ReadKey();
       st.Close();

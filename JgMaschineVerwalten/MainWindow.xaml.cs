@@ -1,8 +1,4 @@
-﻿using JgMaschineData;
-using JgMaschineLib;
-using JgMaschineLib.Zeit;
-using JgMaschineVerwalten.Commands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
@@ -13,6 +9,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using JgMaschineData;
+using JgMaschineLib;
+using JgMaschineLib.Zeit;
+using JgMaschineVerwalten.Commands;
 
 namespace JgMaschineVerwalten
 {
@@ -23,16 +23,30 @@ namespace JgMaschineVerwalten
     private CollectionViewSource _VsBedienerArbeitszeit { get { return (CollectionViewSource)this.FindResource("vsBedienerArbeitszeit"); } }
     private CollectionViewSource _VsBedienerAnmeldung { get { return (CollectionViewSource)this.FindResource("vsBedienerAnmeldung"); } }
 
-    private JgList<tabMaschine> _ListeMaschinen;
+    private List<tabMaschine> _ListeMaschinen { get { return (List<tabMaschine>)_VsMaschine.Source; } }
+    private CollectionViewSource _VsMaschine { get { return (CollectionViewSource)FindResource("vsMaschine"); } }
+    private Guid[] _IdisMaschine { get { return _ListeMaschinen.Select(s => s.Id).ToArray(); } }
+    private tabMaschine _Maschine
+    {
+      get
+      {
+        if (treeViewMaschinen.SelectedItem == null)
+          return null;
+
+        if (treeViewMaschinen.SelectedItem is tabMaschine)
+          return (tabMaschine)treeViewMaschinen.SelectedItem;
+        else
+          return (treeViewMaschinen.SelectedItem as tabBediener).eAktuelleAnmeldungMaschine;
+      }
+    }
+
     private JgList<tabAuswertung> _ListeAuswertung;
 
     private CollectionViewSource _VsAuswertungArbeitszeit { get { return (CollectionViewSource)this.FindResource("vsAuswertungArbeitszeit"); } }
     private CollectionViewSource _VsAuswertungAnmeldung { get { return (CollectionViewSource)this.FindResource("vsAuswertungAnmeldung"); } }
     private CollectionViewSource _VsAuswertungBauteil { get { return (CollectionViewSource)this.FindResource("vsAuswertungBauteil"); } }
     private CollectionViewSource _VsAuswertungReparatur { get { return (CollectionViewSource)this.FindResource("vsAuswertungReparatur"); } }
-           
-    private tabMaschine _Maschine { get { return _ListeMaschinen.AktDatensatz; } }
-    private Guid[] _IdisMaschine = null;
+
 
     private JgList<tabArbeitszeit> _ListeArbeitszeitAktuell;
     private JgList<tabArbeitszeit> _ListeArbeitszeitAuswahl;
@@ -67,9 +81,8 @@ namespace JgMaschineVerwalten
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
       tblDatum.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
-      var bis = DateTime.Now.Date;
-      var von = bis.AddDays(-10);
-      bis = new DateTime(bis.Year, bis.Month, bis.Day, 23, 59, 59);
+      var von = DateTime.Now.Date;
+      var bis = new DateTime(von.Year, von.Month, von.Day, 23, 59, 59);
 
       // Standort initialieren
 
@@ -83,18 +96,19 @@ namespace JgMaschineVerwalten
 
       // Bediener initialisieren
 
-      _ListeBediener = new JgList<tabBediener>(_VsBedienerArbeitszeit); 
+      _ListeBediener = new JgList<tabBediener>(_VsBedienerArbeitszeit);
       _ListeBediener.MyQuery = _ListeBediener.Db.tabBedienerSet.Where(w => w.Status != JgMaschineData.EnumStatusBediener.Stillgelegt)
         .Include(i => i.eAktuelleAnmeldungMaschine).OrderBy(o => o.NachName);
       await _ListeBediener.DatenGenerierenAsync();
       _VsBedienerAnmeldung.Source = _ListeBediener;
 
-      // Maschine intialisieren
-
-      _ListeMaschinen = new JgList<tabMaschine>((CollectionViewSource)FindResource("vsMaschine"));
-      _ListeMaschinen.MyQuery = _ListeMaschinen.Db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt)).Include(i => i.sAktuelleBediener).OrderBy(o => o.MaschinenName);
-      await _ListeMaschinen.DatenGenerierenAsync();
-      _IdisMaschine = _ListeMaschinen.Select(s => s.Id).ToArray();
+      using (var db = new JgMaschineData.JgModelContainer())
+      {
+        _VsMaschine.Source = db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt)).Include(i => i.sAktuelleBediener).ToList();
+      }
+      treeViewMaschinen.UpdateLayout();
+      if (treeViewMaschinen.Items.Count > 0) 
+        (treeViewMaschinen.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsSelected = true;
 
       // Arbeitszeit Initialisieren
 
@@ -145,7 +159,7 @@ namespace JgMaschineVerwalten
       _DzBauteilBis.DatumZeit = bis;
 
       _ListeBauteilAuswahl = new JgList<tabBauteil>((CollectionViewSource)FindResource("vsBauteilAuswahl"));
-      _ListeBauteilAuswahl.MyQuery = _ListeBauteilAuswahl.Db.tabBauteilSet.Where(w => (w.fMaschine == _ListeMaschinen.AktDatensatz.Id) && (w.DatumStart >= _DzBauteilVon.DatumZeit) && (w.DatumStart <= _DzBauteilBis.DatumZeit)).OrderBy(o => o.DatumStart).Include(i => i.sBediener);
+      _ListeBauteilAuswahl.MyQuery = _ListeBauteilAuswahl.Db.tabBauteilSet.Where(w => (w.fMaschine == _Maschine.Id) && (w.DatumStart >= _DzBauteilVon.DatumZeit) && (w.DatumStart <= _DzBauteilBis.DatumZeit)).OrderBy(o => o.DatumStart).Include(i => i.sBediener);
       _ListeBauteilAuswahl.ListeTabellen = new DataGrid[] { dgBauteilAuswahl };
 
       // Reparaturen initialisieren 
@@ -193,9 +207,50 @@ namespace JgMaschineVerwalten
       _AktualisierungsTimer.Start();
     }
 
+    private async Task MaschinenListeAktualisieren()
+    {
+      var idMaschine = _Maschine.Id;
+      Guid? idBediener = null;
+      if (treeViewMaschinen.SelectedItem is tabBediener)
+        idBediener = (treeViewMaschinen.SelectedItem as tabBediener).Id;
+
+      using (var db = new JgMaschineData.JgModelContainer())
+      {
+        _VsMaschine.Source = await db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt)).Include(i => i.sAktuelleBediener).ToListAsync();
+      }
+      treeViewMaschinen.UpdateLayout();
+
+      if (idBediener != null)
+      {
+        foreach (var dsMaschine in treeViewMaschinen.Items)
+        {
+          var itemMaschine = (TreeViewItem)treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine);
+          foreach (var dsBenutzer in itemMaschine.Items)
+          {
+            if ((dsBenutzer as tabBediener).Id == idBediener)
+            {
+              var itemBenutzer = (itemMaschine.ItemContainerGenerator.ContainerFromItem(dsBenutzer) as TreeViewItem).IsSelected = true;
+              return;
+            }
+          }
+        }
+      }
+
+      // Wenn kein Benutzer gefunden wird
+
+      foreach (var dsMaschine in treeViewMaschinen.Items)
+      {
+        if ((dsMaschine as tabMaschine).Id == idMaschine)
+        {
+          (treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine) as TreeViewItem).IsSelected = true;
+          break;
+        }
+      }
+    }
+
     private async void _AktualisierungsTimer_Tick(object sender, EventArgs e)
     {
-      await _ListeMaschinen.DatenGenerierenAsync();
+      await MaschinenListeAktualisieren();
       await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
       await _ListeAnmeldungAktuell.DatenGenerierenAsync();
       await _ListeReparaturAktuell.DatenGenerierenAsync();
@@ -212,7 +267,7 @@ namespace JgMaschineVerwalten
 
     private void CanExecuteRepataurNeu(object sender, CanExecuteRoutedEventArgs e)
     {
-      e.CanExecute = _ListeMaschinen.AktDatensatz != null;
+      e.CanExecute = _Maschine != null;
     }
 
     private void ReparaturBearbeitenAktuell_Click(object sender, RoutedEventArgs e)
@@ -242,7 +297,7 @@ namespace JgMaschineVerwalten
       {
         rep.VorgangEnde = form.DatumZeit;
         rep.IstAktiv = false;
-        _ListeReparaturAuswahl.AktSichern(EnumStatusDatenabgleich.Geaendert);
+        _ListeReparaturAktuell.AktSichern(EnumStatusDatenabgleich.Geaendert);
         await _ListeReparaturAktuell.DatenGenerierenAsync();
       }
     }
@@ -254,7 +309,7 @@ namespace JgMaschineVerwalten
     private async void ExecuteAnmeldungBenutzerAnmeldung(object sender, ExecutedRoutedEventArgs e)
     {
       var bediener = (tabBediener)_VsBedienerAnmeldung.View.CurrentItem;
-      var maschine = _ListeMaschinen.AktDatensatz;
+      var maschine = _Maschine;
 
       _ListeBediener.Reload(bediener);
       if (bediener.eAktuelleAnmeldungMaschine != null)
@@ -266,8 +321,9 @@ namespace JgMaschineVerwalten
       JgFormDatumZeit form = new JgFormDatumZeit();
       if (form.Anzeigen("Anmeldung", $"Geben Sie die Zeit an, in welcher sich der '{bediener.Name}' angemeldet hat.", DateTime.Now))
       {
-        bediener.eAktuelleAnmeldungMaschine = await _ListeBediener.DsAttach<tabMaschine>(maschine.Id);
-        _ListeBediener.DsSichern(bediener, EnumStatusDatenabgleich.Geaendert);
+        var bed = _ListeBediener.FirstOrDefault(f => f.Id == bediener.Id);
+        bed.eAktuelleAnmeldungMaschine = await _ListeBediener.Db.tabMaschineSet.FindAsync(maschine.Id);
+        await _ListeBediener.AktSichernAsync(EnumStatusDatenabgleich.Geaendert);
 
         var anmeldung = new JgMaschineData.tabAnmeldungMaschine()
         {
@@ -281,7 +337,8 @@ namespace JgMaschineVerwalten
           IstAktiv = true
         };
         _ListeAnmeldungAktuell.Add(anmeldung);
-        await _ListeMaschinen.DatenGenerierenAsync();
+
+        await MaschinenListeAktualisieren();
       }
     }
 
@@ -301,15 +358,15 @@ namespace JgMaschineVerwalten
         anmeldung.ManuelleAbmeldung = true;
         anmeldung.IstAktiv = false;
         _ListeAnmeldungAktuell.AktSichern(EnumStatusDatenabgleich.Geaendert);
-
         _ListeAnmeldungAktuell.Remove(anmeldung);
-        await _ListeMaschinen.DatenGenerierenAsync();
+
+        await MaschinenListeAktualisieren();
       }
     }
 
     private void CanExecuteBedienerAngemeldetMaschineVorhanden(object sender, CanExecuteRoutedEventArgs e)
     {
-      e.CanExecute = (_ListeMaschinen.AktDatensatz != null) && (_ListeArbeitszeitAktuell.AktDatensatz != null);
+      e.CanExecute = (_Maschine != null) && (_ListeArbeitszeitAktuell.AktDatensatz != null);
     }
 
     #endregion
@@ -326,16 +383,17 @@ namespace JgMaschineVerwalten
       if (form.ShowDialog() ?? false)
       {
         _Standort = form.StandOrt;
-        tblStandort.Text = _Standort.Bezeichnung;
-        await _ListeMaschinen.DatenGenerierenAsync();
-        _IdisMaschine = _ListeMaschinen.Select(s => s.Id).ToArray();
+        using (var db = new JgMaschineData.JgModelContainer())
+        {
+          _VsMaschine.Source = db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt)).Include(i => i.sAktuelleBediener).ToList();
+        }
+        treeViewMaschinen.UpdateLayout();
+        if (treeViewMaschinen.Items.Count > 0)
+          (treeViewMaschinen.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsSelected = true;
+
         await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
-        await _ListeArbeitszeitAuswahl.DatenGenerierenAsync();
         await _ListeAnmeldungAktuell.DatenGenerierenAsync();
-        await _ListeAnmeldungAuswahl.DatenGenerierenAsync();
-        await _ListeBauteilAuswahl.DatenGenerierenAsync();
         await _ListeReparaturAktuell.DatenGenerierenAsync();
-        await _ListeReparaturAuswahl.DatenGenerierenAsync();
       }
     }
 
@@ -411,7 +469,7 @@ namespace JgMaschineVerwalten
             if (_ListeAnmeldungAktuell.FirstOrDefault(w => (w.Id == anmeldung.Id)) != null)
               _ListeAnmeldungAktuell.Remove(anmeldung);
 
-            await _ListeMaschinen.DatenGenerierenAsync();
+            await MaschinenListeAktualisieren();
           }
         }
       }
@@ -477,7 +535,7 @@ namespace JgMaschineVerwalten
         if (_AktAuswertung.Report == null)
           vorgang = 3;
         else
-        { 
+        {
           var mem = new MemoryStream(_AktAuswertung.Report);
           _Report.Load(mem);
         }
@@ -569,10 +627,12 @@ namespace JgMaschineVerwalten
     {
       switch ((sender as Button).Tag.ToString())
       {
+        case "0": await MaschinenListeAktualisieren(); break;
         case "1": await _ListeArbeitszeitAktuell.DatenGenerierenAsync(); break;
         case "2": await _ListeAnmeldungAktuell.DatenGenerierenAsync(); break;
         case "4": await _ListeReparaturAktuell.DatenGenerierenAsync(); break;
       }
     }
+
   }
 }

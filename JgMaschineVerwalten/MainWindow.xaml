@@ -8,883 +8,890 @@
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
-    x:Class="JgMaschineVerwalten.MainWindow"
-    mc:Ignorable="d"
-    Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" Loaded="Window_Loaded" Closed="Window_Closed">
+        x:Class="JgMaschineVerwalten.MainWindow" mc:Ignorable="d" Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" Loaded="Window_Loaded" Closed="Window_Closed">
 
-    <Window.Resources>
-        <CollectionViewSource x:Key="vsMaschine" d:DesignSource="{d:DesignInstance {x:Type data:tabMaschine}, CreateList=True}"/>
+  <Window.Resources>
+    <CollectionViewSource x:Key="vsMaschine" d:DesignSource="{d:DesignInstance {x:Type data:tabMaschine}, CreateList=True}"/>
 
-        <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
-        <CollectionViewSource x:Key="vsAuswertungAnmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
-        <CollectionViewSource x:Key="vsAuswertungBauteil" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
-        <CollectionViewSource x:Key="vsAuswertungReparatur" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+    <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+    <CollectionViewSource x:Key="vsAuswertungAnmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+    <CollectionViewSource x:Key="vsAuswertungBauteil" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+    <CollectionViewSource x:Key="vsAuswertungReparatur" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
-        <CollectionViewSource x:Key="vsBedienerArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsBedienerAnmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsBedienerArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsBedienerAnmeldung" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
 
-        <CollectionViewSource x:Key="vsArbeitszeitAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsArbeitszeitAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
 
-        <CollectionViewSource x:Key="vsAnmeldungAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsAnmeldungAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsAnmeldungAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsAnmeldungAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabAnmeldungMaschine}, CreateList=True}"/>
 
-        <CollectionViewSource x:Key="vsReparaturAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsReparaturAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsReparaturAktuell" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsReparaturAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabReparatur}, CreateList=True}"/>
 
-        <CollectionViewSource x:Key="vsBauteilAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabBauteil}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsBedienerBauteil" Source="{Binding sBediener, Source={StaticResource vsBauteilAuswahl}}"/>
+    <CollectionViewSource x:Key="vsBauteilAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabBauteil}, CreateList=True}"/>
+    <CollectionViewSource x:Key="vsBedienerBauteil" Source="{Binding sBediener, Source={StaticResource vsBauteilAuswahl}}"/>
 
-        <libZeit:JgDatumZeit x:Key="dzArbeitszeitVon" />
-        <libZeit:JgDatumZeit x:Key="dzArbeitszeitBis" />
+    <libZeit:JgDatumZeit x:Key="dzArbeitszeitVon" />
+    <libZeit:JgDatumZeit x:Key="dzArbeitszeitBis" />
 
-        <libZeit:JgDatumZeit x:Key="dzAnmeldungVon" />
-        <libZeit:JgDatumZeit x:Key="dzAnmeldungBis" />
+    <libZeit:JgDatumZeit x:Key="dzAnmeldungVon" />
+    <libZeit:JgDatumZeit x:Key="dzAnmeldungBis" />
 
-        <libZeit:JgDatumZeit x:Key="dzBauteilVon" />
-        <libZeit:JgDatumZeit x:Key="dzBauteilBis" />
+    <libZeit:JgDatumZeit x:Key="dzBauteilVon" />
+    <libZeit:JgDatumZeit x:Key="dzBauteilBis" />
 
-        <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
-        <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
-    </Window.Resources>
+    <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
+    <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
+  </Window.Resources>
 
-    <Grid DataContext="{StaticResource vsMaschine}" Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
+  <Grid DataContext="{StaticResource vsMaschine}" Margin="5">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="80"/>
+      <RowDefinition/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="250" />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+
+    <Border Margin="6" BorderThickness="1" BorderBrush="#FF7E7E7E" Background="White">
+      <Border.Effect>
+        <DropShadowEffect Color="Silver"/>
+      </Border.Effect>
+    </Border>
+    <StackPanel VerticalAlignment="Center" Margin="0,14,0,18">
+      <TextBlock Text="Aktuelle Anmeldungen" TextAlignment="Center" FontWeight="Bold" Foreground="Blue"/>
+      <TextBlock x:Name="tblDatum" Text="-" TextAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,0"/>
+      <TextBlock x:Name="tblStandort" Text="-" TextAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0" Foreground="Red" FontWeight="Bold"/>
+    </StackPanel>
+
+    <TabControl Grid.Column="1" TabStripPlacement="Right" Margin="10,5,5,5" Grid.RowSpan="3">
+      <TabItem Header="Arbeitszeit" Width="100"  Height="50">
+        <TabItem.Effect>
+          <DropShadowEffect Color="Silver"/>
+        </TabItem.Effect>
+        <Grid Margin="10">
+          <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <TabControl x:Name="tcArbeitszeit">
+            <TabItem Header="  Aktuelle Arbeitszeiten  " Height="30">
+              <TabItem.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </TabItem.Effect>
+              <Grid Margin="5">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="5"/>
+                  <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="180"/>
+                  <ColumnDefinition Width="180"/>
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Mitarbeiter" />
+                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerArbeitszeit}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
+                <Button Click="ArbeitszeitAnmeldung_Click" Grid.Column="2">
+                  <Button.Effect>
+                    <DropShadowEffect Color="Silver"/>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="Bilder\JgAdd.ico" Height="14"/>
+                    <TextBlock Text=" Mitarbeiter anmelden" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+
+                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="1">
+                  <Button.Effect>
+                    <DropShadowEffect Color="Silver"/>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
+                    <TextBlock Text=" syncron." VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+
+                <DataGrid x:Name="dgArbeitszeitAktuell" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAktuell}}" Grid.Row="2" Grid.ColumnSpan="5">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
+                    <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightCenter}"/>
+
+                    <DataGridTemplateColumn Header="Abmelden" Width="80">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Button Click="ArbeitszeitAbmeldung_Click" Margin="1"/>
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
+            </TabItem>
+            <TabItem Header="  Ausgewählte Arbeitszeiten  ">
+              <TabItem.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </TabItem.Effect>
+              <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="5"/>
+                  <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Auswahl vom"/>
+                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitVon}}"/>
+                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+
+                <Label Content="bis" Grid.Column="6" />
+                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitBis}}" />
+                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+
+                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="1" >
+                  <Button.Effect>
+                    <DropShadowEffect Color="Silver"/>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal" >
+                    <Image Source="Bilder\JgRefresh.ico" Height="16" />
+                    <TextBlock Text=" aktualisieren" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+
+                <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
+                    <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90"/>
+                    <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Abmeldung" Width="90" MinWidth="90"/>
+
+                    <DataGridTemplateColumn Header="Bearbeiten" Width="80">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Button Click="ArbeitszeitBearbeiten_Click" Margin="1"/>
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
+            </TabItem>
+          </TabControl>
+
+          <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="160"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Auswertung" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungArbeitszeit}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="11">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
+                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="12">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgPrint.ico" Height="14"/>
+                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="13">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgEdit.ico" Height="14"/>
+                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="14">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgNew.ico" Height="14"/>
+                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+
+          </Grid>
+        </Grid>
+      </TabItem>
+
+      <TabItem Header="Anmeldungen" Width="100"  Height="50">
+        <TabItem.Effect>
+          <DropShadowEffect Color="Silver"/>
+        </TabItem.Effect>
+        <Grid Margin="10">
+          <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+
+          <TabControl x:Name="tcAnmeldungen">
+            <TabItem Header="  Aktuelle Anmeldungen  " Height="30">
+              <TabItem.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </TabItem.Effect>
+              <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="80" />
+                  <ColumnDefinition Width="180" />
+                  <ColumnDefinition Width="280" />
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="30"/>
+                  <RowDefinition Height="5"/>
+                  <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Content="Mitarbeiter" />
+                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerAnmeldung}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
+                <Button Command="{x:Static comands:MyCommands.AnmeldungBediener}" Grid.Column="2">
+                  <Button.Effect>
+                    <DropShadowEffect Color="Silver"/>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="Bilder\JgAdd.ico" Height="16"/>
+                    <TextBlock Text=" Mitarbeiter an Maschine anmelden" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+
+                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="2">
+                  <Button.Effect>
+                    <DropShadowEffect Color="Silver"/>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
+                    <TextBlock Text=" syncron." VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+
+                <DataGrid x:Name="dgAnmeldungAktuell" IsReadOnly="True" Grid.ColumnSpan="5" ItemsSource="{Binding Source={StaticResource vsAnmeldungAktuell}}" Grid.Row="2" >
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Angemeldete Bediener" Width="*" MinWidth="120"/>
+                    <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="an Maschine" Width="*" MinWidth="120"/>
+                    <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+
+                    <DataGridTemplateColumn Header="Abmelden" Width="80">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Button Margin="1" Click="AnmeldungBenutzerAbmelden_Click" />
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
+            </TabItem>
+            <TabItem Header=" Auswahl Anmeldungen  ">
+              <TabItem.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </TabItem.Effect>
+              <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="5" />
+                  <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Content="Auswahl vom"/>
+                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungVon}}"/>
+                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+
+                <Label Content="bis" Grid.Column="6" />
+                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungBis}}" />
+                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+
+                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="2" >
+                  <Button.Effect>
+                    <DropShadowEffect Color="Silver"/>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal" >
+                    <Image Source="Bilder\JgRefresh.ico" Height="16" />
+                    <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+
+                <DataGrid x:Name="dgAnmeldungAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsAnmeldungAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15" >
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="*" MinWidth="120"/>
+                    <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="an Maschine" Width="*" MinWidth="120"/>
+                    <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                    <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Abmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+
+                    <DataGridTemplateColumn Header="Bearbeiten" Width="80">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Button Click="ArbeitszeitBearbeiten_Click" Margin="1"/>
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
+            </TabItem>
+          </TabControl>
+
+          <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="160"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Auswertung" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungAnmeldung}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="21">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
+                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="22">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgPrint.ico" Height="14"/>
+                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="23">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgEdit.ico" Height="14"/>
+                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="24">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgNew.ico" Height="14"/>
+                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+
+          </Grid>
+
+        </Grid>
+      </TabItem>
+
+      <TabItem Header="Bauteile" Width="100"  Height="50">
+        <TabItem.Effect>
+          <DropShadowEffect Color="Silver"/>
+        </TabItem.Effect>
+        <Grid Margin="10">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5" />
+            <RowDefinition />
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <Label Content="Auswahl vom"/>
+          <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilVon}}"/>
+          <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
+          <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+          <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
+          <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
 
-        <Border Margin="5,5,10,5" BorderThickness="1" BorderBrush="#FF7E7E7E" Background="White">
-            <Border.Effect>
-                <DropShadowEffect/>
-            </Border.Effect>
-        </Border>
-        <StackPanel VerticalAlignment="Center" Margin="0,6,0,11">
-            <TextBlock Text="Aktuelle Anmeldungen" TextAlignment="Center" FontWeight="Bold" Foreground="Blue"/>
-            <TextBlock x:Name="tblDatum" Text="-" TextAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,0"/>
-            <TextBlock x:Name="tblStandort" Text="-" TextAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0" Foreground="Red" FontWeight="Bold"/>
-        </StackPanel>
+          <Label Content="Bis" Grid.Column="6" />
+          <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilBis}}" />
+          <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
+          <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+          <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
+          <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
-        <ListBox SelectedValue="{Binding IdLetzteMaschine, Source={x:Static prop:Settings.Default}}" SelectedValuePath="Id" ItemsSource="{Binding}" Margin="5, 5, 10, 5" ItemTemplate="{DynamicResource dtMaschinenKey}" Grid.Row="1" Grid.RowSpan="1">
-            <ListBox.Resources>
-                <DataTemplate x:Key="dtMaschinenKey">
-                    <Grid Width="220">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
+          <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="3">
+            <Button.Effect>
+              <DropShadowEffect Color="Silver"/>
+            </Button.Effect>
+            <StackPanel Orientation="Horizontal" >
+              <Image Source="Bilder\JgRefresh.ico" Height="16" />
+              <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
 
-                        <Image Source="Bilder\JgSettings.ico" Grid.RowSpan="2" Margin="5" />
-                        <TextBlock Text="{Binding MaschinenName}" FontSize="16" FontWeight="Bold" Grid.Column="1" />
-                        <ListBox ItemsSource="{Binding sAktuelleBediener}" DisplayMemberPath="Name" IsEnabled="False" Grid.Column="1" Grid.Row="1" Margin="0,0,5,5"/>
-                    </Grid>
+          <DataGrid x:Name="dgBauteilAuswahl" Grid.Row="2" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBauteilAuswahl}}" IsReadOnly="True" >
+            <DataGrid.Columns>
+              <DataGridTextColumn Binding="{Binding DatumStart, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Start" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+              <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Ende" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+              <DataGridCheckBoxColumn Binding="{Binding IstVorfertigung}" Header="VF" Width="25" MinWidth="25" />
+              <DataGridTextColumn Binding="{Binding BtAnzahl}" Header="Stück" Width="50" MinWidth="50"/>
+              <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
+              <DataGridTextColumn Binding="{Binding BtLaenge}" Header="Laenge" Width="50" MinWidth="50"/>
+              <DataGridTextColumn Binding="{Binding BtGewicht}" Header="Gewicht" Width="70" MinWidth="70" CellStyle="{StaticResource ResourceKey=CellRightAlign}"/>
 
-                    <!--<StackPanel Orientation="Horizontal">
-                        <Image Source="Bilder\JgSettings.ico" Width="50"/>
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,5">
-                            <TextBlock Text="{Binding MaschinenName}" FontSize="16" FontWeight="Bold" />
-                            <ListBox ItemsSource="{Binding sAktuelleBediener}" DisplayMemberPath="Name" IsEnabled="False"/>
-                        </StackPanel>
-                    </StackPanel>-->
-                </DataTemplate>
-            </ListBox.Resources>
-            <ListBox.Effect>
-                <DropShadowEffect/>
-            </ListBox.Effect>
-        </ListBox>
+              <!--<DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Nummer" Width="70" MinWidth="70"/>-->
+              <DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Bauteil" Width="*" MinWidth="120"/>
+              <DataGridTextColumn Binding="{Binding Auftrag}" Header="Auftrag" Width="70" MinWidth="70"/>
+              <DataGridTextColumn Binding="{Binding NummerPosition}" Header="Position" Width="70" MinWidth="70"/>
+              <DataGridTextColumn Binding="{Binding Bediener}" Header="Bediener" Width="100" MinWidth="100"/>
+            </DataGrid.Columns>
+          </DataGrid>
 
-        <TabControl Grid.Column="1" TabStripPlacement="Right" Margin="10,5,5,5" Grid.RowSpan="2">
-            <TabItem Header="Arbeitszeit" Width="100"  Height="50">
-                <TabItem.Effect>
+          <Grid Grid.Row="6" Grid.ColumnSpan="14">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="160"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Auswertung" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungBauteil}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="31">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
+                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="32">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgPrint.ico" Height="14"/>
+                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="33">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgEdit.ico" Height="14"/>
+                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="34">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgNew.ico" Height="14"/>
+                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+
+          </Grid>
+          <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBedienerBauteil}}" Grid.Row="3">
+            <DataGrid.Columns>
+              <DataGridTextColumn Binding="{Binding VorName}" Header="Vorname" Width="160"/>
+              <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="160"/>
+            </DataGrid.Columns>
+          </DataGrid>
+        </Grid>
+      </TabItem>
+
+      <TabItem Header="Reparaturen" Width="100" Height="50">
+        <TabItem.Effect>
+          <DropShadowEffect Color="Silver"/>
+        </TabItem.Effect>
+        <Grid Margin="10">
+          <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+
+          <TabControl x:Name="tcReparaturen">
+            <TabItem Header="  Aktuelle Reparaturen  " Height="30">
+              <TabItem.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </TabItem.Effect>
+              <Grid Margin="5" DataContext="{StaticResource vsReparaturAktuell}" >
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="160"/>
+                  <ColumnDefinition/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="5"/>
+                  <RowDefinition/>
+                  <RowDefinition Height="160"/>
+                  <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Command="{x:Static comands:MyCommands.ReparaturNeu}">
+                  <Button.Effect>
                     <DropShadowEffect Color="Silver"/>
-                </TabItem.Effect>
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <TabControl x:Name="tcArbeitszeit">
-                        <TabItem Header="  Aktuelle Arbeitszeiten  " Height="30">
-                            <TabItem.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </TabItem.Effect>
-                            <Grid Margin="5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="5"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="180"/>
-                                    <ColumnDefinition Width="180"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Mitarbeiter" />
-                                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerArbeitszeit}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
-                                <Button Click="ArbeitszeitAnmeldung_Click" Grid.Column="2">
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="Bilder\JgAdd.ico" Height="14"/>
-                                        <TextBlock Text=" Mitarbeiter anmelden" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="Bilder\JgNew.ico" Margin="1" Height="16" />
+                    <TextBlock Text="Neue Reparatur" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
 
-                                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="1">
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
-                                        <TextBlock Text=" syncron." VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <DataGrid x:Name="dgArbeitszeitAktuell" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAktuell}}" Grid.Row="2" Grid.ColumnSpan="5">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightCenter}"/>
-
-                                        <DataGridTemplateColumn Header="Abmelden" Width="80">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button Click="ArbeitszeitAbmeldung_Click" Margin="1"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="  Ausgewählte Arbeitszeiten  ">
-                            <TabItem.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </TabItem.Effect>
-                            <Grid Margin="5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="5"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-
-                                <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitVon}}"/>
-                                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-
-                                <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitBis}}" />
-                                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-
-                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="1" >
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal" >
-                                        <Image Source="Bilder\JgRefresh.ico" Height="16" />
-                                        <TextBlock Text=" aktualisieren" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90"/>
-                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Abmeldung" Width="90" MinWidth="90"/>
-
-                                        <DataGridTemplateColumn Header="Bearbeiten" Width="80">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button Click="ArbeitszeitBearbeiten_Click" Margin="1"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
-
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="160"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Auswertung" />
-                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungArbeitszeit}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="11">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
-                                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="12">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgPrint.ico" Height="14"/>
-                                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="13">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgEdit.ico" Height="14"/>
-                                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="14">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgNew.ico" Height="14"/>
-                                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-
-                    </Grid>
-                </Grid>
-            </TabItem>
-
-            <TabItem Header="Anmeldungen" Width="100"  Height="50">
-                <TabItem.Effect>
+                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="4">
+                  <Button.Effect>
                     <DropShadowEffect Color="Silver"/>
-                </TabItem.Effect>
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
+                    <TextBlock Text=" syncron." VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
 
-                    <TabControl x:Name="tcAnmeldungen">
-                        <TabItem Header="  Aktuelle Anmeldungen  " Height="30">
-                            <TabItem.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </TabItem.Effect>
-                            <Grid Margin="5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="180" />
-                                    <ColumnDefinition Width="280" />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30"/>
-                                    <RowDefinition Height="5"/>
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Label Content="Mitarbeiter" />
-                                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerAnmeldung}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
-                                <Button Command="{x:Static comands:MyCommands.AnmeldungBediener}" Grid.Column="2">
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="Bilder\JgAdd.ico" Height="16"/>
-                                        <TextBlock Text=" Mitarbeiter an Maschine anmelden" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
+                <Grid Grid.Row="3" Grid.ColumnSpan="4">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                  </Grid.ColumnDefinitions>
 
-                                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="2">
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
-                                        <TextBlock Text=" syncron." VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
+                  <Label Content="Anzahl Coils" />
+                  <TextBox Grid.Column="1" Text="{Binding CoilwechselAnzahl}" Style="{DynamicResource StyleTextBoxReadOnly}" />
+                  <Label Content="Bediener" Grid.Column="2" />
+                  <TextBox Grid.Column="4" Style="{DynamicResource StyleTextBoxReadOnly}" Text="{Binding Bediener, Mode=OneWay}" />
 
-                                <DataGrid x:Name="dgAnmeldungAktuell" IsReadOnly="True" Grid.ColumnSpan="5" ItemsSource="{Binding Source={StaticResource vsAnmeldungAktuell}}" Grid.Row="2" >
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Angemeldete Bediener" Width="*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="an Maschine" Width="*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-
-                                        <DataGridTemplateColumn Header="Abmelden" Width="80">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button Margin="1" Click="AnmeldungBenutzerAbmelden_Click" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header=" Auswahl Anmeldungen  ">
-                            <TabItem.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </TabItem.Effect>
-                            <Grid Margin="5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="5" />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungVon}}"/>
-                                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-
-                                <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungBis}}" />
-                                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-
-                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="2" >
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal" >
-                                        <Image Source="Bilder\JgRefresh.ico" Height="16" />
-                                        <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </Button>
-
-                                <DataGrid x:Name="dgAnmeldungAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsAnmeldungAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15" >
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding eMaschine.MaschinenName}" Header="an Maschine" Width="*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Abmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-
-                                        <DataGridTemplateColumn Header="Bearbeiten" Width="80">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button Click="ArbeitszeitBearbeiten_Click" Margin="1"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
-
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="160"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Auswertung" />
-                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungAnmeldung}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="21">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
-                                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="22">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgPrint.ico" Height="14"/>
-                                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="23">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgEdit.ico" Height="14"/>
-                                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="24">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgNew.ico" Height="14"/>
-                                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-
-                    </Grid>
-
+                  <Label Content="Protokolltext" Grid.Row="1" />
+                  <TextBox IsReadOnly="True" Grid.Column="1" Text="{Binding ProtokollText}" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="3" Style="{DynamicResource StyleTextBoxReadOnly}"/>
                 </Grid>
-            </TabItem>
 
-            <TabItem Header="Bauteile" Width="100"  Height="50">
-                <TabItem.Effect>
+
+                <DataGrid x:Name="dgReparaturAktuell" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="4" IsReadOnly="True">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" CellStyle="{DynamicResource CellRightCenter}" />
+                    <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
+                    <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
+                    <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
+                    <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
+                    <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
+
+                    <DataGridTemplateColumn Header="Bearbeiten" Width="80">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Button Click="ReparaturBearbeitenAktuell_Click" Margin="1"/>
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Rep. beend." Width="80">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Button Click="ReparaturBeenden_Click" Margin="1"/>
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
+            </TabItem>
+            <TabItem Header="  Ausgewählte Reparaturen  ">
+              <TabItem.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </TabItem.Effect>
+
+              <Grid Margin="5" DataContext="{StaticResource vsReparaturAuswahl}">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                  <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="5" />
+                  <RowDefinition />
+                  <RowDefinition Height="160" />
+                </Grid.RowDefinitions>
+                <Label Content="Auswahl vom"/>
+                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturVon}}"/>
+                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+
+                <Label Content="bis" Grid.Column="6" />
+                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturBis}}" />
+                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
+                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+
+                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="4">
+                  <Button.Effect>
                     <DropShadowEffect Color="Silver"/>
-                </TabItem.Effect>
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="5" />
-                        <RowDefinition />
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Content="Auswahl vom"/>
-                    <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilVon}}"/>
-                    <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                    <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                  </Button.Effect>
+                  <StackPanel Orientation="Horizontal" >
+                    <Image Source="Bilder\JgRefresh.ico" Height="16" />
+                    <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
 
-                    <Label Content="Bis" Grid.Column="6" />
-                    <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilBis}}" />
-                    <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                    <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                <Grid Grid.Row="3" Grid.ColumnSpan="14">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
 
-                    <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="3">
-                        <Button.Effect>
-                            <DropShadowEffect Color="Silver"/>
-                        </Button.Effect>
-                        <StackPanel Orientation="Horizontal" >
-                            <Image Source="Bilder\JgRefresh.ico" Height="16" />
-                            <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                  </Grid.ColumnDefinitions>
 
-                    <DataGrid x:Name="dgBauteilAuswahl" Grid.Row="2" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBauteilAuswahl}}" IsReadOnly="True" >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding DatumStart, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Start" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-                            <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Ende" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-                            <DataGridTextColumn Binding="{Binding BtAnzahl}" Header="Stück" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
-                            <DataGridTextColumn Binding="{Binding BtLaenge}" Header="Laenge" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding BtGewicht}" Header="Gewicht" Width="80" MinWidth="80" CellStyle="{StaticResource ResourceKey=CellRightAlign}"/>
+                  <Label Content="Anzahl Coils" />
+                  <TextBox Grid.Column="1" Text="{Binding CoilwechselAnzahl}" Style="{DynamicResource StyleTextBoxReadOnly}"/>
+                  <Label Content="Bediener" Grid.Column="2" />
+                  <TextBox Text="{Binding Bediener}" Grid.Column="3" Style="{DynamicResource StyleTextBoxReadOnly}" />
 
-                            <!--<DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Nummer" Width="70" MinWidth="70"/>-->
-                            <DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Bauteil" Width="*" MinWidth="120"/>
-                            <DataGridTextColumn Binding="{Binding Auftrag}" Header="Auftrag" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding NummerPosition}" Header="Position" Width="70" MinWidth="70"/>
-                            <DataGridTextColumn Binding="{Binding Bediener}" Header="Bediener" Width="100" MinWidth="100"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <Grid Grid.Row="6" Grid.ColumnSpan="14">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="160"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Auswertung" />
-                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungBauteil}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="31">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
-                                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="32">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgPrint.ico" Height="14"/>
-                                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="33">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgEdit.ico" Height="14"/>
-                                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="34">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgNew.ico" Height="14"/>
-                                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-
-                    </Grid>
-                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBedienerBauteil}}" Grid.Row="3">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding VorName}" Header="Vorname" Width="160"/>
-                            <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="160"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                  <Label Content="Protokolltext" Grid.Row="1" />
+                  <TextBox IsReadOnly="True" Text="{Binding ProtokollText}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Style="{DynamicResource StyleTextBoxReadOnly}" Grid.ColumnSpan="3" />
                 </Grid>
+
+                <DataGrid x:Name="dgReparaturAuswahl" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="14" IsReadOnly="True">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
+                    <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
+                    <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
+                    <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
+                    <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
+
+                    <DataGridTemplateColumn Header="Bearbeiten" Width="80">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Button Click="ReparaturBearbeitenAuswahl_Click" Margin="1"/>
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
             </TabItem>
+          </TabControl>
 
-            <TabItem Header="Reparaturen" Width="100" Height="50">
-                <TabItem.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                </TabItem.Effect>
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+          <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="160"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition Width="100"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Auswertung" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungReparatur}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="41">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
+                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="42">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgPrint.ico" Height="14"/>
+                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="43">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgEdit.ico" Height="14"/>
+                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="44">
+              <Button.Effect>
+                <DropShadowEffect Color="Silver"/>
+              </Button.Effect>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="Bilder\JgNew.ico" Height="14"/>
+                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
 
-                    <TabControl x:Name="tcReparaturen">
-                        <TabItem Header="  Aktuelle Reparaturen  " Height="30">
-                            <TabItem.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </TabItem.Effect>
-                            <Grid Margin="5" DataContext="{StaticResource vsReparaturAktuell}" >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="160"/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="5"/>
-                                    <RowDefinition/>
-                                    <RowDefinition Height="160"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+          </Grid>
 
-                                <Button Command="{x:Static comands:MyCommands.ReparaturNeu}">
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="Bilder\JgNew.ico" Margin="1" Height="16" />
-                                        <TextBlock Text="Neue Reparatur" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
+        </Grid>
+      </TabItem>
 
-                                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="4">
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
-                                        <TextBlock Text=" syncron." VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
+      <TabItem Header="Optionen" Width="100" Height="30">
+        <TabItem.Effect>
+          <DropShadowEffect Color="Silver"/>
+        </TabItem.Effect>
+        <Grid Margin="7">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+          </Grid.RowDefinitions>
 
-                                <Grid Grid.Row="3" Grid.ColumnSpan="4">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+          <Button x:Name="btnOptionen" Content="Optionen" Click="ButtonOptionen_Click" >
+            <Button.Effect>
+              <DropShadowEffect Color="Silver"/>
+            </Button.Effect>
+          </Button>
+        </Grid>
+      </TabItem>
+    </TabControl>
+    <TreeView x:Name="treeViewMaschinen" Margin="6" Grid.Row="1" ItemsSource="{Binding}" SelectedValuePath="Id">
+      <TreeView.Effect>
+        <DropShadowEffect Color="Silver"/>
+      </TreeView.Effect>
 
-                                    <Label Content="Anzahl Coils" />
-                                    <TextBox Grid.Column="1" Text="{Binding CoilwechselAnzahl}" Style="{DynamicResource StyleTextBoxReadOnly}" />
-                                    <Label Content="Bediener" Grid.Column="2" />
-                                    <TextBox Grid.Column="4" Style="{DynamicResource StyleTextBoxReadOnly}" Text="{Binding Bediener, Mode=OneWay}" />
+      <TreeView.ItemContainerStyle>
+        <Style TargetType="{x:Type TreeViewItem}">
+          <Setter Property="IsExpanded" Value="True"/>
+        </Style>
+      </TreeView.ItemContainerStyle>
 
-                                    <Label Content="Protokolltext" Grid.Row="1" />
-                                    <TextBox IsReadOnly="True" Grid.Column="1" Text="{Binding ProtokollText}" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="3" Style="{DynamicResource StyleTextBoxReadOnly}"/>
-                                </Grid>
+      <TreeView.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type data:tabMaschine}" ItemsSource="{Binding sAktuelleBediener}">
+          <StackPanel Orientation="Horizontal">
+            <Image Source="Bilder\JgSettings.ico" Margin="5" Width="30" />
+            <TextBlock Text="{Binding MaschinenName}" FontSize="16" FontWeight="Bold" Margin="0, 10, 0, 0" />
+            <TextBlock Text=" [" Foreground="Blue" />
+            <TextBlock Text="{Binding sAktuelleBediener.Count}" Foreground="Blue" />
+            <TextBlock Text="]" Foreground="Blue" />
+          </StackPanel>
+        </HierarchicalDataTemplate>
+        <DataTemplate DataType="{x:Type data:tabBediener}">
+          <StackPanel Orientation="Horizontal" Margin="1">
+            <Image Source="Bilder\JgPerson.png" />
+            <TextBlock Text="{Binding Name}" />
+          </StackPanel>
+        </DataTemplate>
+      </TreeView.Resources>
+    </TreeView>
 
-
-                                <DataGrid x:Name="dgReparaturAktuell" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="4" IsReadOnly="True">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" CellStyle="{DynamicResource CellRightCenter}" />
-                                        <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
-                                        <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
-                                        <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
-                                        <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
-                                        <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
-
-                                        <DataGridTemplateColumn Header="Bearbeiten" Width="80">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button Click="ReparaturBearbeitenAktuell_Click" Margin="1"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-
-                                        <DataGridTemplateColumn Header="Rep. beend." Width="80">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button Click="ReparaturBeenden_Click" Margin="1"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="  Ausgewählte Reparaturen  ">
-                            <TabItem.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </TabItem.Effect>
-
-                            <Grid Margin="5" DataContext="{StaticResource vsReparaturAuswahl}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="5" />
-                                    <RowDefinition />
-                                    <RowDefinition Height="160" />
-                                </Grid.RowDefinitions>
-                                <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturVon}}"/>
-                                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-
-                                <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturBis}}" />
-                                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-
-                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="4"> 
-                                    <Button.Effect>
-                                        <DropShadowEffect Color="Silver"/>
-                                    </Button.Effect>
-                                    <StackPanel Orientation="Horizontal" >
-                                        <Image Source="Bilder\JgRefresh.ico" Height="16" />
-                                        <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </Button>
-
-                                <Grid Grid.Row="3" Grid.ColumnSpan="14">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition/>
-
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Label Content="Anzahl Coils" />
-                                    <TextBox Grid.Column="1" Text="{Binding CoilwechselAnzahl}" Style="{DynamicResource StyleTextBoxReadOnly}"/>
-                                    <Label Content="Bediener" Grid.Column="2" />
-                                    <TextBox Text="{Binding Bediener}" Grid.Column="3" Style="{DynamicResource StyleTextBoxReadOnly}" />
-
-                                    <Label Content="Protokolltext" Grid.Row="1" />
-                                    <TextBox IsReadOnly="True" Text="{Binding ProtokollText}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Style="{DynamicResource StyleTextBoxReadOnly}" Grid.ColumnSpan="3" />
-                                </Grid>
-
-                                <DataGrid x:Name="dgReparaturAuswahl" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="14" IsReadOnly="True">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
-                                        <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
-                                        <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
-                                        <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
-                                        <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
-
-                                        <DataGridTemplateColumn Header="Bearbeiten" Width="80">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button Click="ReparaturBearbeitenAuswahl_Click" Margin="1"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
-
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="160"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Auswertung" />
-                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungReparatur}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="41">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
-                                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="42">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgPrint.ico" Height="14"/>
-                                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="43">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgEdit.ico" Height="14"/>
-                                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="44">
-                            <Button.Effect>
-                                <DropShadowEffect Color="Silver"/>
-                            </Button.Effect>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Bilder\JgNew.ico" Height="14"/>
-                                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-
-                    </Grid>
-
-                </Grid>
-            </TabItem>
-
-            <TabItem Header="Optionen" Width="100" Height="30">
-                <TabItem.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                </TabItem.Effect>
-                <Grid Margin="7">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <Button x:Name="btnOptionen" Content="Optionen" Click="ButtonOptionen_Click" >
-                        <Button.Effect>
-                            <DropShadowEffect Color="Silver"/>
-                        </Button.Effect>
-                    </Button>
-                </Grid>
-            </TabItem>
-        </TabControl>
-    </Grid>
+    <Button Grid.Row="2" Margin="6" Tag="0" Click="TabelleAktualisieren_Click">
+      <Button.Effect>
+        <DropShadowEffect Color="Silver"/>
+      </Button.Effect>
+      <StackPanel Orientation="Horizontal">
+        <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
+        <TextBlock Text=" Tabelle synchronisieren" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Button>
+  </Grid>
 </Window>

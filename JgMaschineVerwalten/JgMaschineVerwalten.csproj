@@ -26,10 +26,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\FertigeProgramme\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -201,6 +201,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="JgPreview.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgPerson.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgPerson.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

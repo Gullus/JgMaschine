@@ -6,63 +6,63 @@
     xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" 
     xmlns:vRules="clr-namespace:JgMaschineSetup.ValidationRules" 
     mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormStandort"
-    Title="Standort bearbeiten" Height="198" Width="439" ShowInTaskbar="False" ResizeMode="NoResize"
+    Title="Standort bearbeiten" Height="208" Width="437" ShowInTaskbar="False" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" Topmost="True" TabIndex="5" FocusManager.FocusedElement="{Binding ElementName=tbStandort}">
-    <Window.Resources>
+  <Window.Resources>
 
-    </Window.Resources>
+  </Window.Resources>
 
-    <Grid x:Name="gridStandort" Margin="5" DataContext="{x:Type JgMaschineData:tabStandort}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="120"/>
-        </Grid.ColumnDefinitions>
+  <Grid x:Name="gridStandort" Margin="8" DataContext="{x:Type JgMaschineData:tabStandort}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition />
+      <RowDefinition Height="50"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="120"/>
+      <ColumnDefinition Width="120"/>
+    </Grid.ColumnDefinitions>
 
-        <Label Content="_Name Standort" Grid.Row="0" Target="{Binding ElementName=tbStandort}"/>
-        <TextBox x:Name="tbStandort" Grid.Column="1" Grid.Row="0" Margin="3" Grid.ColumnSpan="3" TabIndex="0">
-            <Binding Path="Bezeichnung" UpdateSourceTrigger="PropertyChanged">
-                <!--<Binding.ValidationRules>
-                    <vRules:KontrFeldNichtLeer/>
-                </Binding.ValidationRules>-->
-            </Binding>
-        </TextBox>
+    <Label Content="_Name Standort" Grid.Row="0" Target="{Binding ElementName=tbStandort}"/>
+    <TextBox x:Name="tbStandort" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" TabIndex="0" ToolTip="Hallo" >
+      <Binding Path="Bezeichnung" UpdateSourceTrigger="PropertyChanged">
+        <Binding.ValidationRules>
+          <vRules:KontrFeldNichtLeer/>
+        </Binding.ValidationRules>
+      </Binding>
+    </TextBox>
 
-        <Label Content="_Bemerkung" Grid.Row="1" Target="{Binding ElementName=tbBemerkung}"/>
-        <TextBox x:Name="tbBemerkung" Text="{Binding Bemerkung}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"/>
+    <Label Content="_Bemerkung" Grid.Row="1" Target="{Binding ElementName=tbBemerkung}"/>
+    <TextBox x:Name="tbBemerkung" Text="{Binding Bemerkung, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"/>
 
-        <Button Grid.Column="2" Grid.Row="2" IsCancel="True">
-            <Button.Effect>
-                <DropShadowEffect/>
-            </Button.Effect>
-            <StackPanel Orientation="Horizontal">
-                <Image Source="..\Bilder\JgCancel.ico" Margin="5">
-                    <Image.Effect>
-                        <DropShadowEffect/>
-                    </Image.Effect>
-                </Image>
-                <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <Button Grid.Column="3" Grid.Row="2" IsDefault="True" Click="ButtonOk_Click">
-            <Button.Effect>
-                <DropShadowEffect/>
-            </Button.Effect>
-            <StackPanel Orientation="Horizontal">
-                <Image Source="..\Bilder\JgCheck.ico" Margin="5">
-                    <Image.Effect>
-                        <DropShadowEffect/>
-                    </Image.Effect>
-                </Image>
-                <TextBlock Text="Eintragen" VerticalAlignment="Center"/>
-            </StackPanel>
-        </Button>
+    <Button Grid.Column="2" Grid.Row="2" IsCancel="True">
+      <Button.Effect>
+        <DropShadowEffect/>
+      </Button.Effect>
+      <StackPanel Orientation="Horizontal">
+        <Image Source="..\Bilder\JgCancel.ico" Margin="5">
+          <Image.Effect>
+            <DropShadowEffect/>
+          </Image.Effect>
+        </Image>
+        <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Button>
+    <Button Grid.Column="3" Grid.Row="2" IsDefault="True" Click="ButtonOk_Click">
+      <Button.Effect>
+        <DropShadowEffect/>
+      </Button.Effect>
+      <StackPanel Orientation="Horizontal">
+        <Image Source="..\Bilder\JgCheck.ico" Margin="5">
+          <Image.Effect>
+            <DropShadowEffect/>
+          </Image.Effect>
+        </Image>
+        <TextBlock Text="Eintragen" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Button>
 
-    </Grid>
+  </Grid>
 </Window>

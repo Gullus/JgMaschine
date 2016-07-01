@@ -19,7 +19,7 @@ namespace JgMaschineDienst
 
     private static void EintragLog(string Ereigniss, EventLogEntryType EreignissTyp)
     {
-      string source = "JgMaschine Service";
+      string source = "JgMaschineService";
       string log = "Application";
 
       if (!EventLog.SourceExists(source))

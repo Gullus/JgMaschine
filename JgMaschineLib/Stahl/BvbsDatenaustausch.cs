@@ -43,6 +43,10 @@ namespace JgMaschineLib.Stahl
     public int? Anzahl { get; set; }
     public int? Laenge { get; set; }         // mm
     public decimal? Gewicht { get; set; }    // kg
+    public int GewichtInKg
+    {
+      get { return Convert.ToInt32(Gewicht * 1000); }
+    }
     public int? Biegerollendurchmesser { get; set; }
     public int? Durchmesser { get; set; }
     public int? BreiteMatte { get; set; }

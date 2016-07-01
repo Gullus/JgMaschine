@@ -60,12 +60,13 @@ namespace JgMaschineLib
         throw new Exception("Ohne Angabe von IQuerable, kann keine Datenabfrage durchgeführt werden.");
 
       Items.Clear();
-      var daten = await MyQuery.ToListAsync();
       isInRange = true;
+
+      var daten = await MyQuery.ToListAsync();
       foreach (T item in daten)
         Add(item);
-      isInRange = false;
 
+      isInRange = false;
       OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
       if (!IstInit)
@@ -176,7 +177,7 @@ namespace JgMaschineLib
       DbSichern.DsSichern<T>(Db, neu.Entity, Status);
     }
 
-    public async void AktSichernAsync(JgMaschineData.EnumStatusDatenabgleich Status)
+    public async Task AktSichernAsync(JgMaschineData.EnumStatusDatenabgleich Status)
     {
       var neu = Db.Entry<T>(AktDatensatz);
       await DbSichern.DsSichernAsync<T>(Db, neu.Entity, Status);

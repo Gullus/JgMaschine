@@ -15,8 +15,9 @@ namespace JgMaschineLib.Scanner
     {
       FEHLER,
       PROG,
-      MITA,
+      MITA,  // Mitarbeiter Anmeldung an Maschine  
       BF2D,
+      BF3D,
       TEST,
       SCHALTER
     }
@@ -73,7 +74,7 @@ namespace JgMaschineLib.Scanner
       }
       catch (Exception f)
       {
-        Protokoll("Fehler bei Pingabfrage.\n\rGrund: {0}", f.Message); 
+        Protokoll("Fehler bei Pingabfrage.\n\rGrund: {0}", f.Message);
         return false;
       }
 
@@ -136,7 +137,7 @@ namespace JgMaschineLib.Scanner
                 if (ct.IsCancellationRequested)
                   break;
 
-                if (! istPingOk())
+                if (!istPingOk())
                   break;
 
                 if (ct.IsCancellationRequested)
@@ -157,14 +158,16 @@ namespace JgMaschineLib.Scanner
               {
                 _NetStream.Close();
                 _NetStream.Dispose();
-                if (! ct.IsCancellationRequested)
+                if (!ct.IsCancellationRequested)
                 {
                   Protokoll("Fehler beim Empfang der Daten.\r\nGrund: " + f.Message);
                   return _FehlerDatenEmpfang;
                 }
               }
 
-              return Encoding.ASCII.GetString(bufferEmpfang, 0, anzZeichen);
+              // -1 ist für das herausfiltern des Steuerezichens vom Scanner
+
+              return Encoding.ASCII.GetString(bufferEmpfang, 0, anzZeichen - 1);
 
             }, _NetStream, ct);
 
@@ -209,20 +212,25 @@ namespace JgMaschineLib.Scanner
     public string TextEmpfangen { get; set; }
     public bool MitDisplay { get; set; }
 
-    public string ScannerKennung { get { return TextEmpfangen.Substring(0, 13); } }
-    public string ScannerVorgangScan { get { return TextEmpfangen.Substring(13, 4); } }
-    public string ScannerVorgangProgramm { get { return TextEmpfangen.Substring(17, 9); } }
+    public string ScannerKennung { get { return (TextEmpfangen.Length < 13) ? "" : TextEmpfangen.Substring(0, 13); } }
+    public string ScannerVorgangScan { get { return (TextEmpfangen.Length < 17) ? "" : TextEmpfangen.Substring(13, 4); } }
+    public string ScannerVorgangProgramm { get { return (TextEmpfangen.Length < 26) ? "" : TextEmpfangen.Substring(17, 9); } }
 
     public string ScannerKoerper
     {
       get
       {
-        if (IstProgMita(_VorgangScan))
-          return TextEmpfangen.Substring(26);
-        else if (_VorgangScan == DataLogicScanner.VorgangScanner.SCHALTER)
-          return TextEmpfangen[14].ToString();
-        else
-          return TextEmpfangen.Substring(17);
+        switch (_VorgangScan)
+        {
+          case DataLogicScanner.VorgangScanner.PROG:
+            return TextEmpfangen.Substring(26);
+          case DataLogicScanner.VorgangScanner.SCHALTER:
+            return TextEmpfangen[14].ToString();
+          case DataLogicScanner.VorgangScanner.MITA:  // Zeichen 17 ist 0 - für Anmeldung, 1 - für Abmeldung
+            return TextEmpfangen.Substring(18);
+          default:
+            return TextEmpfangen.Substring(17);
+        }
       }
     }
 
@@ -268,12 +276,15 @@ namespace JgMaschineLib.Scanner
             case DataLogicScanner.VorgangScanner.FEHLER: _VorgangProgramm = DataLogicScanner.VorgangProgram.FEHLER; break;
             case DataLogicScanner.VorgangScanner.SCHALTER: _VorgangProgramm = DataLogicScanner.VorgangProgram.SCHALTER; break;
             case DataLogicScanner.VorgangScanner.TEST: _VorgangProgramm = DataLogicScanner.VorgangProgram.TEST; break;
-            default:
-              if (IstProgMita(_VorgangScan))
-              {
-                if (!Enum.TryParse<DataLogicScanner.VorgangProgram>(ScannerVorgangProgramm, true, out _VorgangProgramm))
-                  FehlerAusgabe("Prog. Vorgang falsch.", "Wert: " + ScannerVorgangProgramm);
-              }
+            case DataLogicScanner.VorgangScanner.MITA:
+              if (TextEmpfangen[17] == '0')
+                _VorgangProgramm = DataLogicScanner.VorgangProgram.ANMELDUNG;
+              else
+                _VorgangProgramm = DataLogicScanner.VorgangProgram.ABMELDUNG;
+              break;
+            case DataLogicScanner.VorgangScanner.PROG:
+              if (!Enum.TryParse<DataLogicScanner.VorgangProgram>(ScannerVorgangProgramm, true, out _VorgangProgramm))
+                FehlerAusgabe("Prog. Vorgang falsch.", "Wert: " + ScannerVorgangProgramm);
               break;
           }
         }
@@ -331,9 +342,5 @@ namespace JgMaschineLib.Scanner
       _ZusatzText = sb.ToString();
     }
 
-    public bool IstProgMita(DataLogicScanner.VorgangScanner Vorgang)
-    {
-      return (VorgangScan == DataLogicScanner.VorgangScanner.PROG) || (_VorgangScan == DataLogicScanner.VorgangScanner.MITA);
-    }
   }
 }

@@ -16,9 +16,7 @@ namespace JgMaschineLib
       DatenAbgl.Datum = DateTime.Now;
       DatenAbgl.Bearbeiter = Benutzer;
     }
-
-    public static void DsSichern<T>(JgMaschineData.JgModelContainer Db, object MeinObjekt, JgMaschineData.EnumStatusDatenabgleich Status)
-      where T : class
+    private static void DbSichernVorbereitung<T>(JgMaschineData.JgModelContainer Db, object MeinObjekt, JgMaschineData.EnumStatusDatenabgleich Status) where T : class
     {
       var ent = Db.Set<T>();
       var ds = Db.Entry<T>((T)MeinObjekt);
@@ -28,22 +26,18 @@ namespace JgMaschineLib
 
       if (Status == JgMaschineData.EnumStatusDatenabgleich.Neu)
         ent.Add(ds.Entity);
-
+    }
+    public static void DsSichern<T>(JgMaschineData.JgModelContainer Db, object MeinObjekt, JgMaschineData.EnumStatusDatenabgleich Status)
+      where T : class
+    {
+      DbSichernVorbereitung<T>(Db, MeinObjekt, Status);
       Db.SaveChanges();
     }
 
     public static async Task DsSichernAsync<T>(JgMaschineData.JgModelContainer Db, object MeinObjekt, JgMaschineData.EnumStatusDatenabgleich Status)
       where T : class
     {
-      var ent = Db.Set<T>();
-      var ds = Db.Entry<T>((T)MeinObjekt);
-
-      var abgl = ds.Member<JgMaschineData.DatenAbgleich>("DatenAbgleich");
-      AbgleichEintragen(abgl.CurrentValue, Status);
-
-      if (Status == JgMaschineData.EnumStatusDatenabgleich.Neu)
-        ent.Add(ds.Entity);
-
+      DbSichernVorbereitung<T>(Db, MeinObjekt, Status);
       await Db.SaveChangesAsync();
     }
   }
