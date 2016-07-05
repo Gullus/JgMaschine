@@ -56,6 +56,5 @@ namespace JgMaschineTestTcpFirmaSchnell
     {
       Console.WriteLine("[Server] " + string.Format(AnzeigeText, AnzeigeWerte));
     }
-
   }
 }

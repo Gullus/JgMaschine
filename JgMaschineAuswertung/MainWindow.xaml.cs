@@ -107,6 +107,20 @@ namespace JgMaschineAuswertung
 
       }, CanExecReportVorhanden));
 
+      CommandBindings.Add(new CommandBinding(MyCommands.ReportOptionen, (sen, erg) =>
+      {
+        Fenster.FormAuswertungBearbeiten form = new Fenster.FormAuswertungBearbeiten(_ListeAuswertungen.AktDatensatz);
+        if (form.ShowDialog() ?? false)
+        {
+          string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+          form.Auswertung.GeaendertName = username;
+          form.Auswertung.GeaendertDatum = form.Auswertung.ErstelltDatum;
+          _ListeAuswertungen.AktSichern(JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+        }
+        else
+          _ListeAuswertungen.Reload(_ListeAuswertungen.AktDatensatz);
+      }, CanExecReportVorhanden));
+
       CommandBindings.Add(new CommandBinding(MyCommands.ReportSpeichern, (sen, erg) =>
       {
         Microsoft.Win32.SaveFileDialog dia = new Microsoft.Win32.SaveFileDialog();

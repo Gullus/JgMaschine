@@ -28,9 +28,6 @@ namespace JgMaschineTest
       Console.WriteLine(s.Substring(5, s.Length - 6));
 
 
-
-
-
       //var cs = db.Database.Connection.ConnectionString;
 
       //IQueryable iq = new JgMaschineLib.JgList<tabStandort>()
@@ -88,6 +85,11 @@ namespace JgMaschineTest
       //st.Close();
     }
 
+    /// <summary>
+    /// String in Char Funktion
+    /// </summary>
+    /// <param name="KommaString">String aus Zahlebn</param>
+    /// <returns>CharString welche als Steuerzeichen verwendet werden können.</returns>
     private static string StringInChar(string KommaString)
     {
       string erg = "";

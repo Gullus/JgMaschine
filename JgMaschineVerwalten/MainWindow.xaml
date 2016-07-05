@@ -8,7 +8,8 @@
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
-        x:Class="JgMaschineVerwalten.MainWindow" mc:Ignorable="d" Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" Loaded="Window_Loaded" Closed="Window_Closed">
+        x:Class="JgMaschineVerwalten.MainWindow" mc:Ignorable="d" Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" 
+        Loaded="Window_Loaded" Closed="Window_Closed" Icon="Properties/JgMaschineVerwalten.ico">
 
   <Window.Resources>
     <CollectionViewSource x:Key="vsMaschine" d:DesignSource="{d:DesignInstance {x:Type data:tabMaschine}, CreateList=True}"/>
@@ -58,9 +59,6 @@
     </Grid.ColumnDefinitions>
 
     <Border Margin="6" BorderThickness="1" BorderBrush="#FF7E7E7E" Background="White">
-      <Border.Effect>
-        <DropShadowEffect Color="Silver"/>
-      </Border.Effect>
     </Border>
     <StackPanel VerticalAlignment="Center" Margin="0,14,0,18">
       <TextBlock Text="Aktuelle Anmeldungen" TextAlignment="Center" FontWeight="Bold" Foreground="Blue"/>
@@ -70,9 +68,6 @@
 
     <TabControl Grid.Column="1" TabStripPlacement="Right" Margin="10,5,5,5" Grid.RowSpan="3">
       <TabItem Header="Arbeitszeit" Width="100"  Height="50">
-        <TabItem.Effect>
-          <DropShadowEffect Color="Silver"/>
-        </TabItem.Effect>
         <Grid Margin="10">
           <Grid.RowDefinitions>
             <RowDefinition />
@@ -81,9 +76,6 @@
           </Grid.RowDefinitions>
           <TabControl x:Name="tcArbeitszeit">
             <TabItem Header="  Aktuelle Arbeitszeiten  " Height="30">
-              <TabItem.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </TabItem.Effect>
               <Grid Margin="5">
                 <Grid.RowDefinitions>
                   <RowDefinition Height="Auto" />
@@ -100,9 +92,6 @@
                 <Label Content="Mitarbeiter" />
                 <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerArbeitszeit}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
                 <Button Click="ArbeitszeitAnmeldung_Click" Grid.Column="2">
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgAdd.ico" Height="14"/>
                     <TextBlock Text=" Mitarbeiter anmelden" VerticalAlignment="Center"/>
@@ -110,9 +99,6 @@
                 </Button>
 
                 <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="1">
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
                     <TextBlock Text=" syncron." VerticalAlignment="Center"/>
@@ -136,9 +122,6 @@
               </Grid>
             </TabItem>
             <TabItem Header="  Ausgewählte Arbeitszeiten  ">
-              <TabItem.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </TabItem.Effect>
               <Grid Margin="5">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="Auto"/>
@@ -177,9 +160,6 @@
                 <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
                 <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="1" >
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal" >
                     <Image Source="Bilder\JgRefresh.ico" Height="16" />
                     <TextBlock Text=" aktualisieren" VerticalAlignment="Center"/>
@@ -218,36 +198,24 @@
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungArbeitszeit}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
             <Button Click="btnDrucken_Click" Grid.Column="2" Tag="11">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="3" Tag="12">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="4" Tag="13">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="5" Tag="14">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
@@ -259,9 +227,6 @@
       </TabItem>
 
       <TabItem Header="Anmeldungen" Width="100"  Height="50">
-        <TabItem.Effect>
-          <DropShadowEffect Color="Silver"/>
-        </TabItem.Effect>
         <Grid Margin="10">
           <Grid.RowDefinitions>
             <RowDefinition />
@@ -271,9 +236,6 @@
 
           <TabControl x:Name="tcAnmeldungen">
             <TabItem Header="  Aktuelle Anmeldungen  " Height="30">
-              <TabItem.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </TabItem.Effect>
               <Grid Margin="5">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="80" />
@@ -290,9 +252,6 @@
                 <Label Content="Mitarbeiter" />
                 <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerAnmeldung}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
                 <Button Command="{x:Static comands:MyCommands.AnmeldungBediener}" Grid.Column="2">
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgAdd.ico" Height="16"/>
                     <TextBlock Text=" Mitarbeiter an Maschine anmelden" VerticalAlignment="Center"/>
@@ -300,9 +259,6 @@
                 </Button>
 
                 <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="2">
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
                     <TextBlock Text=" syncron." VerticalAlignment="Center"/>
@@ -327,9 +283,6 @@
               </Grid>
             </TabItem>
             <TabItem Header=" Auswahl Anmeldungen  ">
-              <TabItem.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </TabItem.Effect>
               <Grid Margin="5">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="Auto"/>
@@ -367,9 +320,6 @@
                 <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
                 <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="2" >
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal" >
                     <Image Source="Bilder\JgRefresh.ico" Height="16" />
                     <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -409,36 +359,24 @@
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungAnmeldung}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
             <Button Click="btnDrucken_Click" Grid.Column="2" Tag="21">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="3" Tag="22">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="4" Tag="23">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="5" Tag="24">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
@@ -451,9 +389,6 @@
       </TabItem>
 
       <TabItem Header="Bauteile" Width="100"  Height="50">
-        <TabItem.Effect>
-          <DropShadowEffect Color="Silver"/>
-        </TabItem.Effect>
         <Grid Margin="10">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -494,9 +429,6 @@
           <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
           <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="3">
-            <Button.Effect>
-              <DropShadowEffect Color="Silver"/>
-            </Button.Effect>
             <StackPanel Orientation="Horizontal" >
               <Image Source="Bilder\JgRefresh.ico" Height="16" />
               <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -534,36 +466,24 @@
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungBauteil}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
             <Button Click="btnDrucken_Click" Grid.Column="2" Tag="31">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="3" Tag="32">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="4" Tag="33">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="5" Tag="34">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
@@ -581,9 +501,6 @@
       </TabItem>
 
       <TabItem Header="Reparaturen" Width="100" Height="50">
-        <TabItem.Effect>
-          <DropShadowEffect Color="Silver"/>
-        </TabItem.Effect>
         <Grid Margin="10">
           <Grid.RowDefinitions>
             <RowDefinition />
@@ -593,9 +510,6 @@
 
           <TabControl x:Name="tcReparaturen">
             <TabItem Header="  Aktuelle Reparaturen  " Height="30">
-              <TabItem.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </TabItem.Effect>
               <Grid Margin="5" DataContext="{StaticResource vsReparaturAktuell}" >
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="160"/>
@@ -612,9 +526,6 @@
                 </Grid.RowDefinitions>
 
                 <Button Command="{x:Static comands:MyCommands.ReparaturNeu}">
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgNew.ico" Margin="1" Height="16" />
                     <TextBlock Text="Neue Reparatur" VerticalAlignment="Center"/>
@@ -622,9 +533,6 @@
                 </Button>
 
                 <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="4">
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
                     <TextBlock Text=" syncron." VerticalAlignment="Center"/>
@@ -684,9 +592,6 @@
               </Grid>
             </TabItem>
             <TabItem Header="  Ausgewählte Reparaturen  ">
-              <TabItem.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </TabItem.Effect>
 
               <Grid Margin="5" DataContext="{StaticResource vsReparaturAuswahl}">
                 <Grid.ColumnDefinitions>
@@ -726,9 +631,6 @@
                 <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
 
                 <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="4">
-                  <Button.Effect>
-                    <DropShadowEffect Color="Silver"/>
-                  </Button.Effect>
                   <StackPanel Orientation="Horizontal" >
                     <Image Source="Bilder\JgRefresh.ico" Height="16" />
                     <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -791,36 +693,24 @@
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungReparatur}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
             <Button Click="btnDrucken_Click" Grid.Column="2" Tag="41">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="3" Tag="42">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="4" Tag="43">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
             <Button Click="btnDrucken_Click" Grid.Column="5" Tag="44">
-              <Button.Effect>
-                <DropShadowEffect Color="Silver"/>
-              </Button.Effect>
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
@@ -833,9 +723,6 @@
       </TabItem>
 
       <TabItem Header="Optionen" Width="100" Height="30">
-        <TabItem.Effect>
-          <DropShadowEffect Color="Silver"/>
-        </TabItem.Effect>
         <Grid Margin="7">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
@@ -847,17 +734,11 @@
           </Grid.RowDefinitions>
 
           <Button x:Name="btnOptionen" Content="Optionen" Click="ButtonOptionen_Click" >
-            <Button.Effect>
-              <DropShadowEffect Color="Silver"/>
-            </Button.Effect>
           </Button>
         </Grid>
       </TabItem>
     </TabControl>
     <TreeView x:Name="treeViewMaschinen" Margin="6" Grid.Row="1" ItemsSource="{Binding}" SelectedValuePath="Id">
-      <TreeView.Effect>
-        <DropShadowEffect Color="Silver"/>
-      </TreeView.Effect>
 
       <TreeView.ItemContainerStyle>
         <Style TargetType="{x:Type TreeViewItem}">
@@ -885,9 +766,6 @@
     </TreeView>
 
     <Button Grid.Row="2" Margin="6" Tag="0" Click="TabelleAktualisieren_Click">
-      <Button.Effect>
-        <DropShadowEffect Color="Silver"/>
-      </Button.Effect>
       <StackPanel Orientation="Horizontal">
         <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
         <TextBlock Text=" Tabelle synchronisieren" VerticalAlignment="Center"/>

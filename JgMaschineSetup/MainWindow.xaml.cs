@@ -123,7 +123,7 @@ namespace JgMaschineSetup
         MessageBox.Show("Es müssen Standorte vorhanden sein.", "Information !", MessageBoxButton.OK, MessageBoxImage.Information);
         return false;
       }
-      return true; 
+      return true;
     }
 
     private tabProtokoll ProtokollErstellen(tabMaschine ZuMaschine)
@@ -136,18 +136,17 @@ namespace JgMaschineSetup
         LetzteDateiDatum = DateTime.Today.AddDays(-60),
         LetztePositionDatum = DateTime.Today.AddDays(-60),
         ProtokollText = "Protokoll erstellt",
-        Status = JgMaschineData.EnumStatusProtkoll.Offen
       };
-      _ListeMaschinen.DsSichern(prot, EnumStatusDatenabgleich.Neu);
-
+      JgMaschineLib.DbSichern.AbgleichEintragen(prot.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+      _ListeMaschinen.Db.tabProtokollSet.Add(prot);
       return prot;
     }
 
     private void ButtonNeueMaschine_Click(object sender, RoutedEventArgs e)
     {
-      if (! KontrolleStandorte())
+      if (!KontrolleStandorte())
         return;
- 
+
       var form = new Fenster.FormMaschinenOptionen(null, _ListeStandorte);
       if (form.ShowDialog() ?? false)
       {

@@ -80,6 +80,7 @@
     <Compile Include="TcpIpKomponenten\TcpIpClient.cs" />
     <Compile Include="TcpIpKomponenten\TcpIpServer.cs" />
     <Compile Include="TcpIpKomponenten\TcpIpStamm.cs" />
+    <Compile Include="ValidationRules\KontrAnnotations.cs" />
     <Compile Include="Zeit\DatumZeit.cs" />
     <Compile Include="Zeit\FormAuswahlDatumVonBis.xaml.cs">
       <DependentUpon>FormAuswahlDatumVonBis.xaml</DependentUpon>

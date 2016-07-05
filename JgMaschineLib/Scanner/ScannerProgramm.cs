@@ -89,13 +89,28 @@ namespace JgMaschineLib.Scanner
                 {
                   client.NoDelay = true;
                   client.SendTimeout = 1000;
+                  client.ReceiveTimeout = 1000;
 
                   Protokoll("Verbindung zur Maschine hergestellt.");
                   var nwStr = client.GetStream();
                   var buffer = Encoding.ASCII.GetBytes(md.BvbsString + Convert.ToChar(13) + Convert.ToChar(10));
                   nwStr.Write(buffer, 0, buffer.Length);
-                  nwStr.Flush();
-                  Protokoll("Daten zu Maschine geschickt.");
+                  Protokoll("Daten zu Maschine geschickt. Warte auf Antwort");
+
+                  // Auf Antwort von Maschine warten 
+
+                  buffer = new byte[client.ReceiveBufferSize];
+                  try
+                  {
+                    int anzEmpfang = nwStr.Read(buffer, 0, (int)client.ReceiveBufferSize);
+                    var empfangen = Encoding.UTF8.GetString(buffer, 0, anzEmpfang);
+                    Protokoll($"Daten von Maschine: {empfangen}.");
+                  }
+                  catch (Exception f)
+                  {
+                    Protokoll($"Keine Daten von Maschine empfangen.\n\rGrund: {f.Message}");
+                  }
+
                   client.Close();
                   Protokoll("Verbindung geschlossen.");
                 }

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace JgMaschineData
@@ -57,7 +54,19 @@ namespace JgMaschineData
   }
 
   public partial class tabBedienerMetaData
-  { }
+  {
+    [Required]
+    [MinLength(3, ErrorMessage = "Mindestanzahl der Zeichen für den Vornamen ist {1}")]
+    public object VorName;
+
+    [Required]
+    [MinLength(3, ErrorMessage = "Mindestanzahl der Zeichen für den Nachnamen ist {1}")]
+    public object NachName;
+
+    [Required]
+    [MinLength(2, ErrorMessage = "Mindestanzahl der Zeichen für den Nachnamen ist {1}")]
+    public object MatchCode;
+  }
 
   [MetadataType(typeof(tabBedienerMetaData))]
   public partial class tabBediener
@@ -91,6 +100,17 @@ namespace JgMaschineData
 
   [MetadataType(typeof(tabStandortMetaData))]
   public partial class tabStandort
+  { }
+
+  public partial class tabAuswertungMetaData
+  {
+    [Required]
+    [MinLength(5, ErrorMessage = "Mindestanzahl der Zeichen für den Report ist {1}")]
+    public object ReportName;
+  }
+
+  [MetadataType(typeof(tabAuswertungMetaData))]
+  public partial class tabAuswertung
   { }
 
   #region bei Speicherung Valodierungsfehler anzeigen

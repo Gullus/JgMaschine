@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +26,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\FertigeProgramme\</OutputPath>
@@ -35,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Properties\JgSettings.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -85,7 +86,6 @@
     <Compile Include="Fenster\FormProtokollOptionen.xaml.cs">
       <DependentUpon>FormProtokollOptionen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ValidationRules\KontrMaschinenName.cs" />
     <Page Include="Fenster\FormStandort.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -163,9 +163,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Properties\JgSettings.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <SplashScreen Include="Properties\SplashScreen.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
@@ -193,7 +190,6 @@
     <Resource Include="Bilder\JgPreview.ico" />
     <Resource Include="Bilder\JgPrint.ico" />
     <Resource Include="Bilder\JgProperties.ico" />
-    <Resource Include="Bilder\_JgRefresh.ico" />
     <Resource Include="Bilder\JgRemove.ico" />
     <Resource Include="Bilder\JgRename.ico" />
     <Resource Include="Bilder\JgSave.ico" />
@@ -213,6 +209,9 @@
       <Project>{69d6b7e0-6ddc-49a5-a44f-d6bfd607aed3}</Project>
       <Name>JgMaschineLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Properties\JgMaschineSetup.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

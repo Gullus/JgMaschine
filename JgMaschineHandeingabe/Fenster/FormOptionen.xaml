@@ -3,48 +3,34 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Properties="clr-namespace:JgMaschineHandeingabe.Properties"
         Title="Optionen" Height="135" Width="392" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
-    <Grid Margin="7">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="120"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
+  <Grid Margin="7">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="120"/>
+      <ColumnDefinition Width="120"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="50"/>
+    </Grid.RowDefinitions>
 
-        <Label Content="Standort" HorizontalAlignment="Left" Style="{StaticResource StyleLabel}" VerticalAlignment="Top"/>
-        <ComboBox Name="cmbStandort" DisplayMemberPath="Bezeichnung" SelectedValuePath="Id" Margin="4,3,4,3" Grid.Column="1" Grid.ColumnSpan="3" ToolTip="Aktuellen Standort eintragen"/>
+    <Label Content="Standort" HorizontalAlignment="Left" Style="{StaticResource StyleLabel}" VerticalAlignment="Top"/>
+    <ComboBox Name="cmbStandort" DisplayMemberPath="Bezeichnung" SelectedValuePath="Id" Margin="4,3,4,3" Grid.Column="1" Grid.ColumnSpan="3" ToolTip="Aktuellen Standort eintragen"/>
 
-        <Button Grid.Column="2" Grid.Row="2" Style="{StaticResource StyleButton}" IsCancel="True">
-            <Button.Effect>
-                <DropShadowEffect/>
-            </Button.Effect>
-            <StackPanel Orientation="Horizontal">
-                <Image Source="..\Bilder\JgCancel.ico" Margin="5">
-                    <Image.Effect>
-                        <DropShadowEffect/>
-                    </Image.Effect>
-                </Image>
-                <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <Button Grid.Column="3" Grid.Row="2" Style="{StaticResource StyleButton}" IsDefault="True" Click="ButtonOk_Click">
-            <Button.Effect>
-                <DropShadowEffect/>
-            </Button.Effect>
-            <StackPanel Orientation="Horizontal">
-                <Image Source="..\Bilder\JgCheck.ico" Margin="5">
-                    <Image.Effect>
-                        <DropShadowEffect/>
-                    </Image.Effect>
-                </Image>
-                <TextBlock Text="Eintragen" VerticalAlignment="Center"/>
-            </StackPanel>
-        </Button>
+    <Button Grid.Column="2" Grid.Row="2" Style="{StaticResource StyleButton}" IsCancel="True">
+      <StackPanel Orientation="Horizontal">
+        <Image Source="..\Bilder\JgCancel.ico" Margin="5" />
+        <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Button>
+    <Button Grid.Column="3" Grid.Row="2" Style="{StaticResource StyleButton}" IsDefault="True" Click="ButtonOk_Click">
+      <StackPanel Orientation="Horizontal">
+        <Image Source="..\Bilder\JgCheck.ico" Margin="5" />
+        <TextBlock Text="Eintragen" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Button>
 
-    </Grid>
+  </Grid>
 </Window>

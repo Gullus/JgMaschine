@@ -4,69 +4,70 @@
         xmlns:comand="clr-namespace:JgMaschineAuswertung.Commands"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" mc:Ignorable="d" x:Class="JgMaschineAuswertung.MainWindow"
         xmlns:prop="clr-namespace:JgMaschineAuswertung.Properties"
-        Title="Auswertung Maschine" Height="468" Width="745" Loaded="RibbonWindow_Loaded" WindowStartupLocation="CenterScreen">
-    <RibbonWindow.Resources>
-        <CollectionViewSource x:Key="vsAuswertung" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabAuswertung}, CreateList=True}"/>
-    </RibbonWindow.Resources>
-    <Grid Margin="5" DataContext="{StaticResource vsAuswertung}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        Title="Auswertung Maschine" Height="468" Width="745" Loaded="RibbonWindow_Loaded" WindowStartupLocation="CenterScreen" Icon="Properties/JgMaschineReport.ico">
+  <RibbonWindow.Resources>
+    <CollectionViewSource x:Key="vsAuswertung" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabAuswertung}, CreateList=True}"/>
+  </RibbonWindow.Resources>
+  <Grid Margin="5" DataContext="{StaticResource vsAuswertung}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
 
-        <Ribbon>
-            <Ribbon.ApplicationMenu>
-                <RibbonApplicationMenu>
-                    <RibbonApplicationMenuItem Header="Report anzeigen" Command="{x:Static comand:MyCommands.ReportAnzeigen}" ImageSource="Bilder\JgProperties.ico"/>
-                    <RibbonApplicationMenuItem Header="Report drucken" Command="{x:Static comand:MyCommands.ReportDrucken}" ImageSource="Bilder\JgPrint.ico"/>
-                    <RibbonSeparator/>
-                    <RibbonApplicationMenuItem Header="Neuer Report" Command="{x:Static comand:MyCommands.ReportNeu}" ImageSource="Bilder\JgNew.ico" />
-                    <RibbonApplicationMenuItem Header="Report bearbeiten" Command="{x:Static comand:MyCommands.ReportBearbeiten}" ImageSource="Bilder\JgProperties.ico" />
-                    <RibbonSeparator/>
-                    <RibbonApplicationMenuItem Header="Report laden" Command="{x:Static comand:MyCommands.ReportLaden}" ImageSource="Bilder\JgDownLoad.ico" />
-                    <RibbonApplicationMenuItem Header="Report speichern" Command="{x:Static comand:MyCommands.ReportSpeichern}" ImageSource="Bilder\JgSave.ico"/>
+    <Ribbon>
+      <Ribbon.ApplicationMenu>
+        <RibbonApplicationMenu>
+          <RibbonApplicationMenuItem Header="Report anzeigen" Command="{x:Static comand:MyCommands.ReportAnzeigen}" ImageSource="Bilder\JgProperties.ico"/>
+          <RibbonApplicationMenuItem Header="Report drucken" Command="{x:Static comand:MyCommands.ReportDrucken}" ImageSource="Bilder\JgPrint.ico"/>
+          <RibbonSeparator/>
+          <RibbonApplicationMenuItem Header="Neuer Report" Command="{x:Static comand:MyCommands.ReportNeu}" ImageSource="Bilder\JgNew.ico" />
+          <RibbonApplicationMenuItem Header="Report bearbeiten" Command="{x:Static comand:MyCommands.ReportBearbeiten}" ImageSource="Bilder\JgProperties.ico" />
+          <RibbonSeparator/>
+          <RibbonApplicationMenuItem Header="Report laden" Command="{x:Static comand:MyCommands.ReportLaden}" ImageSource="Bilder\JgDownLoad.ico" />
+          <RibbonApplicationMenuItem Header="Report speichern" Command="{x:Static comand:MyCommands.ReportSpeichern}" ImageSource="Bilder\JgSave.ico"/>
 
-                    <RibbonApplicationMenu.FooterPaneContent>
-                        <RibbonButton Label="Schließen" SmallImageSource="Bilder\JgClose.ico" HorizontalAlignment="Right" />
-                    </RibbonApplicationMenu.FooterPaneContent>
+          <RibbonApplicationMenu.FooterPaneContent>
+            <RibbonButton Label="Schließen" SmallImageSource="Bilder\JgClose.ico" HorizontalAlignment="Right" />
+          </RibbonApplicationMenu.FooterPaneContent>
 
-                </RibbonApplicationMenu>
-            </Ribbon.ApplicationMenu>
+        </RibbonApplicationMenu>
+      </Ribbon.ApplicationMenu>
 
-            <RibbonTab Header="Anzeigen" >
-                <RibbonGroup Header="Anzeigen/Drucken">
-                    <RibbonButton Label="Anzeigen" Width="60" Command="{x:Static comand:MyCommands.ReportAnzeigen}"  LargeImageSource="Bilder\JgPreview.ico" />
-                    <RibbonButton Label="Drucken" Width="60" Command="{x:Static comand:MyCommands.ReportDrucken}" LargeImageSource="Bilder\JgPrint.ico"/>
-                </RibbonGroup>
-            </RibbonTab>
+      <RibbonTab Header="Anzeigen" >
+        <RibbonGroup Header="Anzeigen/Drucken">
+          <RibbonButton Label="Anzeigen" Width="60" Command="{x:Static comand:MyCommands.ReportAnzeigen}"  LargeImageSource="Bilder\JgPreview.ico" />
+          <RibbonButton Label="Drucken" Width="60" Command="{x:Static comand:MyCommands.ReportDrucken}" LargeImageSource="Bilder\JgPrint.ico"/>
+        </RibbonGroup>
+      </RibbonTab>
 
-            <RibbonTab Header="Bearbeiten" >
-                <RibbonGroup Header="Design">
-                    <RibbonButton Label="Neu" Width="60" Command="{x:Static comand:MyCommands.ReportNeu}" LargeImageSource="Bilder\JgNew.ico" />
-                    <RibbonButton Label="Bearbeiten" Width="60" Command="{x:Static comand:MyCommands.ReportBearbeiten}" LargeImageSource="Bilder\JgProperties.ico" />
-                </RibbonGroup>
+      <RibbonTab Header="Bearbeiten" >
+        <RibbonGroup Header="Design">
+          <RibbonButton Label="Neu" Width="60" Command="{x:Static comand:MyCommands.ReportNeu}" LargeImageSource="Bilder\JgNew.ico" />
+          <RibbonButton Label="Bearbeiten" Width="60" Command="{x:Static comand:MyCommands.ReportBearbeiten}" LargeImageSource="Bilder\JgProperties.ico" />
+          <RibbonButton Label="Optionen" Width="60" Command="{x:Static comand:MyCommands.ReportOptionen}" LargeImageSource="Bilder\JgSettings.ico" />
+        </RibbonGroup>
 
-                <RibbonGroup Header="Speichern/Laden">
-                    <RibbonButton Label="Report laden" Width="60" Command="{x:Static comand:MyCommands.ReportLaden}" LargeImageSource="Bilder\JgDownLoad.ico" />
-                    <RibbonButton Label="Report speichern" Width="60" Command="{x:Static comand:MyCommands.ReportSpeichern}" LargeImageSource="Bilder\JgSave.ico"/>
-                </RibbonGroup>
-                <RibbonGroup Header="Optionen">
-                    <RibbonButton Label="Sql Verbindung" Width="80" Command="{x:Static comand:MyCommands.SqlVerbindung}" LargeImageSource="Bilder\JgDownLoad.ico" />
-                </RibbonGroup>
-            </RibbonTab>
-        </Ribbon>
+        <RibbonGroup Header="Speichern/Laden">
+          <RibbonButton Label="Report laden" Width="60" Command="{x:Static comand:MyCommands.ReportLaden}" LargeImageSource="Bilder\JgDownLoad.ico" />
+          <RibbonButton Label="Report speichern" Width="60" Command="{x:Static comand:MyCommands.ReportSpeichern}" LargeImageSource="Bilder\JgSave.ico"/>
+        </RibbonGroup>
+        <RibbonGroup Header="Optionen">
+          <RibbonButton Label="Sql Verbindung" Width="80" Command="{x:Static comand:MyCommands.SqlVerbindung}" LargeImageSource="Bilder\JgDownLoad.ico" />
+        </RibbonGroup>
+      </RibbonTab>
+    </Ribbon>
 
-        <DataGrid x:Name="dgAuswertung" IsReadOnly="True" ItemsSource="{Binding}" Margin="0, 5, 0, 0" Grid.Row="1">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ReportName}" Header="Report Name" Width="*" MinWidth="120"/>
+    <DataGrid x:Name="dgAuswertung" IsReadOnly="True" ItemsSource="{Binding}" Margin="0, 5, 0, 0" Grid.Row="1">
+      <DataGrid.Columns>
+        <DataGridTextColumn Binding="{Binding ReportName}" Header="Report Name" Width="*" MinWidth="120"/>
 
-                <DataGridTextColumn Binding="{Binding ErstelltDatum, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Erstellt" Width="90" MinWidth="90"/>
-                <DataGridTextColumn Binding="{Binding ErstelltName}" Header="Name" Width="120" MinWidth="120"/>
+        <DataGridTextColumn Binding="{Binding ErstelltDatum, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Erstellt" Width="90" MinWidth="90"/>
+        <DataGridTextColumn Binding="{Binding ErstelltName}" Header="Name" Width="120" MinWidth="120"/>
 
-                <DataGridTextColumn Binding="{Binding GeaendertDatum, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Geändert" Width="90" MinWidth="90"/>
-                <DataGridTextColumn Binding="{Binding GeaendertName}" Header="Name" Width="120" MinWidth="120"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <DataGridTextColumn Binding="{Binding GeaendertDatum, StringFormat={}{0:dd.MM.yy HH:mm} }" Header="Geändert" Width="90" MinWidth="90"/>
+        <DataGridTextColumn Binding="{Binding GeaendertName}" Header="Name" Width="120" MinWidth="120"/>
+      </DataGrid.Columns>
+    </DataGrid>
 
-    </Grid>
+  </Grid>
 </RibbonWindow>

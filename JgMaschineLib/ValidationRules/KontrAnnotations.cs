@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity.Validation;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Data;
-using System.Linq;
 using dn = System.ComponentModel.DataAnnotations;
 using wc = System.Windows.Controls;
-using System.ComponentModel;
 
-namespace JgMaschineSetup.ValidationRules
+namespace JgMaschineLib.ValidationRules
 {
-  public class KontrFeldNichtLeer : wc.ValidationRule
+  public class KontrAnnotations : wc.ValidationRule
   {
     List<dn.ValidationResult> _Fehler = new List<dn.ValidationResult>();
 
