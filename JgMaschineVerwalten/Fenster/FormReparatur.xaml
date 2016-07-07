@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
         xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
-        Title="Reparatur bearbeiten" Height="356.637" Width="791.935" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Topmost="True" Loaded="Window_Loaded" ResizeMode="NoResize" >
+        Title="Reparatur bearbeiten" Height="356.637" Width="761.045" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Topmost="True" Loaded="Window_Loaded" ResizeMode="NoResize" Icon="/JgMaschineVerwalten;component/Properties/JgMaschineVerwalten.ico" >
 
   <Window.Resources>
     <libZeit:JgDatumZeit x:Key="dzReparaturVon" />

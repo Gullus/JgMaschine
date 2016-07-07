@@ -22,8 +22,11 @@
     <Setting Name="EvgFileProduktionsAuftrag" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\EVG\EINGABE\HOST\PB.H_M</Value>
     </Setting>
-    <Setting Name="ServerTextAnmeldung" Type="System.String" Scope="User">
+    <Setting Name="ServerTextAnmeldung" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Antwort vom Server</Value>
+    </Setting>
+    <Setting Name="ProgressPfadProduktionsListe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c\Progress\Pro2\impdata</Value>
     </Setting>
   </Settings>
 </SettingsFile>

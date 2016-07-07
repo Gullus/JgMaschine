@@ -189,7 +189,7 @@ namespace JgMaschineTest
       //      }
       //      catch (Exception f)
       //      {
-      //        Fehler($"Fehler beim öffnen der {ss}bindung mit Verbindungsstring: {vs}.\n\rGrunf: {f.Message}");
+      //        Fehler($"Fehler beim öffnen der {ss}bindung mit Verbindungsstring: {vs}.\nGrunf: {f.Message}");
       //        return true;
       //      }
       //    }
@@ -217,7 +217,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -232,7 +232,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion
@@ -253,7 +253,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -268,7 +268,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion
@@ -289,7 +289,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -304,7 +304,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion
@@ -325,7 +325,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -340,7 +340,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion
@@ -360,7 +360,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -375,7 +375,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion
@@ -396,7 +396,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -411,7 +411,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion
@@ -432,7 +432,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -447,7 +447,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion
@@ -468,7 +468,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Server -> Client {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    try
@@ -483,7 +483,7 @@ namespace JgMaschineTest
       //    }
       //    catch (Exception f)
       //    {
-      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\n\rGrund: {f.Message}");
+      //      Fehler($"Fehler beim Datenabgleich Client -> Server {sNameTabelle}.\nGrund: {f.Message}");
       //    }
 
       //    #endregion

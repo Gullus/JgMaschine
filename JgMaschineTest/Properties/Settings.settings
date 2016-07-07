@@ -32,5 +32,17 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=.\SqlExpress;Initial Catalog=JgMaschineServer;Integrated Security=True</Value>
     </Setting>
+    <Setting Name="MaschinenAdresse" Type="System.String" Scope="User">
+      <Value Profile="(Default)">gullus-server</Value>
+    </Setting>
+    <Setting Name="MaschinenPfad" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c\Progress\Pro2\impdata</Value>
+    </Setting>
+    <Setting Name="BenutzerName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">jg</Value>
+    </Setting>
+    <Setting Name="BenutzerKennwort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pezdx65</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

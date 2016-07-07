@@ -16,6 +16,7 @@ namespace JgMaschineServiceTest
         ProtokollAnzeigen = true,
         EvgPfadProduktionsListe = pr.EvgPfadProduktionsListe,
         EvgDateiProduktionsAuftrag = pr.EvgFileProduktionsAuftrag,
+        ProgressPfadProduktionsListe = pr.ProgressPfadProduktionsListe,
         ServerTextAnmeldung = pr.ServerTextAnmeldung
       };
 

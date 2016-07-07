@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="DbSichern.cs" />
     <Compile Include="JgList.cs" />
+    <Compile Include="NetzwerkVerbindung.cs" />
     <Compile Include="Scanner\DataLogicScanner.cs" />
     <Compile Include="Scanner\ScannerProgramm.cs" />
     <Compile Include="SqlVerbindung\DatenbankVerbindungen.cs" />
@@ -90,6 +91,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FehlerCode\JgMaschineFehlerSchnell.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Bilder\JgCalendar.ico" />
     <Resource Include="Bilder\JgCancel.ico" />
     <Resource Include="Bilder\JgCheck.ico" />

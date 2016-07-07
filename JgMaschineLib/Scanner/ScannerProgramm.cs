@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -16,6 +17,7 @@ namespace JgMaschineLib.Scanner
 
     public string EvgPfadProduktionsListe { get; set; } = "";
     public string EvgDateiProduktionsAuftrag { get; set; } = "";
+    public string ProgressPfadProduktionsListe { get; set; } = "";
     public string ServerTextAnmeldung { get; set; } = "";
 
     public bool ProtokollAnzeigen { get; set; } = false;
@@ -103,12 +105,13 @@ namespace JgMaschineLib.Scanner
                   try
                   {
                     int anzEmpfang = nwStr.Read(buffer, 0, (int)client.ReceiveBufferSize);
-                    var empfangen = Encoding.UTF8.GetString(buffer, 0, anzEmpfang);
+                    var empfangen = Encoding.ASCII.GetString(buffer, 0, anzEmpfang);
                     Protokoll($"Daten von Maschine: {empfangen}.");
+                    AntwortMaschineSchnellAuswerten(empfangen);
                   }
                   catch (Exception f)
                   {
-                    Protokoll($"Keine Daten von Maschine empfangen.\n\rGrund: {f.Message}");
+                    Protokoll($"Keine Daten von Maschine empfangen.\nGrund: {f.Message}");
                   }
 
                   client.Close();
@@ -117,53 +120,104 @@ namespace JgMaschineLib.Scanner
               }
               catch (Exception f)
               {
-                var fehlerText = $"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\n\rDaten: {md.BvbsString}\n\rFehler: {f.Message}";
+                var fehlerText = $"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\nDaten: {md.BvbsString}\nFehler: {f.Message}";
                 Protokoll(fehlerText);
-                JgMaschineLib.Helper.InWinProtokoll($"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\n\rDaten: {md.BvbsString}\n\rFehler: {f.Message}", System.Diagnostics.EventLogEntryType.Error);
+                JgMaschineLib.Helper.InWinProtokoll($"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\nDaten: {md.BvbsString}\nFehler: {f.Message}", System.Diagnostics.EventLogEntryType.Error);
               }
             }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
           }
           break;
 
         case JgMaschineData.EnumProtokollName.Evg:
-          if (Maschine.MaschinePortnummer != null)
+
+          var datenAnEvg = Task.Factory.StartNew((mDaten) =>
           {
-            var datenAnMaschine = Task.Factory.StartNew((mDaten) =>
+            var md = (MaschinenDaten)mDaten;
+
+            var datAuftrag = "Auftrag1.txt";
+            var datProdListe = string.Format(@"\\{0}\{1}\{2}", md.Maschine.MaschineAdresse, EvgPfadProduktionsListe, datAuftrag);
+
+            // Produktionsliste schreiben 
+
+            try
+            {
+              File.WriteAllText(datProdListe, md.BvbsString);
+            }
+            catch (Exception f)
+            {
+              string s = $"Fehler beim schreiben der EVG Produktionsliste in die Maschine {md.Maschine.MaschinenName}\nDatei: {datProdListe}.\nGrund: {f.Message}";
+              Protokoll(s);
+              Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+            }
+
+            // Produktionsauftrag
+
+            var datProtAuftrag = string.Format(@"\\{0}\{1}", md.Maschine.MaschineAdresse, EvgDateiProduktionsAuftrag);
+            try
+            {
+              File.WriteAllText(datProtAuftrag, datAuftrag);
+            }
+            catch (Exception f)
+            {
+              string s = $"Fehler beim schreiben des EVG Produktionsauftrages in die Maschine {md.Maschine.MaschinenName}\nDatei: {datProtAuftrag}.\nGrund: {f.Message}";
+              Protokoll(s);
+              Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+            }
+
+          }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
+          break;
+
+        case JgMaschineData.EnumProtokollName.Progress:
+
+          var datenAnProgress = Task.Factory.StartNew((mDaten) =>
             {
               var md = (MaschinenDaten)mDaten;
-
-              var maAdresse = string.Format(@"\\{0}\", Maschine.MaschineAdresse);
-              var sd = "Auftrag1.txt";
+              var dat = string.Format(@"\\{0}\{1}\{2}", md.Maschine.MaschineAdresse, ProgressPfadProduktionsListe, "Auftrag.txt");
 
               // Produktionsliste schreiben 
-
-              string dat = maAdresse + EvgPfadProduktionsListe + sd;
               try
               {
-                System.IO.File.WriteAllText(dat, md.BvbsString);
+                Protokoll($"Bauteil in Datei: {dat} schreiben.");
+                File.WriteAllText(dat, md.BvbsString, Encoding.UTF8);
+                Protokoll("Datei geschrieben !");
               }
               catch (Exception f)
               {
-                string s = $"Fehler beim schreiben der EVG Produktionsliste in die Maschine {Maschine.MaschinenName} in die Datei {dat}.\n\rGrund: {f.Message}";
-                JgMaschineLib.Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+                string s = $"Fehler beim schreiben der Progress Produktionsliste Maschine: {Maschine.MaschinenName} \nDatei: {dat}.\nGrund: {f.Message}";
+                Protokoll(s);
+                Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
               }
-
-              // Produktionsauftrag
-
-              dat = maAdresse + EvgDateiProduktionsAuftrag;
-              try
-              {
-                System.IO.File.WriteAllText(maAdresse, sd);
-              }
-              catch (Exception f)
-              {
-                string s = $"Fehler beim schreiben des EVG Produktionsauftrages in die Maschine {Maschine.MaschinenName} in die Datei {dat}.\n\rGrund: {f.Message}";
-                JgMaschineLib.Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
-              }
-
             }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
-          }
+
           break;
+      }
+    }
+
+    private void AntwortMaschineSchnellAuswerten(string Antwort)
+    {
+      if ((Antwort.Length >= 3) && (Antwort[0] == Convert.ToChar(15)))
+      {
+        var dat = Helper.StartVerzeichnis() + @"FehlerCode\JgMaschineFehlerSchnell.txt";
+        if (!File.Exists(dat))
+          Protokoll($"Fehlerdatei: {dat} existiert nicht.");
+        else
+        {
+          try
+          {
+            string nummer = Antwort.Substring(1, 2);
+
+            var zeilen = File.ReadAllLines(dat);
+            foreach (var zeile in zeilen)
+            {
+              if (zeile.Substring(0, 2) == nummer)
+                Protokoll($"Fehler: {zeile}");
+            }
+          }
+          catch (Exception f)
+          {
+            Protokoll($"Fehler beim auslesen der Fehlerdatei.\nGrund: {f.Message}");
+          }
+        }
       }
     }
 
@@ -243,7 +297,7 @@ namespace JgMaschineLib.Scanner
 
     private void BedienerEintragen(JgMaschineData.JgModelContainer Db, JgMaschineData.tabMaschine Maschine, JgMaschineData.tabBediener Bediener, DataLogicScannerText e)
     {
-      var anmeldung = Db.tabAnmeldungMaschineSet.FirstOrDefault(f => (f.fBediener== Bediener.Id) && f.IstAktiv);
+      var anmeldung = Db.tabAnmeldungMaschineSet.FirstOrDefault(f => (f.fBediener == Bediener.Id) && f.IstAktiv);
 
       if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.ANMELDUNG)
       {
@@ -385,7 +439,7 @@ namespace JgMaschineLib.Scanner
 
       #endregion
 
-      if (e.TextEmpfangen == ServerTextAnmeldung)
+      if (e.TextEmpfangen.Contains(ServerTextAnmeldung))
       {
         Protokoll("Anmeldung Server: {0}", e.TextEmpfangen);
         return;

@@ -7,7 +7,7 @@
     xmlns:vRules="clr-namespace:JgMaschineLib.ValidationRules;assembly=JgMaschineLib" 
     mc:Ignorable="d" x:Class="JgMaschineAuswertung.Fenster.FormAuswertungBearbeiten"
     Title="Auswertung bearbeiten" Height="198" Width="397" Loaded="Window_Loaded" ShowInTaskbar="False" 
-        WindowStartupLocation="CenterScreen" TabIndex="5" FocusManager.FocusedElement="{Binding ElementName=tbStandort}">
+        WindowStartupLocation="CenterScreen" TabIndex="5" FocusManager.FocusedElement="{Binding ElementName=tbStandort}" Icon="/JgMaschineAuswertung;component/Properties/JgMaschineReport.ico">
   <Window.Resources>
   </Window.Resources>
 

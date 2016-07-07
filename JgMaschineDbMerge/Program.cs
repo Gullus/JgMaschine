@@ -50,7 +50,7 @@ namespace JgMaschineDbMerge
       }
       catch (Exception f)
       {
-        Protokoll($"Fehler beim DbMerge in Tabelle '{tabNameFehler}'.\n\rGrund: {f.Message}");
+        Protokoll($"Fehler beim DbMerge in Tabelle '{tabNameFehler}'.\nGrund: {f.Message}");
       }
       finally
       {
@@ -204,7 +204,7 @@ namespace JgMaschineDbMerge
       }
       catch (Exception f)
       {
-        Protokoll($"Fehler beim öffnen der {Vorgang} Verbindung {Verbindungsstring}.\n\rGrund: {f.Message} ");
+        Protokoll($"Fehler beim öffnen der {Vorgang} Verbindung {Verbindungsstring}.\nGrund: {f.Message} ");
         return null;
       }
       return Verbindung;

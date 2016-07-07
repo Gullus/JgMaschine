@@ -69,15 +69,21 @@ namespace JgMaschineServiceTest.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Antwort vom Server")]
         public string ServerTextAnmeldung {
             get {
                 return ((string)(this["ServerTextAnmeldung"]));
             }
-            set {
-                this["ServerTextAnmeldung"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c\\Progress\\Pro2\\impdata")]
+        public string ProgressPfadProduktionsListe {
+            get {
+                return ((string)(this["ProgressPfadProduktionsListe"]));
             }
         }
     }

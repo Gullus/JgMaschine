@@ -55,12 +55,12 @@ namespace JgMaschineWorkflow
             .OrderBy(o => o.eStandort.Bezeichnung).ThenBy(t => t.MaschinenName).ToList();
 
           foreach (var maschine in maschinen)
-            maschine.eProtokoll.ProtokollText = string.Format("{0} Start Workflow\n\r", DateTime.Now.ToString("dd.MM HH:mm:ss"));
+            maschine.eProtokoll.ProtokollText = string.Format("{0} Start Workflow\n", DateTime.Now.ToString("dd.MM HH:mm:ss"));
         }
       }
       catch (Exception f)
       {
-        Console.WriteLine("Fehler beim Initialisieren der Maschinendaten aus der Datenbank!\n\rGrund: " + f.Message);
+        Console.WriteLine("Fehler beim Initialisieren der Maschinendaten aus der Datenbank!\nGrund: " + f.Message);
         return false;
       }
 

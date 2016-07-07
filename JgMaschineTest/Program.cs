@@ -15,97 +15,78 @@ using JgMaschineLib.Scanner;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
+using System.Management;
+using System.Net;
 
 namespace JgMaschineTest
 {
   class Programm
   {
-    static void Main()
+    static void Main(string[] args)
     {
+      //var networkPath = @"\\gullus-server\Sicherungen";
 
-      var s = "123456789";
-      Console.WriteLine(s.Substring(5));
-      Console.WriteLine(s.Substring(5, s.Length - 6));
+      //var fileList = Directory.GetFiles(networkPath);
 
-
-      //var cs = db.Database.Connection.ConnectionString;
-
-      //IQueryable iq = new JgMaschineLib.JgList<tabStandort>()
-
-
-      //List<JgMaschineData.tabBediener> lb = null;
-
-
-
-      //if (validationResults.Count > 0 && errors == null)
-      //  errors = new Dictionary<string, string>(validationResults.Count);
-
-      //foreach (var validationResult in validationResults)
+      //foreach (var file in fileList)
       //{
-      //  errors.Add(validationResult.MemberNames.First(), validationResult.ErrorMessage);
+      //  Console.WriteLine("{0}", Path.GetFileName(file));
       //}
 
-
-
-
-      //var test = db.Entry(st). .GetValidationResult();
-
-      //foreach (var f in test.ValidationErrors)
+      //var credentials = new NetworkCredential("jg", "pezdx65");
+      //try
       //{
-      //  Console.WriteLine(f.GetType() + "  " + f.PropertyName + "  " + f.ErrorMessage);
+      //  using (new JgMaschineLib.NetzwerkVerbindung(networkPath, credentials))
+      //  {
+      //    fileList = Directory.GetFiles(networkPath);
+
+      //    foreach (var file in fileList)
+      //    {
+      //      Console.WriteLine("{0}", Path.GetFileName(file));
+      //    }
+      //  }
+      //}
+      //catch (Exception f)
+      //{
+      //  Console.WriteLine(f.Message);
       //}
 
-      //db.tabStandortSet.Add(st);
+      //string s = "Hallo\nBallo";
+      //Console.WriteLine(s);
 
-      //db.SaveChanges();
+      //Console.ReadKey();
 
 
-      //  //var t = lb[0];
-      //lb[0].NachName = "Juhu99999";
+      var p = Properties.Settings.Default;
+      string bvbs = "BF2D@HjTest14@r417@ia@p1@l1000@n10@e0.888@d12@g500S@s48@v@Gl400@w90@l600@w0@C88@";
 
-      //using (var db = new JgMaschineData.JgModelContainer())
+      //try
       //{
-      //  db.tabBedienerSet.Attach(lb[0]);
-      //  //db.Entry(lb[0]).State = EntityState.Modified;
-      //  db.SaveChanges();
+      //  BenutzerAnmeldung.Anmeldung(p.BenutzerName, p.BenutzerKennwort, p.MaschinenAdresse, p.MaschinenPfad, bvbs);
+      //}
+      //catch (Exception f)
+      //{
+      //  Console.WriteLine(f.Message);
       //}
 
-      //foreach (var d1 in lb)
-      //  Console.WriteLine($"{d1.Id} {d1.NachName}");
+      var dat = @"c\Progress\Pro2\impdata\Auftrag.txt";      //impdata
+      var domaene = p.MaschinenAdresse;
 
-      //using (var db = new JgMaschineData.JgModelContainer())
-      //{
-      //  lb = db.tabBedienerSet.ToList();
+      Console.WriteLine($"Maschinenadesse: {domaene}");
 
-      //  foreach (var d1 in lb)
-      //    Console.WriteLine($"{d1.Id} {d1.NachName}");
-      //}
+      dat = string.Format(@"\\{0}\{1}", domaene, dat);
 
+      Console.WriteLine($"Programmpfad: {dat}");
+
+      try
+      {
+        File.WriteAllText(dat, bvbs, Encoding.UTF8);
+      }
+      catch (Exception f)
+      {
+        Console.WriteLine(f.Message);
+      }
       Console.ReadKey();
-      //st.Close();
-    }
-
-    /// <summary>
-    /// String in Char Funktion
-    /// </summary>
-    /// <param name="KommaString">String aus Zahlebn</param>
-    /// <returns>CharString welche als Steuerzeichen verwendet werden können.</returns>
-    private static string StringInChar(string KommaString)
-    {
-      string erg = "";
-      var ar = KommaString.Split(new char[] { ',', ';' });
-      foreach (var s in ar)
-        erg += Convert.ToChar(Convert.ToByte(s));
-      return erg;
-    }
-
-
-    private static string ByteInChar(params byte[] ByteWerte)
-    {
-      string erg = "";
-      foreach (var b in ByteWerte)
-        erg += Convert.ToChar(b).ToString();
-      return erg;
     }
   }
 }

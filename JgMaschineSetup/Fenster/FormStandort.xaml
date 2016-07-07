@@ -7,7 +7,7 @@
     xmlns:vRules="clr-namespace:JgMaschineLib.ValidationRules;assembly=JgMaschineLib" 
     mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormStandort"
     Title="Standort bearbeiten" Height="208" Width="437" ShowInTaskbar="False" ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner" Topmost="True" TabIndex="5" FocusManager.FocusedElement="{Binding ElementName=tbStandort}">
+        WindowStartupLocation="CenterOwner" Topmost="True" TabIndex="5" FocusManager.FocusedElement="{Binding ElementName=tbStandort}" Icon="/JgMaschineSetup;component/Properties/JgMaschineSetup.ico">
   
   <Window.Resources>
   </Window.Resources>

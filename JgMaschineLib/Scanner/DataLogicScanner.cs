@@ -74,7 +74,7 @@ namespace JgMaschineLib.Scanner
       }
       catch (Exception f)
       {
-        Protokoll("Fehler bei Pingabfrage.\n\rGrund: {0}", f.Message);
+        Protokoll("Fehler bei Pingabfrage.\nGrund: {0}", f.Message);
         return false;
       }
 
@@ -111,7 +111,7 @@ namespace JgMaschineLib.Scanner
           }
           catch (Exception f)
           {
-            Protokoll("Fehler beim Client Verbinungsaufbau.\n\rGrund: {0}", f.Message);
+            Protokoll("Fehler beim Client Verbinungsaufbau.\nGrund: {0}", f.Message);
             Thread.Sleep(10000);
             continue;
           }

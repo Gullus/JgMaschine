@@ -6,7 +6,7 @@
     xmlns:xData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     mc:Ignorable="d" x:Class="JgMaschineSetup.FormProtokollOptionen"
     Title="Protokoll Optionen" Height="299.784" Width="513.391" WindowStartupLocation="CenterOwner" 
-        ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=dtpDatum}">
+        ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=dtpDatum}" Icon="/JgMaschineSetup;component/Properties/JgMaschineSetup.ico">
   <Window.Resources>
 
   </Window.Resources>

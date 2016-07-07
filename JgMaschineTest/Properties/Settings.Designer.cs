@@ -71,5 +71,53 @@ namespace JgMaschineTest.Properties {
                 return ((string)(this["VerbindungServer"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("gullus-server")]
+        public string MaschinenAdresse {
+            get {
+                return ((string)(this["MaschinenAdresse"]));
+            }
+            set {
+                this["MaschinenAdresse"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c\\Progress\\Pro2\\impdata")]
+        public string MaschinenPfad {
+            get {
+                return ((string)(this["MaschinenPfad"]));
+            }
+            set {
+                this["MaschinenPfad"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("jg")]
+        public string BenutzerName {
+            get {
+                return ((string)(this["BenutzerName"]));
+            }
+            set {
+                this["BenutzerName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("pezdx65")]
+        public string BenutzerKennwort {
+            get {
+                return ((string)(this["BenutzerKennwort"]));
+            }
+            set {
+                this["BenutzerKennwort"] = value;
+            }
+        }
     }
 }
