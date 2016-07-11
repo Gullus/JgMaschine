@@ -57,7 +57,7 @@ namespace JgMaschineLib
 
       if (result != 0)
       {
-        throw new Exception("Error connecting to remote share. Fehler: " + result.ToString());
+        throw new System.IO.IOException("Error connecting to remote share. Fehler: " + result.ToString());
       }
     }
 
@@ -88,14 +88,14 @@ namespace JgMaschineLib
     [StructLayout(LayoutKind.Sequential)]
     public class NetResource
     {
-      public ResourceScope Scope;
-      public ResourceType ResourceType;
-      public ResourceDisplaytype DisplayType;
-      public int Usage;
-      public string LocalName;
-      public string RemoteName;
-      public string Comment;
-      public string Provider;
+      public ResourceScope Scope = 0;
+      public ResourceType ResourceType = 0;
+      public ResourceDisplaytype DisplayType = 0;
+      public int Usage = 0;
+      public string LocalName = null;
+      public string RemoteName = null;
+      public string Comment = null;
+      public string Provider = null;
     }
 
     public enum ResourceScope : int

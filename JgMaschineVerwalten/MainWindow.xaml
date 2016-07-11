@@ -336,7 +336,7 @@
                     <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                       <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                          <Button Click="ArbeitszeitBearbeiten_Click" Margin="1"/>
+                          <Button Click="AnmeldungBenutzerBearbeiten_Click"  Margin="1"/>
                         </DataTemplate>
                       </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -437,8 +437,8 @@
 
           <DataGrid x:Name="dgBauteilAuswahl" Grid.Row="2" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBauteilAuswahl}}" IsReadOnly="True" >
             <DataGrid.Columns>
-              <DataGridTextColumn Binding="{Binding DatumStart, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Start" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-              <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat=\{0:dd.MM HH:mm:ss\}}" Header="Ende" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+              <DataGridTextColumn Binding="{Binding DatumStart, StringFormat=\{0:dd.MM HH:mm\}}" Header="Start" Width="80" MinWidth="80" CellStyle="{DynamicResource CellRightCenter}"/>
+              <DataGridTextColumn Binding="{Binding DatumEnde, StringFormat=\{0:dd.MM HH:mm\}}" Header="Ende" Width="80" MinWidth="80" CellStyle="{DynamicResource CellRightCenter}"/>
               <DataGridCheckBoxColumn Binding="{Binding IstVorfertigung}" Header="VF" Width="25" MinWidth="25" />
               <DataGridTextColumn Binding="{Binding BtAnzahl}" Header="Stück" Width="50" MinWidth="50"/>
               <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
@@ -661,6 +661,7 @@
 
                 <DataGrid x:Name="dgReparaturAuswahl" Grid.Row="2" ItemsSource="{Binding}" Grid.ColumnSpan="14" IsReadOnly="True">
                   <DataGrid.Columns>
+                    <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" CellStyle="{DynamicResource CellRightCenter}" />
                     <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                     <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                     <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>

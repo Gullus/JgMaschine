@@ -77,10 +77,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Stahl\BvbsDatenaustausch.cs" />
-    <Compile Include="TcpIpKomponenten\Helper.cs" />
-    <Compile Include="TcpIpKomponenten\TcpIpClient.cs" />
-    <Compile Include="TcpIpKomponenten\TcpIpServer.cs" />
-    <Compile Include="TcpIpKomponenten\TcpIpStamm.cs" />
+    <Compile Include="ValidationRules\TcpIpKomponenten\Helper.cs" />
+    <Compile Include="ValidationRules\TcpIpKomponenten\TcpIpClient.cs" />
+    <Compile Include="ValidationRules\TcpIpKomponenten\TcpIpServer.cs" />
+    <Compile Include="ValidationRules\TcpIpKomponenten\TcpIpStamm.cs" />
     <Compile Include="ValidationRules\KontrAnnotations.cs" />
     <Compile Include="Zeit\DatumZeit.cs" />
     <Compile Include="Zeit\FormAuswahlDatumVonBis.xaml.cs">

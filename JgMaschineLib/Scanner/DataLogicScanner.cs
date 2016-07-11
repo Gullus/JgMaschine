@@ -167,7 +167,10 @@ namespace JgMaschineLib.Scanner
 
               // -1 ist für das herausfiltern des Steuerezichens vom Scanner
 
-              return Encoding.ASCII.GetString(bufferEmpfang, 0, anzZeichen - 1);
+              if (anzZeichen <= 1)
+                return "";
+             else
+                return Encoding.ASCII.GetString(bufferEmpfang, 0, anzZeichen - 1);
 
             }, _NetStream, ct);
 

@@ -364,6 +364,28 @@ namespace JgMaschineVerwalten
       }
     }
 
+    private void AnmeldungBenutzerBearbeiten_Click(object sender, RoutedEventArgs e)
+    {
+      var anmeldung = _ListeAnmeldungAuswahl.AktDatensatz;
+      var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {anmeldung.eBediener.Name}.";
+      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, anmeldung.Anmeldung, (DateTime)anmeldung.Abmeldung);
+      if (form.ShowDialog() ?? false)
+      {
+        if (form.DatumVon != anmeldung.Anmeldung)
+        {
+          anmeldung.Anmeldung = form.DatumVon;
+          anmeldung.ManuelleAnmeldung = true;
+        }
+        if (form.DatumBis != anmeldung.Abmeldung)
+        {
+          anmeldung.Abmeldung = form.DatumBis;
+          anmeldung.ManuelleAbmeldung = true;
+        }
+        _ListeAnmeldungAuswahl.AktSichern(EnumStatusDatenabgleich.Geaendert);
+        _ListeAnmeldungAuswahl.Refresh();
+      }
+    }
+
     private void CanExecuteBedienerAngemeldetMaschineVorhanden(object sender, CanExecuteRoutedEventArgs e)
     {
       e.CanExecute = (_Maschine != null) && (_ListeArbeitszeitAktuell.AktDatensatz != null);
