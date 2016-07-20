@@ -86,5 +86,59 @@ namespace JgMaschineServiceTest.Properties {
                 return ((string)(this["ProgressPfadProduktionsListe"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Support@jgdata.de")]
+        public string EmailAdresseAbsender {
+            get {
+                return ((string)(this["EmailAdresseAbsender"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("smtp.1und1.de")]
+        public string EmailServerAdresse {
+            get {
+                return ((string)(this["EmailServerAdresse"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int EmailServerPort {
+            get {
+                return ((int)(this["EmailServerPort"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("fehlermeldung@jgdata.de")]
+        public string EmailServerBenutzer {
+            get {
+                return ((string)(this["EmailServerBenutzer"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("fehler123")]
+        public string EmailServerKennwort {
+            get {
+                return ((string)(this["EmailServerKennwort"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("joerggullus@gmail.com")]
+        public string EmailAdressenEmpfaenger {
+            get {
+                return ((string)(this["EmailAdressenEmpfaenger"]));
+            }
+        }
     }
 }

@@ -28,5 +28,23 @@
     <Setting Name="ProgressPfadProduktionsListe" Type="System.String" Scope="Application">
       <Value Profile="(Default)">c\Progress\Pro2\impdata</Value>
     </Setting>
+    <Setting Name="EmailAdresseAbsender" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Support@jgdata.de</Value>
+    </Setting>
+    <Setting Name="EmailServerAdresse" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">smtp.1und1.de</Value>
+    </Setting>
+    <Setting Name="EmailServerPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="EmailServerBenutzer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fehlermeldung@jgdata.de</Value>
+    </Setting>
+    <Setting Name="EmailServerKennwort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fehler123</Value>
+    </Setting>
+    <Setting Name="EmailAdressenEmpfaenger" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">joerggullus@gmail.com</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

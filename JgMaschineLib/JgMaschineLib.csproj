@@ -62,6 +62,7 @@
     <Compile Include="NetzwerkVerbindung.cs" />
     <Compile Include="Scanner\DataLogicScanner.cs" />
     <Compile Include="Scanner\ScannerProgramm.cs" />
+    <Compile Include="SendEmail.cs" />
     <Compile Include="SqlVerbindung\DatenbankVerbindungen.cs" />
     <Compile Include="SqlVerbindung\FormDatenbankVerbindung.cs">
       <SubType>Form</SubType>
@@ -77,10 +78,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Stahl\BvbsDatenaustausch.cs" />
-    <Compile Include="ValidationRules\TcpIpKomponenten\Helper.cs" />
-    <Compile Include="ValidationRules\TcpIpKomponenten\TcpIpClient.cs" />
-    <Compile Include="ValidationRules\TcpIpKomponenten\TcpIpServer.cs" />
-    <Compile Include="ValidationRules\TcpIpKomponenten\TcpIpStamm.cs" />
+    <Compile Include="TcpIpKomponenten\Helper.cs" />
+    <Compile Include="TcpIpKomponenten\TcpIpClient.cs" />
+    <Compile Include="TcpIpKomponenten\TcpIpServer.cs" />
+    <Compile Include="TcpIpKomponenten\TcpIpStamm.cs" />
     <Compile Include="ValidationRules\KontrAnnotations.cs" />
     <Compile Include="Zeit\DatumZeit.cs" />
     <Compile Include="Zeit\FormAuswahlDatumVonBis.xaml.cs">
