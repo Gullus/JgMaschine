@@ -71,6 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Fenster\FormNeuerBedienerReparatur.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Fenster\FormNeuerReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -92,6 +96,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\MyCommands.cs" />
+    <Compile Include="Fenster\FormNeuerBedienerReparatur.xaml.cs">
+      <DependentUpon>FormNeuerBedienerReparatur.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Fenster\FormNeuerReport.xaml.cs">
       <DependentUpon>FormNeuerReport.xaml</DependentUpon>
     </Compile>

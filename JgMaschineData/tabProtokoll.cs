@@ -27,7 +27,7 @@ namespace JgMaschineData
     
         public System.Guid Id { get; set; }
         public System.DateTime AuswertungStart { get; set; }
-        public System.DateTime AuswertungEnde { get; set; }
+        public Nullable<System.DateTime> AuswertungEnde { get; set; }
         public System.DateTime LetztePositionDatum { get; set; }
         public System.DateTime LetzteDateiDatum { get; set; }
         public string ProtokollText { get; set; }

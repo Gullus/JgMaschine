@@ -16,7 +16,8 @@ namespace JgMaschineLib
     private bool IstInit = false;
     private bool isInRange = false;
     private string _ConnectionString = "";
-    public JgMaschineData.JgModelContainer Db = null;
+
+    public JgMaschineData.JgModelContainer Db { get; set; } = null;
 
     public IQueryable<T> MyQuery { get; set; } = null;
     public CollectionViewSource ViewSource { get; set; } = null;
@@ -62,7 +63,9 @@ namespace JgMaschineLib
       Items.Clear();
       isInRange = true;
 
+      Db = new JgMaschineData.JgModelContainer();
       var daten = await MyQuery.ToListAsync();
+
       foreach (T item in daten)
         Add(item);
 
@@ -196,12 +199,20 @@ namespace JgMaschineLib
       ViewSource.View.Refresh();
     }
 
-    public async Task<E> DsAttach<E>(Guid IdDatensatz)
+    public async Task<E> DsAttachAsync<E>(Guid IdDatensatz)
       where E : class
     {
       var ent = Db.Set<E>();
       return await ent.FindAsync(IdDatensatz);
     }
+
+    public E DsAttach<E>(Guid IdDatensatz)
+    where E : class
+    {
+      var ent = Db.Set<E>();
+      return ent.Find(IdDatensatz);
+    }
+
 
     public void Delete()
     {

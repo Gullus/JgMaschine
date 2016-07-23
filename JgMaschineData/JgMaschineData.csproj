@@ -104,6 +104,9 @@
     <Compile Include="tabAnmeldungMaschine.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="tabAnmeldungReparatur.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="tabArbeitszeit.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>

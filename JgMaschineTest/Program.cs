@@ -18,6 +18,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Management;
 using System.Net;
 using System.Net.Mail;
+using System.Collections;
+using System.Linq.Expressions;
+using System.Windows.Data;
 
 namespace JgMaschineTest
 {
@@ -26,11 +29,28 @@ namespace JgMaschineTest
     static void Main(string[] args)
     {
 
-      Senden();
+      //var tab = new JgMaschineLib.JgList<tabStandort>(null);
+      //tab.MyQuery = tab.Db.tabStandortSet;
+
+      //while (true)
+      //{
+      //  tab.DatenGenerieren();
+
+      //  for (int i = 0; i < tab.Count(); i++)
+      //  {
+      //    Console.WriteLine(tab[i].Bezeichnung);
+      //  }
+
+      //  foreach (var ds in tab.ToList())
+      //    Console.WriteLine(ds.Bezeichnung);
+      //  Console.WriteLine("---------------");
+
+      //  Console.ReadKey();
+      //}
+
+      TestList();
 
       Console.ReadKey();
-
-
 
       //var networkPath = @"\\gullus-server\Sicherungen";
 
@@ -97,6 +117,75 @@ namespace JgMaschineTest
       //Console.ReadKey();
     }
 
+    public static async void TestList()
+    {
+      var tab = new JgMaschineLib.JgList<tabStandort>(null);
+      tab.MyQuery = tab.Db.tabStandortSet;
+
+      while (true)
+      {
+
+        int anz = await tab.DatenGenerierenAsync();
+
+
+        Console.WriteLine(anz);
+
+        foreach (var ds in tab.ToList())
+          Console.WriteLine(ds.Bezeichnung);
+        Console.WriteLine("---------------");
+
+        Thread.Sleep(10000);
+      }
+    }
+
+
+    public class InMemoryQuery<T> : IQueryable<T>
+    {
+      private readonly IQueryable<T> _queryable;
+      public InMemoryQuery(IQueryable<T> queryable)
+      {
+        _queryable = queryable;
+      }
+      public IEnumerator<T> GetEnumerator()
+      {
+        return this._queryable.GetEnumerator();
+      }
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+        throw new NotImplementedException();
+      }
+      public Expression Expression { get { return this._queryable.Expression; } }
+      public Type ElementType { get { return typeof(T); } }
+      public IQueryProvider Provider { get { return new InMemoryQueryProvider(this._queryable.Provider); }
+      }
+    }
+
+    public class InMemoryQueryProvider : IQueryProvider
+    {
+      private readonly IQueryProvider _innerprovider;
+      public InMemoryQueryProvider(IQueryProvider innerprovider)
+      { _innerprovider = innerprovider;
+      }
+      public IQueryable CreateQuery(Expression expression)
+      {
+        throw new System.NotImplementedException();
+      }
+      public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+      {
+        return new InMemoryQuery<TElement>(this._innerprovider.CreateQuery<TElement>(expression));
+      }
+      public object Execute(Expression expression)
+      {
+        throw new System.NotImplementedException();
+      }
+      public TResult Execute<TResult>(Expression expression) { throw new NotImplementedException();
+      }
+    }
+
+    public class ObCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>
+    {
+      
+    }
 
     public static void Senden()
     {
@@ -148,7 +237,7 @@ namespace JgMaschineTest
         myMail.From = new MailAddress(AdresseAbsender);
 
         var adrEmpfaenger = AdressenEmpfaenger.Split(new char[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-        foreach(var adr in adrEmpfaenger)
+        foreach (var adr in adrEmpfaenger)
           myMail.To.Add(new MailAddress(adr));
         myMail.Priority = MailPriority.High;
 

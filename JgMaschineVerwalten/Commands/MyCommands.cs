@@ -16,10 +16,17 @@ namespace JgMaschineVerwalten.Commands
       get { return MyCommands._AnmeldungBediener; }
     }
 
+    private static RoutedUICommand _AnmeldungReparaturBediener;
+    public static RoutedUICommand AnmeldungReparaturBediener
+    {
+      get { return MyCommands._AnmeldungReparaturBediener; }
+    }
+
     static MyCommands()
     {
       _ReparaturNeu = new RoutedUICommand("Reparatur Neu", "ReparaturNeu", typeof(MyCommands));
       _AnmeldungBediener = new RoutedUICommand("Anmeldung Bediener", "AnmeldungBediener", typeof(MyCommands));
+      _AnmeldungReparaturBediener = new RoutedUICommand("Anmeldung Reparatur Bediener", "AnmeldungReparaturBediener", typeof(MyCommands));
     }
   }
 }

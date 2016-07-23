@@ -24,14 +24,14 @@ namespace JgMaschineData
             this.BtLaenge = -1;
             this.BtGewicht = -1;
             this.BtDurchmesser = -1;
+            this.eAktivMaschine = new HashSet<tabMaschine>();
             this.sBediener = new HashSet<tabBediener>();
-            this.eBauteilAktuell = new HashSet<tabMaschine>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
         public System.DateTime DatumStart { get; set; }
-        public System.DateTime DatumEnde { get; set; }
+        public Nullable<System.DateTime> DatumEnde { get; set; }
         public bool IstVorfertigung { get; set; }
         public int IdStahlPosition { get; set; }
         public int IdStahlBauteil { get; set; }
@@ -39,23 +39,24 @@ namespace JgMaschineData
         public int BtLaenge { get; set; }
         public int BtGewicht { get; set; }
         public int BtDurchmesser { get; set; }
+        public byte BtAnzahlBiegungen { get; set; }
+        public string BvbsCode { get; set; }
+        public string GeometrieFilter { get; set; }
+        public byte AnzahlBediener { get; set; }
+        public bool IstHandeingabe { get; set; }
         public string Kunde { get; set; }
         public string Auftrag { get; set; }
         public string NummerBauteil { get; set; }
         public string NummerPosition { get; set; }
         public string Buegelname { get; set; }
-        public bool IstHandeingabe { get; set; }
-        public byte AnzahlBediener { get; set; }
-        public byte AnzahlBiegungen { get; set; }
-        public string Geometrie { get; set; }
         public System.Guid fMaschine { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabBediener> sBediener { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabMaschine> eBauteilAktuell { get; set; }
+        public virtual ICollection<tabMaschine> eAktivMaschine { get; set; }
         public virtual tabMaschine eMaschine { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabBediener> sBediener { get; set; }
     }
 }

@@ -16,7 +16,6 @@ namespace JgMaschineData
   public partial class tabMaschine
   {
     public bool Abbruch { get; set; }
-
     public string ProtokollAdd
     {
       get { return (this.eProtokoll == null) ? "" : this.eProtokoll.ProtokollText; }
@@ -33,8 +32,26 @@ namespace JgMaschineData
         }
       }
     }
+    public bool IstReparatur
+    {
+      get { return this.fAktivReparatur != null; }
+      set { }
+    }
+
   }
 
+  public partial class tabAnmeldungMaschineMetaData
+  { }
+
+  [MetadataType(typeof(tabAnmeldungMaschineMetaData))]
+  public partial class tabAnmeldungMaschine
+  {
+    public TimeSpan ZeitAngemeldet
+    {
+      get { return DateTime.Now - this.Anmeldung; }
+    }
+  }
+  
   public partial class tabProtokollMetaData
   { }
 
@@ -79,16 +96,15 @@ namespace JgMaschineData
 
   [MetadataType(typeof(tabReparaturMetaData))]
   public partial class tabReparatur
+  { }
+
+  public partial class tabAnmeldungReparaturMetaData
+  { }
+
+  [MetadataType(typeof(tabAnmeldungReparaturMetaData))]
+  public partial class tabAnmeldungReparatur
   {
-    public string Bediener
-    {
-      get
-      {
-        var ben = this.eMaschine.sAnmeldungen.Where(w => (w.Anmeldung < this.VorgangBeginn) && (w.Abmeldung > this.VorgangBeginn)).Select(s => s.eBediener.NachName + ", " + s.eBediener.VorName).Distinct().ToList();
-        return string.Join("; ", ben);
-      }
-      set { }
-    }
+    public bool IstAktiv { get { return this.Abmeldung == null; } }
   }
 
   public partial class tabStandortMetaData

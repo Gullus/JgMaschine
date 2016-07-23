@@ -12,29 +12,23 @@ namespace JgMaschineData
     using System;
     using System.Collections.Generic;
     
-    public partial class tabAnmeldungMaschine
+    public partial class tabAnmeldungReparatur
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tabAnmeldungMaschine()
+        public tabAnmeldungReparatur()
         {
-            this.ManuelleAnmeldung = true;
-            this.ManuelleAbmeldung = true;
             this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
         public System.DateTime Anmeldung { get; set; }
         public Nullable<System.DateTime> Abmeldung { get; set; }
-        public bool ManuelleAnmeldung { get; set; }
-        public bool ManuelleAbmeldung { get; set; }
+        public System.Guid fReparatur { get; set; }
         public System.Guid fBediener { get; set; }
-        public System.Guid fMaschine { get; set; }
-        public Nullable<System.Guid> fAktivMaschine { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     
-        public virtual tabMaschine eMaschine { get; set; }
+        public virtual tabReparatur eReparatur { get; set; }
         public virtual tabBediener eBediener { get; set; }
-        public virtual tabMaschine eAktivMaschine { get; set; }
     }
 }

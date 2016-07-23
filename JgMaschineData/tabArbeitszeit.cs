@@ -19,15 +19,15 @@ namespace JgMaschineData
         {
             this.ManuelleAnmeldung = true;
             this.ManuelleAbmeldung = true;
+            this.eAktivBediener = new HashSet<tabBediener>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
         public System.DateTime Anmeldung { get; set; }
-        public System.DateTime Abmeldung { get; set; }
+        public Nullable<System.DateTime> Abmeldung { get; set; }
         public bool ManuelleAnmeldung { get; set; }
         public bool ManuelleAbmeldung { get; set; }
-        public bool IstAktiv { get; set; }
         public System.Guid fBediener { get; set; }
         public System.Guid fStandort { get; set; }
     
@@ -35,5 +35,7 @@ namespace JgMaschineData
     
         public virtual tabBediener eBediener { get; set; }
         public virtual tabStandort eStandort { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabBediener> eAktivBediener { get; set; }
     }
 }

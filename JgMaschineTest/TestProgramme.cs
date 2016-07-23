@@ -276,7 +276,7 @@ namespace JgMaschineTest
       //    #region Maschine abgleichen
 
       //    sNameTabelle = "Maschine";
-      //    felderAuschliessen = new string[] { "ProtokollAdd", "eLetztesBauteil", "eProtokoll", "sAktuelleBediener", "sAnmeldungen", "sBauteile", "sReparaturen", "eStandort" };
+      //    felderAuschliessen = new string[] { "ProtokollAdd", "eAktivBauteil", "eProtokoll", "sAktuelleBediener", "sAnmeldungen", "sBauteile", "sReparaturen", "eStandort" };
       //    try
       //    {
       //      var lServer = await _DbServer.tabMaschineSet.Where(w => (w.DatenAbgleich.Status != EnumStatusDatenabgleich.Abgeglichen)).ToListAsync();
