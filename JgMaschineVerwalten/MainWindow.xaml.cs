@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 using JgMaschineData;
 using JgMaschineLib;
 using JgMaschineLib.Zeit;
@@ -18,12 +17,25 @@ namespace JgMaschineVerwalten
 {
   public partial class MainWindow : Window
   {
+    private JgModelContainer _Db;
     private tabStandort _Standort;
-    private JgList<tabBediener> _ListeBediener;
-    private CollectionViewSource _VsBediener { get { return (CollectionViewSource)this.FindResource("vsBedienerArbeitszeit"); } }
-    private CollectionViewSource _VsBedienerAnmeldung { get { return (CollectionViewSource)this.FindResource("vsBedienerAnmeldung"); } }
-    private List<tabMaschine> _ListeMaschinen { get { return (List<tabMaschine>)_VsMaschine.Source; } }
-    private CollectionViewSource _VsMaschine { get { return (CollectionViewSource)FindResource("vsMaschine"); } }
+
+    private EnumFilterAuswertung _Auswahl { get { return (EnumFilterAuswertung)Convert.ToByte((tcVerwaltung.SelectedItem as TabItem).Tag); } }
+
+    #region Bediener
+
+    private tabBediener _AuswahlBedienerArbeitszeit { get { return (tabBediener)(FindResource("vsBedienerArbeitszeit") as CollectionViewSource).View.CurrentItem; } }
+    private tabBediener _AuswahlBedienerAnmeldung { get { return (tabBediener)(FindResource("vsBedienerAnmeldung") as CollectionViewSource).View.CurrentItem; } }
+
+    #endregion
+
+    private JgEntityAuto _DatenPool;
+    private JgEntityTab<tabBediener> _JgBediener { get { return (JgEntityTab<tabBediener>)_DatenPool.Tabs[JgEntityAuto.TabArt.Bediener]; } }
+    private JgEntityTab<tabMaschine> _JgMaschine { get { return (JgEntityTab<tabMaschine>)_DatenPool.Tabs[JgEntityAuto.TabArt.Maschine]; } }
+    private JgEntityTab<tabArbeitszeit> _JgArbeitszeit { get { return (JgEntityTab<tabArbeitszeit>)_DatenPool.Tabs[JgEntityAuto.TabArt.Arbeitszeit]; } }
+    private JgEntityTab<tabAnmeldungMaschine> _JgAnmeldung { get { return (JgEntityTab<tabAnmeldungMaschine>)_DatenPool.Tabs[JgEntityAuto.TabArt.Anmeldung]; } }
+    private JgEntityTab<tabReparatur> _JgReparatur { get { return (JgEntityTab<tabReparatur>)_DatenPool.Tabs[JgEntityAuto.TabArt.Reparatur]; } }
+    private JgEntityTab<tabAnmeldungReparatur> _JgRepAnmeldung { get { return (JgEntityTab<tabAnmeldungReparatur>)_DatenPool.Tabs[JgEntityAuto.TabArt.RepAnmeldung]; } }
     private tabMaschine _Maschine
     {
       get
@@ -38,41 +50,35 @@ namespace JgMaschineVerwalten
       }
     }
 
-    private JgList<tabAuswertung> _ListeAuswertung;
+    #region Report Ausertungen
 
+    private JgEntityView<tabAuswertung> _ListeAuswertung;
     private CollectionViewSource _VsAuswertungArbeitszeit { get { return (CollectionViewSource)this.FindResource("vsAuswertungArbeitszeit"); } }
     private CollectionViewSource _VsAuswertungAnmeldung { get { return (CollectionViewSource)this.FindResource("vsAuswertungAnmeldung"); } }
     private CollectionViewSource _VsAuswertungBauteil { get { return (CollectionViewSource)this.FindResource("vsAuswertungBauteil"); } }
     private CollectionViewSource _VsAuswertungReparatur { get { return (CollectionViewSource)this.FindResource("vsAuswertungReparatur"); } }
 
-    private JgList<tabArbeitszeit> _ListeArbeitszeitAktuell;
-    private JgList<tabArbeitszeit> _ListeArbeitszeitAuswahl;
-    private JgDatumZeit _DzArbeitszeitVon { get { return (JgDatumZeit)this.FindResource("dzArbeitszeitVon"); } }
-    private JgDatumZeit _DzArbeitszeitBis { get { return (JgDatumZeit)this.FindResource("dzArbeitszeitBis"); } }
+    #endregion
 
-    private JgList<tabAnmeldungMaschine> _ListeAnmeldungAktuell;
-    private JgList<tabAnmeldungMaschine> _ListeAnmeldungAuswahl;
-    private JgDatumZeit _DzAnmeldungVon { get { return (JgDatumZeit)this.FindResource("dzAnmeldungVon"); } }
-    private JgDatumZeit _DzAnmeldungBis { get { return (JgDatumZeit)this.FindResource("dzAnmeldungBis"); } }
+    private JgEntityView<tabArbeitszeit> _ListeArbeitszeitAuswahl;
+    private JgDatumZeit _DzArbeitszeitVon { get { return (JgDatumZeit)FindResource("dzArbeitszeitVon"); } }
+    private JgDatumZeit _DzArbeitszeitBis { get { return (JgDatumZeit)FindResource("dzArbeitszeitBis"); } }
 
-    private JgDatumZeit _DzBauteilVon { get { return (JgDatumZeit)this.FindResource("dzBauteilVon"); } }
-    private JgDatumZeit _DzBauteilBis { get { return (JgDatumZeit)this.FindResource("dzBauteilBis"); } }
-    private JgList<tabBauteil> _ListeBauteilAuswahl;
+    private JgEntityView<tabAnmeldungMaschine> _ListeAnmeldungAuswahl;
+    private JgDatumZeit _DzAnmeldungVon { get { return (JgDatumZeit)FindResource("dzAnmeldungVon"); } }
+    private JgDatumZeit _DzAnmeldungBis { get { return (JgDatumZeit)FindResource("dzAnmeldungBis"); } }
 
-    private JgDatumZeit _DzReparaturVon { get { return (JgDatumZeit)this.FindResource("dzReparaturVon"); } }
-    private JgDatumZeit _DzReparaturBis { get { return (JgDatumZeit)this.FindResource("dzReparaturBis"); } }
-    private JgList<tabReparatur> _ListeReparaturAktuell;
-    private JgList<tabReparatur> _ListeReparaturAuswahl;
+    private JgEntityView<tabBauteil> _ListeBauteilAuswahl;
+    private JgDatumZeit _DzBauteilVon { get { return (JgDatumZeit)FindResource("dzBauteilVon"); } }
+    private JgDatumZeit _DzBauteilBis { get { return (JgDatumZeit)FindResource("dzBauteilBis"); } }
 
-    private DispatcherTimer _AktualisierungsTimer;
+    private JgEntityView<tabReparatur> _ListeReparaturAuswahl;
+    private JgDatumZeit _DzReparaturVon { get { return (JgDatumZeit)FindResource("dzReparaturVon"); } }
+    private JgDatumZeit _DzReparaturBis { get { return (JgDatumZeit)FindResource("dzReparaturBis"); } }
 
     private FastReport.Report _Report;
-    private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
     private tabAuswertung _AktAuswertung = null;
-
-    private Guid[] _IdisAktivArbeitszeit { get { return _ListeBediener.Where(w => (w.fAktivArbeitszeit != null)).Select(s => (Guid)s.fAktivArbeitszeit).ToArray(); } }
-    private Guid[] _IdisMaschine { get { return _ListeMaschinen.Select(s => s.Id).ToArray(); } }
-    private Guid[] _IdisAktivReparatur { get { return _ListeMaschinen.Where(w => (w.fAktivReparatur != null)).Select(s => (Guid)s.fAktivReparatur).ToArray(); } }
+    private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
     public MainWindow()
     {
@@ -81,23 +87,19 @@ namespace JgMaschineVerwalten
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      tblDatum.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
-      var von = DateTime.Now.Date;
-      var bis = new DateTime(von.Year, von.Month, von.Day, 23, 59, 59);
+      _Db = new JgModelContainer();
+      _Standort = await _Db.tabStandortSet.FindAsync(Properties.Settings.Default.IdStandort);
+      if (_Standort == null)
+        _Standort = await _Db.tabStandortSet.FirstOrDefaultAsync();
 
-      // Standort initialieren
-
-      using (var db = new JgMaschineData.JgModelContainer())
-      {
-        _Standort = await db.tabStandortSet.FindAsync(Properties.Settings.Default.IdStandort);
-        if (_Standort == null)
-          _Standort = await db.tabStandortSet.FirstOrDefaultAsync();
-      }
       tblStandort.Text = _Standort.Bezeichnung;
 
-      await InitListen(von, bis);
+      await InitListen();
 
-      InitCommands();
+      CommandBindings.Add(new CommandBinding(MyCommands.AnmeldungReparaturBediener, ExecuteAnmeldungBedienerReparatur, (sen, erg) =>
+      {
+        erg.CanExecute = _JgReparatur.Current != null;
+      }));
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -110,7 +112,7 @@ namespace JgMaschineVerwalten
           _AktAuswertung.Report = memStr.ToArray();
           _AktAuswertung.GeaendertDatum = DateTime.Now;
           _AktAuswertung.GeaendertName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          _ListeAuswertung.DsSichern(_AktAuswertung, EnumStatusDatenabgleich.Geaendert);
+          _ListeAuswertung.DsSave();
         }
         catch (Exception f)
         {
@@ -121,368 +123,452 @@ namespace JgMaschineVerwalten
           memStr.Dispose();
         }
       };
-
-      //_AktualisierungsTimer = new DispatcherTimer(DispatcherPriority.Background) { Interval = new TimeSpan(0, 0, 10) };
-      //_AktualisierungsTimer.Tick += _AktualisierungsTimer_Tick;
-      //_AktualisierungsTimer.Start();
     }
 
-    private async Task InitListen(DateTime von, DateTime bis)
+    private async Task InitListen()
     {
-      // Bediener initialisieren
-
-      _ListeBediener = new JgList<tabBediener>(_VsBediener);
-      _ListeBediener.MyQuery = _ListeBediener.Db.tabBedienerSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != EnumStatusBediener.Stillgelegt))
-        .Include(i => i.eAktivArbeitszeit).Include(i => i.eAktivArbeitszeit.eBediener).OrderBy(o => o.NachName);
-      await _ListeBediener.DatenGenerierenAsync();
-      _VsBedienerAnmeldung.Source = _ListeBediener;
-
-      using (var db = new JgMaschineData.JgModelContainer())
+      _DatenPool = new JgEntityAuto(Properties.Settings.Default.VerbindungsString, 5)
       {
-        _VsMaschine.Source = db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt))
-          .Include(i => i.sAktiveAnmeldungen).Include(i => i.sAktiveAnmeldungen.Select(s => s.eBediener)).ToList();
+        TimerAusgeloest = () =>
+        {
+          tblDatum.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
+          TreeListMaschinRefresh();
+        }
+      };
+
+      var con = _DatenPool.DbVerbindung();
+      if (con == null)
+        return;
+
+      try
+      {
+        var eBediener = new JgEntityTab<tabBediener>(_DatenPool.Db)
+        {
+          AbfrageSqlString = () =>
+          {
+            if (_Standort == null)
+              return JgEntityTab.IstNull;
+
+            return "Select Id, DatenAbgleich_Datum "
+              + "From tabBedienerSet "
+              + "Where (fStandort = '" + _Standort.Id + "') AND (Status <> " + EnumStatusBediener.Stillgelegt.ToString("d") + ")";
+          }
+        };
+        eBediener.SetIdis(con);
+        if (eBediener.Idis != null)
+          eBediener.Daten = await _DatenPool.Db.tabBedienerSet.Where(w => eBediener.Idis.Contains(w.Id)).ToListAsync();
+        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Bediener, eBediener);
+
+        (FindResource("vsBedienerArbeitszeit") as CollectionViewSource).Source = eBediener.Daten;
+        (FindResource("vsBedienerAnmeldung") as CollectionViewSource).Source = eBediener.Daten;
+
+        var eMaschine = new JgEntityTab<tabMaschine>(_DatenPool.Db)
+        {
+          ViewSource = (CollectionViewSource)FindResource("vsMaschine"),
+          AbfrageSqlString = () =>
+          {
+            if (_Standort == null)
+              return JgEntityTab.IstNull;
+
+            return "SELECT Id, DatenAbgleich_Datum "
+              + "FROM tabMaschineSet "
+              + "WHERE (fStandort = '" + _Standort.Id + "') AND (Status <> " + EnumStatusMaschine.Stillgelegt.ToString("d") + ")";
+          }
+        };
+        eMaschine.SetIdis(con);
+        if (eMaschine.Idis != null)
+          eMaschine.Daten = await _DatenPool.Db.tabMaschineSet.Where(w => eMaschine.Idis.Contains(w.Id)).ToListAsync();
+        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Maschine, eMaschine);
+        //(FindResource("vsMaschine") as CollectionViewSource).Source = eMaschine.Daten.ToList();
+
+        var eArbeitszeit = new JgEntityTab<tabArbeitszeit>(_DatenPool.Db)
+        {
+          ViewSource = (CollectionViewSource)FindResource("vsArbeitszeitAktuell"),
+          Tabellen = new DataGrid[] { dgArbeitszeitAktuell },
+          AbfrageSqlString = () =>
+          {
+            if (_Standort == null)
+              return JgEntityTab.IstNull;
+
+            return "SELECT arbeitszeit.Id, arbeitszeit.DatenAbgleich_Datum "
+              + "FROM tabBedienerSet AS bediener INNER JOIN "
+              + "tabArbeitszeitSet AS arbeitszeit ON bediener.fAktivArbeitszeit = arbeitszeit.Id "
+              + "WHERE(bediener.fStandort = '" + _Standort.Id + "')";
+          }
+        };
+        eArbeitszeit.SetIdis(con);
+        if (eArbeitszeit.Idis != null)
+          eArbeitszeit.Daten = await _DatenPool.Db.tabArbeitszeitSet.Where(w => eArbeitszeit.Idis.Contains(w.Id)).ToListAsync();
+        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Arbeitszeit, eArbeitszeit);
+
+        var eAnmeldung = new JgEntityTab<tabAnmeldungMaschine>(_DatenPool.Db)
+        {
+          ViewSource = (CollectionViewSource)FindResource("vsAnmeldungAktuell"),
+          Tabellen = new DataGrid[] { dgAnmeldungAktuell },
+          AbfrageSqlString = () =>
+          {
+            if (_JgMaschine.Idis == null)
+              return JgEntityTab.IstNull;
+            else
+              return "SELECT Id, DatenAbgleich_Datum "
+                + "FROM tabAnmeldungMaschineSet "
+                + "WHERE fAktivMaschine In (" + JgEntityTab.IdisInString(_JgMaschine.Idis) + ")";
+          }
+        };
+        eAnmeldung.SetIdis(con);
+        if (eAnmeldung.Idis != null)
+          eAnmeldung.Daten = await _DatenPool.Db.tabAnmeldungMaschineSet.Where(w => eAnmeldung.Idis.Contains(w.Id)).ToListAsync();
+        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Anmeldung, eAnmeldung);
+
+        var eReparatur = new JgEntityTab<tabReparatur>(_DatenPool.Db)
+        {
+          ViewSource = (CollectionViewSource)FindResource("vsReparaturAktuell"),
+          Tabellen = new DataGrid[] { dgReparaturAktuell },
+          AbfrageSqlString = () =>
+          {
+            if (_JgMaschine.Idis != null)
+            {
+              var ids = _JgMaschine.Daten.Where(w => (w.fAktivReparatur != null)).Select(s => (Guid)s.fAktivReparatur).ToArray();
+              if (ids.Length > 0)
+                return "SELECT Id, DatenAbgleich_Datum "
+                  + "FROM tabReparaturSet "
+                  + "WHERE Id IN (" + JgEntityTab.IdisInString(ids) + ")";
+            }
+            return JgEntityTab.IstNull;
+          }
+        };
+        eReparatur.SetIdis(con);
+        if (eReparatur.Idis != null)
+          eReparatur.Daten = await _DatenPool.Db.tabReparaturSet.Where(w => eReparatur.Idis.Contains(w.Id)).ToListAsync();
+        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Reparatur, eReparatur);
+
+        var eRepAnmeldung = new JgEntityTab<tabAnmeldungReparatur>(_DatenPool.Db, false)
+        {
+          ViewSource = (CollectionViewSource)FindResource("vsReparaturAktuellBediener"),
+          AbfrageSqlString = () =>
+          {
+            if (_JgReparatur.Idis != null)
+              return "SELECT Id, DatenAbgleich_Datum "
+                + "FROM tabAnmeldungReparaturSet "
+                + "WHERE fReparatur In (" + JgEntityTab.IdisInString(_JgReparatur.Idis) + ")";
+
+            return JgEntityTab.IstNull;
+          }
+        };
+        eRepAnmeldung.SetIdis(con);
+        if (eRepAnmeldung.Idis != null)
+          eRepAnmeldung.Daten = await _DatenPool.Db.tabAnmeldungReparaturSet.Where(w => eRepAnmeldung.Idis.Contains(w.Id)).ToListAsync();
+        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.RepAnmeldung, eRepAnmeldung);
+
       }
-      treeViewMaschinen.UpdateLayout();
-      if (treeViewMaschinen.Items.Count > 0)
-        (treeViewMaschinen.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsSelected = true;
+      catch (Exception f)
+      {
+        Helper.Protokoll($"Fehler beim erstellen des Datenpools !\nGrund: {f.Message}");
+      }
+      finally
+      {
+        con.Close();
+      }
 
-      // Arbeitszeit Initialisieren
-
-      _ListeArbeitszeitAktuell = new JgList<tabArbeitszeit>((CollectionViewSource)FindResource("vsArbeitszeitAktuell"));
-      _ListeArbeitszeitAktuell.MyQuery = _ListeArbeitszeitAktuell.Db.tabArbeitszeitSet.Where(w => _IdisAktivArbeitszeit.Contains(w.Id))
-        .OrderBy(o => o.Anmeldung);
-      _ListeArbeitszeitAktuell.ListeTabellen = new DataGrid[] { dgArbeitszeitAktuell };
-      await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
-      await _ListeArbeitszeitAktuell.Db.tabBedienerSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
+      var von = DateTime.Now.Date;
+      var bis = new DateTime(von.Year, von.Month, von.Day, 23, 59, 59);
 
       _DzArbeitszeitVon.DatumZeit = von;
       _DzArbeitszeitBis.DatumZeit = bis;
 
-      _ListeArbeitszeitAuswahl = new JgList<tabArbeitszeit>((CollectionViewSource)FindResource("vsArbeitszeitAuswahl"));
-      _ListeArbeitszeitAuswahl.MyQuery = _ListeArbeitszeitAuswahl.Db.tabArbeitszeitSet.Where(w => (w.fStandort == _Standort.Id) && (w.Anmeldung >= _DzArbeitszeitVon.DatumZeit) && ((w.Anmeldung <= _DzArbeitszeitBis.DatumZeit)))
-        .OrderBy(o => o.Anmeldung);
-      _ListeArbeitszeitAuswahl.ListeTabellen = new DataGrid[] { dgArbeitszeitAuswahl };
-
-      // Anmeldungen initialisieren
-
-      _ListeAnmeldungAktuell = new JgList<tabAnmeldungMaschine>((CollectionViewSource)FindResource("vsAnmeldungAktuell"));
-      _ListeAnmeldungAktuell.MyQuery = _ListeAnmeldungAktuell.Db.tabAnmeldungMaschineSet.Where(w => _IdisMaschine.Contains(w.fAktivMaschine ?? Guid.Empty))
-        .Include(i => i.eBediener).Include(i => i.eMaschine)
-        .OrderBy(o => o.Anmeldung);
-      _ListeAnmeldungAktuell.ListeTabellen = new DataGrid[] { dgAnmeldungAktuell };
-      await _ListeAnmeldungAktuell.DatenGenerierenAsync();
-      await _ListeAnmeldungAktuell.Db.tabBedienerSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
-      await _ListeAnmeldungAktuell.Db.tabMaschineSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
+      _ListeArbeitszeitAuswahl = new JgEntityView<tabArbeitszeit>()
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsArbeitszeitAuswahl"),
+        Tabellen = new DataGrid[] { dgArbeitszeitAuswahl },
+        DatenErstellen = (db) =>
+        {
+          return db.tabArbeitszeitSet.Where(w => (w.fStandort == _Standort.Id) && (w.Anmeldung >= _DzArbeitszeitVon.DatumZeit) && ((w.Anmeldung <= _DzArbeitszeitBis.DatumZeit)))
+            .OrderBy(o => o.Anmeldung).ToList();
+        }
+      };
 
       _DzAnmeldungVon.DatumZeit = von;
       _DzAnmeldungBis.DatumZeit = bis;
 
-      _ListeAnmeldungAuswahl = new JgList<tabAnmeldungMaschine>((CollectionViewSource)FindResource("vsAnmeldungAuswahl"));
-      _ListeAnmeldungAuswahl.MyQuery = _ListeAnmeldungAuswahl.Db.tabAnmeldungMaschineSet.Where(w => _IdisMaschine.Contains(w.fMaschine) && (w.Anmeldung >= _DzAnmeldungVon.DatumZeit) && ((w.Anmeldung <= _DzAnmeldungBis.DatumZeit)))
-        .OrderBy(o => o.Anmeldung);
-      _ListeAnmeldungAuswahl.ListeTabellen = new DataGrid[] { dgAnmeldungAuswahl };
+      _ListeAnmeldungAuswahl = new JgEntityView<tabAnmeldungMaschine>()
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsAnmeldungAuswahl"),
+        Tabellen = new DataGrid[] { dgAnmeldungAuswahl },
+        DatenErstellen = (db) =>
+        {
+          var idis = (_DatenPool.Tabs[JgEntityAuto.TabArt.Maschine] as JgEntityTab<tabMaschine>).Idis;
+          return db.tabAnmeldungMaschineSet.Where(w => idis.Contains(w.fMaschine) && (w.Anmeldung >= _DzAnmeldungVon.DatumZeit) && ((w.Anmeldung <= _DzAnmeldungBis.DatumZeit)))
+            .OrderBy(o => o.Anmeldung).ToList();
+        }
+      };
 
-      // Bauteile initialisieren
+      // Bauteile initialisieren ****************************
 
       _DzBauteilVon.DatumZeit = von;
       _DzBauteilBis.DatumZeit = bis;
 
-      _ListeBauteilAuswahl = new JgList<tabBauteil>((CollectionViewSource)FindResource("vsBauteilAuswahl"));
-      _ListeBauteilAuswahl.MyQuery = _ListeBauteilAuswahl.Db.tabBauteilSet.Where(w => (w.fMaschine == _Maschine.Id) && (w.DatumStart >= _DzBauteilVon.DatumZeit) && (w.DatumStart <= _DzBauteilBis.DatumZeit)).OrderBy(o => o.DatumStart).Include(i => i.sBediener);
-      _ListeBauteilAuswahl.ListeTabellen = new DataGrid[] { dgBauteilAuswahl };
-
-      // Reparaturen initialisieren 
-
-      _ListeReparaturAktuell = new JgList<tabReparatur>((CollectionViewSource)FindResource("vsReparaturAktuell"));
-      _ListeReparaturAktuell.MyQuery = _ListeReparaturAktuell.Db.tabReparaturSet.Where(w => _IdisAktivReparatur.Contains(w.Id))
-        .Include(i => i.eMaschine).Include(i => i.eProtokollant).Include(i => i.eVerursacher).Include(i => i.sAnmeldungen)
-        .OrderByDescending(o => o.VorgangBeginn);
-      _ListeReparaturAktuell.ListeTabellen = new DataGrid[] { dgReparaturAktuell };
-      await _ListeReparaturAktuell.DatenGenerierenAsync();
-      await _ListeReparaturAktuell.Db.tabBedienerSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
-      await _ListeReparaturAktuell.Db.tabMaschineSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
-      var sortBenutzerReparatur = new System.ComponentModel.SortDescription("Anmeldung", System.ComponentModel.ListSortDirection.Descending);
-      (FindResource("vsReparaturAktuellBediener") as CollectionViewSource).SortDescriptions.Add(sortBenutzerReparatur);
+      _ListeBauteilAuswahl = new JgEntityView<tabBauteil>()
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsBauteilAuswahl"),
+        Tabellen = new DataGrid[] { dgBauteilAuswahl },
+        DatenErstellen = (db) =>
+        {
+          if (_Maschine == null)
+          {
+            Helper.Protokoll("Bitte Maschine in linker Tabelle auswahlen !", Helper.ProtokollArt.Warnung);
+            return null;
+          }
+          else
+            return db.tabBauteilSet.Where(w => (w.fMaschine == _Maschine.Id) && (w.DatumStart >= _DzBauteilVon.DatumZeit) && (w.DatumStart <= _DzBauteilBis.DatumZeit))
+            .Include(i => i.sBediener)
+            .OrderBy(o => o.DatumStart).ToList();
+        }
+      };
 
       _DzReparaturVon.DatumZeit = von;
       _DzReparaturBis.DatumZeit = bis;
 
-      _ListeReparaturAuswahl = new JgList<tabReparatur>((CollectionViewSource)FindResource("vsReparaturAuswahl"));
-      _ListeReparaturAuswahl.MyQuery = _ListeReparaturAuswahl.Db.tabReparaturSet.Where(w => _IdisMaschine.Contains(w.fMaschine) && (w.VorgangBeginn >= _DzReparaturVon.DatumZeit) && (w.VorgangBeginn <= _DzReparaturBis.DatumZeit))
-        .Include(i => i.sAnmeldungen).Include(i => i.sAnmeldungen.Select(s => s.eBediener))
-        .OrderByDescending(o => o.VorgangBeginn);
-      _ListeReparaturAuswahl.ListeTabellen = new DataGrid[] { dgReparaturAuswahl };
-      (FindResource("vsReparaturAuswahlBediener") as CollectionViewSource).SortDescriptions.Add(sortBenutzerReparatur);
+      _ListeReparaturAuswahl = new JgEntityView<tabReparatur>()
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsReparaturAuswahl"),
+        Tabellen = new DataGrid[] { dgReparaturAuswahl },
+        DatenErstellen = (db) =>
+        {
+          var idis = (_DatenPool.Tabs[JgEntityAuto.TabArt.Maschine] as JgEntityTab<tabMaschine>).Idis;
+          return db.tabReparaturSet.Where(w => idis.Contains(w.fMaschine) && (w.VorgangBeginn >= _DzReparaturVon.DatumZeit) && (w.VorgangBeginn <= _DzReparaturBis.DatumZeit))
+            .Include(i => i.sAnmeldungen).Include(i => i.sAnmeldungen.Select(s => s.eBediener))
+            .OrderByDescending(o => o.VorgangBeginn);
+        }
+      };
 
-      // Auswertung initialisieren
+      // Auswertung initialisieren ********************************
 
-      _ListeAuswertung = new JgList<tabAuswertung>(_VsAuswertungArbeitszeit);
+      _ListeAuswertung = new JgEntityView<tabAuswertung>();
+      _ListeAuswertung.Daten = await _Db.tabAuswertungSet.Where(w => w.FilterAuswertung != EnumFilterAuswertung.Allgemein)
+        .OrderBy(o => o.ReportName).ToListAsync();
+
+      _VsAuswertungArbeitszeit.Source = _ListeAuswertung.Daten;
       _VsAuswertungArbeitszeit.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Arbeitszeit;
-      _ListeAuswertung.MyQuery = _ListeAuswertung.Db.tabAuswertungSet.Where(w => w.FilterAuswertung != EnumFilterAuswertung.Allgemein).OrderBy(o => o.ReportName);
-      await _ListeAuswertung.DatenGenerierenAsync();
-
-      _VsAuswertungAnmeldung.Source = _ListeAuswertung;
+      _VsAuswertungAnmeldung.Source = _ListeAuswertung.Daten;
       _VsAuswertungAnmeldung.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Anmeldung;
-      _VsAuswertungBauteil.Source = _ListeAuswertung;
+      _VsAuswertungBauteil.Source = _ListeAuswertung.Daten;
       _VsAuswertungBauteil.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Bauteil;
-      _VsAuswertungReparatur.Source = _ListeAuswertung;
+      _VsAuswertungReparatur.Source = _ListeAuswertung.Daten;
       _VsAuswertungReparatur.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Reparatur;
     }
 
-    private void InitCommands()
+    private void TreeListMaschinRefresh()
     {
-      CommandBindings.Add(new CommandBinding(MyCommands.AnmeldungBediener, ExecuteAnmeldungBenutzerAnmeldung, (sen, erg) =>
+      Guid? idMaschine = null;
+      Guid? idAnmeldung = null;
+      if (_Maschine != null)
       {
-        erg.CanExecute = (_Maschine != null);
-      }));
-
-      CommandBindings.Add(new CommandBinding(MyCommands.ReparaturNeu, ExecuteReperaturNeu, (sen, erg) =>
-      {
-        erg.CanExecute = _Maschine != null;
-      }));
-
-      CommandBindings.Add(new CommandBinding(MyCommands.AnmeldungReparaturBediener, (sen, erg) =>
-      {
-        var reparatur = _ListeReparaturAktuell.AktDatensatz;
-        var breitsAngemeldet = reparatur.sAnmeldungen.Where(w => w.IstAktiv).Select(s => s.fBediener).ToArray();
-        Dictionary<Guid, string> bediener = _ListeBediener.Where(w => !breitsAngemeldet.Contains(w.Id)).ToDictionary(s => s.Id, s => s.Name);
-
-        var form = new Fenster.FormNeuerBedienerReparatur(bediener);
-        if (form.ShowDialog() ?? false)
-        {
-          form.Anmeldung.eReparatur = reparatur;
-          DbSichern.AbgleichEintragen(form.Anmeldung.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-          _ListeReparaturAktuell.Db.tabAnmeldungReparaturSet.Add(form.Anmeldung);
-          _ListeReparaturAktuell.Db.SaveChanges();
-          (FindResource("vsReparaturAktuellBediener") as CollectionViewSource).View.Refresh();
-        }
-      }, (sen, erg) =>
-     {
-       erg.CanExecute = _ListeReparaturAktuell.AktDatensatz != null;
-     }));
-    }
-
-    private async Task TreeListAktualisieren()
-    {
-      _AktualisierungsTimer.Stop();
-
-      var idMaschine = _Maschine.Id;
-      Guid? idBediener = null;
-      if (treeViewMaschinen.SelectedItem is tabBediener)
-        idBediener = (treeViewMaschinen.SelectedItem as tabBediener).Id;
-
-      using (var db = new JgMaschineData.JgModelContainer())
-      {
-        _VsMaschine.Source = await db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt))
-          .Include(i => i.sAktiveAnmeldungen).Include(i => i.sAktiveAnmeldungen.Select(s => s.eBediener)).ToListAsync();
+        idMaschine = _Maschine.Id;
+        if (treeViewMaschinen.SelectedItem is tabAnmeldungMaschine)
+          idAnmeldung = (treeViewMaschinen.SelectedItem as tabAnmeldungMaschine).Id;
       }
-      treeViewMaschinen.UpdateLayout();
 
-      if (idBediener != null)
+      _JgMaschine.ViewSource?.View?.Refresh();
+
+      if (idMaschine != null)
       {
-        foreach (var dsMaschine in treeViewMaschinen.Items)
+        if (idAnmeldung != null) // Als ersttes nach Benutzer suchen
         {
-          var itemMaschine = (TreeViewItem)treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine);
-          foreach (var dsBenutzer in itemMaschine.Items)
+          foreach (var dsMaschine in treeViewMaschinen.Items)
           {
-            if ((dsBenutzer as tabBediener).Id == idBediener)
+            var itemMaschine = (TreeViewItem)treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine);
+            foreach (var dsAnmeldung in itemMaschine.Items)
             {
-              var itemBenutzer = (itemMaschine.ItemContainerGenerator.ContainerFromItem(dsBenutzer) as TreeViewItem).IsSelected = true;
-              return;
+              if ((dsAnmeldung as tabAnmeldungMaschine).Id == idAnmeldung)
+              {
+                (itemMaschine.ItemContainerGenerator.ContainerFromItem(dsAnmeldung) as TreeViewItem).IsSelected = true;
+                return;
+              }
             }
           }
         }
-      }
-
-      // Wenn kein Benutzer gefunden wird
-
-      foreach (var dsMaschine in treeViewMaschinen.Items)
-      {
-        if ((dsMaschine as tabMaschine).Id == idMaschine)
+        foreach (var dsMaschine in treeViewMaschinen.Items)
         {
-          (treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine) as TreeViewItem).IsSelected = true;
-          break;
+          if ((dsMaschine as tabMaschine).Id == idMaschine)
+          {
+            (treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine) as TreeViewItem).IsSelected = true;
+            return;
+          }
         }
       }
-
-      _AktualisierungsTimer.Start();
     }
 
-    private async void _AktualisierungsTimer_Tick(object sender, EventArgs e)
-    {
-      tblDatum.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
-      await TreeListAktualisieren();
-      await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
-      await _ListeAnmeldungAktuell.DatenGenerierenAsync();
-      await _ListeReparaturAktuell.DatenGenerierenAsync();
-    }
+    #region Reparaturen ************************************************************
 
-    #region Formular Reparatur *****************************************************
-
-    private async void ExecuteReperaturNeu(object sender, ExecutedRoutedEventArgs e)
+    private void NeueReparaturErstellen_Click(object sender, RoutedEventArgs e)
     {
+      if (_Maschine == null)
+      {
+        Helper.Protokoll("Bitte Maschine in linker Tabelle auswahlen !", Helper.ProtokollArt.Warnung);
+        return;
+      }
+
       if (_Maschine.fAktivReparatur != null)
       {
         MessageBox.Show($"Die Maschine {_Maschine.MaschinenName} ist bereits im Reparaturmodus.", "Information !", MessageBoxButton.OK, MessageBoxImage.Information);
         return;
       }
 
-      var form = new Fenster.FormReparatur(null, _ListeBediener, _Maschine);
+      var form = new Fenster.FormReparatur(null, _JgBediener.Daten, _Maschine);
       if (form.ShowDialog() ?? false)
       {
-        _ListeReparaturAktuell.Add(form.Reparatur);
-        form.Reparatur.eAktivMaschine.Add(await _ListeReparaturAktuell.DsAttachAsync<tabMaschine>(_Maschine.Id));
+        _JgReparatur.Add(form.Reparatur, false);
+        _Maschine.fAktivReparatur = form.Reparatur.Id;
+        DbSichern.AbgleichEintragen(_Maschine.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
 
-        if (_Maschine.sAktiveAnmeldungen.Count > 0)
+        foreach (var anmeldungMaschine in _Maschine.sAktiveAnmeldungen)
         {
-          foreach (var anmeldungMaschine in _Maschine.sAktiveAnmeldungen)
+          var anmledRep = new tabAnmeldungReparatur()
           {
-            var anmeldungReparatur = new tabAnmeldungReparatur()
-            {
-              Id = Guid.NewGuid(),
-              Anmeldung = form.Reparatur.VorgangBeginn,
-              fReparatur = form.Reparatur.Id,
-              fBediener = anmeldungMaschine.fBediener
-            };
-            DbSichern.AbgleichEintragen(anmeldungReparatur.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-            _ListeReparaturAktuell.Db.tabAnmeldungReparaturSet.Add(anmeldungReparatur);
-          }
-          (FindResource("vsReparaturAktuellBediener") as CollectionViewSource).View.Refresh();
+            Id = Guid.NewGuid(),
+            Anmeldung = form.Reparatur.VorgangBeginn,
+            fReparatur = form.Reparatur.Id,
+            fBediener = anmeldungMaschine.fBediener
+          };
+          _JgRepAnmeldung.Add(anmledRep, false);
         }
-        _ListeReparaturAktuell.Db.SaveChanges();
 
-        await TreeListAktualisieren();
+        _JgReparatur.GeheZuDatensatz(form.Reparatur, true);
+        TreeListMaschinRefresh();
       }
     }
 
     private void ReparaturBearbeitenAktuell_Click(object sender, RoutedEventArgs e)
     {
-      Fenster.FormReparatur form = new Fenster.FormReparatur(_ListeReparaturAktuell.AktDatensatz, _ListeBediener);
+      Fenster.FormReparatur form = new Fenster.FormReparatur(_JgReparatur.Current, _JgBediener.Daten);
       if (form.ShowDialog() ?? false)
-        _ListeReparaturAktuell.AktSichern(EnumStatusDatenabgleich.Geaendert);
+        _JgReparatur.DsSave();
       else
-        _ListeReparaturAktuell.Reload(form.Reparatur);
+        _JgReparatur.Reload();
     }
 
-    private void ReparaturBearbeitenAuswahl_Click(object sender, RoutedEventArgs e)
+    private void ReparaturBeenden_Click(object sender, RoutedEventArgs e)
     {
-      Fenster.FormReparatur form = new Fenster.FormReparatur(_ListeReparaturAuswahl.AktDatensatz, _ListeBediener);
-      if (form.ShowDialog() ?? false)
-        _ListeReparaturAuswahl.AktSichern(EnumStatusDatenabgleich.Geaendert);
-      else
-        _ListeReparaturAuswahl.Reload(form.Reparatur);
-    }
-
-    private async void ReparaturBeenden_Click(object sender, RoutedEventArgs e)
-    {
-      var reparatur = _ListeReparaturAktuell.AktDatensatz;
-      var anzeigeText = $"Maschine {reparatur.eMaschine.MaschinenName} mit Ereigniss {reparatur.Ereigniss} abmelden?";
+      var reparatur = _JgReparatur.Current;
+      var anzeigeText = $"Maschine {reparatur.eMaschine.MaschinenName} mit Ereignis {reparatur.Ereignis} abmelden?";
 
       JgMaschineLib.Zeit.FormAuswahlDatumZeit form = new FormAuswahlDatumZeit("Abmeldung", anzeigeText, DateTime.Now);
       if (form.ShowDialog() ?? false)
       {
-        var repAustragen = reparatur.sAnmeldungen.Where(w => w.IstAktiv).ToList();
-        foreach (var bediener in repAustragen)
+        var repBedienerAustragen = reparatur.sAnmeldungen.Where(w => w.IstAktiv).ToList();
+        foreach (var bediener in repBedienerAustragen)
         {
           bediener.Abmeldung = form.DatumZeit;
           DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
         reparatur.VorgangEnde = form.DatumZeit;
         reparatur.eMaschine.fAktivReparatur = null;
-        _ListeReparaturAktuell.AktSichern(EnumStatusDatenabgleich.Geaendert);
-        _ListeReparaturAktuell.Remove(reparatur);
+        DbSichern.AbgleichEintragen(reparatur.eMaschine.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        _JgReparatur.DsSave();
+        _JgReparatur.Remove();
 
-        await TreeListAktualisieren();
+        TreeListMaschinRefresh();
       }
     }
 
-    private void ReparaturAnmeldungBearbeiten_Click(object sender, RoutedEventArgs e)
+    private void ReparaturBearbeitenAuswahl_Click(object sender, RoutedEventArgs e)
     {
-      var cvs = (CollectionViewSource)FindResource("vsReparaturAuswahlBediener");
-      var anmeldung = (tabAnmeldungReparatur)cvs.View.CurrentItem;
-      string anzeigeText = $"Reparaturzeiten für den Bediener {anmeldung.eBediener.Name} bearbeiten.";
+      Fenster.FormReparatur form = new Fenster.FormReparatur(_ListeReparaturAuswahl.Current, _JgBediener.Daten);
+      if (form.ShowDialog() ?? false)
+        _ListeReparaturAuswahl.DsSave();
+      else
+        _ListeReparaturAuswahl.Reload(form.Reparatur);
+    }
 
-      var form = new JgMaschineLib.Zeit.FormAuswahlDatumVonBis("Anmeldung Maschine bearbeiten", anzeigeText, anmeldung.Anmeldung, anmeldung.Abmeldung ?? DateTime.Now);
+    private void ExecuteAnmeldungBedienerReparatur(object sender, ExecutedRoutedEventArgs e)
+    {
+      var beschäaeftigt = _JgReparatur.Daten.SelectMany(s => s.sAnmeldungen).Where(w => w.IstAktiv).Select(s => s.eBediener.Id).ToList();
+
+      var form = new Fenster.FormNeuerBedienerReparatur(_JgBediener.Daten.Where(w => !beschäaeftigt.Contains(w.Id)));
+      if (form.ShowDialog() ?? false)
+      {
+        var anmeldungReparatur = form.Anmeldung;
+        anmeldungReparatur.eReparatur = _JgReparatur.Current;
+        _JgRepAnmeldung.Add(anmeldungReparatur);
+        _JgRepAnmeldung.Refresh();
+      }
+    }
+
+    private void ReparaturAnmeldungAbmeldung_Click(object sender, RoutedEventArgs e)
+    {
+      var anmeldung = _JgRepAnmeldung.Current;
+      string anzeigeText = $"Möchten Sie den Bediener {anmeldung.eBediener.Name} von der Reparatur an Maschine {anmeldung.eReparatur.eMaschine.MaschinenName} abmelden ?";
+
+      var form = new JgFormDatumZeit();
+      if (form.Anzeigen("Abmeldung", anzeigeText, DateTime.Now))
+      {
+        anmeldung.Abmeldung = form.Datum;
+        _JgRepAnmeldung.DsSave(anmeldung);
+        _JgRepAnmeldung.Refresh();
+      }
+    }
+
+    private void ReparaturAnmeldungAuswahlBearbeiten_Click(object sender, RoutedEventArgs e)
+    {
+      var colView = (CollectionViewSource)FindResource("vsReparaturAuswahlBediener");
+      var anmeldung = (tabAnmeldungReparatur)colView.View.CurrentItem;
+      string anzeigeText = $"Reparaturzeiten für den Bediener {anmeldung.eBediener.Name} an Maschin {anmeldung.eReparatur.eMaschine.MaschinenName} bearbeiten.";
+
+      var form = new FormAuswahlDatumVonBis("Anmeldung Maschine bearbeiten", anzeigeText, anmeldung.Anmeldung, anmeldung.Abmeldung ?? DateTime.Now);
       if (form.ShowDialog() ?? false)
       {
         anmeldung.Anmeldung = form.DatumVon;
         anmeldung.Abmeldung = form.DatumBis;
         DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         _ListeReparaturAuswahl.Db.SaveChanges();
-        cvs.View.Refresh();
-      }
-    }
-
-    private void ReparaturAnmeldungAbmeldung_Click(object sender, RoutedEventArgs e)
-    {
-      var anmeldung = (tabAnmeldungReparatur)(FindResource("vsReparaturAktuellBediener") as CollectionViewSource).View.CurrentItem;
-      string anzeigeText = $"Möchten Sie den Bediener {anmeldung.eBediener.Name} von der Reparatur abmelden ?";
-
-      var form = new JgFormDatumZeit();
-      if (form.Anzeigen("Abmeldung", anzeigeText, DateTime.Now))
-        ReparaturBedienerAbmelden(anmeldung, form.Datum);
-    }
-
-    private void ReparaturBedienerAbmelden(tabAnmeldungReparatur AnmeldungReparatur, DateTime ZeitAbmeldung)
-    {
-      if (AnmeldungReparatur != null)
-      {
-        AnmeldungReparatur.Abmeldung = ZeitAbmeldung;
-        DbSichern.AbgleichEintragen(AnmeldungReparatur.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-        _ListeReparaturAktuell.Db.SaveChanges();
+        colView.View.Refresh();
+        colView.View.MoveCurrentTo(anmeldung);
       }
     }
 
     #endregion
 
-    #region Anmeldungen Maschine
+    #region Anmeldungen Maschine ***************************************************
 
-    private async void ExecuteAnmeldungBenutzerAnmeldung(object sender, ExecutedRoutedEventArgs e)
+    private void NeueAnmeldungMaschine_Click(object sender, RoutedEventArgs e)
     {
-      var bediener = (tabBediener)_VsBedienerAnmeldung.View.CurrentItem;
-      var kontrAngemeldet = _Maschine.sAktiveAnmeldungen.FirstOrDefault(f => (f.fBediener == bediener.Id));
+      if (_Maschine == null)
+      {
+        Helper.Protokoll("Bitte Maschine in linker Tabelle auswahlen !", Helper.ProtokollArt.Warnung);
+        return;
+      }
 
-      if (kontrAngemeldet != null)
-        MessageBox.Show($"{bediener.Name} ist bereits an Maschine: '{kontrAngemeldet.eMaschine.MaschinenName}' angemeldet! Bitte erst an dieser Maschine abmelden.", "Information !", MessageBoxButton.OK, MessageBoxImage.Warning);
+      var bedienerAusgewaehlt = (tabBediener)(FindResource("vsBedienerAnmeldung") as CollectionViewSource).View.CurrentItem;
+      var anmeldung = _JgMaschine.Daten.SelectMany(s => s.sAktiveAnmeldungen).FirstOrDefault(w => w.fBediener == bedienerAusgewaehlt.Id);
+
+      if (anmeldung != null)
+        MessageBox.Show($"{bedienerAusgewaehlt.Name} ist bereits an Maschine: '{anmeldung.eMaschine.MaschinenName}' angemeldet! Bitte erst an dieser Maschine abmelden.", "Information !", MessageBoxButton.OK, MessageBoxImage.Warning);
       else
       {
         JgFormDatumZeit form = new JgFormDatumZeit();
-        if (form.Anzeigen("Anmeldung", $"Geben Sie die Zeit an, in welcher sich der '{bediener.Name}' angemeldet hat.", DateTime.Now))
+        if (form.Anzeigen("Anmeldung", $"Geben Sie die Zeit an, in welcher sich der '{_AuswahlBedienerAnmeldung.Name}' angemeldet hat.", DateTime.Now))
         {
-          var anmeldung = new tabAnmeldungMaschine()
+          anmeldung = new tabAnmeldungMaschine()
           {
             Id = Guid.NewGuid(),
-            fBediener = bediener.Id,
-            fMaschine = _Maschine.Id,
+            eBediener = bedienerAusgewaehlt,
+            eMaschine = _Maschine,
             Anmeldung = form.Datum,
             ManuelleAnmeldung = true,
             ManuelleAbmeldung = true,
             fAktivMaschine = _Maschine.Id
           };
-          _ListeAnmeldungAktuell.Add(anmeldung);
+          var datAnmeldung = (JgEntityTab<tabAnmeldungMaschine>)_DatenPool.Tabs[JgEntityAuto.TabArt.Anmeldung];
+          datAnmeldung.Add(anmeldung);
 
-          if (_Maschine.fAktivReparatur != null)
-          {
-            var anmeldungReparatur = new tabAnmeldungReparatur()
-            {
-              Id = Guid.NewGuid(),
-              fReparatur = (Guid)_Maschine.fAktivReparatur,
-              fBediener = anmeldung.fBediener,
-              Anmeldung = DateTime.Now,
-            };
-            DbSichern.AbgleichEintragen(anmeldungReparatur.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-            _ListeReparaturAktuell.Db.tabAnmeldungReparaturSet.Add(anmeldungReparatur);
-            _ListeReparaturAktuell.Db.SaveChanges();
-          }
-
-          await TreeListAktualisieren();
+          TreeListMaschinRefresh();
         }
       }
     }
 
-    private async void AnmeldungBenutzerAbmelden_Click(object sender, RoutedEventArgs e)
+    private void BanutzerMaschineAbmelden_Click(object sender, RoutedEventArgs e)
     {
-      var anmeldung = _ListeAnmeldungAktuell.AktDatensatz;
+      var anmeldung = _JgAnmeldung.Current;
       string anzeigeText = $"Möchten Sie den Bediener {anmeldung.eBediener.Name} von der Maschine {anmeldung.eMaschine.MaschinenName} abmelden ?";
 
       JgFormDatumZeit form = new JgFormDatumZeit();
@@ -491,26 +577,26 @@ namespace JgMaschineVerwalten
         anmeldung.Abmeldung = form.Datum;
         anmeldung.ManuelleAbmeldung = true;
         anmeldung.eAktivMaschine = null;
-        _ListeAnmeldungAktuell.AktSichern(EnumStatusDatenabgleich.Geaendert);
-        _ListeAnmeldungAktuell.Remove(anmeldung);
+        _JgAnmeldung.Remove(anmeldung);
 
-        tabAnmeldungReparatur rep = _ListeReparaturAktuell.SelectMany(s => s.sAnmeldungen).FirstOrDefault(f => f.fBediener == anmeldung.fBediener);
+        tabAnmeldungReparatur rep = _JgReparatur.Daten.SelectMany(s => s.sAnmeldungen).Where(w => w.IstAktiv).FirstOrDefault(f => f.fBediener == anmeldung.fBediener);
         if (rep != null)
         {
           rep.Abmeldung = form.Datum;
           DbSichern.AbgleichEintragen(rep.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-          _ListeReparaturAktuell.Db.SaveChanges();
         }
 
-        await TreeListAktualisieren();
+        _JgAnmeldung.DsSave(anmeldung);
+
+        TreeListMaschinRefresh();
       }
     }
 
     private void AnmeldungBenutzerBearbeiten_Click(object sender, RoutedEventArgs e)
     {
-      var anmeldung = _ListeAnmeldungAuswahl.AktDatensatz;
+      var anmeldung = _ListeAnmeldungAuswahl.Current;
       var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {anmeldung.eBediener.Name}.";
-      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, anmeldung.Anmeldung, (DateTime)anmeldung.Abmeldung);
+      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, anmeldung.Anmeldung, anmeldung.Abmeldung ?? DateTime.Now);
       if (form.ShowDialog() ?? false)
       {
         if (form.DatumVon != anmeldung.Anmeldung)
@@ -523,107 +609,77 @@ namespace JgMaschineVerwalten
           anmeldung.Abmeldung = form.DatumBis;
           anmeldung.ManuelleAbmeldung = true;
         }
-        _ListeAnmeldungAuswahl.AktSichern(EnumStatusDatenabgleich.Geaendert);
+        _ListeAnmeldungAuswahl.DsSave();
         _ListeAnmeldungAuswahl.Refresh();
-      }
-    }
-
-    private void BenutzerAbmelden(tabAnmeldungMaschine Anmeldung, DateTime AbmeldeZeit)
-    {
-      if (Anmeldung != null)
-      {
-        var anmeldung = _ListeAnmeldungAktuell.FirstOrDefault(f => f.Id == Anmeldung.Id);
-        anmeldung.Abmeldung = AbmeldeZeit;
-        anmeldung.ManuelleAbmeldung = true;
-        anmeldung.eAktivMaschine = null;
-        DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-        _ListeAnmeldungAktuell.Db.SaveChanges();
-
-        var anmeldungReparatur = _ListeReparaturAktuell.SelectMany(m => m.sAnmeldungen).FirstOrDefault(f => f.fBediener == anmeldung.fBediener);
-        ReparaturBedienerAbmelden(anmeldungReparatur, AbmeldeZeit);
       }
     }
 
     #endregion
 
-    #region Arbeitszeit verwalten
+    #region Arbeitszeit verwalten **************************************************
 
-    private void ArbeitszeitAnmeldung_Click(object sender, RoutedEventArgs e)
+    private void ArbeitszeitErstellen_Click(object sender, RoutedEventArgs e)
     {
       var bediener = (tabBediener)(FindResource("vsBedienerArbeitszeit") as CollectionViewSource).View.CurrentItem;
 
       if (bediener.eAktivArbeitszeit != null)
-        MessageBox.Show($"Bediener {bediener.Name} bereits angemeldet !", "Informaation !", MessageBoxButton.OK, MessageBoxImage.Warning);
+        Helper.Protokoll($"Bediener {bediener.Name} bereits angemeldet !", Helper.ProtokollArt.Warnung);
       else
       {
-        string anzeigeText = string.Format("Mitarbeiter {0} im Betrieb anmelden ?", bediener.Name);
+        string anzeigeText = string.Format("Mitarbeiter {0} im Betrieb anmelden ?", _AuswahlBedienerArbeitszeit.Name);
         FormAuswahlDatumZeit form = new FormAuswahlDatumZeit("Anmeldung", anzeigeText, DateTime.Now);
         if (form.ShowDialog() ?? false)
         {
           var arbeitszeit = new JgMaschineData.tabArbeitszeit()
           {
             Id = Guid.NewGuid(),
-            fBediener = bediener.Id,
+            fBediener = _AuswahlBedienerArbeitszeit.Id,
             fStandort = _Standort.Id,
             Anmeldung = form.DatumZeit,
             ManuelleAnmeldung = true,
             ManuelleAbmeldung = true,
           };
-          _ListeArbeitszeitAktuell.Add(arbeitszeit);
+
+          _JgArbeitszeit.Add(arbeitszeit);
 
           bediener.fAktivArbeitszeit = arbeitszeit.Id;
-          _ListeBediener.DsSichern(bediener, EnumStatusDatenabgleich.Geaendert);
+          _JgBediener.DsSave(bediener);
         }
       }
     }
 
-    private async void ArbeitszeitAbmeldung_Click(object sender, RoutedEventArgs e)
+    private void ArbeitszeitAbmeldung_Click(object sender, RoutedEventArgs e)
     {
-      var arbeitszeit = _ListeArbeitszeitAktuell.AktDatensatz;
-
       JgFormDatumZeit form = new JgFormDatumZeit();
-      if (form.Anzeigen("Abmeldung Bediener", $"Möchten Sie '{arbeitszeit.eBediener.Name}' abmelden ?", DateTime.Now))
+      if (form.Anzeigen("Abmeldung Bediener", $"Möchten Sie '{_JgArbeitszeit.Current.eBediener.Name}' abmelden ?", DateTime.Now))
       {
-        arbeitszeit.Abmeldung = form.Datum;
-        arbeitszeit.ManuelleAbmeldung = true;
-
-        arbeitszeit.eBediener.fAktivArbeitszeit = null;
-        DbSichern.AbgleichEintragen(arbeitszeit.eBediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-
-        _ListeArbeitszeitAktuell.AktSichern(EnumStatusDatenabgleich.Geaendert);
-        _ListeArbeitszeitAktuell.Remove(arbeitszeit);
-
-        var anmeldungAktuell = _ListeAnmeldungAktuell.FirstOrDefault(f => f.fBediener == arbeitszeit.fBediener);
-        if (anmeldungAktuell != null)
-        {
-          var anzeigeText = $"{arbeitszeit.eBediener.Name} ist noch an Maschine '{anmeldungAktuell.eMaschine.MaschinenName}' angemeldet. Von dieser Maschine abmelden?";
-          var erg = MessageBox.Show(anzeigeText, "Abfrage Abmeldung", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
-          if (erg == MessageBoxResult.Yes)
-            BenutzerAbmelden(anmeldungAktuell, form.Datum);
-          await TreeListAktualisieren();
-        }
+        var abmeldung = _JgArbeitszeit.Current;
+        abmeldung.eBediener.fAktivArbeitszeit = null;
+        abmeldung.Abmeldung = form.Datum;
+        abmeldung.ManuelleAbmeldung = true;
+        _JgArbeitszeit.DsSave(abmeldung);
+        _JgArbeitszeit.Remove(abmeldung);
       }
     }
 
     private void ArbeitszeitBearbeiten_Click(object sender, RoutedEventArgs e)
     {
-      var arbeitszeit = _ListeArbeitszeitAuswahl.AktDatensatz;
-      var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {arbeitszeit.eBediener.Name}.";
-      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, arbeitszeit.Anmeldung, arbeitszeit.Abmeldung ?? DateTime.Now);
+      var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {_ListeArbeitszeitAuswahl.Current.eBediener.Name}.";
+
+      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
       if (form.ShowDialog() ?? false)
       {
-        if (form.DatumVon != arbeitszeit.Anmeldung)
+        if (form.DatumVon != _ListeArbeitszeitAuswahl.Current.Anmeldung)
         {
-          arbeitszeit.Anmeldung = form.DatumVon;
-          arbeitszeit.ManuelleAnmeldung = true;
+          _ListeArbeitszeitAuswahl.Current.Anmeldung = form.DatumVon;
+          _ListeArbeitszeitAuswahl.Current.ManuelleAnmeldung = true;
         }
-        if (form.DatumBis != arbeitszeit.Abmeldung)
+        if (form.DatumBis != _ListeArbeitszeitAuswahl.Current.Abmeldung)
         {
-          arbeitszeit.Abmeldung = form.DatumBis;
-          arbeitszeit.ManuelleAbmeldung = true;
+          _ListeArbeitszeitAuswahl.Current.Abmeldung = form.DatumBis;
+          _ListeArbeitszeitAuswahl.Current.ManuelleAbmeldung = true;
         }
-        _ListeArbeitszeitAuswahl.AktSichern(EnumStatusDatenabgleich.Geaendert);
-        _ListeArbeitszeitAuswahl.Refresh();
+        _ListeArbeitszeitAuswahl.DsSave();
       }
     }
 
@@ -641,51 +697,37 @@ namespace JgMaschineVerwalten
       if (form.ShowDialog() ?? false)
       {
         _Standort = form.StandOrt;
-        using (var db = new JgMaschineData.JgModelContainer())
-        {
-          _VsMaschine.Source = db.tabMaschineSet.Where(w => (w.fStandort == _Standort.Id) && (w.Status != JgMaschineData.EnumStatusMaschine.Stillgelegt)).ToList();
-        }
-        treeViewMaschinen.UpdateLayout();
-        if (treeViewMaschinen.Items.Count > 0)
-          (treeViewMaschinen.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsSelected = true;
-
-        await _ListeArbeitszeitAktuell.DatenGenerierenAsync();
-        await _ListeArbeitszeitAktuell.Db.tabBedienerSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
-        await _ListeAnmeldungAktuell.DatenGenerierenAsync();
-        await _ListeAnmeldungAktuell.Db.tabBedienerSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
-        await _ListeAnmeldungAktuell.Db.tabMaschineSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
-        await _ListeReparaturAktuell.DatenGenerierenAsync();
-        await _ListeReparaturAktuell.Db.tabBedienerSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
-        await _ListeReparaturAktuell.Db.tabMaschineSet.Where(w => w.fStandort == _Standort.Id).ToListAsync();
+        await InitListen();
       }
     }
     private void Window_Closed(object sender, EventArgs e)
     {
       Properties.Settings.Default.Save();
     }
-    private async void btnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
+
+    private void btnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
     {
       switch ((sender as Button).Tag.ToString())
       {
-        case "1": await _ListeArbeitszeitAuswahl.DatenGenerierenAsync(); break;
-        case "2": await _ListeAnmeldungAuswahl.DatenGenerierenAsync(); break;
-        case "3": await _ListeBauteilAuswahl.DatenGenerierenAsync(); break;
-        case "4": await _ListeReparaturAuswahl.DatenGenerierenAsync(); break;
+        case "1": _ListeArbeitszeitAuswahl.DatenAktualisieren(); break;
+        case "2": _ListeAnmeldungAuswahl.DatenAktualisieren(); break;
+        case "3": _ListeBauteilAuswahl.DatenAktualisieren(); break;
+        case "4": _ListeReparaturAuswahl.DatenAktualisieren(); break;
       }
     }
+
     private void btnDrucken_Click(object sender, RoutedEventArgs e)
     {
-      var auswahl = (EnumFilterAuswertung)Enum.Parse(typeof(EnumFilterAuswertung), (sender as Button).Tag.ToString()[0].ToString());
-      var vorgang = Convert.ToInt32((sender as Button).Tag.ToString().Substring(1));  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report
+      var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report
 
       if (vorgang < 4)
       {
-        switch (auswahl)
+        switch (_Auswahl)
         {
-          case JgMaschineData.EnumFilterAuswertung.Arbeitszeit: _AktAuswertung = (tabAuswertung)_VsAuswertungArbeitszeit.View.CurrentItem; break;
-          case JgMaschineData.EnumFilterAuswertung.Anmeldung: _AktAuswertung = (tabAuswertung)_VsAuswertungAnmeldung.View.CurrentItem; break;
-          case JgMaschineData.EnumFilterAuswertung.Bauteil: _AktAuswertung = (tabAuswertung)_VsAuswertungBauteil.View.CurrentItem; break;
-          case JgMaschineData.EnumFilterAuswertung.Reparatur: _AktAuswertung = (tabAuswertung)_VsAuswertungReparatur.View.CurrentItem; break;
+          case EnumFilterAuswertung.Arbeitszeit: _AktAuswertung = (tabAuswertung)_VsAuswertungArbeitszeit.View.CurrentItem; break;
+          case EnumFilterAuswertung.Anmeldung: _AktAuswertung = (tabAuswertung)_VsAuswertungAnmeldung.View.CurrentItem; break;
+          case EnumFilterAuswertung.Bauteil: _AktAuswertung = (tabAuswertung)_VsAuswertungBauteil.View.CurrentItem; break;
+          case EnumFilterAuswertung.Reparatur: _AktAuswertung = (tabAuswertung)_VsAuswertungReparatur.View.CurrentItem; break;
         }
 
         if (_AktAuswertung == null)
@@ -704,45 +746,45 @@ namespace JgMaschineVerwalten
         }
       }
 
-      switch (auswahl)
+      switch (_Auswahl)
       {
         case JgMaschineData.EnumFilterAuswertung.Arbeitszeit:
           if (tcArbeitszeit.SelectedIndex == 0)
-            _Report.RegisterData(_ListeArbeitszeitAktuell, "Daten");
+            _Report.RegisterData(_JgArbeitszeit.Daten, "Daten");
           else
           {
-            _Report.RegisterData(_ListeArbeitszeitAuswahl, "Daten");
+            _Report.RegisterData(_ListeArbeitszeitAuswahl.Daten, "Daten");
             _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon);
             _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis);
           }
           _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 0);
           break;
         case JgMaschineData.EnumFilterAuswertung.Anmeldung:
-          if (tcAnmeldungen.SelectedIndex == 0)
-            _Report.RegisterData(_ListeAnmeldungAktuell, "Daten");
+          if (tcAnmeldung.SelectedIndex == 0)
+            _Report.RegisterData(_JgAnmeldung.Daten, "Daten");
           else
           {
-            _Report.RegisterData(_ListeAnmeldungAuswahl, "Daten");
+            _Report.RegisterData(_ListeAnmeldungAuswahl.Daten, "Daten");
             _Report.SetParameterValue("DatumVon", _DzAnmeldungVon);
             _Report.SetParameterValue("DatumBis", _DzAnmeldungBis);
           }
-          _Report.SetParameterValue("IstAktuell", tcAnmeldungen.SelectedIndex == 0);
+          _Report.SetParameterValue("IstAktuell", tcAnmeldung.SelectedIndex == 0);
           break;
-        case JgMaschineData.EnumFilterAuswertung.Bauteil:
-          _Report.RegisterData(_ListeBauteilAuswahl, "Daten");
+        case EnumFilterAuswertung.Bauteil:
+          _Report.RegisterData(_ListeBauteilAuswahl.Daten, "Daten");
           _Report.SetParameterValue("DatumVon", _DzBauteilVon);
           _Report.SetParameterValue("DatumBis", _DzBauteilBis);
           break;
-        case JgMaschineData.EnumFilterAuswertung.Reparatur:
-          if (tcReparaturen.SelectedIndex == 0)
-            _Report.RegisterData(_ListeReparaturAktuell, "Daten");
+        case EnumFilterAuswertung.Reparatur:
+          if (tcReparatur.SelectedIndex == 0)
+            _Report.RegisterData(_JgReparatur.Daten, "Daten");
           else
           {
-            _Report.RegisterData(_ListeReparaturAuswahl, "Daten");
+            _Report.RegisterData(_ListeReparaturAuswahl.Daten, "Daten");
             _Report.SetParameterValue("DatumVon", _DzReparaturVon);
             _Report.SetParameterValue("DatumBis", _DzReparaturBis);
           }
-          _Report.SetParameterValue("IstAktuell", tcReparaturen.SelectedIndex == 0);
+          _Report.SetParameterValue("IstAktuell", tcReparatur.SelectedIndex == 0);
           break;
         default:
           break;
@@ -757,7 +799,7 @@ namespace JgMaschineVerwalten
           _AktAuswertung = new JgMaschineData.tabAuswertung()
           {
             Id = Guid.NewGuid(),
-            FilterAuswertung = auswahl,
+            FilterAuswertung = _Auswahl,
             ReportName = form.ReportName,
             ErstelltDatum = DateTime.Now,
             ErstelltName = username,
@@ -766,12 +808,12 @@ namespace JgMaschineVerwalten
           };
           _ListeAuswertung.Add(_AktAuswertung);
 
-          switch (auswahl)
+          switch (_Auswahl)
           {
-            case JgMaschineData.EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.MoveCurrentTo(_AktAuswertung); break;
-            case JgMaschineData.EnumFilterAuswertung.Anmeldung: _VsAuswertungAnmeldung.View.MoveCurrentTo(_AktAuswertung); break;
-            case JgMaschineData.EnumFilterAuswertung.Bauteil: _VsAuswertungBauteil.View.MoveCurrentTo(_AktAuswertung); break;
-            case JgMaschineData.EnumFilterAuswertung.Reparatur: _VsAuswertungReparatur.View.MoveCurrentTo(_AktAuswertung); break;
+            case EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.MoveCurrentTo(_AktAuswertung); break;
+            case EnumFilterAuswertung.Anmeldung: _VsAuswertungAnmeldung.View.MoveCurrentTo(_AktAuswertung); break;
+            case EnumFilterAuswertung.Bauteil: _VsAuswertungBauteil.View.MoveCurrentTo(_AktAuswertung); break;
+            case EnumFilterAuswertung.Reparatur: _VsAuswertungReparatur.View.MoveCurrentTo(_AktAuswertung); break;
           }
 
           _Report.Design();
@@ -785,23 +827,16 @@ namespace JgMaschineVerwalten
           case 3: _Report.Design(); break;
         }
     }
-    private async void TabelleAktualisieren_Click(object sender, RoutedEventArgs e)
-    {
-      switch ((sender as Button).Tag.ToString())
-      {
-        case "0": await TreeListAktualisieren(); break;
-        case "1": await 
-            _ListeArbeitszeitAktuell.DatenGenerierenAsync();
 
-          break;
-        case "2": await _ListeAnmeldungAktuell.DatenGenerierenAsync(); break;
-        case "4": await _ListeReparaturAktuell.DatenGenerierenAsync(); break;
-      }
+    private void TabelleAktualisieren_Click(object sender, RoutedEventArgs e)
+    {
+      _DatenPool.DatenAktualisieren();
     }
 
     private void button_Click(object sender, RoutedEventArgs e)
     {
-      (FindResource("vsReparaturAktuell") as CollectionViewSource).View.Refresh();
+      _JgReparatur.ViewSource.View.Refresh();
+
     }
   }
 }

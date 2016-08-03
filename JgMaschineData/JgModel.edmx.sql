@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 07/22/2016 11:33:08
--- Generated from EDMX file: D:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
+-- Date Created: 08/01/2016 16:04:42
+-- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -234,7 +234,7 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [VorgangEnde] datetime  NULL,
     [ProtokollText] nvarchar(max)  NULL,
     [CoilwechselAnzahl] tinyint  NULL,
-    [Ereigniss] tinyint  NOT NULL,
+    [Ereignis] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,

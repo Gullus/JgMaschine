@@ -11,7 +11,7 @@ namespace JgMaschineData
 {
     using System;
     
-    public enum EnumReperaturEreigniss : byte
+    public enum EnumReperaturEreignis : byte
     {
         Wartung = 0,
         Coilwechsel = 1,

@@ -4,14 +4,14 @@
     xmlns:ec="http://schemas.microsoft.com/expression/2010/controls" 
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit"    
     x:Class="JgMaschineLib.Zeit.FormAuswahlDatumVonBis"
-    Title="Terminabfrage" Height="214" Width="433" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
+    Title="Terminabfrage" Height="220" Width="401" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
 
   <Window.Resources>
     <libZeit:JgDatumZeit x:Key="dzDatumVon" />
     <libZeit:JgDatumZeit x:Key="dzDatumBis" />
   </Window.Resources>
 
-  <Grid Margin="7">
+  <Grid Margin="8">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"/>
       <ColumnDefinition/>

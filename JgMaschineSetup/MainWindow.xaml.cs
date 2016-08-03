@@ -7,14 +7,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using JgMaschineLib;
 
 namespace JgMaschineSetup
 {
   public partial class MainWindow : Window
   {
-    private JgMaschineLib.JgList<JgMaschineData.tabMaschine> _ListeMaschinen;
-    private JgMaschineLib.JgList<JgMaschineData.tabStandort> _ListeStandorte;
-    private JgMaschineLib.JgList<JgMaschineData.tabBediener> _ListeBediener;
+    private JgEntityView<tabMaschine> _ListeMaschinen;
+    private JgEntityView<tabStandort> _ListeStandorte;
+    private JgEntityView<tabBediener> _ListeBediener;
 
     public MainWindow()
     {
@@ -23,23 +24,42 @@ namespace JgMaschineSetup
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      _ListeMaschinen = new JgMaschineLib.JgList<tabMaschine>((CollectionViewSource)this.FindResource("vsMaschinen"));
-      _ListeMaschinen.MyQuery = _ListeMaschinen.Db.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll).OrderBy(o => o.MaschinenName);
-      _ListeMaschinen.ListeTabellen = new DataGrid[] { dgMaschine };
-      await _ListeMaschinen.DatenGenerierenAsync();
+      using (var db = new JgModelContainer()) { var ds = await db.tabStandortSet.FirstOrDefaultAsync(); }
 
-      _ListeStandorte = new JgMaschineLib.JgList<tabStandort>((CollectionViewSource)this.FindResource("vsStandort"));
-      _ListeStandorte.MyQuery = _ListeStandorte.Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung);
-      _ListeStandorte.ListeTabellen = new DataGrid[] { dgStandort };
-      await _ListeStandorte.DatenGenerierenAsync();
+      _ListeMaschinen = new JgEntityView<tabMaschine>()
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsMaschinen"),
+        Tabellen = new DataGrid[] { dgMaschine },
+        DatenErstellen = (db) =>
+        {
+          return db.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll).OrderBy(o => o.MaschinenName).ToList();
+        }
+      };
+      _ListeMaschinen.DatenAktualisieren();
 
-      _ListeBediener = new JgMaschineLib.JgList<tabBediener>((CollectionViewSource)this.FindResource("vsBediener"));
-      _ListeBediener.MyQuery = _ListeBediener.Db.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName);
-      _ListeBediener.ListeTabellen = new DataGrid[] { dgBediener };
-      await _ListeBediener.DatenGenerierenAsync();
+      _ListeStandorte = new JgEntityView<tabStandort>()
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
+        Tabellen = new DataGrid[] { dgStandort },
+        DatenErstellen = (db) =>
+        {
+          return db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
+        }
+      };
+      _ListeStandorte.DatenAktualisieren();
+
+      _ListeBediener = new JgEntityView<tabBediener>()
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsBediener"),
+        Tabellen = new DataGrid[] { dgBediener },
+        DatenErstellen = (db) =>
+        {
+          return db.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToList();
+        }
+      };
+      _ListeBediener.DatenAktualisieren();
 
       cbStatusBediener.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusBediener));
-
       InitCommands();
     }
 
@@ -47,55 +67,58 @@ namespace JgMaschineSetup
     {
       CommandBindings.Add(new CommandBinding(MyCommands.MaschineBearbeiten, (sen, erg) =>
       {
-        var form = new Fenster.FormMaschinenOptionen(_ListeMaschinen.AktDatensatz, _ListeStandorte);
+        var form = new Fenster.FormMaschinenOptionen(_ListeMaschinen.Current, _ListeStandorte.Daten);
         if (form.ShowDialog() ?? false)
-          _ListeMaschinen.AktSichern(EnumStatusDatenabgleich.Geaendert);
+          _ListeMaschinen.DsSave();
         else
-          _ListeMaschinen.Reload(form.Maschine);
+          _ListeMaschinen.Reload();
       },
       (sen, erg) =>
       {
-        erg.CanExecute = !_ListeMaschinen.IsEmpty;
+        erg.CanExecute = _ListeMaschinen.Current != null;
       }));
 
       CommandBindings.Add(new CommandBinding(MyCommands.BedienerBeabeiten, (sen, erg) =>
       {
-        var form = new Fenster.FormBediener(_ListeBediener.AktDatensatz, _ListeStandorte);
+        var form = new Fenster.FormBediener(_ListeBediener.Current, _ListeStandorte.Daten);
         if (form.ShowDialog() ?? false)
-          _ListeBediener.AktSichern(EnumStatusDatenabgleich.Geaendert);
+          _ListeBediener.DsSave();
         else
-          _ListeBediener.Reload(form.Bediener);
+          _ListeBediener.Reload();
       }, (sen, erg) =>
       {
-        erg.CanExecute = !_ListeBediener.IsEmpty;
+        erg.CanExecute = _ListeBediener.Current != null;
       }));
 
       CommandBindings.Add(new CommandBinding(MyCommands.StandortBearbeiten, (sen, erg) =>
       {
-        var form = new Fenster.FormStandort(_ListeStandorte.AktDatensatz);
+        var form = new Fenster.FormStandort(_ListeStandorte.Current);
         if (form.ShowDialog() ?? false)
-          _ListeStandorte.AktSichern(EnumStatusDatenabgleich.Geaendert);
+          _ListeStandorte.DsSave();
         else
-          _ListeStandorte.Reload(form.Standort);
+          _ListeStandorte.Reload();
       }
       , (sen, erg) =>
       {
-        erg.CanExecute = !_ListeStandorte.IsEmpty;
+        erg.CanExecute = _ListeStandorte.Current != null;
       }));
 
       CommandBindings.Add(new CommandBinding(MyCommands.ProtokollBearbeiten, (sen, erg) =>
       {
-        var prot = _ListeMaschinen.AktDatensatz.eProtokoll;
+        var prot = _ListeMaschinen.Current.eProtokoll;
         if (prot == null)
-          prot = ProtokollErstellen(_ListeMaschinen.AktDatensatz);
-        var form = new FormProtokollOptionen(_ListeMaschinen.AktDatensatz.eProtokoll);
+          prot = ProtokollErstellen(_ListeMaschinen.Current);
+        var form = new FormProtokollOptionen(_ListeMaschinen.Current.eProtokoll);
         if (form.ShowDialog() ?? false)
-          _ListeMaschinen.DsSichern(form.Protokoll, EnumStatusDatenabgleich.Geaendert);
+        {
+          DbSichern.AbgleichEintragen(form.Protokoll.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          _ListeMaschinen.Db.SaveChanges();
+        }
         else
-          _ListeMaschinen.DsReload<tabProtokoll>(form.Protokoll);
+          _ListeMaschinen.Db.Entry(form.Protokoll);
       }, (sen, erg) =>
       {
-        erg.CanExecute = !_ListeMaschinen.IsEmpty;
+        erg.CanExecute = _ListeMaschinen.Current != null;
       }));
     }
 
@@ -111,14 +134,14 @@ namespace JgMaschineSetup
       if (!KontrolleStandorte())
         return;
 
-      var form = new JgMaschineSetup.Fenster.FormBediener(null, _ListeStandorte);
+      var form = new JgMaschineSetup.Fenster.FormBediener(null, _ListeStandorte.Daten);
       if (form.ShowDialog() ?? false)
         _ListeBediener.Add(form.Bediener);
     }
 
     private bool KontrolleStandorte()
     {
-      if (_ListeStandorte.IsEmpty)
+      if (_ListeStandorte.Current == null)
       {
         MessageBox.Show("Es müssen Standorte vorhanden sein.", "Information !", MessageBoxButton.OK, MessageBoxImage.Information);
         return false;
@@ -147,7 +170,7 @@ namespace JgMaschineSetup
       if (!KontrolleStandorte())
         return;
 
-      var form = new Fenster.FormMaschinenOptionen(null, _ListeStandorte);
+      var form = new Fenster.FormMaschinenOptionen(null, _ListeStandorte.Daten);
       if (form.ShowDialog() ?? false)
       {
         _ListeMaschinen.Add(form.Maschine);
@@ -155,9 +178,14 @@ namespace JgMaschineSetup
       }
     }
 
-    private async void ButtonDatenAktualisieren_Click(object sender, RoutedEventArgs e)
+    private void ButtonDatenAktualisieren_Click(object sender, RoutedEventArgs e)
     {
-      await _ListeMaschinen.DatenGenerierenAsync();
+      switch ((sender as Button).Tag.ToString())
+      {
+        case "Maschine": _ListeMaschinen.DatenAktualisieren(); break;
+        case "Standort": _ListeStandorte.DatenAktualisieren(); break;
+        case "Bediener": _ListeBediener.DatenAktualisieren(); break;
+      }
     }
   }
 }

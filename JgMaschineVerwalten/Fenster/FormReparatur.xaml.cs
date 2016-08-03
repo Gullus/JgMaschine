@@ -1,9 +1,8 @@
-﻿using JgMaschineLib.Zeit;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using JgMaschineData;
+using JgMaschineLib.Zeit;
 
 namespace JgMaschineVerwalten.Fenster
 {
@@ -11,20 +10,19 @@ namespace JgMaschineVerwalten.Fenster
   {
     public JgMaschineData.tabReparatur Reparatur { get { return (tabReparatur)gridReparatur.DataContext; } }
 
-    public FormReparatur(JgMaschineData.tabReparatur Reparatur, IEnumerable<JgMaschineData.tabBediener> Bediener, JgMaschineData.tabMaschine AktuelleMaschine = null)
+    public FormReparatur(JgMaschineData.tabReparatur Reparatur, IEnumerable<tabBediener> Bediener, tabMaschine AktuelleMaschine = null)
     {
       InitializeComponent();
       tblMaschine.Text = Reparatur?.eMaschine?.MaschinenName ?? AktuelleMaschine.MaschinenName;
 
       cmbVerursacher.ItemsSource = Bediener;
       cmbProtokollant.ItemsSource = Bediener;
-      cmbEreigniss.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumReperaturEreigniss));
+      cmbEreigniss.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumReperaturEreignis));
 
       if (Reparatur == null)
       {
         Reparatur = new JgMaschineData.tabReparatur()
         {
-          Id = Guid.NewGuid(),
           VorgangBeginn = DateTime.Now,
           fMaschine = AktuelleMaschine.Id
         };

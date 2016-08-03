@@ -69,8 +69,8 @@
       <TextBlock x:Name="tblStandort" Text="-" TextAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0" Foreground="Red" FontWeight="Bold"/>
     </StackPanel>
 
-    <TabControl Grid.Column="1" TabStripPlacement="Right" Margin="10,5,5,5" Grid.RowSpan="3">
-      <TabItem x:Name="tabArbeitszeitAktuell" Header="Arbeitszeit" Width="100"  Height="50">
+    <TabControl x:Name="tcVerwaltung" Grid.Column="1" TabStripPlacement="Right" Margin="10,5,5,5" Grid.RowSpan="3">
+      <TabItem Header="Arbeitszeit" Width="100"  Height="50" Tag="1">
         <Grid Margin="10">
           <Grid.RowDefinitions>
             <RowDefinition />
@@ -93,18 +93,11 @@
                   <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Mitarbeiter" />
-                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerArbeitszeit}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
-                <Button Click="ArbeitszeitAnmeldung_Click" Grid.Column="2">
+                <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerArbeitszeit}}" Grid.Column="1" DisplayMemberPath="Name" />
+                <Button Click="ArbeitszeitErstellen_Click" Grid.Column="2">
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgAdd.ico" Height="14"/>
-                    <TextBlock Text=" Mitarbeiter anmelden" VerticalAlignment="Center"/>
-                  </StackPanel>
-                </Button>
-
-                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="1">
-                  <StackPanel Orientation="Horizontal">
-                    <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
-                    <TextBlock Text=" syncron." VerticalAlignment="Center"/>
+                    <TextBlock Text=" Arbeitszeit erstellen " VerticalAlignment="Center"/>
                   </StackPanel>
                 </Button>
 
@@ -112,7 +105,6 @@
                   <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
                     <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightCenter}"/>
-
                     <DataGridTemplateColumn Header="Abmelden" Width="80">
                       <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -124,6 +116,7 @@
                 </DataGrid>
               </Grid>
             </TabItem>
+            
             <TabItem Header="  Ausgewählte Arbeitszeiten  ">
               <Grid Margin="5">
                 <Grid.ColumnDefinitions>
@@ -200,36 +193,35 @@
             </Grid.ColumnDefinitions>
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungArbeitszeit}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="11">
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="12">
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="13">
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="14">
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-
           </Grid>
         </Grid>
       </TabItem>
 
-      <TabItem Header="Anmeldungen" Width="100"  Height="50">
+      <TabItem Header="Anmeldungen" Width="100"  Height="50" Tag="2">
         <Grid Margin="10">
           <Grid.RowDefinitions>
             <RowDefinition />
@@ -237,7 +229,7 @@
             <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
 
-          <TabControl x:Name="tcAnmeldungen">
+          <TabControl x:Name="tcAnmeldung">
             <TabItem Header="  Aktuelle Anmeldungen  " Height="30">
               <Grid Margin="5">
                 <Grid.ColumnDefinitions>
@@ -254,17 +246,10 @@
                 </Grid.RowDefinitions>
                 <Label Content="Mitarbeiter" />
                 <ComboBox ItemsSource="{Binding Source={StaticResource vsBedienerAnmeldung}}" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id" />
-                <Button Command="{x:Static comands:MyCommands.AnmeldungBediener}" Grid.Column="2">
+                <Button Grid.Column="2" Click="NeueAnmeldungMaschine_Click">
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgAdd.ico" Height="14"/>
                     <TextBlock Text=" Mitarbeiter an Maschine anmelden" VerticalAlignment="Center"/>
-                  </StackPanel>
-                </Button>
-
-                <Button Click="TabelleAktualisieren_Click" Grid.Column="4" Tag="2">
-                  <StackPanel Orientation="Horizontal">
-                    <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
-                    <TextBlock Text=" syncron." VerticalAlignment="Center"/>
                   </StackPanel>
                 </Button>
 
@@ -277,7 +262,7 @@
                     <DataGridTemplateColumn Header="Abmelden" Width="80">
                       <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                          <Button Margin="1" Click="AnmeldungBenutzerAbmelden_Click" />
+                          <Button Margin="1" Click="BanutzerMaschineAbmelden_Click" />
                         </DataTemplate>
                       </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -361,25 +346,25 @@
             </Grid.ColumnDefinitions>
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungAnmeldung}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="21">
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="22">
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="23">
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="24">
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
@@ -391,7 +376,7 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="Bauteile" Width="100"  Height="50">
+      <TabItem Header="Bauteile" Width="100"  Height="50" Tag="3">
         <Grid Margin="10">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -468,25 +453,25 @@
             </Grid.ColumnDefinitions>
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungBauteil}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="31">
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
               <StackPanel Orientation="Horizontal">
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="32">
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="33">
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="34">
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
@@ -503,7 +488,7 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="Reparaturen" Width="100" Height="50">
+      <TabItem Header="Reparaturen" Width="100" Height="50" Tag="4">
         <Grid Margin="10">
           <Grid.RowDefinitions>
             <RowDefinition />
@@ -511,9 +496,9 @@
             <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
 
-          <TabControl x:Name="tcReparaturen">
+          <TabControl x:Name="tcReparatur">
             <TabItem Header="  Aktuelle Reparaturen  " Height="30">
-              <Grid Margin="5" DataContext="{StaticResource vsReparaturAktuell}" >
+              <Grid  DataContext="{StaticResource vsReparaturAktuell}" >
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="160"/>
                   <ColumnDefinition Width="300"/>
@@ -530,17 +515,10 @@
                   <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Button Command="{x:Static comands:MyCommands.ReparaturNeu}">
+                <Button Click="NeueReparaturErstellen_Click">
                   <StackPanel Orientation="Horizontal">
                     <Image Source="Bilder\JgNew.ico" Margin="1" Height="16" />
                     <TextBlock Text="Neue Reparatur" VerticalAlignment="Center"/>
-                  </StackPanel>
-                </Button>
-
-                <Button Click="TabelleAktualisieren_Click" Grid.Column="3" Tag="4">
-                  <StackPanel Orientation="Horizontal">
-                    <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
-                    <TextBlock Text=" syncron." VerticalAlignment="Center"/>
                   </StackPanel>
                 </Button>
 
@@ -549,7 +527,7 @@
                     <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" />
                     <DataGridTextColumn Width="90" Header="von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                     <DataGridTextColumn Width="90" Header="bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" CellStyle="{DynamicResource CellRightCenter}" />
-                    <DataGridTextColumn Width="100" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
+                    <DataGridTextColumn Width="100" Header="Ereigniss" Binding="{Binding Ereignis}"/>
                     <DataGridTextColumn Width="40" Header="Coil" Binding="{Binding CoilwechselAnzahl}"/>
                     <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
                     <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
@@ -572,7 +550,7 @@
                   </DataGrid.Columns>
                 </DataGrid>
 
-                <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="2" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsReparaturAktuellBediener}}" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.Row="3" Grid.RowSpan="2">
+                <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="2" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsReparaturAktuellBediener}}" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.Row="3" Grid.RowSpan="2" CanUserAddRows="False">
                   <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="*"/>
                     <DataGridTextColumn Width="90" Header="von" Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
@@ -598,14 +576,17 @@
                     <TextBlock Text="Neuen Bediener anmelden" VerticalAlignment="Center"/>
                   </StackPanel>
                 </Button>
+                
+                <TextBlock Grid.Column="2" Grid.ColumnSpan="4" Margin="5,5,5,5" Grid.Row="3" TextAlignment="Center" Text="Sollten Bediener bei der Auswahl fehlen, müssen die von einer anderen Reparatur abgemeldet werden." TextWrapping="Wrap" HorizontalAlignment="Left" Width="200" FontStyle="Italic"/>
 
                 <Label Content="Protokolltext" Grid.Row="5"/>
                 <TextBox IsReadOnly="True" Text="{Binding ProtokollText}" Grid.Row="6" Grid.ColumnSpan="4" Style="{DynamicResource StyleTextBoxReadOnly}"/>
-                <Button x:Name="button" Grid.ColumnSpan="2" Content="Button" Grid.Column="2" HorizontalAlignment="Left" Margin="66,27,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+                <Button x:Name="button" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="71,12,0,0" Grid.Row="5" Grid.RowSpan="2" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+
               </Grid>
             </TabItem>
-            <TabItem Header="  Ausgewählte Reparaturen  ">
 
+            <TabItem Header="  Ausgewählte Reparaturen  ">
               <Grid Margin="5" DataContext="{StaticResource vsReparaturAuswahl}">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="Auto"/>
@@ -626,11 +607,11 @@
                 <Grid.RowDefinitions>
                   <RowDefinition Height="Auto" />
                   <RowDefinition Height="5" />
-                  <RowDefinition Height="3*"/>
+                  <RowDefinition Height="2*"/>
                   <RowDefinition />
                   <RowDefinition Height="28"/>
                   <RowDefinition Height="Auto"/>
-                  <RowDefinition Height="2*" />
+                  <RowDefinition />
                 </Grid.RowDefinitions>
                 <Label Content="Auswahl vom"/>
                 <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturVon}}" Height="Auto" Margin="3,2"/>
@@ -658,7 +639,7 @@
                     <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" />
                     <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                     <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" CellStyle="{DynamicResource CellRightCenter}" />
-                    <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereigniss}"/>
+                    <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereignis}"/>
                     <DataGridTextColumn Width="40" Header="Coil" Binding="{Binding CoilwechselAnzahl}"/>
                     <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
                     <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
@@ -673,7 +654,7 @@
                   </DataGrid.Columns>
                 </DataGrid>
 
-                <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="9" Width="454" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsReparaturAuswahlBediener}}" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.Row="3" Grid.RowSpan="2" HorizontalAlignment="Left" Margin="3,3,0,3">
+                <DataGrid Width="454" AutoGenerateColumns="False" Grid.ColumnSpan="9" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsReparaturAuswahlBediener}}" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.Row="3" Grid.RowSpan="2" HorizontalAlignment="Left">
                   <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="*"/>
                     <DataGridTextColumn Width="90" Header="von" Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
@@ -681,7 +662,7 @@
                     <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                       <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                          <Button Click="ReparaturAnmeldungBearbeiten_Click" Margin="1"/>
+                          <Button Click="ReparaturAnmeldungAuswahlBearbeiten_Click" Margin="1"/>
                         </DataTemplate>
                       </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -691,6 +672,7 @@
                 <Label Content="Protokolltext" Grid.Row="5" />
                 <TextBox IsReadOnly="True" Grid.Row="6" Grid.ColumnSpan="14" Text="{Binding ProtokollText}" Style="{DynamicResource StyleTextBoxReadOnly}" />
               </Grid>
+
             </TabItem>
           </TabControl>
 
@@ -706,25 +688,25 @@
             </Grid.ColumnDefinitions>
             <Label Content="Auswertung" />
             <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungReparatur}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="41">
+            <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="42">
+            <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="43">
+            <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
               </StackPanel>
             </Button>
-            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="44">
+            <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
               <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
@@ -736,7 +718,7 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="Optionen" Width="100" Height="30">
+      <TabItem Header="Optionen" Width="100" Height="30" Tag="5">
         <Grid Margin="7">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
@@ -751,6 +733,7 @@
           </Button>
         </Grid>
       </TabItem>
+
     </TabControl>
     <TreeView x:Name="treeViewMaschinen" Margin="6" Grid.Row="1" ItemsSource="{Binding}" SelectedValuePath="Id">
 
@@ -761,7 +744,7 @@
       </TreeView.ItemContainerStyle>
 
       <TreeView.Resources>
-        
+
         <Style x:Key="styleIstReparatur" TargetType="StackPanel">
           <Setter Property="StackPanel.Background" Value="Transparent" />
           <Style.Triggers>
@@ -790,7 +773,7 @@
       </TreeView.Resources>
     </TreeView>
 
-    <Button Grid.Row="2" Margin="6" Tag="0" Click="TabelleAktualisieren_Click">
+    <Button Grid.Row="2" Margin="6" Click="TabelleAktualisieren_Click">
       <StackPanel Orientation="Horizontal">
         <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
         <TextBlock Text=" Tabelle synchronisieren" VerticalAlignment="Center"/>

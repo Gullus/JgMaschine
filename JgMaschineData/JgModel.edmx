@@ -213,7 +213,7 @@
     <Property Name="VorgangEnde" Type="datetime" Nullable="true" />
     <Property Name="ProtokollText" Type="nvarchar(max)" Nullable="true" />
     <Property Name="CoilwechselAnzahl" Type="tinyint" Nullable="true" />
-    <Property Name="Ereigniss" Type="tinyint" Nullable="false" />
+    <Property Name="Ereignis" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
@@ -784,7 +784,7 @@
           <Property Name="VorgangEnde" Type="DateTime" Nullable="true" Precision="3" />
           <Property Name="ProtokollText" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="CoilwechselAnzahl" Type="Byte" Nullable="true" />
-          <Property Name="Ereigniss" Type="JgModel.EnumReperaturEreigniss" Nullable="false" />
+          <Property Name="Ereignis" Type="JgModel.EnumReperaturEreignis" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
           <Property Name="fVerursacher" Type="Guid" Nullable="true" />
@@ -904,7 +904,7 @@
           <Property Name="FilterAuswertung" Type="JgModel.EnumFilterAuswertung" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
         </EntityType>
-        <EnumType Name="EnumReperaturEreigniss" UnderlyingType="Byte">
+        <EnumType Name="EnumReperaturEreignis" UnderlyingType="Byte">
           <Member Name="Wartung" Value="0" />
           <Member Name="Coilwechsel" Value="1" />
           <Member Name="Reparatur" Value="2" />
@@ -1219,7 +1219,7 @@
           <ScalarProperty Name="VorgangEnde" ColumnName="VorgangEnde" />
           <ScalarProperty Name="ProtokollText" ColumnName="ProtokollText" />
           <ScalarProperty Name="CoilwechselAnzahl" ColumnName="CoilwechselAnzahl" />
-          <ScalarProperty Name="Ereigniss" ColumnName="Ereigniss" />
+          <ScalarProperty Name="Ereignis" ColumnName="Ereignis" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

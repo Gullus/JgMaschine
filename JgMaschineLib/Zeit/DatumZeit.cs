@@ -14,7 +14,7 @@ namespace JgMaschineLib.Zeit
 
     public bool Anzeigen(string Caption, string AnzeigeText, DateTime DatumZeit)
     {
-      JgMaschineLib.Zeit.FormAuswahlDatumZeit form = new Zeit.FormAuswahlDatumZeit(Caption, AnzeigeText, DatumZeit);
+      FormAuswahlDatumZeit form = new FormAuswahlDatumZeit(Caption, AnzeigeText, DatumZeit);
       if (form.ShowDialog() ?? false)
       {
         _Datum = form.DatumZeit;
@@ -33,10 +33,7 @@ namespace JgMaschineLib.Zeit
 
     private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
     {
-      if (PropertyChanged != null)
-      {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-      }
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     private DateTime _DatumZeit;
@@ -51,8 +48,7 @@ namespace JgMaschineLib.Zeit
         NotifyPropertyChanged("Minute");
         NotifyPropertyChanged("Datum");
 
-        if (NeuerWert != null)
-          NeuerWert(value);
+        NeuerWert?.Invoke(value);
       }
     }
 

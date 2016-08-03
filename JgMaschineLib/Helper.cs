@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Win32;
 
 namespace JgMaschineLib
@@ -83,12 +84,9 @@ namespace JgMaschineLib
         return Wert;
     }
 
-    public static string ListInString<T>(IEnumerable<T> Liste, string Trennzeichen, string FeldBegrenzer = "")
+    public static string ListInString<T>(T[] Liste, string Trennzeichen, string FeldBegrenzer = "")
     {
-      var sb = new StringBuilder();
-      foreach (var o in Liste)
-        sb.Append($"{FeldBegrenzer}{o.ToString()}{FeldBegrenzer}{Trennzeichen}");
-      return EntferneLetztesZeichen(sb.ToString());
+      return FeldBegrenzer + string.Join(FeldBegrenzer + Trennzeichen + FeldBegrenzer, Liste) + FeldBegrenzer; 
     }
 
     public static string DezimalInString(decimal Wert)
@@ -111,6 +109,32 @@ namespace JgMaschineLib
       foreach (var b in ByteWerte)
         erg += Convert.ToChar(b);
       return erg;
+    }
+
+    public enum ProtokollArt
+    {
+      Info,
+      Warnung,
+      Fehler
+    }
+    public static void Protokoll(string ProtokollText, ProtokollArt ProtokollArt = ProtokollArt.Fehler)
+    {
+      string caption = "Fehler";
+      MessageBoxIcon icon = MessageBoxIcon.Error;
+
+      switch (ProtokollArt)
+      {
+        case ProtokollArt.Info:
+          caption = "Info";
+          icon = MessageBoxIcon.Information;
+          break;
+        case ProtokollArt.Warnung:
+          caption = "Warnung";
+          icon = MessageBoxIcon.Warning;
+          break;
+      }
+
+      MessageBox.Show(ProtokollText, caption, MessageBoxButtons.OK, icon);
     }
   }
 }

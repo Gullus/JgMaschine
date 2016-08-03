@@ -31,7 +31,7 @@
     </Grid.RowDefinitions>
 
     <Label Content="Bediener" Target="{Binding ElementName=cmbMaschine}" />
-    <ComboBox x:Name="cmbBediener" SelectedValue="{Binding fBediener}" SelectedValuePath="Key" DisplayMemberPath="Value" Grid.Column="1" Grid.ColumnSpan="3"/>
+    <ComboBox x:Name="cmbBediener" SelectedValue="{Binding eBediener}" DisplayMemberPath="Name" Grid.Column="1" Grid.ColumnSpan="3"/>
 
     <Label Content="_Reparatubeginn" Target="{Binding ElementName=dtpRepVon}" Grid.Row="1"/>
     <DatePicker x:Name="dtpRepVon" SelectedDate="{Binding Source={StaticResource dzReparaturVon}, Path=Datum}" Grid.Column="1" Grid.Row="1" Margin="3,2"/>

@@ -27,7 +27,7 @@ namespace JgMaschineData
         public Nullable<System.DateTime> VorgangEnde { get; set; }
         public string ProtokollText { get; set; }
         public Nullable<byte> CoilwechselAnzahl { get; set; }
-        public EnumReperaturEreigniss Ereigniss { get; set; }
+        public EnumReperaturEreignis Ereignis { get; set; }
         public System.Guid fMaschine { get; set; }
         public Nullable<System.Guid> fVerursacher { get; set; }
         public Nullable<System.Guid> fProtokollant { get; set; }

@@ -8,6 +8,7 @@
   <RibbonWindow.Resources>
     <CollectionViewSource x:Key="vsAuswertung" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabAuswertung}, CreateList=True}"/>
   </RibbonWindow.Resources>
+  
   <Grid Margin="5" DataContext="{StaticResource vsAuswertung}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
@@ -23,8 +24,8 @@
           <RibbonApplicationMenuItem Header="Neuer Report" Command="{x:Static comand:MyCommands.ReportNeu}" ImageSource="Bilder\JgNew.ico" />
           <RibbonApplicationMenuItem Header="Report bearbeiten" Command="{x:Static comand:MyCommands.ReportBearbeiten}" ImageSource="Bilder\JgProperties.ico" />
           <RibbonSeparator/>
-          <RibbonApplicationMenuItem Header="Report laden" Command="{x:Static comand:MyCommands.ReportLaden}" ImageSource="Bilder\JgDownLoad.ico" />
-          <RibbonApplicationMenuItem Header="Report speichern" Command="{x:Static comand:MyCommands.ReportSpeichern}" ImageSource="Bilder\JgSave.ico"/>
+          <RibbonApplicationMenuItem Header="Report laden" Command="{x:Static comand:MyCommands.ReportAusDateiLaden}" ImageSource="Bilder\JgDownLoad.ico" />
+          <RibbonApplicationMenuItem Header="Report speichern" Command="{x:Static comand:MyCommands.ReportInDateiSpeichern}" ImageSource="Bilder\JgSave.ico"/>
 
           <RibbonApplicationMenu.FooterPaneContent>
             <RibbonButton Label="Schließen" SmallImageSource="Bilder\JgClose.ico" HorizontalAlignment="Right" />
@@ -38,6 +39,12 @@
           <RibbonButton Label="Anzeigen" Width="60" Command="{x:Static comand:MyCommands.ReportAnzeigen}"  LargeImageSource="Bilder\JgPreview.ico" />
           <RibbonButton Label="Drucken" Width="60" Command="{x:Static comand:MyCommands.ReportDrucken}" LargeImageSource="Bilder\JgPrint.ico"/>
         </RibbonGroup>
+        <RibbonGroup Header="Aktualisieren">
+          <RibbonButton Label="Aktual." Width="60" Click="Click_TabelleAktuallisieren"  LargeImageSource="Bilder\JgRefresh.ico" />
+        </RibbonGroup>
+        <RibbonGroup Header="Reportbeschreibung">
+            <TextBlock Text="{Binding Bemerkung}" Margin="5" Width="300" Height="55"/>
+        </RibbonGroup>
       </RibbonTab>
 
       <RibbonTab Header="Bearbeiten" >
@@ -48,8 +55,8 @@
         </RibbonGroup>
 
         <RibbonGroup Header="Speichern/Laden">
-          <RibbonButton Label="Report laden" Width="60" Command="{x:Static comand:MyCommands.ReportLaden}" LargeImageSource="Bilder\JgDownLoad.ico" />
-          <RibbonButton Label="Report speichern" Width="60" Command="{x:Static comand:MyCommands.ReportSpeichern}" LargeImageSource="Bilder\JgSave.ico"/>
+          <RibbonButton Label="Report laden" Width="60" Command="{x:Static comand:MyCommands.ReportAusDateiLaden}" LargeImageSource="Bilder\JgDownLoad.ico" />
+          <RibbonButton Label="Report speichern" Width="60" Command="{x:Static comand:MyCommands.ReportInDateiSpeichern}" LargeImageSource="Bilder\JgSave.ico"/>
         </RibbonGroup>
         <RibbonGroup Header="Optionen">
           <RibbonButton Label="Sql Verbindung" Width="80" Command="{x:Static comand:MyCommands.SqlVerbindung}" LargeImageSource="Bilder\JgDownLoad.ico" />

@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Input;
 using JgMaschineAuswertung.Commands;
+using JgMaschineData;
 using JgMaschineLib;
 
 namespace JgMaschineAuswertung
@@ -17,19 +18,26 @@ namespace JgMaschineAuswertung
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
     private string _FileSqlVerbindung = "JgMaschineSqlVerbindung.Xml";
-    private JgList<JgMaschineData.tabAuswertung> _ListeAuswertungen;
+    private JgEntityView<tabAuswertung> _Auswertungen;
 
     public MainWindow()
     {
       InitializeComponent();
     }
 
-    private async void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
+    private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
     {
-      _ListeAuswertungen = new JgList<JgMaschineData.tabAuswertung>((CollectionViewSource)FindResource("vsAuswertung"));
-      _ListeAuswertungen.MyQuery = _ListeAuswertungen.Db.tabAuswertungSet.Where(w => w.FilterAuswertung == JgMaschineData.EnumFilterAuswertung.Allgemein).OrderBy(o => o.ReportName);
-      _ListeAuswertungen.ListeTabellen = new System.Windows.Controls.DataGrid[] { dgAuswertung };
-      await _ListeAuswertungen.DatenGenerierenAsync();
+      _Auswertungen = new JgEntityView<tabAuswertung>()
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsAuswertung"),
+        Tabellen = new DataGrid[] { dgAuswertung },
+        DatenErstellen = (db) =>
+          {
+            return db.tabAuswertungSet.Where(w => w.FilterAuswertung == EnumFilterAuswertung.Allgemein).OrderBy(o => o.ReportName).ToList();
+          }
+      };
+
+      _Auswertungen.DatenAktualisieren();
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -38,13 +46,13 @@ namespace JgMaschineAuswertung
         MemoryStream memStr = new MemoryStream();
         try
         {
-          var ausw = (JgMaschineData.tabAuswertung)_ListeAuswertungen.AktDatensatz;
+          var ausw = _Auswertungen.Current;
 
           repEvent.Report.Save(memStr);
           ausw.Report = memStr.ToArray();
           ausw.GeaendertDatum = DateTime.Now;
-          ausw.GeaendertName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          _ListeAuswertungen.AktSichern(JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+          ausw.GeaendertName = DbSichern.Benutzer;
+          _Auswertungen.DsSave(ausw);
         }
         catch (Exception f)
         {
@@ -66,8 +74,7 @@ namespace JgMaschineAuswertung
         Fenster.FormAuswertungBearbeiten form = new Fenster.FormAuswertungBearbeiten(null);
         if (form.ShowDialog() ?? false)
         {
-          string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          form.Auswertung.Id = Guid.NewGuid();
+          string username = DbSichern.Benutzer;
           form.Auswertung.FilterAuswertung = JgMaschineData.EnumFilterAuswertung.Allgemein;
           form.Auswertung.ErstelltDatum = DateTime.Now;
           form.Auswertung.ErstelltName = username;
@@ -75,7 +82,7 @@ namespace JgMaschineAuswertung
           form.Auswertung.GeaendertName = form.Auswertung.ErstelltName;
           form.Auswertung.GeaendertDatum = form.Auswertung.ErstelltDatum;
 
-          _ListeAuswertungen.Add(form.Auswertung);
+          _Auswertungen.Add(form.Auswertung);
 
           _Report.Clear();
 
@@ -89,7 +96,7 @@ namespace JgMaschineAuswertung
       CommandBindings.Add(new CommandBinding(MyCommands.ReportDrucken, ExceReportAnzeigenDruck, CanExecReportVorhandenAndNull));
       CommandBindings.Add(new CommandBinding(MyCommands.ReportBearbeiten, ExceReportAnzeigenDruck, CanExecReportVorhanden));
 
-      CommandBindings.Add(new CommandBinding(MyCommands.ReportLaden, (sen, erg) =>
+      CommandBindings.Add(new CommandBinding(MyCommands.ReportAusDateiLaden, (sen, erg) =>
       {
         Microsoft.Win32.OpenFileDialog dia = new Microsoft.Win32.OpenFileDialog();
         dia.Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*";
@@ -101,27 +108,28 @@ namespace JgMaschineAuswertung
           {
             f.CopyTo(mem);
           }
-          _ListeAuswertungen.AktDatensatz.Report = mem.ToArray();
-          _ListeAuswertungen.AktSichern(JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+          _Auswertungen.Current.Report = mem.ToArray();
+          _Auswertungen.DsSave();
+          _Auswertungen.Refresh();
         }
 
       }, CanExecReportVorhanden));
 
       CommandBindings.Add(new CommandBinding(MyCommands.ReportOptionen, (sen, erg) =>
       {
-        Fenster.FormAuswertungBearbeiten form = new Fenster.FormAuswertungBearbeiten(_ListeAuswertungen.AktDatensatz);
+        Fenster.FormAuswertungBearbeiten form = new Fenster.FormAuswertungBearbeiten(_Auswertungen.Current);
         if (form.ShowDialog() ?? false)
         {
           string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
           form.Auswertung.GeaendertName = username;
           form.Auswertung.GeaendertDatum = form.Auswertung.ErstelltDatum;
-          _ListeAuswertungen.AktSichern(JgMaschineData.EnumStatusDatenabgleich.Geaendert);
+          _Auswertungen.DsSave();
         }
         else
-          _ListeAuswertungen.Reload(_ListeAuswertungen.AktDatensatz);
+          _Auswertungen.Reload();
       }, CanExecReportVorhanden));
 
-      CommandBindings.Add(new CommandBinding(MyCommands.ReportSpeichern, (sen, erg) =>
+      CommandBindings.Add(new CommandBinding(MyCommands.ReportInDateiSpeichern, (sen, erg) =>
       {
         Microsoft.Win32.SaveFileDialog dia = new Microsoft.Win32.SaveFileDialog();
         dia.Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*";
@@ -129,7 +137,7 @@ namespace JgMaschineAuswertung
         if (dia.ShowDialog() ?? false)
         {
           MemoryStream mem;
-          mem = new MemoryStream(_ListeAuswertungen.AktDatensatz.Report);
+          mem = new MemoryStream(_Auswertungen.Current.Report);
           using (Stream f = File.Create(dia.FileName))
           {
             mem.CopyTo(f);
@@ -146,18 +154,18 @@ namespace JgMaschineAuswertung
 
     private void CanExecReportVorhandenAndNull(object sender, CanExecuteRoutedEventArgs e)
     {
-      e.CanExecute = (_ListeAuswertungen.AktDatensatz != null) && (_ListeAuswertungen.AktDatensatz.Report != null);
+      e.CanExecute = (_Auswertungen.Current!= null) && (_Auswertungen.Current.Report != null);
     }
 
     private void CanExecReportVorhanden(object sender, CanExecuteRoutedEventArgs e)
     {
-      e.CanExecute = _ListeAuswertungen.AktDatensatz != null;
+      e.CanExecute = _Auswertungen.Current != null;
     }
 
     private void ExceReportAnzeigenDruck(object sender, ExecutedRoutedEventArgs e)
     {
       _Report.Clear();
-      var dsRep = _ListeAuswertungen.AktDatensatz;
+      var dsRep = _Auswertungen.Current;
 
       if (dsRep.Report != null)
       {
@@ -174,7 +182,12 @@ namespace JgMaschineAuswertung
       else if (e.Command == Commands.MyCommands.ReportDrucken)
         _Report.Print();
       else if (e.Command == Commands.MyCommands.ReportBearbeiten)
-        _Report.Design();      
+        _Report.Design();
+    }
+
+    private void Click_TabelleAktuallisieren(object sender, RoutedEventArgs e)
+    {
+      _Auswertungen.DatenAktualisieren();
     }
   }
 }

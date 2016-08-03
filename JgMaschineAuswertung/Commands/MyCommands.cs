@@ -22,16 +22,16 @@ namespace JgMaschineAuswertung.Commands
       get { return _ReportNeu; }
     }
 
-    private static RoutedUICommand _ReportLaden;
-    public static RoutedUICommand ReportLaden
+    private static RoutedUICommand _ReportAusDateiLaden;
+    public static RoutedUICommand ReportAusDateiLaden
     {
-      get { return _ReportLaden; }
+      get { return _ReportAusDateiLaden; }
     }
 
-    private static RoutedUICommand _ReportSpeichern;
-    public static RoutedUICommand ReportSpeichern
+    private static RoutedUICommand _ReportInDateiSpeichern;
+    public static RoutedUICommand ReportInDateiSpeichern
     {
-      get { return _ReportSpeichern; }
+      get { return _ReportInDateiSpeichern; }
     }
 
     private static RoutedUICommand _ReportBearbeiten;
@@ -57,8 +57,8 @@ namespace JgMaschineAuswertung.Commands
       _ReportAnzeigen = new RoutedUICommand("Report anzeigen", "ReportAnzeigen", typeof(MyCommands));
       _ReportDrucken = new RoutedUICommand("Report drucken", "RportDrucken", typeof(MyCommands));
       _ReportNeu = new RoutedUICommand("Report Neu", "ReportNeu", typeof(MyCommands));
-      _ReportLaden = new RoutedUICommand("Report laden", "ReportLaden", typeof(MyCommands));
-      _ReportSpeichern = new RoutedUICommand("Report Speichern", "ReportSpeichern", typeof(MyCommands));
+      _ReportAusDateiLaden = new RoutedUICommand("Report laden", "ReportLaden", typeof(MyCommands));
+      _ReportInDateiSpeichern = new RoutedUICommand("Report Speichern", "ReportSpeichern", typeof(MyCommands));
       _ReportBearbeiten = new RoutedUICommand("Report bearbeiten", "ReportBearbeiten", typeof(MyCommands));
       _ReportOptionen = new RoutedUICommand("Report Optionen", "ReportOptionen", typeof(MyCommands));
       _SqlVerbindung = new RoutedUICommand("Sql Verbindung", "SqlVerbinung", typeof(MyCommands));

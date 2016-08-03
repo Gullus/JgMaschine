@@ -6,6 +6,7 @@
         Title="Reparatur bearbeiten" Height="356.637" Width="607.913" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Topmost="True" Icon="/JgMaschineVerwalten;component/Properties/JgMaschineVerwalten.ico" ResizeMode="CanResizeWithGrip" WindowStyle="ThreeDBorderWindow" >
 
   <Window.Resources>
+    <data:tabReparatur x:Key="dsReparatur" />
     <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
     <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
   </Window.Resources>
@@ -60,13 +61,13 @@
     <Button x:Name="btnAktuelleZeit2" Content="aktuelle Zeit" Grid.Column="6" Grid.Row="2" Margin="4"/>
 
     <Label Content="_Ereigniss" Target="{Binding ElementName=cmbEreigniss}" Grid.Row="3" />
-    <ComboBox x:Name="cmbEreigniss" SelectedValue="{Binding Path=Ereigniss}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
+    <ComboBox x:Name="cmbEreigniss" SelectedValue="{Binding Path=Ereignis}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
 
     <Label Content="_Verursacher" Target="{Binding ElementName=cmbVerursacher}" Grid.Row="4" />
-    <ComboBox x:Name="cmbVerursacher" SelectedValue="{Binding Path=fVerursacher}" DisplayMemberPath="Name" SelectedValuePath="Id" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" />
+    <ComboBox x:Name="cmbVerursacher" SelectedValue="{Binding Path=eVerursacher}" DisplayMemberPath="Name" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" />
 
     <Label Content="_Protokollant" Target="{Binding ElementName=cmbProtokollant}" Grid.Row="5" />
-    <ComboBox x:Name="cmbProtokollant" SelectedValue="{Binding Path=fProtokollant}" DisplayMemberPath="Name" SelectedValuePath="Id" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="5" />
+    <ComboBox x:Name="cmbProtokollant" SelectedValue="{Binding Path=eProtokollant}" DisplayMemberPath="Name" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="5" />
 
     <Label Content="_Bemerkung" Target="{Binding ElementName=tbBemerkung}" Grid.Row="6" />
     <TextBox x:Name="tbBemerkung" Text="{Binding ProtokollText}" Grid.Column="1" Grid.ColumnSpan="9" Grid.Row="6" Margin="3" SpellCheck.IsEnabled="True" AcceptsTab="True" />

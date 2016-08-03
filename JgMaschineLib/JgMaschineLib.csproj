@@ -58,7 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbSichern.cs" />
-    <Compile Include="JgList.cs" />
+    <Compile Include="Listen\JgEntityAuto.cs" />
+    <Compile Include="Listen\JgEntityList.cs" />
     <Compile Include="NetzwerkVerbindung.cs" />
     <Compile Include="Scanner\DataLogicScanner.cs" />
     <Compile Include="Scanner\ScannerProgramm.cs" />

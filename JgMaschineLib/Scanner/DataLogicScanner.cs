@@ -29,11 +29,9 @@ namespace JgMaschineLib.Scanner
       ANMELDUNG,
       ABMELDUNG,
       COILSTART,
-      COIL_ENDE,
       REPASTART,
-      REPA_ENDE,
       WARTSTART,
-      WART_ENDE,
+      REPA_ENDE,
       SCHALTER,
       TEST
     }
@@ -188,11 +186,7 @@ namespace JgMaschineLib.Scanner
               else if (textEmpfangen.Length > 0)
               {
                 var scText = new DataLogicScannerText(textEmpfangen);
-
-                Protokoll(scText.TextEmpfangen);
-
                 _ScannerCom.Invoke(scText);
-
                 byte[] senden = scText.PufferSendeText();
                 _NetStream.Write(senden, 0, senden.Length);
               }

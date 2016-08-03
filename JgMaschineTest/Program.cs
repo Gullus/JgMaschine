@@ -21,186 +21,143 @@ using System.Net.Mail;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Windows.Data;
+using System.Data.Entity.Core.Objects;
 
 namespace JgMaschineTest
 {
   class Programm
   {
+
     static void Main(string[] args)
     {
-
-      //var tab = new JgMaschineLib.JgList<tabStandort>(null);
-      //tab.MyQuery = tab.Db.tabStandortSet;
-
-      //while (true)
-      //{
-      //  tab.DatenGenerieren();
-
-      //  for (int i = 0; i < tab.Count(); i++)
-      //  {
-      //    Console.WriteLine(tab[i].Bezeichnung);
-      //  }
-
-      //  foreach (var ds in tab.ToList())
-      //    Console.WriteLine(ds.Bezeichnung);
-      //  Console.WriteLine("---------------");
-
-      //  Console.ReadKey();
-      //}
-
-      TestList();
-
-      Console.ReadKey();
-
-      //var networkPath = @"\\gullus-server\Sicherungen";
-
-      //var fileList = Directory.GetFiles(networkPath);
-
-      //foreach (var file in fileList)
-      //{
-      //  Console.WriteLine("{0}", Path.GetFileName(file));
-      //}
-
-      //var credentials = new NetworkCredential("jg", "pezdx65");
-      //try
-      //{
-      //  using (new JgMaschineLib.NetzwerkVerbindung(networkPath, credentials))
-      //  {
-      //    fileList = Directory.GetFiles(networkPath);
-
-      //    foreach (var file in fileList)
-      //    {
-      //      Console.WriteLine("{0}", Path.GetFileName(file));
-      //    }
-      //  }
-      //}
-      //catch (Exception f)
-      //{
-      //  Console.WriteLine(f.Message);
-      //}
-
-      //string s = "Hallo\nBallo";
-      //Console.WriteLine(s);
-
-      //Console.ReadKey();
-
-
-      //var p = Properties.Settings.Default;
-      //string bvbs = "BF2D@HjTest14@r417@ia@p1@l1000@n10@e0.888@d12@g500S@s48@v@Gl400@w90@l600@w0@C88@";
-
-      //try
-      //{
-      //  BenutzerAnmeldung.Anmeldung(p.BenutzerName, p.BenutzerKennwort, p.MaschinenAdresse, p.MaschinenPfad, bvbs);
-      //}
-      //catch (Exception f)
-      //{
-      //  Console.WriteLine(f.Message);
-      //}
-
-      //var dat = @"c\Progress\Pro2\impdata\Auftrag.txt";      //impdata
-      //var domaene = p.MaschinenAdresse;
-
-      //Console.WriteLine($"Maschinenadesse: {domaene}");
-
-      //dat = string.Format(@"\\{0}\{1}", domaene, dat);
-
-      //Console.WriteLine($"Programmpfad: {dat}");
-
-      //try
-      //{
-      //  File.WriteAllText(dat, bvbs, Encoding.UTF8);
-      //}
-      //catch (Exception f)
-      //{
-      //  Console.WriteLine(f.Message);
-      //}
-      //Console.ReadKey();
-    }
-
-    public static async void TestList()
-    {
-      var tab = new JgMaschineLib.JgList<tabStandort>(null);
-      tab.MyQuery = tab.Db.tabStandortSet;
-
-      while (true)
+      using (var Db = new JgModelContainer())
       {
+        var tl = new TestList<tabStandort, tabBediener>(Db, "tabStandortSet")
+        {
+          Dedend_EntitiDataset = "tabBedienerSet",
+          Depend_SqlWhereString = $"fStandort In ({TestList<tabStandort, tabBediener>.Depend_IdPlatzhallter})",
+        };
 
-        int anz = await tab.DatenGenerierenAsync();
+        tl.Daten = Db.tabStandortSet.ToList();
 
+        while (true)
+        {
+          foreach (var ds in tl.Daten)
+          {
+            Console.WriteLine(ds.Bezeichnung);
 
-        Console.WriteLine(anz);
+            foreach (var it in ds.sBediener)
+              Console.WriteLine("   " + it.NachName);
+          }
+          Console.WriteLine("---------------");
 
-        foreach (var ds in tab.ToList())
-          Console.WriteLine(ds.Bezeichnung);
-        Console.WriteLine("---------------");
+          Console.ReadKey();
 
-        Thread.Sleep(10000);
+          tl.DatenAktualisieren();
+        }
       }
-    }
-
-
-    public class InMemoryQuery<T> : IQueryable<T>
-    {
-      private readonly IQueryable<T> _queryable;
-      public InMemoryQuery(IQueryable<T> queryable)
-      {
-        _queryable = queryable;
-      }
-      public IEnumerator<T> GetEnumerator()
-      {
-        return this._queryable.GetEnumerator();
-      }
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-        throw new NotImplementedException();
-      }
-      public Expression Expression { get { return this._queryable.Expression; } }
-      public Type ElementType { get { return typeof(T); } }
-      public IQueryProvider Provider { get { return new InMemoryQueryProvider(this._queryable.Provider); }
-      }
-    }
-
-    public class InMemoryQueryProvider : IQueryProvider
-    {
-      private readonly IQueryProvider _innerprovider;
-      public InMemoryQueryProvider(IQueryProvider innerprovider)
-      { _innerprovider = innerprovider;
-      }
-      public IQueryable CreateQuery(Expression expression)
-      {
-        throw new System.NotImplementedException();
-      }
-      public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
-      {
-        return new InMemoryQuery<TElement>(this._innerprovider.CreateQuery<TElement>(expression));
-      }
-      public object Execute(Expression expression)
-      {
-        throw new System.NotImplementedException();
-      }
-      public TResult Execute<TResult>(Expression expression) { throw new NotImplementedException();
-      }
-    }
-
-    public class ObCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>
-    {
-      
-    }
-
-    public static void Senden()
-    {
-      var em = new SendEmail();
-      em.SendErgebniss = (info, istFehler) =>
-      {
-        Console.WriteLine(info);
-      };
-
-      Console.WriteLine("Email Senden");
-      em.Send();
-      Console.WriteLine("nach send");
     }
   }
 
+  public class TestList<Prinzipal, Dependency>
+    where Prinzipal : class
+    where Dependency : class
+  {
+    private JgModelContainer _Db;
+    private string _EntityDataset;
+    private Guid[] _IdisDaten;
+
+    private string _SqlWhereString { get; set; } = "";
+    public List<Prinzipal> Daten { get; set; }
+
+    public static string Depend_IdPlatzhallter = "#IdisPlatzHalter#";
+    public string Dedend_EntitiDataset { get; set; } = "";
+    public string Depend_SqlWhereString { get; set; } = "";
+
+    public TestList(JgModelContainer Db, string EntityDataset, string SqlWehreString = "")
+    {
+      _Db = Db;
+      _EntityDataset = EntityDataset;
+      _SqlWhereString = SqlWehreString;
+    }
+
+    private Dictionary<Guid, DateTime> ListeAusDatenbank(SqlConnection SqlVerbindung, string EntityDataset, string WhereString)
+    {
+      var dbDaten = new Dictionary<Guid, DateTime>();
+
+      var sqlWhere = (WhereString == "") ? "" : " Where " + WhereString;
+      var sqlString = $"Select Id, DatenAbgleich_Datum From {EntityDataset}{sqlWhere}";
+      var com = new SqlCommand(sqlString, SqlVerbindung);
+
+      var reader = com.ExecuteReader();
+      while (reader.Read())
+        dbDaten.Add((Guid)reader[0], (DateTime)reader[1]);
+
+      return dbDaten;
+    }
+
+    private void AktPrinzipal(SqlConnection SqlVerbindung, string EntityDataset, string WhereString)
+    {
+      var listeDb = ListeAusDatenbank(SqlVerbindung, EntityDataset, WhereString);
+      _IdisDaten = listeDb.Keys.ToArray();      
+
+      var listeLoeschen = new List<Prinzipal>();
+      var idisVorhanden = new SortedSet<Guid>();
+      foreach (var ds in Daten)
+      {
+        var dsEntity = _Db.Entry(ds);
+        var id = (Guid)dsEntity.Property("Id").CurrentValue;
+
+        if (listeDb.ContainsKey(id))
+        {
+          idisVorhanden.Add(id);
+          if (dsEntity.Property<DatenAbgleich>("DatenAbgleich").CurrentValue.Datum != listeDb[id])
+            _Db.Entry(ds).Reload();
+        }
+        else
+          listeLoeschen.Add(ds);
+      }
+
+      foreach (var ds in listeLoeschen)
+        Daten.Remove(ds);
+
+      var idisNeu = _IdisDaten.Where(w => !idisVorhanden.Contains(w)).ToArray();
+      foreach (var id in idisNeu)
+        Daten.Add(_Db.Set<Prinzipal>().Find(id));
+    }
+
+    private void AktDepend(SqlConnection SqlVerbindung, string EntityDataset, string WhereString)
+    {
+      var listeDb = ListeAusDatenbank(SqlVerbindung, EntityDataset, WhereString);
+
+      foreach (var ds in listeDb)
+      {
+        var kontr = _Db.Set<Dependency>().Find(ds.Key);
+        if (kontr != null)
+        {
+          if (_Db.Entry<Dependency>(kontr).Property<DatenAbgleich>("DatenAbgleich").CurrentValue.Datum != ds.Value)
+            _Db.Entry<Dependency>(kontr).Reload();
+        }
+      }
+    }
+
+    public void DatenAktualisieren()
+    {
+      var con = new SqlConnection(_Db.Database.Connection.ConnectionString);
+      con.Open();
+
+      AktPrinzipal(con, _EntityDataset, _SqlWhereString);
+
+      if (Dedend_EntitiDataset != null)
+      {
+        var sIdis = "'" + string.Join("','", _IdisDaten) + "'";
+        var sqlText = Depend_SqlWhereString.Replace(Depend_IdPlatzhallter, sIdis);
+        AktDepend(con, Dedend_EntitiDataset, sqlText);
+      }
+
+      con.Close();
+    }
+  }
 
   class SendEmail
   {

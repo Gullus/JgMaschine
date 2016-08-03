@@ -95,7 +95,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\MyCommands.cs" />
     <Compile Include="Fenster\FormNeuerBedienerReparatur.xaml.cs">
       <DependentUpon>FormNeuerBedienerReparatur.xaml</DependentUpon>
     </Compile>
@@ -114,6 +113,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\MyCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -134,6 +134,7 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\JgMaschineData.JgModelContainer.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungMaschine.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungReparatur.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabArbeitszeit.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabAuswertung.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBauteil.datasource" />
