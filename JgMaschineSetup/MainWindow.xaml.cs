@@ -187,5 +187,15 @@ namespace JgMaschineSetup
         case "Bediener": _ListeBediener.DatenAktualisieren(); break;
       }
     }
+
+    private void btnExportBedienerDatafox_Click(object sender, RoutedEventArgs e)
+    {
+      var dialog = new System.Windows.Forms.FolderBrowserDialog();
+      if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+      {
+        var listeBediener = _ListeBediener.Daten.Where(w => w.Status != EnumStatusBediener.Stillgelegt).ToList();
+        JgMaschineDatafoxLib.ProgDatafox.BedienerInDatafoxDatei(listeBediener, dialog.SelectedPath);
+      }
+    }
   }
 }

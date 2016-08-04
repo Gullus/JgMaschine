@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:JgMaschineSetup"
     xmlns:comand="clr-namespace:JgMaschineSetup.Commands"
     mc:Ignorable="d" x:Class="JgMaschineSetup.MainWindow"    
-    Title="Setup Maschinenauswertung" Height="581" Width="1073" Loaded="Window_Loaded" Icon="Properties/JgMaschineSetup.ico">
+    Title="Setup Maschinenauswertung" Height="611" Width="1073" Loaded="Window_Loaded" Icon="Properties/JgMaschineSetup.ico">
 
   <Window.Resources>
     <CollectionViewSource x:Key="vsMaschinen" d:DesignSource="{d:DesignInstance {x:Type xData:tabMaschine}, CreateList=True}"/>
@@ -173,6 +173,7 @@
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="70"/>
             <RowDefinition Height="70"/>
             <RowDefinition Height="70"/>
@@ -182,16 +183,17 @@
             <ColumnDefinition Width="250"/>
           </Grid.ColumnDefinitions>
 
-          <DataGrid x:Name="dgBediener" ItemsSource="{Binding}" Grid.RowSpan="5" Margin="0, 0, 7, 0" IsReadOnly="True">
+          <DataGrid x:Name="dgBediener" ItemsSource="{Binding}" Grid.RowSpan="6" Margin="0, 0, 7, 0" IsReadOnly="True">
             <DataGrid.Columns>
               <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="*"/>
               <DataGridTextColumn Binding="{Binding VorName}" Header="Vorname" Width="*"/>
               <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung}" Header="Standort" Width="100"/>
-              <DataGridTextColumn Binding="{Binding Status}" Header="Status" Width="100"/>
+              <DataGridTextColumn Binding="{Binding MatchCode}" Header="MC" Width="50"/>
+              <DataGridTextColumn Binding="{Binding Status}" Header="Status" Width="50"/>
             </DataGrid.Columns>
           </DataGrid>
 
-          <Grid Grid.Column="1" Grid.ColumnSpan="3">
+          <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto"/>
               <ColumnDefinition />
@@ -200,7 +202,7 @@
               <RowDefinition Height="Auto"/>
               <RowDefinition Height="Auto"/>
               <RowDefinition Height="Auto"/>
-              <RowDefinition Height="Auto"/>
+              <RowDefinition/>
             </Grid.RowDefinitions>
 
             <Label Content="Status"/>
@@ -208,24 +210,26 @@
             <TextBox Grid.Row="1" Text="{Binding Id}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.ColumnSpan="3" />
 
             <Label Content="Bemerkung"  Grid.Row="2"/>
-            <TextBox Text="{Binding Bemerkung}" Grid.Row="3" Grid.ColumnSpan="2" Height="150"/>
+            <TextBox Text="{Binding Bemerkung}" Grid.Row="3" Grid.ColumnSpan="2" Height="100"/>
           </Grid>
 
-          <Button Grid.Column="1" Grid.Row="2" Click="ButtonDatenAktualisieren_Click" Tag="Bediener" Grid.ColumnSpan="3">
+          <Button x:Name="btnExportBedienerDatafox" Content="Datei Export Bediener Datafox" Grid.Column="1" Grid.Row="2" Click="btnExportBedienerDatafox_Click"/>
+
+          <Button Grid.Column="1" Grid.Row="3" Click="ButtonDatenAktualisieren_Click" Tag="Bediener">
             <StackPanel Orientation="Horizontal">
               <Image Source="Bilder\JgRefresh.ico" Margin="5"/>
               <TextBlock Text="Tabelle aktualisieren" VerticalAlignment="Center" TextWrapping="Wrap" Width="100" />
             </StackPanel>
           </Button>
 
-          <Button Grid.Column="1" Grid.Row="3" Click="ButtonNeuerBediener_Click" Grid.ColumnSpan="3">
+          <Button Grid.Column="1" Grid.Row="4" Click="ButtonNeuerBediener_Click">
             <StackPanel Orientation="Horizontal">
               <Image Source="Bilder\JgNew.ico" Margin="5" />
               <TextBlock Text="Neuen Bediener anlegen" VerticalAlignment="Center" TextWrapping="Wrap" Width="100" />
             </StackPanel>
           </Button>
 
-          <Button Grid.Column="1" Grid.Row="4" Command="{x:Static comand:MyCommands.BedienerBeabeiten}" Grid.ColumnSpan="3">
+          <Button Grid.Column="1" Grid.Row="5" Command="{x:Static comand:MyCommands.BedienerBeabeiten}">
             <StackPanel Orientation="Horizontal">
               <Image Source="Bilder\JgPerson.ico" Margin="5" />
               <TextBlock Text="Bediener bearbeiten" VerticalAlignment="Center" TextWrapping="Wrap" Width="100" />
@@ -234,7 +238,7 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header=" Standorte ">
+      <TabItem Header=" Standorte " HorizontalAlignment="Right" Width="74">
         <Grid DataContext="{StaticResource vsStandort}" Margin="8">
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -248,7 +252,7 @@
             <ColumnDefinition Width="250"/>
           </Grid.ColumnDefinitions>
 
-          <DataGrid x:Name="dgStandort" ItemsSource="{Binding}" Grid.RowSpan="5" Margin="0, 0, 7, 0" IsReadOnly="True">
+          <DataGrid x:Name="dgStandort" ItemsSource="{Binding}" Grid.RowSpan="6" Margin="0, 0, 7, 0" IsReadOnly="True">
             <DataGrid.Columns>
               <DataGridTextColumn Binding="{Binding Bezeichnung}" Header="Bezeichnung" Width="*" MinWidth="120"/>
             </DataGrid.Columns>
