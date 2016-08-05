@@ -423,7 +423,7 @@ namespace JgMaschineLib.Scanner
           e.FehlerAusgabe("Kein Reparatur", "angemeldet !");
         else
         {
-          e.SendeText("Vorgang beendet: ", $"- {reparatur.Ereignis} -", $"MA: {Maschine.MaschinenName}");
+          e.SendeText("Vorgang beendet: ", $"- {reparatur.Vorgang} -", $"MA: {Maschine.MaschinenName}");
 
           reparatur.VorgangEnde = DateTime.Now;
           DbSichern.AbgleichEintragen(reparatur.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
@@ -443,7 +443,7 @@ namespace JgMaschineLib.Scanner
       else // Anmeldung einer Reparatur
       { 
         if (reparatur != null)
-          e.FehlerAusgabe("Vorgang:", $"- {reparatur.Ereignis} -", "bereits angemeldet !");
+          e.FehlerAusgabe("Vorgang:", $"- {reparatur.Vorgang} -", "bereits angemeldet !");
         else
         {
           reparatur = new tabReparatur()
@@ -455,9 +455,9 @@ namespace JgMaschineLib.Scanner
 
           switch (e.VorgangProgramm)
           {
-            case DataLogicScanner.VorgangProgram.REPASTART: reparatur.Ereignis = EnumReperaturEreignis.Reparatur; break;
-            case DataLogicScanner.VorgangProgram.WARTSTART: reparatur.Ereignis = EnumReperaturEreignis.Wartung; break;
-            case DataLogicScanner.VorgangProgram.COILSTART: reparatur.Ereignis = EnumReperaturEreignis.Coilwechsel; break;
+            case DataLogicScanner.VorgangProgram.REPASTART: reparatur.Vorgang = EnumReperaturVorgang.Reparatur; break;
+            case DataLogicScanner.VorgangProgram.WARTSTART: reparatur.Vorgang = EnumReperaturVorgang.Wartung; break;
+            case DataLogicScanner.VorgangProgram.COILSTART: reparatur.Vorgang = EnumReperaturVorgang.Coilwechsel; break;
           }
 
           if (e.VorgangProgramm == DataLogicScanner.VorgangProgram.COILSTART)
@@ -465,7 +465,7 @@ namespace JgMaschineLib.Scanner
           DbSichern.AbgleichEintragen(reparatur.DatenAbgleich, EnumStatusDatenabgleich.Neu);
           Db.tabReparaturSet.Add(reparatur);
 
-          e.SendeText("Beginn Vorgang: ", $"- {reparatur.Ereignis} -", $"MA: {Maschine.MaschinenName}");
+          e.SendeText("Beginn Vorgang: ", $"- {reparatur.Vorgang} -", $"MA: {Maschine.MaschinenName}");
 
           Maschine.eAktivReparatur = reparatur;
           DbSichern.AbgleichEintragen(Maschine.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);

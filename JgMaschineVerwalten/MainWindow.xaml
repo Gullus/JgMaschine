@@ -9,7 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
         x:Class="JgMaschineVerwalten.MainWindow" mc:Ignorable="d" Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" 
-        Loaded="Window_Loaded" Closed="Window_Closed" Icon="Properties/JgMaschineVerwalten.ico">
+        Loaded="Window_Loaded" Closed="Window_Closed" Icon="JgMaschineVerwalten.ico">
 
   <Window.Resources>
     <CollectionViewSource x:Key="vsMaschine" d:DesignSource="{d:DesignInstance {x:Type data:tabMaschine}, CreateList=True}"/>
@@ -527,7 +527,7 @@
                     <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" />
                     <DataGridTextColumn Width="90" Header="von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                     <DataGridTextColumn Width="90" Header="bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" CellStyle="{DynamicResource CellRightCenter}" />
-                    <DataGridTextColumn Width="100" Header="Ereigniss" Binding="{Binding Ereignis}"/>
+                    <DataGridTextColumn Width="100" Header="Vorgangs" Binding="{Binding Vorgang}"/>
                     <DataGridTextColumn Width="40" Header="Coil" Binding="{Binding CoilwechselAnzahl}"/>
                     <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
                     <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
@@ -639,7 +639,7 @@
                     <DataGridTextColumn Width="90" Header="Maschine" Binding="{Binding eMaschine.MaschinenName }" />
                     <DataGridTextColumn Width="90" Header="Reparatur Von" Binding="{Binding VorgangBeginn, StringFormat=\{0:dd.MM.yy HH:mm\}}" CellStyle="{DynamicResource CellRightCenter}" />
                     <DataGridTextColumn Width="90" Header="Reparatur Bis" Binding="{Binding VorgangEnde, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" CellStyle="{DynamicResource CellRightCenter}" />
-                    <DataGridTextColumn Width="110" Header="Ereigniss" Binding="{Binding Ereignis}"/>
+                    <DataGridTextColumn Width="110" Header="Vorgangs" Binding="{Binding Vorgang}"/>
                     <DataGridTextColumn Width="40" Header="Coil" Binding="{Binding CoilwechselAnzahl}"/>
                     <DataGridTextColumn Width="*" Header="Verursacher" Binding="{Binding eVerursacher.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />
                     <DataGridTextColumn Width="*" Header="Protokullant" Binding="{Binding eProtokollant.Name, StringFormat=\{0:dd.MM.yy HH:mm\}}" />

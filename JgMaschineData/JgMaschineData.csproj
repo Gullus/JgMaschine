@@ -69,7 +69,7 @@
     <Compile Include="EnumProtokollName.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EnumReperaturEreignis.cs">
+    <Compile Include="EnumReperaturVorgang.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EnumStatusBediener.cs">

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Controls;
@@ -36,7 +35,7 @@ namespace JgMaschineLib
     public JgEntityAutoTimerAusgeloestDelegate TimerAusgeloest { get; set; }
 
     public JgModelContainer Db { get { return _Db; } }
-    public DispatcherTimer Timer { get { return _Timer; } }
+    public DispatcherTimer JgTimer { get { return _Timer; } }
     public Dictionary<TabArt, JgEntityTab> Tabs { get { return _Tabs; } }
 
     public JgEntityAuto(String ConnectionString, int AktualisierungsIntervall = 30)
@@ -93,7 +92,14 @@ namespace JgMaschineLib
         if (!tab.DatenAnViewSource) 
           tab.Refresh();
         else if (tab.RefreshAusloesen)
-          tab.ViewSource?.View?.Refresh();
+        {
+          tab.Refresh();
+          if (tab.ViewSorceAuchAktualisieren.Count > 0)
+          {
+            foreach (var vs in tab.ViewSorceAuchAktualisieren)
+              vs?.View?.Refresh();
+          }
+        }
       }
     }
   }
@@ -115,6 +121,7 @@ namespace JgMaschineLib
     public abstract void DatenAktualisieren(SqlConnection SqlVerbindung);
     public abstract void Refresh();
 
+    public List<CollectionViewSource> ViewSorceAuchAktualisieren = new List<CollectionViewSource>();
     public static string IdisInString(Guid[] Idis)
     {
       return "'" + string.Join("','", Idis) + "'";
@@ -275,9 +282,9 @@ namespace JgMaschineLib
 
     public void Add(K DatenSatz, bool Sichern = true)
     {
-      var ds = _Db.Entry(DatenSatz);
-      ds.Property("Id").CurrentValue = Guid.NewGuid();
-      DbSichern.AbgleichEintragen((DatenAbgleich)ds.Property("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Neu);
+      var entr = _Db.Entry(DatenSatz);
+      entr.Property("Id").CurrentValue = Guid.NewGuid();
+      DbSichern.AbgleichEintragen((DatenAbgleich)entr.Property("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Neu);
       _Db.Set<K>().Add(DatenSatz);
       _Daten.Add(DatenSatz);
 
@@ -326,8 +333,10 @@ namespace JgMaschineLib
 
     public void DsSave(K DatenSatz = null)
     {
-      var ds = _Db.Entry(DatenSatz ?? Current);
-      DbSichern.AbgleichEintragen((DatenAbgleich)ds.Property("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Neu);
+      var entr = _Db.Entry(DatenSatz ?? Current);
+      if (entr.State != System.Data.Entity.EntityState.Modified)
+        entr.State = System.Data.Entity.EntityState.Modified;
+      DbSichern.AbgleichEintragen(entr.Property<DatenAbgleich>("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Geaendert);
       _Db.SaveChanges();
     }
 

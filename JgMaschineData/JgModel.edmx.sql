@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 08/01/2016 16:04:42
--- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
+-- Date Created: 08/05/2016 13:21:26
+-- Generated from EDMX file: D:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -232,9 +232,9 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [Id] uniqueidentifier  NOT NULL,
     [VorgangBeginn] datetime  NOT NULL,
     [VorgangEnde] datetime  NULL,
+    [Vorgang] tinyint  NOT NULL,
     [ProtokollText] nvarchar(max)  NULL,
     [CoilwechselAnzahl] tinyint  NULL,
-    [Ereignis] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
@@ -250,6 +250,7 @@ CREATE TABLE [dbo].[tabStandortSet] (
     [Id] uniqueidentifier  NOT NULL,
     [Bezeichnung] nvarchar(120)  NOT NULL,
     [Bemerkung] nvarchar(120)  NULL,
+    [UpdateBedienerDatafox] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
@@ -278,7 +279,7 @@ GO
 -- Creating table 'tabArbeitszeitSet'
 CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [Id] uniqueidentifier  NOT NULL,
-    [Anmeldung] datetime  NOT NULL,
+    [Anmeldung] datetime  NULL,
     [Abmeldung] datetime  NULL,
     [ManuelleAnmeldung] bit  NOT NULL,
     [ManuelleAbmeldung] bit  NOT NULL,

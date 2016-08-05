@@ -114,8 +114,10 @@ namespace JgMaschineLib
 
     public void DsSave(K DatenSatz = null)
     {
-      var ds = (DatenAbgleich)_Db.Entry(DatenSatz ?? Current).Property("DatenAbgleich").CurrentValue;
-      DbSichern.AbgleichEintragen(ds, EnumStatusDatenabgleich.Geaendert);
+      var entr = _Db.Entry(DatenSatz ?? Current);
+      if (entr.State != System.Data.Entity.EntityState.Modified)
+        entr.State = System.Data.Entity.EntityState.Modified;
+      DbSichern.AbgleichEintragen(entr.Property<DatenAbgleich>("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Geaendert);
       _Db.SaveChanges();
       Refresh();
     }

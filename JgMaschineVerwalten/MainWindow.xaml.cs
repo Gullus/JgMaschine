@@ -179,7 +179,6 @@ namespace JgMaschineVerwalten
         if (eMaschine.Idis != null)
           eMaschine.Daten = await _DatenPool.Db.tabMaschineSet.Where(w => eMaschine.Idis.Contains(w.Id)).ToListAsync();
         _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Maschine, eMaschine);
-        //(FindResource("vsMaschine") as CollectionViewSource).Source = eMaschine.Daten.ToList();
 
         var eArbeitszeit = new JgEntityTab<tabArbeitszeit>(_DatenPool.Db)
         {
@@ -239,7 +238,7 @@ namespace JgMaschineVerwalten
         };
         eReparatur.SetIdis(con);
         if (eReparatur.Idis != null)
-          eReparatur.Daten = await _DatenPool.Db.tabReparaturSet.Where(w => eReparatur.Idis.Contains(w.Id)).ToListAsync();
+          eReparatur.Daten = _DatenPool.Db.tabReparaturSet.Where(w => eReparatur.Idis.Contains(w.Id)).ToList();
         _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Reparatur, eReparatur);
 
         var eRepAnmeldung = new JgEntityTab<tabAnmeldungReparatur>(_DatenPool.Db, false)
@@ -260,10 +259,13 @@ namespace JgMaschineVerwalten
           eRepAnmeldung.Daten = await _DatenPool.Db.tabAnmeldungReparaturSet.Where(w => eRepAnmeldung.Idis.Contains(w.Id)).ToListAsync();
         _DatenPool.Tabs.Add(JgEntityAuto.TabArt.RepAnmeldung, eRepAnmeldung);
 
+        // Bei Benutzer zusätzliche Viesorce refreshen
+
+        _JgBediener.ViewSorceAuchAktualisieren.AddRange(new CollectionViewSource[] { _JgArbeitszeit.ViewSource, _JgAnmeldung.ViewSource, _JgReparatur.ViewSource, _JgRepAnmeldung.ViewSource });
       }
       catch (Exception f)
       {
-        Helper.Protokoll($"Fehler beim erstellen des Datenpools !\nGrund: {f.Message}");
+        Helper.Protokoll("Fehler beim erstellen des Datenpools !", f);
       }
       finally
       {
@@ -450,7 +452,7 @@ namespace JgMaschineVerwalten
     private void ReparaturBeenden_Click(object sender, RoutedEventArgs e)
     {
       var reparatur = _JgReparatur.Current;
-      var anzeigeText = $"Maschine {reparatur.eMaschine.MaschinenName} mit Ereignis {reparatur.Ereignis} abmelden?";
+      var anzeigeText = $"Maschine {reparatur.eMaschine.MaschinenName} mit Vorgang {reparatur.Vorgang} abmelden?";
 
       JgMaschineLib.Zeit.FormAuswahlDatumZeit form = new FormAuswahlDatumZeit("Abmeldung", anzeigeText, DateTime.Now);
       if (form.ShowDialog() ?? false)
@@ -666,7 +668,7 @@ namespace JgMaschineVerwalten
     {
       var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {_ListeArbeitszeitAuswahl.Current.eBediener.Name}.";
 
-      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
+      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung ?? DateTime.Now, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
       if (form.ShowDialog() ?? false)
       {
         if (form.DatumVon != _ListeArbeitszeitAuswahl.Current.Anmeldung)
@@ -687,6 +689,7 @@ namespace JgMaschineVerwalten
 
     private async void ButtonOptionen_Click(object sender, RoutedEventArgs e)
     {
+      _DatenPool.JgTimer.Stop();
       List<tabStandort> standorte;
       using (var db = new JgModelContainer())
       {
@@ -697,9 +700,13 @@ namespace JgMaschineVerwalten
       if (form.ShowDialog() ?? false)
       {
         _Standort = form.StandOrt;
+        tblStandort.Text = _Standort.Bezeichnung;
         await InitListen();
       }
+      else
+        _DatenPool.JgTimer.Start();
     }
+
     private void Window_Closed(object sender, EventArgs e)
     {
       Properties.Settings.Default.Save();

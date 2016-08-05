@@ -131,8 +131,8 @@ namespace JgMaschineDatafoxLib
 
           if (result == 0)
           {
-            msg = string.Format("Es liegt kein Datensatz vor");
-            Helper.Protokoll(msg);
+            //msg = string.Format("Es liegt kein Datensatz vor");
+            //Helper.Protokoll(msg);
             break;
           }
 

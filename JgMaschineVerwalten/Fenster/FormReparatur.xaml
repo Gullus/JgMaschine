@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
         xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
-        Title="Reparatur bearbeiten" Height="356.637" Width="607.913" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Topmost="True" Icon="/JgMaschineVerwalten;component/Properties/JgMaschineVerwalten.ico" ResizeMode="CanResizeWithGrip" WindowStyle="ThreeDBorderWindow" >
+        Title="Reparatur bearbeiten" Height="356.637" Width="607.913" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Topmost="True" ResizeMode="CanResizeWithGrip" WindowStyle="ThreeDBorderWindow" Icon="/JgMaschineVerwalten;component/JgMaschineVerwalten.ico" >
 
   <Window.Resources>
     <data:tabReparatur x:Key="dsReparatur" />
@@ -60,8 +60,8 @@
 
     <Button x:Name="btnAktuelleZeit2" Content="aktuelle Zeit" Grid.Column="6" Grid.Row="2" Margin="4"/>
 
-    <Label Content="_Ereigniss" Target="{Binding ElementName=cmbEreigniss}" Grid.Row="3" />
-    <ComboBox x:Name="cmbEreigniss" SelectedValue="{Binding Path=Ereignis}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
+    <Label Content="_Vorgangs" Target="{Binding ElementName=cmbVorgangs}" Grid.Row="3" />
+    <ComboBox x:Name="cmbVorgangs" SelectedValue="{Binding Path=Vorgang}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
 
     <Label Content="_Verursacher" Target="{Binding ElementName=cmbVerursacher}" Grid.Row="4" />
     <ComboBox x:Name="cmbVerursacher" SelectedValue="{Binding Path=eVerursacher}" DisplayMemberPath="Name" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" />

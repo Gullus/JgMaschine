@@ -51,13 +51,13 @@ namespace JgMaschineDatafoxLib
         var files = Directory.GetFiles(DateiPfad, fileName);
 
         if (files.Length == 0 || files[0].EndsWith("txt") == false)
-          return;
+          break;
 
         if (files.Length > 1)
         {
           msg = string.Format("Für Liste [{0}] liegen mehrere Listendateien vor.", lists.Tables[idx].Name);
           Helper.Protokoll(msg);
-          return;
+          break;
         }
 
         try
@@ -89,7 +89,7 @@ namespace JgMaschineDatafoxLib
       if (importCount == 0)
       {
         msg = "Es liegen keine Listendaten vor.";
-        Helper.Protokoll(msg, Helper.ProtokollArt.Warnung);
+        Helper.Protokoll(msg, Helper.ProtokollArt.Info);
         return;
       }
 

@@ -26,6 +26,7 @@ namespace JgMaschineData
         public System.Guid Id { get; set; }
         public string Bezeichnung { get; set; }
         public string Bemerkung { get; set; }
+        public bool UpdateBedienerDatafox { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     

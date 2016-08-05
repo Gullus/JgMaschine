@@ -22,9 +22,18 @@ namespace JgMaschineSetup
       InitializeComponent();
     }
 
-    private async void Window_Loaded(object sender, RoutedEventArgs e)
+    private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      using (var db = new JgModelContainer()) { var ds = await db.tabStandortSet.FirstOrDefaultAsync(); }
+      _ListeStandorte = new JgEntityView<tabStandort>()
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
+        Tabellen = new DataGrid[] { dgStandort },
+        DatenErstellen = (db) =>
+        {
+          return db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
+        }
+      };
+      _ListeStandorte.DatenAktualisieren();
 
       _ListeMaschinen = new JgEntityView<tabMaschine>()
       {
@@ -36,17 +45,6 @@ namespace JgMaschineSetup
         }
       };
       _ListeMaschinen.DatenAktualisieren();
-
-      _ListeStandorte = new JgEntityView<tabStandort>()
-      {
-        ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
-        Tabellen = new DataGrid[] { dgStandort },
-        DatenErstellen = (db) =>
-        {
-          return db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
-        }
-      };
-      _ListeStandorte.DatenAktualisieren();
 
       _ListeBediener = new JgEntityView<tabBediener>()
       {
@@ -190,11 +188,11 @@ namespace JgMaschineSetup
 
     private void btnExportBedienerDatafox_Click(object sender, RoutedEventArgs e)
     {
-      var dialog = new System.Windows.Forms.FolderBrowserDialog();
-      if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+      var form = new Fenster.FormAuswahlStandort(_ListeStandorte.Daten);
+      if (form.ShowDialog() ?? false)
       {
-        var listeBediener = _ListeBediener.Daten.Where(w => w.Status != EnumStatusBediener.Stillgelegt).ToList();
-        JgMaschineDatafoxLib.ProgDatafox.BedienerInDatafoxDatei(listeBediener, dialog.SelectedPath);
+        form.Standort.UpdateBedienerDatafox = true;
+        _ListeStandorte.DsSave(form.Standort);
       }
     }
   }

@@ -17,7 +17,7 @@ namespace JgMaschineVerwalten.Fenster
 
       cmbVerursacher.ItemsSource = Bediener;
       cmbProtokollant.ItemsSource = Bediener;
-      cmbEreigniss.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumReperaturEreignis));
+      cmbVorgangs.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumReperaturVorgang));
 
       if (Reparatur == null)
       {

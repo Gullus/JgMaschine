@@ -35,8 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>JgMaschineReport.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -186,10 +185,10 @@
     <Resource Include="Bilder\JgCancel.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Properties\JgMaschineReport.ico" />
+    <Resource Include="Bilder\JgRefresh.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Bilder\JgRefresh.ico" />
+    <Resource Include="JgMaschineReport.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

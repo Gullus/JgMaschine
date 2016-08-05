@@ -211,9 +211,9 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="VorgangBeginn" Type="datetime" Nullable="false" />
     <Property Name="VorgangEnde" Type="datetime" Nullable="true" />
+    <Property Name="Vorgang" Type="tinyint" Nullable="false" />
     <Property Name="ProtokollText" Type="nvarchar(max)" Nullable="true" />
     <Property Name="CoilwechselAnzahl" Type="tinyint" Nullable="true" />
-    <Property Name="Ereignis" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
@@ -229,6 +229,7 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Bezeichnung" Type="nvarchar" Nullable="false" MaxLength="120" />
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="120" />
+    <Property Name="UpdateBedienerDatafox" Type="bit" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
@@ -257,7 +258,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Anmeldung" Type="datetime" Nullable="false" />
+    <Property Name="Anmeldung" Type="datetime" Nullable="true" />
     <Property Name="Abmeldung" Type="datetime" Nullable="true" />
     <Property Name="ManuelleAnmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
@@ -782,9 +783,9 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="VorgangBeginn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="VorgangEnde" Type="DateTime" Nullable="true" Precision="3" />
+          <Property Name="Vorgang" Type="JgModel.EnumReperaturVorgang" Nullable="false" />
           <Property Name="ProtokollText" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="CoilwechselAnzahl" Type="Byte" Nullable="true" />
-          <Property Name="Ereignis" Type="JgModel.EnumReperaturEreignis" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
           <Property Name="fVerursacher" Type="Guid" Nullable="true" />
@@ -874,6 +875,7 @@
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="sMaschinen" Relationship="JgModel.tabStandorttabMaschine" FromRole="tabStandort" ToRole="tabMaschine" />
           <NavigationProperty Name="sArbeitszeiten" Relationship="JgModel.tabStandorttabArbeitszeit1" FromRole="tabStandort" ToRole="tabArbeitszeit" />
+          <Property Name="UpdateBedienerDatafox" Type="Boolean" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <NavigationProperty Name="sBediener" Relationship="JgModel.tabStandorttabBediener" FromRole="tabStandort" ToRole="tabBediener" />
         </EntityType>
@@ -904,7 +906,7 @@
           <Property Name="FilterAuswertung" Type="JgModel.EnumFilterAuswertung" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
         </EntityType>
-        <EnumType Name="EnumReperaturEreignis" UnderlyingType="Byte">
+        <EnumType Name="EnumReperaturVorgang" UnderlyingType="Byte">
           <Member Name="Wartung" Value="0" />
           <Member Name="Coilwechsel" Value="1" />
           <Member Name="Reparatur" Value="2" />
@@ -914,7 +916,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <Property Name="Anmeldung" Type="DateTime" Nullable="false" />
+          <Property Name="Anmeldung" Type="DateTime" Nullable="true" />
           <Property Name="Abmeldung" Type="DateTime" Nullable="true" />
           <Property Name="ManuelleAnmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />
           <Property Name="ManuelleAbmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />
@@ -1217,9 +1219,9 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="VorgangBeginn" ColumnName="VorgangBeginn" />
           <ScalarProperty Name="VorgangEnde" ColumnName="VorgangEnde" />
+          <ScalarProperty Name="Vorgang" ColumnName="Vorgang" />
           <ScalarProperty Name="ProtokollText" ColumnName="ProtokollText" />
           <ScalarProperty Name="CoilwechselAnzahl" ColumnName="CoilwechselAnzahl" />
-          <ScalarProperty Name="Ereignis" ColumnName="Ereignis" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
@@ -1238,6 +1240,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Bezeichnung" ColumnName="Bezeichnung" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
+          <ScalarProperty Name="UpdateBedienerDatafox" ColumnName="UpdateBedienerDatafox" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

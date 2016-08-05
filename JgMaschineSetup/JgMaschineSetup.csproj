@@ -35,8 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>JgMaschineSetup.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -77,6 +76,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\MyCommands.cs" />
+    <Compile Include="Fenster\FormAuswahlStandort.xaml.cs">
+      <DependentUpon>FormAuswahlStandort.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Fenster\FormStandort.xaml.cs">
       <DependentUpon>FormStandort.xaml</DependentUpon>
     </Compile>
@@ -86,6 +88,10 @@
     <Compile Include="Fenster\FormProtokollOptionen.xaml.cs">
       <DependentUpon>FormProtokollOptionen.xaml</DependentUpon>
     </Compile>
+    <Page Include="Fenster\FormAuswahlStandort.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Fenster\FormStandort.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -215,10 +221,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Properties\JgMaschineSetup.ico" />
+    <Resource Include="Bilder\JgRefresh.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Bilder\JgRefresh.ico" />
+    <Resource Include="JgMaschineSetup.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

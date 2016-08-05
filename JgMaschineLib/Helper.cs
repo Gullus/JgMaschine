@@ -86,7 +86,7 @@ namespace JgMaschineLib
 
     public static string ListInString<T>(T[] Liste, string Trennzeichen, string FeldBegrenzer = "")
     {
-      return FeldBegrenzer + string.Join(FeldBegrenzer + Trennzeichen + FeldBegrenzer, Liste) + FeldBegrenzer; 
+      return FeldBegrenzer + string.Join(FeldBegrenzer + Trennzeichen + FeldBegrenzer, Liste) + FeldBegrenzer;
     }
 
     public static string DezimalInString(decimal Wert)
@@ -111,6 +111,13 @@ namespace JgMaschineLib
       return erg;
     }
 
+    public enum ProtokollAusgabeArt
+    {
+      Console,
+      WindowsFenster
+    }
+    public static ProtokollAusgabeArt ProtokollAusgabe = ProtokollAusgabeArt.Console;
+
     public enum ProtokollArt
     {
       Info,
@@ -119,22 +126,42 @@ namespace JgMaschineLib
     }
     public static void Protokoll(string ProtokollText, ProtokollArt ProtokollArt = ProtokollArt.Fehler)
     {
-      string caption = "Fehler";
-      MessageBoxIcon icon = MessageBoxIcon.Error;
-
-      switch (ProtokollArt)
+      if (ProtokollAusgabe == ProtokollAusgabeArt.Console)
       {
-        case ProtokollArt.Info:
-          caption = "Info";
-          icon = MessageBoxIcon.Information;
-          break;
-        case ProtokollArt.Warnung:
-          caption = "Warnung";
-          icon = MessageBoxIcon.Warning;
-          break;
+        Console.WriteLine(ProtokollArt + ": " + ProtokollText);
+      }
+      else
+      {
+        string caption = "Fehler";
+        MessageBoxIcon icon = MessageBoxIcon.Error;
+
+        switch (ProtokollArt)
+        {
+          case ProtokollArt.Info:
+            caption = "Info";
+            icon = MessageBoxIcon.Information;
+            break;
+          case ProtokollArt.Warnung:
+            caption = "Warnung";
+            icon = MessageBoxIcon.Warning;
+            break;
+        }
+        MessageBox.Show(ProtokollText, caption, MessageBoxButtons.OK, icon);
+      }
+    }
+    public static void Protokoll(string FehlerText, Exception Fehler)
+    {
+      var msg = $"{FehlerText}\nGrund: {Fehler.Message}";
+      var inExcep = Fehler.InnerException;
+      int zaehler = 0;
+      while (inExcep != null)
+      {
+        zaehler++;
+        msg += $"\nInExcep {zaehler}: {inExcep.Message}";
+        inExcep = inExcep.InnerException;
       }
 
-      MessageBox.Show(ProtokollText, caption, MessageBoxButtons.OK, icon);
+      Protokoll(msg);
     }
   }
 }

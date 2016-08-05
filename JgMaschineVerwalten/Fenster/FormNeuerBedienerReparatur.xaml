@@ -7,7 +7,7 @@
         xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
         xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
         mc:Ignorable="d"
-        Title="Reparatur Bediener erstellen" Height="163" Width="549.542" Icon="/Properties/JgMaschineVerwalten.ico" ShowInTaskbar="False" WindowStartupLocation="CenterScreen">
+        Title="Reparatur Bediener erstellen" Height="163" Width="549.542" Icon="/JgMaschineVerwalten;component/JgMaschineVerwalten.ico" ShowInTaskbar="False" WindowStartupLocation="CenterScreen">
   <Window.Resources>
     <data:tabAnmeldungReparatur x:Key="dsAnmeldung" />
     <libZeit:JgDatumZeit x:Key="dzReparaturVon" />

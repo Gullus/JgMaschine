@@ -119,6 +119,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JgMaschineDatafoxLib\JgMaschineDatafoxLib.csproj">
+      <Project>{306f2418-ad6b-449e-8ece-f35e385ef2e2}</Project>
+      <Name>JgMaschineDatafoxLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JgMaschineData\JgMaschineData.csproj">
       <Project>{6bc109e0-7e70-46eb-9137-5e60e8074ccc}</Project>
       <Name>JgMaschineData</Name>

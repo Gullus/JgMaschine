@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:JgMaschineSetup"
     xmlns:comand="clr-namespace:JgMaschineSetup.Commands"
     mc:Ignorable="d" x:Class="JgMaschineSetup.MainWindow"    
-    Title="Setup Maschinenauswertung" Height="611" Width="1073" Loaded="Window_Loaded" Icon="Properties/JgMaschineSetup.ico">
+    Title="Setup Maschinenauswertung" Height="611" Width="1073" Loaded="Window_Loaded" Icon="Bilder/JgNew.ico" >
 
   <Window.Resources>
     <CollectionViewSource x:Key="vsMaschinen" d:DesignSource="{d:DesignInstance {x:Type xData:tabMaschine}, CreateList=True}"/>
@@ -213,7 +213,12 @@
             <TextBox Text="{Binding Bemerkung}" Grid.Row="3" Grid.ColumnSpan="2" Height="100"/>
           </Grid>
 
-          <Button x:Name="btnExportBedienerDatafox" Content="Datei Export Bediener Datafox" Grid.Column="1" Grid.Row="2" Click="btnExportBedienerDatafox_Click"/>
+          <Button Grid.Column="1" Grid.Row="2" Click="btnExportBedienerDatafox_Click">
+            <StackPanel Orientation="Horizontal">
+              <Image Source="Bilder\JgSynchronize.ico" Margin="5"/>
+              <TextBlock Text="Bediener in Datafox übertragen" VerticalAlignment="Center"  />
+            </StackPanel>            
+          </Button>
 
           <Button Grid.Column="1" Grid.Row="3" Click="ButtonDatenAktualisieren_Click" Tag="Bediener">
             <StackPanel Orientation="Horizontal">
@@ -238,7 +243,7 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header=" Standorte " HorizontalAlignment="Right" Width="74">
+      <TabItem Header=" Standorte ">
         <Grid DataContext="{StaticResource vsStandort}" Margin="8">
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

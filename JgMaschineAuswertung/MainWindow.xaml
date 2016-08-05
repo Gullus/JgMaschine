@@ -4,7 +4,7 @@
         xmlns:comand="clr-namespace:JgMaschineAuswertung.Commands"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" mc:Ignorable="d" x:Class="JgMaschineAuswertung.MainWindow"
         xmlns:prop="clr-namespace:JgMaschineAuswertung.Properties"
-        Title="Auswertung Maschine" Height="468" Width="745" Loaded="RibbonWindow_Loaded" WindowStartupLocation="CenterScreen" Icon="Properties/JgMaschineReport.ico">
+        Title="Auswertung Maschine" Height="468" Width="745" Loaded="RibbonWindow_Loaded" WindowStartupLocation="CenterScreen" Icon="JgMaschineReport.ico">
   <RibbonWindow.Resources>
     <CollectionViewSource x:Key="vsAuswertung" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabAuswertung}, CreateList=True}"/>
   </RibbonWindow.Resources>
