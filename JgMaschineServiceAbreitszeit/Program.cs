@@ -5,14 +5,14 @@ using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JgMaschineDienst
+namespace JgMaschineServiceAbreitszeit
 {
-  public class JgMaschieService : ServiceBase
+  public class JgMaschieServiceArbeitszeit : ServiceBase
   {
     private static void Main()
     {
       EintragLog("Service gestartet", EventLogEntryType.Information);
-      JgMaschieService.Run(new JgMaschieService());
+      JgMaschieServiceArbeitszeit.Run(new JgMaschieServiceArbeitszeit());
       EintragLog("Sevice beendet", EventLogEntryType.Information);
     }
 
@@ -36,7 +36,7 @@ namespace JgMaschineDienst
       {
         while (true)
         {
-          EintragLog("Durchlauf " + JgMaschineService.Properties.Settings.Default.ScannerAdresse, EventLogEntryType.SuccessAudit);
+          EintragLog("Durchlauf " + JgMaschieServiceArbeitszeit.Properties.Settings.Default.ScannerAdresse, EventLogEntryType.SuccessAudit);
           System.Media.SystemSounds.Beep.Play();
           Thread.Sleep(5000);
         }
