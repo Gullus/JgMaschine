@@ -58,12 +58,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbSichern.cs" />
+    <Compile Include="Email\SendEamilOptionen.cs" />
     <Compile Include="Listen\JgEntityAuto.cs" />
     <Compile Include="Listen\JgEntityList.cs" />
     <Compile Include="NetzwerkVerbindung.cs" />
+    <Compile Include="Proto.cs" />
     <Compile Include="Scanner\DataLogicScanner.cs" />
     <Compile Include="Scanner\ScannerProgramm.cs" />
-    <Compile Include="SendEmail.cs" />
+    <Compile Include="Email\SendEmail.cs" />
     <Compile Include="SqlVerbindung\DatenbankVerbindungen.cs" />
     <Compile Include="SqlVerbindung\FormDatenbankVerbindung.cs">
       <SubType>Form</SubType>

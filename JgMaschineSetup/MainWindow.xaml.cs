@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using JgMaschineLib;
+using System.Diagnostics;
 
 namespace JgMaschineSetup
 {
@@ -19,6 +20,7 @@ namespace JgMaschineSetup
 
     public MainWindow()
     {
+      Helper.ProtokollAusgabe = Helper.ProtokollAusgabeArt.WindowsFenster;
       InitializeComponent();
     }
 
@@ -194,6 +196,11 @@ namespace JgMaschineSetup
         form.Standort.UpdateBedienerDatafox = true;
         _ListeStandorte.DsSave(form.Standort);
       }
+    }
+
+    private void PfadEreignissanzeigeEinrichten_Click(object sender, RoutedEventArgs e)
+    {
+      Proto.PfadeInWindowsEreignissAnzeigeSetzten();
     }
   }
 }

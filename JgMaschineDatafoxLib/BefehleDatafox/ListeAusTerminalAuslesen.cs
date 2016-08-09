@@ -79,7 +79,7 @@ namespace JgMaschineDatafoxLib
     /// </summary>
     /// <param name="Optionen">Übertragungsoptionen zum Datafox Terminal</param>
     /// <returns>Ausgelesene Datensätze aus dem Terminal</returns>
-    public static List<string> ListeAusTerminalAuslesen(DatafoxOptionen Optionen)
+    public static List<string> ListeAusTerminalAuslesen(ZeitsteuerungDatafox Optionen)
     {
       string msg;
       byte[] buf = new byte[256];
@@ -87,46 +87,33 @@ namespace JgMaschineDatafoxLib
       var listeAntwort = new List<string>();
       var errorString = new StringBuilder(255);
 
-      byte idVerbindung = 3; // <= Verbindung über TcpIp
-
-      if (DFComDLL.DFCComOpenIV(Optionen.ChannelId, 0, idVerbindung, Optionen.IpNummer, Optionen.Portnummer, Optionen.TimeOut) == 0)
-      {
-        msg = string.Format("Schnittstelle oder Verbindung zum Gerät konnte nicht geöffnet werden.\n\nBitte überprüfen Sie die Einstellungen der Kommunikation und Erreichbarkeit des Terminals.");
-        Helper.Protokoll(msg);
-        return null;
-      }
-
       // Schleife nur um mit break abzubrechen, kein goto verwenden.
       do
       {
         // Lesen der Datensatzbeschreibungen, diese stellen die Tabellendefinitionen dar.
         DFComDLL.TableDeclarations records = new DFComDLL.TableDeclarations(DFComDLL.TableDeclarations.TableType.Record, "Records.xml");
-        if (records.LoadFromDevice(Optionen.ChannelId, Optionen.DeviceId, "") == false)
+        if (records.LoadFromDevice(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, "") == false)
         {
           // Fehlertext ermitteln
-          DFComDLL.DFCGetErrorText(Optionen.ChannelId, errorID, 0, errorString, errorString.Capacity);
-          // Nachricht anzeigen
+          DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
           msg = string.Format("Lesen der Datensatzbeschreibung ist fehlgeschlagen.\n\nZurückgelieferte Fehlerbeschreibung:\n{0}", errorString);
-          Helper.Protokoll(msg);
-          break;
+          throw new Exception(msg);
         }
         if (records.Tables == null)
         {
           // Es liegen keine Datensatzbeschreibungen vor.
           msg = string.Format("Es liegen keine Datensatzbeschreibungen vor.\n\nBitte prüfen Sie das eingespielte Setup.}");
-          Helper.Protokoll(msg);
-          break;
+          throw new Exception(msg);
         }
 
         do
         {
           length = buf.Length;
           // Datensatz lesen
-          if ((result = DFComDLL.DFCReadRecord(Optionen.ChannelId, Optionen.DeviceId, buf, out length, out errorID)) < 0)
+          if ((result = DFComDLL.DFCReadRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buf, out length, out errorID)) < 0)
           {
             msg = string.Format("Datensatz konnte nicht gelesen werden. Fehlercode: {0}", errorID);
-            Helper.Protokoll(msg);
-            break;
+            throw new Exception(msg);
           }
 
           if (result == 0)
@@ -140,17 +127,13 @@ namespace JgMaschineDatafoxLib
           listeAntwort.Add(rs.TabbedString());
 
           // Datensatz quittieren
-          if (DFComDLL.DFCQuitRecord(Optionen.ChannelId, Optionen.DeviceId, out errorID) < 0)
+          if (DFComDLL.DFCQuitRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, out errorID) < 0)
           {
             msg = string.Format("Datensatz konnte nicht quittiert werden. Fehlercode: {0}", errorID);
-            Helper.Protokoll(msg);
-            break;
+            throw new Exception(msg);
           }
         } while (true);
       } while (false);
-
-      // Verbindung schliessen
-      DFComDLL.DFCComClose(Optionen.ChannelId);
 
       return listeAntwort;
     }

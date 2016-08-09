@@ -243,7 +243,7 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header=" Standorte ">
+      <TabItem Header=" Standorte " Height="32" VerticalAlignment="Bottom">
         <Grid DataContext="{StaticResource vsStandort}" Margin="8">
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -297,7 +297,29 @@
           </Button>
         </Grid>
       </TabItem>
+
+      <TabItem Header="Zusätliche Einstellungen">
+        <Grid Margin="8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition/>
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+          </Grid.RowDefinitions>
+
+          <Button Click="PfadEreignissanzeigeEinrichten_Click">
+            <StackPanel>
+              <TextBlock Text="Pfad für Ereignissanzeige erstellen" TextWrapping="Wrap"/>
+            </StackPanel>
+          </Button>
+          <TextBlock Margin="10,0,10,0" TextWrapping="Wrap" Grid.Column="1" Text="Um ordnungsgemäße Einträge in der Windows Ereignissanzeige zu gewährleisten, muss hier der Eintrag des Eintragsverzeichnisses vorgenommen werden. Vorraussetzung ist, dass das Programm mit Administrtorrechten gestaretet wurde." />
+        </Grid>
+      </TabItem>
+    
     </TabControl>
+   
 
   </Grid>
 </Window>

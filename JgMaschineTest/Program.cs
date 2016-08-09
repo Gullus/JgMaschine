@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -14,158 +15,174 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
+      var test = Properties.Settings.Default.Properties["ScannerAdresse"].DefaultValue;
+      Console.WriteLine(test);
 
-      var zo = new ZeitsteuerungDatafox()
-      {
-        OptionenDatafox = new DatafoxOptionen(),
-        Standort = "Heidenau",
-        PfadUpdateBediener = @"C:\Users\jg\Desktop\Test",
-        TimerIntervall = 10000
-      };
+      //using (EventLog eventLog = new EventLog("Application"))
+      //{
+      //  eventLog.Source = "Application";
+      //  eventLog.WriteEntry("Log message example", EventLogEntryType.Information);
+      //}
 
-      //ProgDatafox.ListenInTerminalSchreiben(zo.OptionenDatafox, zo.PfadUpdateBediener);
 
-      var timerUhrzeit = new System.Threading.Timer(OnTimedEvent, zo, 3000, zo.TimerIntervall);
+      //var zs = new ArbeitszeitErfassen(new ZeitsteuerungDatafox()
+      //{
+      //  Standort = "Heidenau",
+      //  PfadUpdateBediener = @"C:\Users\jg\Desktop\Test",
+      //  TimerIntervall = 10000
+      //});
+
+      //var zo = new ZeitsteuerungDatafox()
+      //{
+      //  OptionenDatafox = new DatafoxOptionen(),
+      //  Standort = "Heidenau",
+      //  PfadUpdateBediener = @"C:\Users\jg\Desktop\Test",
+      //  TimerIntervall = 10000
+      //};
+
+      ////ProgDatafox.ListenInTerminalSchreiben(zo.OptionenDatafox, zo.PfadUpdateBediener);
+
+      //var timerUhrzeit = new System.Threading.Timer(OnTimedEvent, zo, 3000, zo.TimerIntervall);
 
       Console.ReadKey();
     }
 
-    private static void OnTimedEvent(object state)
-    {
-      var zo = (ZeitsteuerungDatafox)state;
-      Helper.Protokoll("Durchlauf", Helper.ProtokollArt.Info);
-      zo.ZaehlerDatumAktualisieren++;
+    //private static void OnTimedEvent(object state)
+  //  {
+  //    var zo = (ZeitsteuerungDatafox)state;
+  //    Helper.Protokoll("Durchlauf", Helper.ProtokollArt.Info);
+  //    zo.ZaehlerDatumAktualisieren++;
 
-      // Zeit mit Termimal abgeleichem
+  //    // Zeit mit Termimal abgeleichem
 
-      if (zo.ZaehlerDatumAktualisieren > 50)
-      {
-        zo.ZaehlerDatumAktualisieren = 0;
-        ProgDatafox.ZeitEinstellen(zo.OptionenDatafox, DateTime.Now);
-        Helper.Protokoll("Zeit Datafox gestellt!", Helper.ProtokollArt.Info);
-        return;
-      }
+  //    if (zo.ZaehlerDatumAktualisieren > 50)
+  //    {
+  //      zo.ZaehlerDatumAktualisieren = 0;
+  //      ProgDatafox.ZeitEinstellen(zo.OptionenDatafox, DateTime.Now);
+  //      Helper.Protokoll("Zeit Datafox gestellt!", Helper.ProtokollArt.Info);
+  //      return;
+  //    }
 
-      using (var Db = new JgModelContainer())
-      {
-        if (zo.VerbindungsString != "")
-          Db.Database.Connection.ConnectionString = zo.VerbindungsString;
+  //    using (var Db = new JgModelContainer())
+  //    {
+  //      if (zo.VerbindungsString != "")
+  //        Db.Database.Connection.ConnectionString = zo.VerbindungsString;
 
-        var standort = Db.tabStandortSet.FirstOrDefault(f => f.Bezeichnung == zo.Standort);
-        if (standort == null)
-        {
-          Helper.Protokoll($"Standort {zo.Standort} nicht gefunden !");
-          return;
-        }
-        var idStandort = standort.Id;
+  //      var standort = Db.tabStandortSet.FirstOrDefault(f => f.Bezeichnung == zo.Standort);
+  //      if (standort == null)
+  //      {
+  //        Helper.Protokoll($"Standort {zo.Standort} nicht gefunden !");
+  //        return;
+  //      }
+  //      var idStandort = standort.Id;
 
-        // Kontrolle, ob Benutzer im Termanl geändert werden müssen
+  //      // Kontrolle, ob Benutzer im Termanl geändert werden müssen
 
-        if (standort.UpdateBedienerDatafox)
-        {
-          standort.UpdateBedienerDatafox = false;
-          DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-          Db.SaveChanges();
+  //      if (standort.UpdateBedienerDatafox)
+  //      {
+  //        standort.UpdateBedienerDatafox = false;
+  //        DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+  //        Db.SaveChanges();
 
-          var bediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt) && (w.fStandort == idStandort)).ToList();
-          ProgDatafox.BedienerInDatafoxDatei(bediener, zo.PfadUpdateBediener);
-          ProgDatafox.ListenInTerminalSchreiben(zo.OptionenDatafox, zo.PfadUpdateBediener);
-          return;
-        }
+  //        var bediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt) && (w.fStandort == idStandort)).ToList();
+  //        ProgDatafox.BedienerInDatafoxDatei(bediener, zo.PfadUpdateBediener);
+  //        ProgDatafox.ListenInTerminalSchreiben(zo.OptionenDatafox, zo.PfadUpdateBediener);
+  //        return;
+  //      }
 
-        // Anmeldungen aus Terminal auslesen
+  //      // Anmeldungen aus Terminal auslesen
 
-        var dsVomTerminal = ProgDatafox.ListeAusTerminalAuslesen(zo.OptionenDatafox);
-        if (dsVomTerminal.Count > 0)
-        {
-          var anmeldTermial = ProgDatafox.KonvertDatafoxExport(dsVomTerminal, "MITA_");
+  //      var dsVomTerminal = ProgDatafox.ListeAusTerminalAuslesen(zo.OptionenDatafox);
+  //      if (dsVomTerminal.Count > 0)
+  //      {
+  //        var anmeldTermial = ProgDatafox.KonvertDatafoxExport(dsVomTerminal, "MITA_");
 
-          var idisAktiveAnmeldungen = Db.tabBedienerSet.Where(w => w.fAktivArbeitszeit != null).Select(s => s.fAktivArbeitszeit).ToArray();
-          var aktAnmeldungen = Db.tabArbeitszeitSet.Where(w => idisAktiveAnmeldungen.Contains(w.Id)).ToList();
+  //        var idisAktiveAnmeldungen = Db.tabBedienerSet.Where(w => w.fAktivArbeitszeit != null).Select(s => s.fAktivArbeitszeit).ToArray();
+  //        var aktAnmeldungen = Db.tabArbeitszeitSet.Where(w => idisAktiveAnmeldungen.Contains(w.Id)).ToList();
 
-          var matchCodes = "'" + string.Join("','", anmeldTermial.Select(s => s.MatchCode).Distinct().ToArray()) + "'";
-          var alleBediener = Db.tabBedienerSet.Where(w => matchCodes.Contains(w.MatchCode)).ToList();
+  //        var matchCodes = "'" + string.Join("','", anmeldTermial.Select(s => s.MatchCode).Distinct().ToArray()) + "'";
+  //        var alleBediener = Db.tabBedienerSet.Where(w => matchCodes.Contains(w.MatchCode)).ToList();
 
-          foreach (var anmeld in anmeldTermial)
-          {
-            var bediener = alleBediener.FirstOrDefault(f => f.MatchCode == anmeld.MatchCode);
-            if (bediener == null)
-            {
-              Helper.Protokoll($"Bediner {anmeld.MatchCode} aus Terminal nicht bekannt!", Helper.ProtokollArt.Warnung);
-              continue;
-            }
+  //        foreach (var anmeld in anmeldTermial)
+  //        {
+  //          var bediener = alleBediener.FirstOrDefault(f => f.MatchCode == anmeld.MatchCode);
+  //          if (bediener == null)
+  //          {
+  //            Helper.Protokoll($"Bediner {anmeld.MatchCode} aus Terminal nicht bekannt!", Helper.ProtokollArt.Warnung);
+  //            continue;
+  //          }
 
-            var arbeitzeitVorhanden = aktAnmeldungen.FirstOrDefault(f => f.eBediener.MatchCode == anmeld.MatchCode);
+  //          var arbeitzeitVorhanden = aktAnmeldungen.FirstOrDefault(f => f.eBediener.MatchCode == anmeld.MatchCode);
 
-            if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Komme)
-            {
-              if (arbeitzeitVorhanden != null)
-              {
-                if (anmeld.Datum.AddHours(1) < DateTime.Now)
-                  continue;
-              }
+  //          if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Komme)
+  //          {
+  //            if (arbeitzeitVorhanden != null)
+  //            {
+  //              if (anmeld.Datum.AddHours(1) < DateTime.Now)
+  //                continue;
+  //            }
 
-              var arbZeit = new tabArbeitszeit()
-              {
-                Id = Guid.NewGuid(),
-                fBediener = bediener.Id,
-                fStandort = idStandort,
-                Anmeldung = anmeld.Datum,
-                ManuelleAnmeldung = false,
-                ManuelleAbmeldung = false,
-              };
-              DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-              Db.tabArbeitszeitSet.Add(arbZeit);
-              bediener.fAktivArbeitszeit = arbZeit.Id;
-              DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-            }
-            else if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Gehen)
-            {
-              if (arbeitzeitVorhanden != null)
-              {
-                arbeitzeitVorhanden.Abmeldung = anmeld.Datum;
-                arbeitzeitVorhanden.ManuelleAbmeldung = true;
-                DbSichern.AbgleichEintragen(arbeitzeitVorhanden.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-                bediener.fAktivArbeitszeit = null;
-                DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-              }
-              else
-              {
-                var arbZeit = new tabArbeitszeit()
-                {
-                  Id = Guid.NewGuid(),
-                  fBediener = bediener.Id,
-                  fStandort = idStandort,
-                  Abmeldung = anmeld.Datum,
-                  ManuelleAnmeldung = false,
-                  ManuelleAbmeldung = false,
-                };
-                DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-                Db.tabArbeitszeitSet.Add(arbZeit);
-              }
-            }
+  //            var arbZeit = new tabArbeitszeit()
+  //            {
+  //              Id = Guid.NewGuid(),
+  //              fBediener = bediener.Id,
+  //              fStandort = idStandort,
+  //              Anmeldung = anmeld.Datum,
+  //              ManuelleAnmeldung = false,
+  //              ManuelleAbmeldung = false,
+  //            };
+  //            DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+  //            Db.tabArbeitszeitSet.Add(arbZeit);
+  //            bediener.fAktivArbeitszeit = arbZeit.Id;
+  //            DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+  //          }
+  //          else if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Gehen)
+  //          {
+  //            if (arbeitzeitVorhanden != null)
+  //            {
+  //              arbeitzeitVorhanden.Abmeldung = anmeld.Datum;
+  //              arbeitzeitVorhanden.ManuelleAbmeldung = true;
+  //              DbSichern.AbgleichEintragen(arbeitzeitVorhanden.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+  //              bediener.fAktivArbeitszeit = null;
+  //              DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+  //            }
+  //            else
+  //            {
+  //              var arbZeit = new tabArbeitszeit()
+  //              {
+  //                Id = Guid.NewGuid(),
+  //                fBediener = bediener.Id,
+  //                fStandort = idStandort,
+  //                Abmeldung = anmeld.Datum,
+  //                ManuelleAnmeldung = false,
+  //                ManuelleAbmeldung = false,
+  //              };
+  //              DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+  //              Db.tabArbeitszeitSet.Add(arbZeit);
+  //            }
+  //          }
 
-            Db.SaveChanges();
-            Helper.Protokoll($"{dsVomTerminal.Count} Arbeitszeiten ins System übertragen!", Helper.ProtokollArt.Info);
-          }
-        }
-      }
-    }
+  //          Db.SaveChanges();
+  //          Helper.Protokoll($"{dsVomTerminal.Count} Arbeitszeiten ins System übertragen!", Helper.ProtokollArt.Info);
+  //        }
+  //      }
+  //    }
+  //  }
   }
 
-  public class ZeitsteuerungDatafox
-  {
-    internal string Standort = "";
-    internal string PfadUpdateBediener = "";
-    internal JgModelContainer Db = null;
-    internal DatafoxOptionen OptionenDatafox;
-    internal string VerbindungsString = "";
-    internal int ZaehlerDatumAktualisieren = 0;
-    internal int TimerIntervall = 10000;
+  //public class ZeitsteuerungDatafox
+  //{
+  //  internal string Standort = "";
+  //  internal string PfadUpdateBediener = "";
+  //  internal JgModelContainer Db = null;
+  //  internal DatafoxOptionen OptionenDatafox;
+  //  internal string VerbindungsString = "";
+  //  internal int ZaehlerDatumAktualisieren = 0;
+  //  internal int TimerIntervall = 10000;
 
-  public ZeitsteuerungDatafox()
-    { }
-  }
+  //  public ZeitsteuerungDatafox()
+  //  { }
+  //}
 
 
 

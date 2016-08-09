@@ -11,7 +11,7 @@ namespace JgMaschineDatafoxLib
 {
   public static partial class ProgDatafox
   {
-    public static void BedienerInDatafoxDatei(List<tabBediener> ListeBediener , string Pfad)
+    public static void BedienerInDatafoxDatei(ZeitsteuerungDatafox Optionen, List<tabBediener> ListeBediener)
     {
       var sb = new StringBuilder();
       foreach (var bediener in ListeBediener)
@@ -20,7 +20,7 @@ namespace JgMaschineDatafoxLib
         sb.AppendLine($"MITA0{bediener.MatchCode}\tMITA1{bediener.MatchCode}\t{bed}");
       }
 
-      var dat = Pfad + @"\PersonalStamm.txt";
+      var dat = Optionen.PfadUpdateBediener + @"\PersonalStamm.txt";
 
       try
       {

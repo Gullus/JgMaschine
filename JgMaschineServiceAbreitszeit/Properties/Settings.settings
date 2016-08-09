@@ -1,6 +1,48 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JgMaschineServiceAbreitszeit.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Standort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Heidenau</Value>
+    </Setting>
+    <Setting Name="PfadUpdateBediener" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\jg\Desktop\Test</Value>
+    </Setting>
+    <Setting Name="DatenbankVerbindungsstring" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AusleseIntervall" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30000</Value>
+    </Setting>
+    <Setting Name="Terminal_IpNummer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">192.168.1.57</Value>
+    </Setting>
+    <Setting Name="Terminal_PortNummer" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8000</Value>
+    </Setting>
+    <Setting Name="Terminal_TimeOut" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="EmailAbsender" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">JgSupport@gullus.de</Value>
+    </Setting>
+    <Setting Name="EamilAdressenEmpfaenger" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">joerggullus@gmail.com</Value>
+    </Setting>
+    <Setting Name="Betreff" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Fehlermeldung Arbeitszeit</Value>
+    </Setting>
+    <Setting Name="ServerAdresse" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">smtp.1und1.de</Value>
+    </Setting>
+    <Setting Name="ServerPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="ServerBenutzername" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fehlermeldung@jgdata.de</Value>
+    </Setting>
+    <Setting Name="ServerPasswort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fehler123</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

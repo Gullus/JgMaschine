@@ -2,22 +2,14 @@
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace JgMaschineLib
+namespace JgMaschineLib.Email
 {
   class SendEmail
   {
     public delegate void SendEmailErgebnissDelegate(string InfoText, bool Fehler = false);
     public SendEmailErgebnissDelegate SendErgebniss { get; set; } = null;
 
-    public string AdresseAbsender { get; set; }
-    public string AdressenEmpfaenger { get; set; }
-    public string Betreff { get; set; }
-    public string Koerper { get; set; } // "<html><body>UtilMailMessage001 - success</body></html>";
-
-    public string ServerAdresse { get; set; }
-    public int ServerPort { get; set; } = 25;
-    public string ServerBenutzername { get; set; }
-    public string ServerPasswort { get; set; }
+    public SendEmailOptionen Optionen = null;
 
     private class TSendHelper
     {
@@ -36,16 +28,16 @@ namespace JgMaschineLib
       MailMessage myMail = new MailMessage();
       try
       {
-        myMail.From = new MailAddress(AdresseAbsender);
+        myMail.From = new MailAddress(Optionen.AdresseAbsender);
 
-        var adrEmpfaenger = AdressenEmpfaenger.Split(new char[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+        var adrEmpfaenger = Optionen.AdressenEmpfaenger.Split(new char[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
         foreach (var adr in adrEmpfaenger)
           myMail.To.Add(new MailAddress(adr));
         myMail.Priority = MailPriority.High;
 
-        myMail.Subject = Betreff;
+        myMail.Subject = Optionen.Betreff;
         myMail.IsBodyHtml = true;
-        myMail.Body = Koerper;
+        myMail.Body = Optionen.Koerper;
       }
       catch (Exception f)
       {
@@ -60,8 +52,8 @@ namespace JgMaschineLib
       {
         SendHelper.EmailMessage = myMail;
         SendHelper.EmailErgebniss = SendErgebniss;
-        SendHelper.EmailClient = new SmtpClient(ServerAdresse, ServerPort);
-        SendHelper.EmailClient.Credentials = new System.Net.NetworkCredential(ServerBenutzername, ServerPasswort);
+        SendHelper.EmailClient = new SmtpClient(Optionen.ServerAdresse, Optionen.ServerPort);
+        SendHelper.EmailClient.Credentials = new System.Net.NetworkCredential(Optionen.ServerBenutzername, Optionen.ServerPasswort);
       }
       catch (Exception f)
       {
