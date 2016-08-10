@@ -10,18 +10,8 @@ namespace JgMaschineLib.Scanner
 {
   public class ScannerProgramm
   {
-    private bool _ProtokllAnzeigen = true;
-
-    public string ScannnerAdresse { get; set; } = "";
-    public int ScannerPortNummer { get; set; } = 0;
-    public string DbVerbindungsString { get; set; } = "";
-
-    public string EvgPfadProduktionsListe { get; set; } = "";
-    public string EvgDateiProduktionsAuftrag { get; set; } = "";
-    public string ProgressPfadProduktionsListe { get; set; } = "";
-    public string ServerTextAnmeldung { get; set; } = "";
-
-    public bool ProtokollAnzeigen { get; set; } = false;
+    private ScannerOptionen _Optionen = null;
+    public ScannerOptionen Optionen { get { return _Optionen; } }
 
     private class MaschinenDaten
     {
@@ -31,22 +21,23 @@ namespace JgMaschineLib.Scanner
 
     private DataLogicScanner _DlScanner;
 
-    public ScannerProgramm()
-    { }
+    public ScannerProgramm(ScannerOptionen NeuOptionen)
+    {
+      _Optionen = NeuOptionen;
+    }
 
     public void Start()
     {
-      Protokoll($"Scanneradresse: {ScannnerAdresse}");
-      Protokoll($"Scannerport {ScannerPortNummer}");
-      Protokoll($"Db Verbindungsstring {DbVerbindungsString}");
+      var msg = $"Start Scannerprogramm\nScanneradrese: {_Optionen.CradleIpAdresse}\nScannerport: {_Optionen.CradlePortNummer}\nDb Verbindungsstring {_Optionen.DbVerbindungsString}";
+      _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
 
       using (var db = new JgModelContainer())
       {
-        db.Database.Connection.ConnectionString = DbVerbindungsString;
+        db.Database.Connection.ConnectionString = _Optionen.DbVerbindungsString;
         db.tabStandortSet.FirstOrDefault();
       }
 
-      _DlScanner = new DataLogicScanner(ScannnerAdresse, ScannerPortNummer, ScannerCommunication, ProtokollAnzeigen);
+      _DlScanner = new DataLogicScanner(_Optionen, ScannerCommunication);
       _DlScanner.Start();
     }
 
@@ -55,19 +46,19 @@ namespace JgMaschineLib.Scanner
       _DlScanner.Close();
     }
 
-    private void Protokoll(string Ausgabe, params object[] Werte)
-    {
-      if (_ProtokllAnzeigen)
-        Console.WriteLine(Ausgabe, Werte);
-    }
-
     private tabMaschine SucheMaschine(JgModelContainer Db, DataLogicScannerText e)
     {
       var maschine = Db.tabMaschineSet.FirstOrDefault(f => f.ScannerNummer == e.ScannerKennung);
       if (maschine == null)
+      {
         e.FehlerAusgabe("Scanner nicht regist.!", " ", "Adresse: " + e.ScannerKennung);
+
+        var msg = $"Scanner nicht gefunden. Scanner: {e.ScannerKennung}";
+        _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+      }
       else
         e.MitDisplay = maschine.ScannerMitDisplay;
+
       return maschine;
     }
 
@@ -86,18 +77,17 @@ namespace JgMaschineLib.Scanner
               var md = (MaschinenDaten)mDaten;
               try
               {
-                Protokoll($"Verbindung mit: {md.Maschine.MaschinenName} auf Port: {md.Maschine.MaschinePortnummer}.");
+                var msg = $"Verbindung mit: {md.Maschine.MaschinenName} auf Port: {md.Maschine.MaschinePortnummer}.";
+                _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
                 using (var client = new TcpClient(md.Maschine.MaschineAdresse, (int)md.Maschine.MaschinePortnummer))
                 {
                   client.NoDelay = true;
                   client.SendTimeout = 1000;
                   client.ReceiveTimeout = 1000;
 
-                  Protokoll("Verbindung zur Maschine hergestellt.");
                   var nwStr = client.GetStream();
                   var buffer = Encoding.ASCII.GetBytes(md.BvbsString + Convert.ToChar(13) + Convert.ToChar(10));
                   nwStr.Write(buffer, 0, buffer.Length);
-                  Protokoll("Daten zu Maschine geschickt. Warte auf Antwort");
 
                   // Auf Antwort von Maschine warten 
 
@@ -106,23 +96,25 @@ namespace JgMaschineLib.Scanner
                   {
                     int anzEmpfang = nwStr.Read(buffer, 0, (int)client.ReceiveBufferSize);
                     var empfangen = Encoding.ASCII.GetString(buffer, 0, anzEmpfang);
-                    Protokoll($"Daten von Maschine: {empfangen}.");
-                    AntwortMaschineSchnellAuswerten(empfangen);
+                    var antwortMaschine = AntwortMaschineSchnellAuswerten(empfangen);
+                    if (antwortMaschine != "")
+                      throw new Exception($"Rückmeldung von Maschine {md.Maschine.MaschinenName} ist {antwortMaschine}!");
                   }
                   catch (Exception f)
                   {
-                    Protokoll($"Keine Daten von Maschine empfangen.\nGrund: {f.Message}");
+                    throw new Exception($"Keine Rückantwort von Maschine ! {f.Message}");
                   }
 
                   client.Close();
-                  Protokoll("Verbindung geschlossen.");
+
+                  msg = $"Verbindung mit: {md.Maschine.MaschinenName} abgeschlossen.";
+                  _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
                 }
               }
               catch (Exception f)
               {
-                var fehlerText = $"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\nDaten: {md.BvbsString}\nFehler: {f.Message}";
-                Protokoll(fehlerText);
-                JgMaschineLib.Helper.InWinProtokoll($"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\nDaten: {md.BvbsString}\nFehler: {f.Message}", System.Diagnostics.EventLogEntryType.Error);
+                var msg = $"Fehler beim senden der Bvbs Daten an die Maschine: {Maschine.MaschinenName}\nDaten: {md.BvbsString}";
+                _Optionen.Protokoll.Set(msg, f);
               }
             }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
           }
@@ -135,7 +127,7 @@ namespace JgMaschineLib.Scanner
             var md = (MaschinenDaten)mDaten;
 
             var datAuftrag = "Auftrag1.txt";
-            var datProdListe = string.Format(@"\\{0}\{1}\{2}", md.Maschine.MaschineAdresse, EvgPfadProduktionsListe, datAuftrag);
+            var datProdListe = string.Format(@"\\{0}\{1}\{2}", md.Maschine.MaschineAdresse, _Optionen.EvgPfadProduktionsListe, datAuftrag);
 
             // Produktionsliste schreiben 
 
@@ -145,23 +137,21 @@ namespace JgMaschineLib.Scanner
             }
             catch (Exception f)
             {
-              string s = $"Fehler beim schreiben der EVG Produktionsliste in die Maschine {md.Maschine.MaschinenName}\nDatei: {datProdListe}.\nGrund: {f.Message}";
-              Protokoll(s);
-              Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+              var msg = $"Fehler beim schreiben der EVG Produktionsliste in die Maschine {md.Maschine.MaschinenName}!\nDatei: {datProdListe}.";
+              _Optionen.Protokoll.Set(msg, f);
             }
 
             // Produktionsauftrag
 
-            var datProtAuftrag = string.Format(@"\\{0}\{1}", md.Maschine.MaschineAdresse, EvgDateiProduktionsAuftrag);
+            var datProtAuftrag = string.Format(@"\\{0}\{1}", md.Maschine.MaschineAdresse, _Optionen.EvgDateiProduktionsAuftrag);
             try
             {
               File.WriteAllText(datProtAuftrag, datAuftrag);
             }
             catch (Exception f)
             {
-              string s = $"Fehler beim schreiben des EVG Produktionsauftrages in die Maschine {md.Maschine.MaschinenName}\nDatei: {datProtAuftrag}.\nGrund: {f.Message}";
-              Protokoll(s);
-              Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+              var msg = $"Fehler beim schreiben des EVG Produktionsauftrages in die Maschine {md.Maschine.MaschinenName}!\nDatei: {datProtAuftrag}.";
+              _Optionen.Protokoll.Set(msg, f);
             }
 
           }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
@@ -172,20 +162,17 @@ namespace JgMaschineLib.Scanner
           var datenAnProgress = Task.Factory.StartNew((mDaten) =>
             {
               var md = (MaschinenDaten)mDaten;
-              var dat = string.Format(@"\\{0}\{1}\{2}", md.Maschine.MaschineAdresse, ProgressPfadProduktionsListe, "Auftrag.txt");
+              var datei = string.Format(@"\\{0}\{1}\{2}", md.Maschine.MaschineAdresse, _Optionen.ProgressPfadProduktionsListe, "Auftrag.txt");
 
               // Produktionsliste schreiben 
               try
               {
-                Protokoll($"Bauteil in Datei: {dat} schreiben.");
-                File.WriteAllText(dat, md.BvbsString, Encoding.UTF8);
-                Protokoll("Datei geschrieben !");
+                File.WriteAllText(datei, md.BvbsString, Encoding.UTF8);
               }
               catch (Exception f)
               {
-                string s = $"Fehler beim schreiben der Progress Produktionsliste Maschine: {Maschine.MaschinenName} \nDatei: {dat}.\nGrund: {f.Message}";
-                Protokoll(s);
-                Helper.InWinProtokoll(s, System.Diagnostics.EventLogEntryType.Error);
+                var msg = $"Fehler beim schreiben der Progress Produktionsliste Maschine: {Maschine.MaschinenName} \nDatei: {datei}.";
+                _Optionen.Protokoll.Set(msg, f);
               }
             }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
 
@@ -193,13 +180,16 @@ namespace JgMaschineLib.Scanner
       }
     }
 
-    private void AntwortMaschineSchnellAuswerten(string Antwort)
+    private string AntwortMaschineSchnellAuswerten(string Antwort)
     {
       if ((Antwort.Length >= 3) && (Antwort[0] == Convert.ToChar(15)))
       {
         var dat = Helper.StartVerzeichnis() + @"FehlerCode\JgMaschineFehlerSchnell.txt";
         if (!File.Exists(dat))
-          Protokoll($"Fehlerdatei: {dat} existiert nicht.");
+        {
+          var msg = $"Fehlerdatei: {dat} für Maschine 'Schnell' existiert nicht.";
+          _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+        }
         else
         {
           try
@@ -210,24 +200,26 @@ namespace JgMaschineLib.Scanner
             foreach (var zeile in zeilen)
             {
               if (zeile.Substring(0, 2) == nummer)
-                Protokoll($"Fehler: {zeile}");
+                return zeile;
             }
           }
           catch (Exception f)
           {
-            Protokoll($"Fehler beim auslesen der Fehlerdatei.\nGrund: {f.Message}");
+            var msg = $"Fehler beim auslesen der Fehlerdatei Firma Schnell.\nGrund: {f.Message}";
+            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
           }
         }
       }
+
+      return "";
     }
 
     private void Bf2dEintragen(JgModelContainer Db, tabMaschine Maschine, DataLogicScannerText e)
     {
       var btNeu = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
 
-      Protokoll("Maschine: {0}", Maschine.MaschinenName);
-      Protokoll("Project:  {0}  Anzahl: {1} Gewicht: {2}", btNeu.ProjektNummer, btNeu.Anzahl, btNeu.Gewicht * 1000);
-      Protokoll(" ");
+      var msg = $"Maschine: {Maschine.MaschinenName}\nProject: {btNeu.ProjektNummer} Anzahl: {btNeu.Anzahl} Gewicht: {btNeu.Gewicht * 1000}";
+      _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
 
       if (Maschine.eAktivBauteil != null)
       {
@@ -238,7 +230,9 @@ namespace JgMaschineLib.Scanner
         if ((letztesBt.NummerBauteil == btNeu.ProjektNummer) && (letztesBt.BtDurchmesser == btNeu.Durchmesser)
           && (letztesBt.BtGewicht == btNeu.GewichtInKg) && (letztesBt.BtLaenge == btNeu.Laenge))
         {
-          Protokoll("Bauteil erledigt");
+          msg = $"BauteilMaschine: {Maschine.MaschinenName}\nProject: {btNeu.ProjektNummer} erledigt";
+          _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+
           e.SendeText(" ", " - Bauteil erledigt -");
           Maschine.eAktivBauteil = null;
           DbSichern.DsSichern<tabMaschine>(Db, Maschine, EnumStatusDatenabgleich.Geaendert);
@@ -252,7 +246,9 @@ namespace JgMaschineLib.Scanner
 
       if (btInDatenBank != null)
       {
-        Protokoll($"Bauteil bereits am {btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm")} gefertigt.");
+        msg = $"Bauteil an Maschine {Maschine.MaschinenName} bereits am {btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm")} gefertigt.";
+        _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+
         e.FehlerAusgabe("Bauteil bereits am", btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm"), "gefertigt.");
       }
       else
@@ -311,8 +307,8 @@ namespace JgMaschineLib.Scanner
           btNeuErstellt.sBediener.Add(bed.eBediener);
 
         Maschine.eAktivBauteil = btNeuErstellt;
-        Protokoll("Neues Bauteil erstellt.");
         DbSichern.DsSichern<tabBauteil>(Db, btNeuErstellt, EnumStatusDatenabgleich.Neu);
+        _Optionen.Protokoll.Set("Neues Bauteil erstellt.", Proto.ProtoArt.Kommentar);
       }
     }
 
@@ -329,7 +325,9 @@ namespace JgMaschineLib.Scanner
           if (anmeldungVorhanden.eMaschine == Maschine)
           {
             e.FehlerAusgabe("Sie sind bereits an", $"MA: {Maschine.MaschinenName}", "angemeldet !");
-            Protokoll($"Bediener {Bediener.Name} bereits an Maschine {Maschine.MaschinenName} angemeldet.");
+
+            var msg1 = $"Bediener {Bediener.Name} bereits an Maschine {Maschine.MaschinenName} angemeldet.";
+            _Optionen.Protokoll.Set(msg1, Proto.ProtoArt.Kommentar);
             return;
           }
           else // Wenn nicht, an der angmeldeten Maschine abmelden.
@@ -340,8 +338,7 @@ namespace JgMaschineLib.Scanner
         }
 
         e.SendeText(" ", "- A N M E L D U N G -", Maschine.MaschinenName, Bediener.Name);
-        Protokoll($"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} anmelden.");
-         
+                 
         var anmeldungNeu = new tabAnmeldungMaschine()
         {
           Id = Guid.NewGuid(),
@@ -371,6 +368,9 @@ namespace JgMaschineLib.Scanner
         }
 
         Db.SaveChanges();
+
+        var msg = $"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} angemeldet.";
+        _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
       }
 
       else // Abmeldung
@@ -391,13 +391,14 @@ namespace JgMaschineLib.Scanner
 
     private void BedienerVonMaschineAbmelden(tabMaschine Maschine, tabBediener Bediener, tabAnmeldungMaschine anmeldungVorhanden)
     {
-      Protokoll($"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} abmelden.");
-
       anmeldungVorhanden.Abmeldung = DateTime.Now;
       anmeldungVorhanden.ManuelleAbmeldung = false;
       anmeldungVorhanden.eAktivMaschine = null;
 
       DbSichern.AbgleichEintragen(anmeldungVorhanden.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+
+      var msg = $"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} abgemeldet.";
+      _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
     }
 
     private static void BedienerReparaturAbmelden(tabMaschine Maschine, tabBediener Bediener)
@@ -438,6 +439,9 @@ namespace JgMaschineLib.Scanner
           }
 
           Db.SaveChanges();
+
+          var msg = $"Reparatur {reparatur.Vorgang} an Maschine {Maschine.MaschinenName} beendet.";
+          _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
         };
       }
       else // Anmeldung einer Reparatur
@@ -484,10 +488,11 @@ namespace JgMaschineLib.Scanner
           }
 
           Db.SaveChanges();
+
+          var msg = $"Reparatur {reparatur.Vorgang} an Maschine {Maschine.MaschinenName} gestartet.";
+          _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
         }
       }
-
-      Protokoll($"Maschine: {Maschine.MaschinenName} - Vorgang: {e.VorgangProgramm}");
     }
 
     private void ScannerCommunication(DataLogicScannerText e)
@@ -502,9 +507,10 @@ namespace JgMaschineLib.Scanner
 
       #endregion
 
-      if (e.TextEmpfangen.Contains(ServerTextAnmeldung))
+      if (e.TextEmpfangen.ToUpper().Contains(_Optionen.CradleTextAnmeldung.ToUpper()))
       {
-        Protokoll("Anmeldung Server: {0}", e.TextEmpfangen);
+        var msg = $"Anmeldung am GraddelReparatur. Rückgabe Craddel: {e.TextEmpfangen}";
+        _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
         return;
       }
 
@@ -512,9 +518,7 @@ namespace JgMaschineLib.Scanner
       {
         var maschine = SucheMaschine(db, e);
 
-        if (maschine == null)
-          Protokoll("Maschine nicht gefunden.");
-        else
+        if (maschine != null)
         {
           switch (e.VorgangScan)
           {
@@ -523,7 +527,6 @@ namespace JgMaschineLib.Scanner
               if (maschine.sAktiveAnmeldungen.FirstOrDefault() == null)
               {
                 e.FehlerAusgabe(" ", "Es ist keine Bediener", "angemeldet !");
-                Protokoll("Kein Bediener angemeldet.");
               }
               else
                 Bf2dEintragen(db, maschine, e);
@@ -535,21 +538,16 @@ namespace JgMaschineLib.Scanner
               if (mitarb == null)
               {
                 e.FehlerAusgabe("Bediener unbekannt!", " ", $"MA: {maschine.MaschinenName}", e.ScannerKoerper);
-                Protokoll($"Bediener unbekannt MA: {maschine.MaschinenName} Anz. Zeichen: {e.ScannerKoerper.Length} Matchcode: {e.ScannerKoerper} ");
+                var msg = $"Bediener unbekannt: {e.ScannerKoerper}";
+                _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
               }
               else
-              {
                 BedienerEintragen(db, maschine, mitarb, e);
-                Protokoll($"Bediener MA: {maschine.MaschinenName} Anz. Zeichen: {e.ScannerKoerper.Length} Matchcode: {e.ScannerKoerper} ");
-              }
+
               break;
 
             case DataLogicScanner.VorgangScanner.PROG:
               ProgrammeEintragen(db, maschine, e);
-              break;
-
-            default:
-              Protokoll("Vorgang Scanner unbekannt.");
               break;
           }
         }

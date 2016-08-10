@@ -53,7 +53,7 @@ namespace JgMaschineDatafoxLib
           {
             zo.ZaehlerDatumAktualisieren = 0;
             ProgDatafox.ZeitEinstellen(zo, DateTime.Now);
-            zo.Protokoll.Set("Zeit Datafox gestellt!", Proto.ProtoArt.Info);
+            zo.Protokoll.Set("Zeit Datafox gestellt!", Proto.ProtoArt.Kommentar);
           }
 
           // Kontrolle, ob Benutzer im Termanl geändert werden müssen
@@ -154,7 +154,7 @@ namespace JgMaschineDatafoxLib
       }
 
       Db.SaveChanges();
-      MyProtokoll.Set($"{ListeArbeitszeitvomTerminal.Count} Arbeitszeiten ins System übertragen!", Proto.ProtoArt.Info);
+      MyProtokoll.Set($"{ListeArbeitszeitvomTerminal.Count} Arbeitszeiten ins System übertragen!", Proto.ProtoArt.Kommentar);
     }
   }
 }

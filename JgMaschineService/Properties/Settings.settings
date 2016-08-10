@@ -2,11 +2,47 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JgMaschineService.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ScannerAdresse" Type="System.String" Scope="Application">
+    <Setting Name="CradleIpAdresse" Type="System.String" Scope="Application">
       <Value Profile="(Default)">192.168.16.1</Value>
     </Setting>
-    <Setting Name="ScannerPortnummer" Type="System.Int32" Scope="Application">
+    <Setting Name="CradlePortNummer" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">5200</Value>
+    </Setting>
+    <Setting Name="CradleTextAnmeldung" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DbVerbindungsString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EvgPfadProduktionsListe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EvgDateiProduktionsAuftrag" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ProgressPfadProduktionsListe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailAbsender" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailListeEmpfanger" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailServerAdresse" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailPortNummer" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EmailBenutzerName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailBenutzerKennwort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailBetreff" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Meldung von JgMaschineService</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineService", "JgMasc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineDbMerge", "JgMaschineDbMerge\JgMaschineDbMerge.csproj", "{6BEE4BFE-BFB0-44D7-ADDE-521505D1B001}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineServiceTest", "JgMaschineServiceTest\JgMaschineServiceTest.csproj", "{13C75255-DEE6-41DA-8625-6FD793EE8A3D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineTestTcpFirmaSchnell", "JgMaschineTestTcpFirmaSchnell\JgMaschineTestTcpFirmaSchnell.csproj", "{50378377-AFAA-453F-84E4-5C57EDBDC866}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineDatafoxLib", "JgMaschineDatafoxLib\JgMaschineDatafoxLib.csproj", "{306F2418-AD6B-449E-8ECE-F35E385EF2E2}"
@@ -194,22 +192,6 @@ Global
 		{6BEE4BFE-BFB0-44D7-ADDE-521505D1B001}.Release|x64.Build.0 = Release|Any CPU
 		{6BEE4BFE-BFB0-44D7-ADDE-521505D1B001}.Release|x86.ActiveCfg = Release|Any CPU
 		{6BEE4BFE-BFB0-44D7-ADDE-521505D1B001}.Release|x86.Build.0 = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|x64.Build.0 = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Debug|x86.Build.0 = Debug|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|x64.ActiveCfg = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|x64.Build.0 = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|x86.ActiveCfg = Release|Any CPU
-		{13C75255-DEE6-41DA-8625-6FD793EE8A3D}.Release|x86.Build.0 = Release|Any CPU
 		{50378377-AFAA-453F-84E4-5C57EDBDC866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{50378377-AFAA-453F-84E4-5C57EDBDC866}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50378377-AFAA-453F-84E4-5C57EDBDC866}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

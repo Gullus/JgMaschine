@@ -36,30 +36,18 @@ namespace JgMaschineLib.Scanner
       TEST
     }
 
-    private string _Adresse = "";
-    private int _Port = 0;
-
     private const string _FehlerDatenEmpfang = "#[SCANNERFEHLER]#";
-
-    private bool _AnzeigeProtokoll = false;
 
     private TcpClient _Client;
     private NetworkStream _NetStream;
+    private ScannerOptionen _Optionen;
 
     private ScannerTextDelegate _ScannerCom = null;
 
-    public DataLogicScanner(string Adresse, int Port, ScannerTextDelegate ScannerText, bool AnzeigeProtokoll = false)
+    public DataLogicScanner( ScannerOptionen Optionen, ScannerTextDelegate ScannerText)
     {
-      _Adresse = Adresse;
-      _Port = Port;
-      _AnzeigeProtokoll = AnzeigeProtokoll;
+      _Optionen = Optionen;
       _ScannerCom = ScannerText;
-    }
-
-    private void Protokoll(string FehlerText, params object[] Felder)
-    {
-      if (_AnzeigeProtokoll)
-        Console.WriteLine(FehlerText, Felder);
     }
 
     private bool istPingOk()
@@ -68,18 +56,20 @@ namespace JgMaschineLib.Scanner
       PingReply result = null;
       try
       {
-        result = sender.Send(_Adresse);
+        result = sender.Send(_Optionen.CradleIpAdresse);
       }
       catch (Exception f)
       {
-        Protokoll("Fehler bei Pingabfrage.\nGrund: {0}", f.Message);
+        var msg = "Fehler bei Pingabfrage!";
+        _Optionen.Protokoll.Set(msg, f);
         return false;
       }
 
-      if (result.Status == IPStatus.Success)
-        Protokoll("Ping erfolgreich.");
-      else
-        Protokoll("Ping fehlgeschlagen mit IPStatus: {0}", result.Status);
+      if (result.Status != IPStatus.Success)
+      {
+        var msg = $"Bing mit Status {result.Status} fehlgeschlagen!";
+        _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
+      }
 
       return result.Status == IPStatus.Success;
     }
@@ -100,21 +90,22 @@ namespace JgMaschineLib.Scanner
       while (true)
       {
         if (!istPingOk())
-          Thread.Sleep(10000);
+          Thread.Sleep(30000);
         else
         {
           try
           {
-            _Client = new TcpClient(_Adresse, _Port);
+            _Client = new TcpClient(_Optionen.CradleIpAdresse, _Optionen.CradlePortNummer);
           }
           catch (Exception f)
           {
-            Protokoll("Fehler beim Client Verbinungsaufbau.\nGrund: {0}", f.Message);
-            Thread.Sleep(10000);
+            var msg1 = $"Fehler beim Client Verbinungsaufbau.\nGrund: {f.Message}";
+            _Optionen.Protokoll.Set(msg1, Proto.ProtoArt.Warnung);
             continue;
           }
 
-          Protokoll("Verbindung mit Server hergestellt.");
+          var msg = "Verbindung mit Graddel hergestellt.";
+          _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
 
           _NetStream = _Client.GetStream();
 
@@ -141,7 +132,7 @@ namespace JgMaschineLib.Scanner
                 if (ct.IsCancellationRequested)
                   break;
               }
-            }, _Adresse, ct);
+            }, _Optionen.CradleIpAdresse, ct);
 
             var taskScannen = Task.Factory.StartNew<string>((nStream) =>
             {
@@ -158,7 +149,8 @@ namespace JgMaschineLib.Scanner
                 _NetStream.Dispose();
                 if (!ct.IsCancellationRequested)
                 {
-                  Protokoll("Fehler beim Empfang der Daten.\r\nGrund: " + f.Message);
+                  var msg1 = "Fehler beim Empfang der Daten von Sanner!";
+                  _Optionen.Protokoll.Set(msg1, f);
                   return _FehlerDatenEmpfang;
                 }
               }

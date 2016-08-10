@@ -1,53 +1,99 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Configuration.Install;
-using System.Diagnostics;
 using System.ServiceProcess;
-using System.Threading;
-using System.Threading.Tasks;
+using JgMaschineLib;
+using JgMaschineLib.Scanner;
 
-namespace JgMaschineDienst
+namespace JgMaschineService
 {
-  public class JgMaschieService : ServiceBase
+  public class JgMaschineService : ServiceBase
   {
+    //static void Main(string[] args)
+    //{
+    //  var pr = Properties.Settings.Default;
+    //  var st = new ScannerProgramm(new ScannerOptionen()
+    //  {
+    //    DbVerbindungsString = pr.DbVerbindungsString,
+
+    //    CradleIpAdresse = pr.CradleIpAdresse,
+    //    CradlePortNummer = pr.CradlePortNummer,
+    //    CradleTextAnmeldung = pr.CradleTextAnmeldung,
+
+    //    EvgPfadProduktionsListe = pr.EvgPfadProduktionsListe,
+    //    EvgDateiProduktionsAuftrag = pr.EvgDateiProduktionsAuftrag,
+    //    ProgressPfadProduktionsListe = pr.ProgressPfadProduktionsListe,
+
+    //    Protokoll = new JgMaschineLib.Proto(JgMaschineLib.Proto.KategorieArt.ServiceScanner, new JgMaschineLib.Email.SendEmailOptionen()
+    //    {
+    //      AdresseAbsender = pr.EmailAbsender,
+    //      AdressenEmpfaenger = pr.EmailListeEmpfanger,
+    //      Betreff = pr.EmailBetreff,
+
+    //      ServerAdresse = pr.EmailServerAdresse,
+    //      ServerPort = pr.EmailPortNummer,
+    //      ServerBenutzername = pr.EmailBenutzerName,
+    //      ServerPasswort = pr.EmailBenutzerKennwort
+    //    })
+    //  });
+
+    //var prot = _ScannProgramm.Optionen.Protokoll;
+    //prot.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll, Proto.AnzeigeArt.Email);
+    //  prot.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
+
+    //  st.Start();
+
+    //  Console.ReadKey();
+    //  st.Close();
+    //}
+
+    private ScannerProgramm _ScannProgramm;
+
     private static void Main()
     {
-      EintragLog("Service gestartet", EventLogEntryType.Information);
-      JgMaschieService.Run(new JgMaschieService());
-      EintragLog("Sevice beendet", EventLogEntryType.Information);
-    }
-
-    private static void EintragLog(string Ereigniss, EventLogEntryType EreignissTyp)
-    {
-      string source = "JgMaschineService";
-      string log = "Application";
-
-      if (!EventLog.SourceExists(source))
-        EventLog.CreateEventSource(source, log);
-
-      EventLog.WriteEntry(source, Ereigniss, EreignissTyp, 1);
+      JgMaschineService.Run(new JgMaschineService());
     }
 
     protected override void OnStart(string[] args)
     {
-      EintragLog("Start Dienst", EventLogEntryType.Warning);
       base.OnStart(args);
-
-      var t = new Task(() =>
+      var pr = Properties.Settings.Default;
+      _ScannProgramm = new ScannerProgramm(new ScannerOptionen()
       {
-        while (true)
+        DbVerbindungsString = pr.DbVerbindungsString,
+
+        CradleIpAdresse = pr.CradleIpAdresse,
+        CradlePortNummer = pr.CradlePortNummer,
+        CradleTextAnmeldung = pr.CradleTextAnmeldung,
+
+        EvgPfadProduktionsListe = pr.EvgPfadProduktionsListe,
+        EvgDateiProduktionsAuftrag = pr.EvgDateiProduktionsAuftrag,
+        ProgressPfadProduktionsListe = pr.ProgressPfadProduktionsListe,
+
+        Protokoll = new JgMaschineLib.Proto(JgMaschineLib.Proto.KategorieArt.ServiceScanner, new JgMaschineLib.Email.SendEmailOptionen()
         {
-          EintragLog("Durchlauf " + JgMaschineService.Properties.Settings.Default.ScannerAdresse, EventLogEntryType.SuccessAudit);
-          System.Media.SystemSounds.Beep.Play();
-          Thread.Sleep(5000);
-        }
+          AdresseAbsender = pr.EmailAbsender,
+          AdressenEmpfaenger = pr.EmailListeEmpfanger,
+          Betreff = pr.EmailBetreff,
+
+          ServerAdresse = pr.EmailServerAdresse,
+          ServerPort = pr.EmailPortNummer,
+          ServerBenutzername = pr.EmailBenutzerName,
+          ServerPasswort = pr.EmailBenutzerKennwort
+        })
       });
-      t.Start();
+
+      var prot = _ScannProgramm.Optionen.Protokoll;
+      prot.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll, Proto.AnzeigeArt.Email);
+      prot.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
+
+      _ScannProgramm.Start(); ;
     }
 
-    protected override void OnStop()
+    protected override void OnShutdown()
     {
-      EintragLog("Stop Dienst", EventLogEntryType.Warning);
-      base.OnStop();
+      base.OnShutdown();
+      _ScannProgramm.Optionen.Protokoll.Set("Serve Scanner heruntergefahren!", Proto.ProtoArt.Info);
     }
   }
 

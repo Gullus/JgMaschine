@@ -23,6 +23,7 @@ namespace JgMaschineLib
 
     public enum ProtoArt
     {
+      Kommentar,
       Info,
       Warnung,
       Fehler
@@ -55,15 +56,19 @@ namespace JgMaschineLib
           SendErgebniss = (erg, fehler) =>
           {
             if (fehler)
+            {
               AnzeigeWinProtokoll(erg, Proto.ProtoArt.Warnung);
+              AnzeigeConsole(erg, Proto.ProtoArt.Warnung);
+            }
           }
         };
       }
     }
 
-    public void AddAuswahl(ProtoArt Art, AnzeigeArt Anzeige)
+    public void AddAuswahl(ProtoArt Art, params AnzeigeArt[] Anzeige)
     {
-      _ListAnzeige.Add(new ProtoAuswahl(Art, Anzeige));
+      foreach(var anz in Anzeige)
+        _ListAnzeige.Add(new ProtoAuswahl(Art, anz));
     }
 
     public static void PfadeInWindowsEreignissAnzeigeSetzten()
@@ -106,9 +111,10 @@ namespace JgMaschineLib
         {
           switch (ProtokollArt)
           {
-            case ProtoArt.Info: CaptionText = "Information"; break;
-            case ProtoArt.Warnung: CaptionText = "Warnung"; break;
-            case ProtoArt.Fehler: CaptionText = "Fehler"; break;
+            case ProtoArt.Kommentar: CaptionText = "JgMaschine - Kommentar"; break;
+            case ProtoArt.Info: CaptionText = "JgMaschine - Information"; break;
+            case ProtoArt.Warnung: CaptionText = "JgMaschine - Warnung!"; break;
+            case ProtoArt.Fehler: CaptionText = "JgMaschine - Fehler!"; break;
           }
         }
         foreach (var anz in anzeigen)
@@ -141,12 +147,14 @@ namespace JgMaschineLib
     {
       if (EventLog.SourceExists(_Kategorie.ToString()))
       {
-      var logType = EventLogEntryType.Error;
+      var logType = EventLogEntryType.Information;
 
         switch (AnzeigeArt)
         {
           case ProtoArt.Info:
-            logType = EventLogEntryType.Information; break;
+            logType = EventLogEntryType.SuccessAudit; break;
+          case ProtoArt.Fehler:
+            logType = EventLogEntryType.Error; break;
           case ProtoArt.Warnung:
             logType = EventLogEntryType.Warning; break;
         }
@@ -172,11 +180,11 @@ namespace JgMaschineLib
 
     public void AnzeigeFenster(string CaptionText, string ProtokollText, ProtoArt AnzeigeArt = ProtoArt.Fehler)
     {
-      MessageBoxIcon icon = MessageBoxIcon.Error;
+      MessageBoxIcon icon = MessageBoxIcon.Information;
       switch (AnzeigeArt)
       {
-        case ProtoArt.Info:
-          icon = MessageBoxIcon.Information; break;
+        case ProtoArt.Fehler:
+          icon = MessageBoxIcon.Error; break;
         case ProtoArt.Warnung:
           icon = MessageBoxIcon.Warning; break;
       }

@@ -30,7 +30,7 @@ namespace JgMaschineDatafoxLib
       if (lists.Tables == null)
       {
         msg = $"Es liegen keine Listendefinitionen im Verzeichnis {Optionen.PfadUpdateBediener} vor.";
-        Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
+        Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
         return;
       }
 
@@ -65,7 +65,7 @@ namespace JgMaschineDatafoxLib
           }
 
           msg = string.Format("Liste [{0} (Datensätze: {1})] wurde importiert. Datei: {2}", lists.Tables[idx].Name, import.RecordCount, files[0]);
-          Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
+          Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
         }
         catch (DFComDLL.ListImportException ex)
         {
@@ -80,7 +80,7 @@ namespace JgMaschineDatafoxLib
       if (importCount == 0)
       {
         msg = "Es liegen keine Listendaten vor.";
-        Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
+        Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
         return;
       }
 
@@ -93,7 +93,7 @@ namespace JgMaschineDatafoxLib
         throw new Exception(msg);
       }
       msg = string.Format("Es wurde{0} {1} von {2} Listen übertragen.", (importCount == 1) ? "" : "n", importCount, lists.Tables.Length);
-      Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
+      Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
 
       // Verbindung schliessen
       DatafoxSchliessen(Optionen);

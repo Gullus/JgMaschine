@@ -39,12 +39,9 @@ namespace JgMaschineServiceAbreitszeit
       });
 
       var prot = _ArbeitszeitErfassung.ZeitsteuerungOptionen.Protokoll;
-      prot.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll);
-      prot.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
       prot.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.WinProtokoll);
-      prot.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.Email);
-      prot.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.Email);
-      prot.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.Email);
+      prot.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
+      prot.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll, Proto.AnzeigeArt.Email);
 
       prot.AnzeigeWinProtokoll("Arbeitszeit startet!", Proto.ProtoArt.Info);
 

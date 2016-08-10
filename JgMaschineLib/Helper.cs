@@ -59,21 +59,6 @@ namespace JgMaschineLib
       public EventLogEntryType aBild { get; set; }
     }
 
-    public static void InWinProtokoll(string ProtokollText, EventLogEntryType AnzeigeBild = EventLogEntryType.Information)
-    {
-      var ds = new DatensatzWinlog() { pText = ProtokollText, aBild = AnzeigeBild };
-      var t = Task.Factory.StartNew((logDatensatz) =>
-      {
-        var source = "JgMaschine";
-        var logDs = (DatensatzWinlog)logDatensatz;
-
-        if (!EventLog.SourceExists(source))
-          EventLog.CreateEventSource(source, "Application");
-
-        EventLog.WriteEntry(source, logDs.pText, logDs.aBild);
-      }, ds);
-    }
-
     #endregion
 
     public static string EntferneLetztesZeichen(string Wert, int Anzahl = 1)
