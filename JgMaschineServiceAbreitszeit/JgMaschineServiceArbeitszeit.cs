@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Configuration.Install;
 using System.ServiceProcess;
 using JgMaschineDatafoxLib;
 using JgMaschineLib;
@@ -16,8 +15,8 @@ namespace JgMaschineServiceAbreitszeit
       {
         Standort = prop.Standort,
         PfadUpdateBediener = prop.PfadUpdateBediener,
-        TimerIntervall = prop.AusleseIntervall,
-        VerbindungsString = prop.DatenbankVerbindungsstring,
+        TimerIntervall = prop.AusleseIntervallInSekunden,
+        VerbindungsString = prop.DatenbankVerbindungsString,
 
         Datafox = new DatafoxOptionen()
         {
@@ -29,12 +28,12 @@ namespace JgMaschineServiceAbreitszeit
         Protokoll = new Proto(Proto.KategorieArt.ServiceArbeitszeit, new JgMaschineLib.Email.SendEmailOptionen()
         {
           AdresseAbsender = prop.EmailAbsender,
-          AdressenEmpfaenger = prop.EamilAdressenEmpfaenger,
-          Betreff = prop.Betreff,
-          ServerAdresse = prop.ServerAdresse,
-          ServerPort = prop.ServerPort,
-          ServerBenutzername = prop.ServerBenutzername,
-          ServerPasswort = prop.ServerPasswort
+          AdressenEmpfaenger = prop.EmailListeEmpfaenger,
+          Betreff = prop.EmailBetreff,
+          ServerAdresse = prop.EmailServerAdresse,
+          ServerPort = prop.EmailServerPortNummer,
+          ServerBenutzername = prop.EmailServerBenutzerName,
+          ServerPasswort = prop.EmailServerBenutzerKennwort
         })
       });
 
@@ -43,7 +42,8 @@ namespace JgMaschineServiceAbreitszeit
       prot.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
       prot.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll, Proto.AnzeigeArt.Email);
 
-      prot.AnzeigeWinProtokoll("Arbeitszeit startet!", Proto.ProtoArt.Info);
+      var msg = $"Arbeitszeit startet!\nAdresse: {_ArbeitszeitErfassung.ZeitsteuerungOptionen.Datafox.IpNummer}  Port: {_ArbeitszeitErfassung.ZeitsteuerungOptionen.Datafox.Portnummer}.";
+      prot.Set(msg, Proto.ProtoArt.Info);
 
       Console.ReadKey();
     }
@@ -67,8 +67,8 @@ namespace JgMaschineServiceAbreitszeit
   //    {
   //      Standort = prop.Standort,
   //      PfadUpdateBediener = prop.PfadUpdateBediener,
-  //      TimerIntervall = prop.AusleseIntervall,
-  //      VerbindungsString = prop.DatenbankVerbindungsstring,
+  //      TimerIntervall = prop.AusleseIntervallInSekunden,
+  //      VerbindungsString = prop.DatenbankVerbindungsString,
 
   //      Datafox = new DatafoxOptionen()
   //      {
@@ -82,12 +82,12 @@ namespace JgMaschineServiceAbreitszeit
   //        EmailOptionen = new JgMaschineLib.Email.SendEmailOptionen()
   //        {
   //          AdresseAbsender = prop.EmailAbsender,
-  //          AdressenEmpfaenger = prop.EamilAdressenEmpfaenger,
-  //          Betreff = prop.Betreff,
-  //          ServerAdresse = prop.ServerAdresse,
-  //          ServerPort = prop.ServerPort,
-  //          ServerBenutzername = prop.ServerBenutzername,
-  //          ServerPasswort = prop.ServerPasswort
+  //          AdressenEmpfaenger = prop.EmailListeEmpfaenger,
+  //          Betreff = prop.EmailBetreff,
+  //          ServerAdresse = prop.EmailServerAdresse,
+  //          ServerPort = prop.EmailServerPortNummer,
+  //          ServerBenutzername = prop.EmailServerBenutzerName,
+  //          ServerPasswort = prop.EmailServerBenutzerKennwort
   //        }
   //      }
   //    });

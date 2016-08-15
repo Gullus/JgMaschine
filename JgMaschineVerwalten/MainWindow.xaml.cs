@@ -88,7 +88,7 @@ namespace JgMaschineVerwalten
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
       _Db = new JgModelContainer();
-      _Standort = await _Db.tabStandortSet.FindAsync(Properties.Settings.Default.IdStandort);
+      _Standort = await _Db.tabStandortSet.FirstOrDefaultAsync(f => f.Id == Properties.Settings.Default.IdStandort);
       if (_Standort == null)
         _Standort = await _Db.tabStandortSet.FirstOrDefaultAsync();
 
@@ -372,32 +372,36 @@ namespace JgMaschineVerwalten
 
       _JgMaschine.ViewSource?.View?.Refresh();
 
-      if (idMaschine != null)
+      try
       {
-        if (idAnmeldung != null) // Als ersttes nach Benutzer suchen
+        if (idMaschine != null)
         {
-          foreach (var dsMaschine in treeViewMaschinen.Items)
+          if (idAnmeldung != null) // Als ersttes nach Benutzer suchen
           {
-            var itemMaschine = (TreeViewItem)treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine);
-            foreach (var dsAnmeldung in itemMaschine.Items)
+            foreach (var dsMaschine in treeViewMaschinen.Items)
             {
-              if ((dsAnmeldung as tabAnmeldungMaschine).Id == idAnmeldung)
+              var itemMaschine = (TreeViewItem)treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine);
+              foreach (var dsAnmeldung in itemMaschine.Items)
               {
-                (itemMaschine.ItemContainerGenerator.ContainerFromItem(dsAnmeldung) as TreeViewItem).IsSelected = true;
-                return;
+                if ((dsAnmeldung as tabAnmeldungMaschine).Id == idAnmeldung)
+                {
+                  (itemMaschine.ItemContainerGenerator.ContainerFromItem(dsAnmeldung) as TreeViewItem).IsSelected = true;
+                  return;
+                }
               }
             }
           }
-        }
-        foreach (var dsMaschine in treeViewMaschinen.Items)
-        {
-          if ((dsMaschine as tabMaschine).Id == idMaschine)
+          foreach (var dsMaschine in treeViewMaschinen.Items)
           {
-            (treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine) as TreeViewItem).IsSelected = true;
-            return;
+            if ((dsMaschine as tabMaschine).Id == idMaschine)
+            {
+              (treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine) as TreeViewItem).IsSelected = true;
+              return;
+            }
           }
         }
       }
+      catch { }
     }
 
     #region Reparaturen ************************************************************

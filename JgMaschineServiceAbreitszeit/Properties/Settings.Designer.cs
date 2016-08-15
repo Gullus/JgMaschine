@@ -44,18 +44,18 @@ namespace JgMaschineServiceAbreitszeit.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DatenbankVerbindungsstring {
+        public string DatenbankVerbindungsString {
             get {
-                return ((string)(this["DatenbankVerbindungsstring"]));
+                return ((string)(this["DatenbankVerbindungsString"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30000")]
-        public int AusleseIntervall {
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int AusleseIntervallInSekunden {
             get {
-                return ((int)(this["AusleseIntervall"]));
+                return ((int)(this["AusleseIntervallInSekunden"]));
             }
         }
         
@@ -98,54 +98,54 @@ namespace JgMaschineServiceAbreitszeit.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("joerggullus@gmail.com")]
-        public string EamilAdressenEmpfaenger {
+        public string EmailListeEmpfaenger {
             get {
-                return ((string)(this["EamilAdressenEmpfaenger"]));
+                return ((string)(this["EmailListeEmpfaenger"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Fehlermeldung Arbeitszeit")]
-        public string Betreff {
+        [global::System.Configuration.DefaultSettingValueAttribute("Information aus JgMaschine Service Arbeitszeit")]
+        public string EmailBetreff {
             get {
-                return ((string)(this["Betreff"]));
+                return ((string)(this["EmailBetreff"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("smtp.1und1.de")]
-        public string ServerAdresse {
+        public string EmailServerAdresse {
             get {
-                return ((string)(this["ServerAdresse"]));
+                return ((string)(this["EmailServerAdresse"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("25")]
-        public int ServerPort {
+        public int EmailServerPortNummer {
             get {
-                return ((int)(this["ServerPort"]));
+                return ((int)(this["EmailServerPortNummer"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("fehlermeldung@jgdata.de")]
-        public string ServerBenutzername {
+        public string EmailServerBenutzerName {
             get {
-                return ((string)(this["ServerBenutzername"]));
+                return ((string)(this["EmailServerBenutzerName"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("fehler123")]
-        public string ServerPasswort {
+        public string EmailServerBenutzerKennwort {
             get {
-                return ((string)(this["ServerPasswort"]));
+                return ((string)(this["EmailServerBenutzerKennwort"]));
             }
         }
     }

@@ -8,11 +8,11 @@
     <Setting Name="PfadUpdateBediener" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Users\jg\Desktop\Test</Value>
     </Setting>
-    <Setting Name="DatenbankVerbindungsstring" Type="System.String" Scope="Application">
+    <Setting Name="DatenbankVerbindungsString" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AusleseIntervall" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">30000</Value>
+    <Setting Name="AusleseIntervallInSekunden" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="Terminal_IpNummer" Type="System.String" Scope="Application">
       <Value Profile="(Default)">192.168.1.57</Value>
@@ -26,22 +26,22 @@
     <Setting Name="EmailAbsender" Type="System.String" Scope="Application">
       <Value Profile="(Default)">JgSupport@gullus.de</Value>
     </Setting>
-    <Setting Name="EamilAdressenEmpfaenger" Type="System.String" Scope="Application">
+    <Setting Name="EmailListeEmpfaenger" Type="System.String" Scope="Application">
       <Value Profile="(Default)">joerggullus@gmail.com</Value>
     </Setting>
-    <Setting Name="Betreff" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Fehlermeldung Arbeitszeit</Value>
+    <Setting Name="EmailBetreff" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Information aus JgMaschine Service Arbeitszeit</Value>
     </Setting>
-    <Setting Name="ServerAdresse" Type="System.String" Scope="Application">
+    <Setting Name="EmailServerAdresse" Type="System.String" Scope="Application">
       <Value Profile="(Default)">smtp.1und1.de</Value>
     </Setting>
-    <Setting Name="ServerPort" Type="System.Int32" Scope="Application">
+    <Setting Name="EmailServerPortNummer" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">25</Value>
     </Setting>
-    <Setting Name="ServerBenutzername" Type="System.String" Scope="Application">
+    <Setting Name="EmailServerBenutzerName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">fehlermeldung@jgdata.de</Value>
     </Setting>
-    <Setting Name="ServerPasswort" Type="System.String" Scope="Application">
+    <Setting Name="EmailServerBenutzerKennwort" Type="System.String" Scope="Application">
       <Value Profile="(Default)">fehler123</Value>
     </Setting>
   </Settings>

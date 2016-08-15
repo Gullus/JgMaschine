@@ -1,14 +1,13 @@
-﻿using JgMaschineData;
-using JgMaschineSetup.Commands;
-using System;
+﻿using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using JgMaschineData;
 using JgMaschineLib;
-using System.Diagnostics;
+using JgMaschineSetup.Commands;
 
 namespace JgMaschineSetup
 {
@@ -20,7 +19,6 @@ namespace JgMaschineSetup
 
     public MainWindow()
     {
-      Helper.ProtokollAusgabe = Helper.ProtokollAusgabeArt.WindowsFenster;
       InitializeComponent();
     }
 

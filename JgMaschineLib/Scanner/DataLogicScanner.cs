@@ -99,8 +99,9 @@ namespace JgMaschineLib.Scanner
           }
           catch (Exception f)
           {
-            var msg1 = $"Fehler beim Client Verbinungsaufbau.\nGrund: {f.Message}";
+            var msg1 = $"Fehler beim Verbinungsaufbau zum Cradle.\nGrund: {f.Message}";
             _Optionen.Protokoll.Set(msg1, Proto.ProtoArt.Warnung);
+            Thread.Sleep(30000);
             continue;
           }
 

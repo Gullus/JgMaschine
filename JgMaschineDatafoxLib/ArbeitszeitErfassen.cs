@@ -16,7 +16,7 @@ namespace JgMaschineDatafoxLib
     public ArbeitszeitErfassen(ZeitsteuerungDatafox ZeitsteuerungOptionen)
     {
       _ZeitsteuerungOptionen = ZeitsteuerungOptionen;
-      _SteuerungsTimer = new Timer(OnTimedEvent, _ZeitsteuerungOptionen, 1000, _ZeitsteuerungOptionen.TimerIntervall);
+      _SteuerungsTimer = new Timer(OnTimedEvent, _ZeitsteuerungOptionen, new TimeSpan(0 , 0 , 1), new TimeSpan(0, 0, _ZeitsteuerungOptionen.TimerIntervall));
     }
 
     public void TimerStop()
@@ -26,7 +26,7 @@ namespace JgMaschineDatafoxLib
 
     public void TimerContinue()
     {
-      _SteuerungsTimer.Change(1000, _ZeitsteuerungOptionen.TimerIntervall);
+      _SteuerungsTimer.Change(new TimeSpan(0, 0, 1), new TimeSpan(0, 0, _ZeitsteuerungOptionen.TimerIntervall));
     }
 
     private static void OnTimedEvent(object state)
@@ -74,7 +74,11 @@ namespace JgMaschineDatafoxLib
           ProgDatafox.DatafoxSchliessen(zo);
 
           if (dsVomTerminal.Count > 0)
+          {
             ArbeitszeitInDatenbank(Db, dsVomTerminal, standort.Id, zo.Protokoll);
+            var msg = $"Es wurden {dsVomTerminal.Count} Arbeitszeiten von Terminal übertragen.";
+            zo.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+          }
         }
       }
       catch (Exception f)
@@ -108,7 +112,9 @@ namespace JgMaschineDatafoxLib
         {
           if (arbeitzeitVorhanden != null)
           {
-            if (anmeld.Datum.AddHours(1) < DateTime.Now)
+            // Zeitspanne wo erneute Anmeldungen ohne gültige Abmeldung erfolgt, wurde von Herrn Großmann am 13.08.16 fetgelegt.
+
+            if (anmeld.Datum.AddHours(12) < DateTime.Now)
               continue;
           }
 
@@ -138,17 +144,22 @@ namespace JgMaschineDatafoxLib
           }
           else
           {
-            var arbZeit = new tabArbeitszeit()
+            var letzteArbeitszeit = Db.tabArbeitszeitSet.Where(w => (w.fBediener == bediener.Id) && (w.Abmeldung != null)).Max(m => m.Abmeldung);
+
+            if ((letzteArbeitszeit != null) && (((DateTime)letzteArbeitszeit).AddHours(12) > DateTime.Now))
             {
-              Id = Guid.NewGuid(),
-              fBediener = bediener.Id,
-              fStandort = IdStandort,
-              Abmeldung = anmeld.Datum,
-              ManuelleAnmeldung = false,
-              ManuelleAbmeldung = false,
-            };
-            DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-            Db.tabArbeitszeitSet.Add(arbZeit);
+              var arbZeit = new tabArbeitszeit()
+              {
+                Id = Guid.NewGuid(),
+                fBediener = bediener.Id,
+                fStandort = IdStandort,
+                Abmeldung = anmeld.Datum,
+                ManuelleAnmeldung = false,
+                ManuelleAbmeldung = false,
+              };
+              DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+              Db.tabArbeitszeitSet.Add(arbZeit);
+            }
           }
         }
       }

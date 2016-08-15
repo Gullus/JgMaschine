@@ -67,25 +67,31 @@ namespace JgMaschineLib
 
     public void AddAuswahl(ProtoArt Art, params AnzeigeArt[] Anzeige)
     {
-      foreach(var anz in Anzeige)
+      foreach (var anz in Anzeige)
         _ListAnzeige.Add(new ProtoAuswahl(Art, anz));
     }
 
     public static void PfadeInWindowsEreignissAnzeigeSetzten()
     {
+      string fehler = null;
       foreach (var name in Enum.GetNames(typeof(KategorieArt)))
       {
         try
         {
-          if (! EventLog.SourceExists(name))
+          if (!EventLog.SourceExists(name))
             EventLog.CreateEventSource(name, "JgMaschine");
         }
         catch (Exception f)
         {
-          var msg = $"Fehler beim Einrichten des Pfades !\nGrund: {f.Message}";
-          Helper.Protokoll(msg, Helper.ProtokollArt.Warnung);
+          if (fehler == null)
+            fehler = "Fehler beim Einrichten des Windowsprotokoll!";
+          fehler += $"{name} : {f.Message}";
         }
       }
+      if (fehler == null)
+        Helper.Protokoll("Windowsereigniss Pfade erfolgreich eingetragen", Helper.ProtokollArt.Info);
+      else
+        Helper.Protokoll(fehler, Helper.ProtokollArt.Warnung);
     }
 
     public void Set(string ProtokollText, Exception Fehler, string Caption = "")
@@ -147,7 +153,7 @@ namespace JgMaschineLib
     {
       if (EventLog.SourceExists(_Kategorie.ToString()))
       {
-      var logType = EventLogEntryType.Information;
+        var logType = EventLogEntryType.Information;
 
         switch (AnzeigeArt)
         {
@@ -159,7 +165,7 @@ namespace JgMaschineLib
             logType = EventLogEntryType.Warning; break;
         }
 
-        EventLog.WriteEntry(_Kategorie.ToString() , ProtokollText, logType, 1);
+        EventLog.WriteEntry(_Kategorie.ToString(), ProtokollText, logType, 1);
       }
     }
 

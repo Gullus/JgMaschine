@@ -298,7 +298,7 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="Zusätliche Einstellungen">
+      <TabItem Header=" Zusätliche Einstellungen ">
         <Grid Margin="8">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="160"/>

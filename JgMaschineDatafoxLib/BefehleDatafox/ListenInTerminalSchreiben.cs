@@ -16,8 +16,6 @@ namespace JgMaschineDatafoxLib
       int importCount = 0;
       var import = new DFComDLL.ListImport();
 
-      DatafoxOeffnen(Optionen);
-
       var lists = new DFComDLL.TableDeclarations(DFComDLL.TableDeclarations.TableType.List, "Lists.xml");
       if (lists.LoadFromDevice(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, "") == false)
       {
@@ -94,9 +92,6 @@ namespace JgMaschineDatafoxLib
       }
       msg = string.Format("Es wurde{0} {1} von {2} Listen übertragen.", (importCount == 1) ? "" : "n", importCount, lists.Tables.Length);
       Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
-
-      // Verbindung schliessen
-      DatafoxSchliessen(Optionen);
     }
   }
 }

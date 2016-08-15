@@ -96,13 +96,6 @@ namespace JgMaschineLib
       return erg;
     }
 
-    public enum ProtokollAusgabeArt
-    {
-      Console,
-      WindowsFenster
-    }
-    public static ProtokollAusgabeArt ProtokollAusgabe = ProtokollAusgabeArt.Console;
-
     public enum ProtokollArt
     {
       Info,
@@ -111,29 +104,23 @@ namespace JgMaschineLib
     }
     public static void Protokoll(string ProtokollText, ProtokollArt ProtokollArt = ProtokollArt.Fehler)
     {
-      if (ProtokollAusgabe == ProtokollAusgabeArt.Console)
-      {
-        Console.WriteLine(ProtokollArt + ": " + ProtokollText);
-      }
-      else
-      {
-        string caption = "Fehler";
-        MessageBoxIcon icon = MessageBoxIcon.Error;
+      string caption = "Fehler!";
+      MessageBoxIcon icon = MessageBoxIcon.Error;
 
-        switch (ProtokollArt)
-        {
-          case ProtokollArt.Info:
-            caption = "Info";
-            icon = MessageBoxIcon.Information;
-            break;
-          case ProtokollArt.Warnung:
-            caption = "Warnung";
-            icon = MessageBoxIcon.Warning;
-            break;
-        }
-        MessageBox.Show(ProtokollText, caption, MessageBoxButtons.OK, icon);
+      switch (ProtokollArt)
+      {
+        case ProtokollArt.Info:
+          caption = "Information";
+          icon = MessageBoxIcon.Information;
+          break;
+        case ProtokollArt.Warnung:
+          caption = "Warnung!";
+          icon = MessageBoxIcon.Warning;
+          break;
       }
+      MessageBox.Show(ProtokollText, caption, MessageBoxButtons.OK, icon);
     }
+
     public static void Protokoll(string FehlerText, Exception Fehler)
     {
       var msg = $"{FehlerText}\nGrund: {Fehler.Message}";

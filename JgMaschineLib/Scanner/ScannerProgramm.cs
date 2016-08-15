@@ -33,7 +33,8 @@ namespace JgMaschineLib.Scanner
 
       using (var db = new JgModelContainer())
       {
-        db.Database.Connection.ConnectionString = _Optionen.DbVerbindungsString;
+        if (_Optionen.DbVerbindungsString != "")
+          db.Database.Connection.ConnectionString = _Optionen.DbVerbindungsString;
         db.tabStandortSet.FirstOrDefault();
       }
 
@@ -218,9 +219,6 @@ namespace JgMaschineLib.Scanner
     {
       var btNeu = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
 
-      var msg = $"Maschine: {Maschine.MaschinenName}\nProject: {btNeu.ProjektNummer} Anzahl: {btNeu.Anzahl} Gewicht: {btNeu.Gewicht * 1000}";
-      _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
-
       if (Maschine.eAktivBauteil != null)
       {
         var letztesBt = Maschine.eAktivBauteil;
@@ -230,7 +228,7 @@ namespace JgMaschineLib.Scanner
         if ((letztesBt.NummerBauteil == btNeu.ProjektNummer) && (letztesBt.BtDurchmesser == btNeu.Durchmesser)
           && (letztesBt.BtGewicht == btNeu.GewichtInKg) && (letztesBt.BtLaenge == btNeu.Laenge))
         {
-          msg = $"BauteilMaschine: {Maschine.MaschinenName}\nProject: {btNeu.ProjektNummer} erledigt";
+          var msg = $"BauteilMaschine: {Maschine.MaschinenName}\nProject: {btNeu.ProjektNummer} erledigt";
           _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
 
           e.SendeText(" ", " - Bauteil erledigt -");
@@ -246,7 +244,7 @@ namespace JgMaschineLib.Scanner
 
       if (btInDatenBank != null)
       {
-        msg = $"Bauteil an Maschine {Maschine.MaschinenName} bereits am {btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm")} gefertigt.";
+        var msg = $"Bauteil an Maschine {Maschine.MaschinenName} bereits am {btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm")} gefertigt.";
         _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
 
         e.FehlerAusgabe("Bauteil bereits am", btInDatenBank.DatumStart.ToString("dd.MM.yy HH:mm"), "gefertigt.");
@@ -308,7 +306,9 @@ namespace JgMaschineLib.Scanner
 
         Maschine.eAktivBauteil = btNeuErstellt;
         DbSichern.DsSichern<tabBauteil>(Db, btNeuErstellt, EnumStatusDatenabgleich.Neu);
-        _Optionen.Protokoll.Set("Neues Bauteil erstellt.", Proto.ProtoArt.Kommentar);
+
+        var msg = $"BT erstellt. Maschine: {Maschine.MaschinenName}\n  Project: {btNeu.ProjektNummer} Anzahl: {btNeu.Anzahl} Gewicht: {btNeu.Gewicht * 1000}";
+        _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
       }
     }
 
@@ -326,7 +326,7 @@ namespace JgMaschineLib.Scanner
           {
             e.FehlerAusgabe("Sie sind bereits an", $"MA: {Maschine.MaschinenName}", "angemeldet !");
 
-            var msg1 = $"Bediener {Bediener.Name} bereits an Maschine {Maschine.MaschinenName} angemeldet.";
+            var msg1 = $"Bediener {Bediener.Name} ist bereits an Maschine {Maschine.MaschinenName} angemeldet.";
             _Optionen.Protokoll.Set(msg1, Proto.ProtoArt.Kommentar);
             return;
           }
@@ -338,7 +338,7 @@ namespace JgMaschineLib.Scanner
         }
 
         e.SendeText(" ", "- A N M E L D U N G -", Maschine.MaschinenName, Bediener.Name);
-                 
+
         var anmeldungNeu = new tabAnmeldungMaschine()
         {
           Id = Guid.NewGuid(),
@@ -364,7 +364,7 @@ namespace JgMaschineLib.Scanner
             fReparatur = (Guid)Maschine.fAktivReparatur,
           };
           DbSichern.AbgleichEintragen(anmeldungReparatur.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-          Db.tabAnmeldungMaschineSet.Add(anmeldungNeu);
+          Db.tabAnmeldungReparaturSet.Add(anmeldungReparatur);
         }
 
         Db.SaveChanges();
@@ -372,14 +372,13 @@ namespace JgMaschineLib.Scanner
         var msg = $"Bediener {Bediener.Name} an Maschine {Maschine.MaschinenName} angemeldet.";
         _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
       }
-
       else // Abmeldung
       {
         if (anmeldungVorhanden == null)
-          e.FehlerAusgabe(" ", "Sie sind an keiner", "Maschine angemeldet !");
+          e.FehlerAusgabe(" ", "Sie sind an dieser", "Maschine nicht angemeldet !");
         else
         {
-          e.SendeText(" ", "- A B M E L D U N G -", " ", Bediener.Name, $"MA: {Maschine.MaschinenName}");
+          e.SendeText(" ",  "- A B M E L D U N G -", " ", Bediener.Name, $"MA: {Maschine.MaschinenName}");
 
           BedienerVonMaschineAbmelden(Maschine, Bediener, anmeldungVorhanden);
           BedienerReparaturAbmelden(Maschine, Bediener);
@@ -405,7 +404,7 @@ namespace JgMaschineLib.Scanner
     {
       if (Maschine.eAktivReparatur != null)
       {
-        var anmeldungReparatur = Maschine.eAktivReparatur.sAnmeldungen.Where(w => w.IstAktiv).FirstOrDefault(f => f.Id == Bediener.Id);
+        var anmeldungReparatur = Maschine.eAktivReparatur.sAnmeldungen.Where(w => w.IstAktiv).FirstOrDefault(f => f.eBediener == Bediener);
         if (anmeldungReparatur != null)
         {
           anmeldungReparatur.Abmeldung = DateTime.Now;
@@ -445,7 +444,7 @@ namespace JgMaschineLib.Scanner
         };
       }
       else // Anmeldung einer Reparatur
-      { 
+      {
         if (reparatur != null)
           e.FehlerAusgabe("Vorgang:", $"- {reparatur.Vorgang} -", "bereits angemeldet !");
         else
@@ -474,7 +473,7 @@ namespace JgMaschineLib.Scanner
           Maschine.eAktivReparatur = reparatur;
           DbSichern.AbgleichEintragen(Maschine.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
 
-          foreach(var anmeldungen in Maschine.sAktiveAnmeldungen)
+          foreach (var anmeldungen in Maschine.sAktiveAnmeldungen)
           {
             var anmeldungReparatur = new tabAnmeldungReparatur()
             {
@@ -509,7 +508,7 @@ namespace JgMaschineLib.Scanner
 
       if (e.TextEmpfangen.ToUpper().Contains(_Optionen.CradleTextAnmeldung.ToUpper()))
       {
-        var msg = $"Anmeldung am GraddelReparatur. Rückgabe Craddel: {e.TextEmpfangen}";
+        var msg = $"Anmeldung Cradle, Antwort: {e.TextEmpfangen}";
         _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
         return;
       }
@@ -537,7 +536,7 @@ namespace JgMaschineLib.Scanner
               var mitarb = db.tabBedienerSet.FirstOrDefault(f => f.MatchCode == e.ScannerKoerper);
               if (mitarb == null)
               {
-                e.FehlerAusgabe("Bediener unbekannt!", " ", $"MA: {maschine.MaschinenName}", e.ScannerKoerper);
+                e.FehlerAusgabe("Bediener unbekannt!", $"MA: {maschine.MaschinenName}", e.ScannerKoerper);
                 var msg = $"Bediener unbekannt: {e.ScannerKoerper}";
                 _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
               }

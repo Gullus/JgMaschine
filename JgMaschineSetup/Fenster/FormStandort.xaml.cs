@@ -1,6 +1,6 @@
-﻿using JgMaschineData;
-using System;
+﻿using System;
 using System.Windows;
+using JgMaschineData;
 
 namespace JgMaschineSetup.Fenster
 {

@@ -43,7 +43,7 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("welcome")]
         public string CradleTextAnmeldung {
             get {
                 return ((string)(this["CradleTextAnmeldung"]));
@@ -53,15 +53,15 @@ namespace JgMaschineService.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DbVerbindungsString {
+        public string DatenbankVerbindungsString {
             get {
-                return ((string)(this["DbVerbindungsString"]));
+                return ((string)(this["DatenbankVerbindungsString"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\EVG\\EINGABE\\PROD\\")]
         public string EvgPfadProduktionsListe {
             get {
                 return ((string)(this["EvgPfadProduktionsListe"]));
@@ -70,7 +70,7 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\EVG\\EINGABE\\HOST\\PB.H_M")]
         public string EvgDateiProduktionsAuftrag {
             get {
                 return ((string)(this["EvgDateiProduktionsAuftrag"]));
@@ -79,7 +79,7 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c\\Progress\\Pro2\\impdata")]
         public string ProgressPfadProduktionsListe {
             get {
                 return ((string)(this["ProgressPfadProduktionsListe"]));
@@ -88,7 +88,7 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("JgSupport@gullus.de")]
         public string EmailAbsender {
             get {
                 return ((string)(this["EmailAbsender"]));
@@ -97,16 +97,16 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EmailListeEmpfanger {
+        [global::System.Configuration.DefaultSettingValueAttribute("joerggullus@gmail.com")]
+        public string EmailListeEmpfaenger {
             get {
-                return ((string)(this["EmailListeEmpfanger"]));
+                return ((string)(this["EmailListeEmpfaenger"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("smtp.1und1.de")]
         public string EmailServerAdresse {
             get {
                 return ((string)(this["EmailServerAdresse"]));
@@ -115,37 +115,49 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int EmailPortNummer {
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int EmailServerPortNummer {
             get {
-                return ((int)(this["EmailPortNummer"]));
+                return ((int)(this["EmailServerPortNummer"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EmailBenutzerName {
+        [global::System.Configuration.DefaultSettingValueAttribute("fehlermeldung@jgdata.de")]
+        public string EmailServerBenutzerName {
             get {
-                return ((string)(this["EmailBenutzerName"]));
+                return ((string)(this["EmailServerBenutzerName"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EmailBenutzerKennwort {
+        [global::System.Configuration.DefaultSettingValueAttribute("fehler123")]
+        public string EmailServerBenutzerKennwort {
             get {
-                return ((string)(this["EmailBenutzerKennwort"]));
+                return ((string)(this["EmailServerBenutzerKennwort"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Meldung von JgMaschineService")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Information aus JgMaschineService")]
         public string EmailBetreff {
             get {
                 return ((string)(this["EmailBetreff"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Heidenau")]
+        public string Standort {
+            get {
+                return ((string)(this["Standort"]));
+            }
+            set {
+                this["Standort"] = value;
             }
         }
     }

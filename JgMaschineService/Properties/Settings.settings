@@ -9,40 +9,43 @@
       <Value Profile="(Default)">5200</Value>
     </Setting>
     <Setting Name="CradleTextAnmeldung" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">welcome</Value>
     </Setting>
-    <Setting Name="DbVerbindungsString" Type="System.String" Scope="Application">
+    <Setting Name="DatenbankVerbindungsString" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="EvgPfadProduktionsListe" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">C:\EVG\EINGABE\PROD\</Value>
     </Setting>
     <Setting Name="EvgDateiProduktionsAuftrag" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">C:\EVG\EINGABE\HOST\PB.H_M</Value>
     </Setting>
     <Setting Name="ProgressPfadProduktionsListe" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">c\Progress\Pro2\impdata</Value>
     </Setting>
     <Setting Name="EmailAbsender" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">JgSupport@gullus.de</Value>
     </Setting>
-    <Setting Name="EmailListeEmpfanger" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+    <Setting Name="EmailListeEmpfaenger" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">joerggullus@gmail.com</Value>
     </Setting>
     <Setting Name="EmailServerAdresse" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">smtp.1und1.de</Value>
     </Setting>
-    <Setting Name="EmailPortNummer" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="EmailServerPortNummer" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
     </Setting>
-    <Setting Name="EmailBenutzerName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+    <Setting Name="EmailServerBenutzerName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fehlermeldung@jgdata.de</Value>
     </Setting>
-    <Setting Name="EmailBenutzerKennwort" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+    <Setting Name="EmailServerBenutzerKennwort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fehler123</Value>
     </Setting>
     <Setting Name="EmailBetreff" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Meldung von JgMaschineService</Value>
+      <Value Profile="(Default)">Information aus JgMaschineService</Value>
+    </Setting>
+    <Setting Name="Standort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Heidenau</Value>
     </Setting>
   </Settings>
 </SettingsFile>
