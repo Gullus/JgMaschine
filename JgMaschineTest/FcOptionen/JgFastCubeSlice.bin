@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<slice version="2" timestamp="17.08.2016 14:08:54">
+  <Script ScriptLanguage="PascalScript" Code=""/>
+  <fields>
+    <field name="DatumStart" caption="DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Year_DatumStart" caption="Jahr_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Month_DatumStart" caption="Monat_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Day_DatumStart" caption="Tag_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#DayOfWeeek_DatumStart" caption="Tag_der_Woche_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Quarter_DatumStart" caption="Quartal_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#WeekNumber_DatumStart" caption="KalenderwocheDatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#DayOfYear_DatumStart" caption="Tage_des_Jahres_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Hour_DatumStart" caption="Stunden_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Minute_DatumStart" caption="Minuten_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Second_DatumStart" caption="Sekunden_DatumStart" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="DatumEnde" caption="DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Year_DatumEnde" caption="Jahr_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Month_DatumEnde" caption="Monat_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Day_DatumEnde" caption="Tag_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#DayOfWeeek_DatumEnde" caption="Tag_der_Woche_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Quarter_DatumEnde" caption="Quartal_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#WeekNumber_DatumEnde" caption="KalenderwocheDatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#DayOfYear_DatumEnde" caption="Tage_des_Jahres_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Hour_DatumEnde" caption="Stunden_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Minute_DatumEnde" caption="Minuten_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Second_DatumEnde" caption="Sekunden_DatumEnde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="IstVorfertigung" caption="IstVorfertigung" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="IdStahlPosition" caption="IdStahlPosition" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="IdStahlBauteil" caption="IdStahlBauteil" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="BtAnzahl" caption="BtAnzahl" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="BtLaenge" caption="BtLaenge" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="BtGewicht" caption="BtGewicht" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="BtDurchmesser" caption="BtDurchmesser" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="BtAnzahlBiegungen" caption="BtAnzahlBiegungen" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="GeometrieFilter" caption="GeometrieFilter" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="AnzahlBediener" caption="AnzahlBediener" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="IstHandeingabe" caption="IstHandeingabe" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="Kunde" caption="Kunde" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="Auftrag" caption="Auftrag" Width="0" Height="0" PopupWidth="180" PopupShowAvailable="-1" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="NummerBauteil" caption="NummerBauteil" Width="0" Height="0" PopupWidth="180" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="NummerPosition" caption="NummerPosition" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="Buegelname" caption="Buegelname" Width="0" Height="0" PopupWidth="180" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="DatenAbgleich_Datum" caption="DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Year_DatenAbgleich_Datum" caption="Jahr_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Month_DatenAbgleich_Datum" caption="Monat_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Day_DatenAbgleich_Datum" caption="Tag_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="180" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#DayOfWeeek_DatenAbgleich_Datum" caption="Tag_der_Woche_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Quarter_DatenAbgleich_Datum" caption="Quartal_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#WeekNumber_DatenAbgleich_Datum" caption="KalenderwocheDatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#DayOfYear_DatenAbgleich_Datum" caption="Tage_des_Jahres_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Hour_DatenAbgleich_Datum" caption="Stunden_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Minute_DatenAbgleich_Datum" caption="Minuten_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="#Second_DatenAbgleich_Datum" caption="Sekunden_DatenAbgleich_Datum" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="DatenAbgleich_Status" caption="DatenAbgleich_Status" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+    <field name="DatenAbgleich_Geloescht" caption="DatenAbgleich_Geloescht" Width="0" Height="0" PopupWidth="120" PopupShowAvailable="0" Collapsed="0" CollapsedSubGroup="0"/>
+  </fields>
+  <page_fields alignment="taLeftJustify">
+    <fields/>
+  </page_fields>
+  <xaxis_fields alignment="taLeftJustify" GrandTotalPosition="fctp_Before" UseGrandTotalPositionFromMeasure="0" DefaultTypeSort="md_tsa_ByAxisValue" AxisType="at_Standard">
+    <fields>
+      <field name="#Month_DatenAbgleich_Datum" caption="Monat_DatenAbgleich_Datum" alignment="taLeftJustify" captionwidth="100" field_name="#Month_DatenAbgleich_Datum" SortDirection="fcsd_Asc" TotalPosition="fctp_Before" UseTotalPositionFromMeasure="0">
+        <AdditionalTotals AdditionalTotalScriptFunction=""/>
+      </field>
+      <field name="#Day_DatenAbgleich_Datum" caption="Tag_DatenAbgleich_Datum" alignment="taLeftJustify" captionwidth="100" field_name="#Day_DatenAbgleich_Datum" SortDirection="fcsd_Asc" TotalPosition="fctp_Before" UseTotalPositionFromMeasure="0">
+        <AdditionalTotals AdditionalTotalScriptFunction=""/>
+      </field>
+    </fields>
+    <AdditionalGrandTotals AdditionalGrandTotalScriptFunction=""/>
+  </xaxis_fields>
+  <yaxis_fields alignment="taLeftJustify" GrandTotalPosition="fctp_Before" UseGrandTotalPositionFromMeasure="0" DefaultTypeSort="md_tsa_ByAxisValue" AxisType="at_Standard">
+    <fields>
+      <field name="NummerBauteil" caption="NummerBauteil" alignment="taLeftJustify" captionwidth="100" field_name="NummerBauteil" SortDirection="fcsd_Asc" TotalPosition="fctp_Before" UseTotalPositionFromMeasure="0">
+        <AdditionalTotals AdditionalTotalScriptFunction=""/>
+      </field>
+    </fields>
+    <AdditionalGrandTotals AdditionalGrandTotalScriptFunction=""/>
+  </yaxis_fields>
+  <measure_fields alignment="taLeftJustify" caption="Felder" CaptionWidth="100" Region="X" Position="2">
+    <fields>
+      <field name="BtGewicht" caption="BtGewicht" alignment="taRightJustify" captionwidth="100" field_name="BtGewicht" field2_name="BtGewicht" fieldadv_name="BtGewicht" AgrFunc="af_Sum" Visible="-1" DisplayAs="da_Value" ScriptFunction="" ScriptOrder="-1" FilterScriptFunction="" ScriptFunctionForTotals="" ScriptOrderForTotals="0" CalcAllCells="0" CalcAllCellsForTotals="0" Distinct="0" ChangeNullToZero="0" DefaultTotalPosition="fctp_After" UseDifferentAggForTotals="0" AgrFuncForTotals="af_Sum" CalcTotalsOnTotals="0" UseXAxisTotalsAsBase="-1" ConflictResolve="tcrEmptyValue">
+        <display_format decimal_separator="," format_str="%g" kind="fkNumeric" QuarterDisplayFormat="qdf_System" WeekDayDisplayFormat="wddf_Long" WeekNumberDisplayFormat="wndf_System" MonthDisplayFormat="mdf_Long"/>
+        <HIGHLIGHTS/>
+      </field>
+      <field name="BtAnzahl" caption="BtAnzahl" alignment="taRightJustify" captionwidth="100" field_name="BtAnzahl" field2_name="BtAnzahl" fieldadv_name="BtAnzahl" AgrFunc="af_Sum" Visible="-1" DisplayAs="da_Value" ScriptFunction="" ScriptOrder="-1" FilterScriptFunction="" ScriptFunctionForTotals="" ScriptOrderForTotals="0" CalcAllCells="0" CalcAllCellsForTotals="0" Distinct="0" ChangeNullToZero="0" DefaultTotalPosition="fctp_After" UseDifferentAggForTotals="0" AgrFuncForTotals="af_Sum" CalcTotalsOnTotals="0" UseXAxisTotalsAsBase="-1" ConflictResolve="tcrEmptyValue">
+        <display_format decimal_separator="," format_str="%g" kind="fkNumeric" QuarterDisplayFormat="qdf_System" WeekDayDisplayFormat="wddf_Long" WeekNumberDisplayFormat="wndf_System" MonthDisplayFormat="mdf_Long"/>
+        <HIGHLIGHTS/>
+      </field>
+    </fields>
+  </measure_fields>
+  <topn/>
+  <selection col="2" row="0" measure="1"/>
+  <sortselection xlevelindex="0" xindexinlevel="0" xmeasureindex="0" xadditionaltotalindex="0" ylevelindex="0" yindexinlevel="0" ymeasureindex="0" yadditionaltotalindex="0"/>
+  <options HideColZeros="0" HideRowZeros="0"/>
+</slice>

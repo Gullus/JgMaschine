@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using JgMaschineData;
 using JgMaschineDatafoxLib;
@@ -15,17 +17,37 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
-      using (var db = new JgMaschineData.JgModelContainer())
-      {
-        var gui = Guid.NewGuid();
 
-        var letzteArbeitszeit = db.tabArbeitszeitSet.Where(w => (w.fBediener == gui) && (w.Abmeldung != null)).Max(m => m.Abmeldung);
 
-        Console.WriteLine(letzteArbeitszeit);
-        Console.ReadLine();
-      }
+
+      JgFastCube.JgFastCubeStart(Properties.Settings.Default.FastCubeConnection, "Select * From tabBauteilSet", @"C:\Entwicklung\JgMaschine\JgMaschineTest\FcOptionen");
+
+      //using (var db = new JgMaschineData.JgModelContainer())
+      //{
+      //  var gui = Guid.NewGuid();
+
+      //  var letzteArbeitszeit = db.tabArbeitszeitSet.Where(w => (w.fBediener == gui) && (w.Abmeldung != null)).Max(m => m.Abmeldung);
+
+      //  Console.WriteLine(letzteArbeitszeit);
+      //  Console.ReadLine();
+      //}
+
+      Console.ReadKey();
 
     }
+  }
+
+
+  public static class JgFastCube
+  {
+    [DllImport("JgFastCube.dll")]
+    public static extern void JgFastCubeStart([MarshalAs(UnmanagedType.BStr)]string ConnectionString, [MarshalAs(UnmanagedType.BStr)] string SqlText, [MarshalAs(UnmanagedType.BStr)] string PfadOptione);
+
+    [DllImport("JgFastCube.dll")]
+    public static extern void MessageTest1();
+
+    [DllImport("JgFastCube.dll")]
+    public static extern void MessageTest2([MarshalAs(UnmanagedType.BStr)]string MeinText);
   }
 
   class SendEmail

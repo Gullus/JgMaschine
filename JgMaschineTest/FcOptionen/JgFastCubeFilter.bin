@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<filters version="2" timestamp="17.08.2016 14:08:54">
+  <filter name="#UVFilter">
+    <field name="NummerBauteil" type="uvfield" fcxVarType="fcvtString" StoreEnabledValues="0">
+      <values>
+        <value value="TestPDF"/>
+        <value value="TestPDF111"/>
+        <value value="TestPDF15"/>
+        <value value="TestPDF222"/>
+        <value value="TestPDF3"/>
+        <value value="TestPDF333"/>
+        <value value="TestPDF444"/>
+        <value value="TestPDF555"/>
+        <value value="TestPDF777"/>
+        <value value="TestPDF888"/>
+        <value value="TestPDF99"/>
+      </values>
+    </field>
+  </filter>
+</filters>

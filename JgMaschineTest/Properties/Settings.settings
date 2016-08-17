@@ -44,5 +44,9 @@
     <Setting Name="BenutzerKennwort" Type="System.String" Scope="User">
       <Value Profile="(Default)">pezdx65</Value>
     </Setting>
+    <Setting Name="FastCubeConnection" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Provider=SQLNCLI11.1;Integrated Security=SSPI;Persist Security Info=False;User ID="";Initial Catalog=JgMaschine;Data Source=.\SqlExpress;Initial File Name="";Server SPN=""
+</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

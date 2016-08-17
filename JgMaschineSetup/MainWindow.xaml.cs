@@ -24,6 +24,8 @@ namespace JgMaschineSetup
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+
+      
       _ListeStandorte = new JgEntityView<tabStandort>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),

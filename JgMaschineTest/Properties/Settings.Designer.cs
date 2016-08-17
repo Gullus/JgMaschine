@@ -119,5 +119,19 @@ namespace JgMaschineTest.Properties {
                 this["BenutzerKennwort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Provider=SQLNCLI11.1;Integrated Security=SSPI;Persist Security Info=False;User ID" +
+            "=\"\";Initial Catalog=JgMaschine;Data Source=.\\SqlExpress;Initial File Name=\"\";Ser" +
+            "ver SPN=\"\"\r\n")]
+        public string FastCubeConnection {
+            get {
+                return ((string)(this["FastCubeConnection"]));
+            }
+            set {
+                this["FastCubeConnection"] = value;
+            }
+        }
     }
 }
