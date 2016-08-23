@@ -174,13 +174,13 @@
                                             <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_22">
                                               <Assign DisplayName="Endzeit eintragen" sap2010:WorkflowViewState.IdRef="Assign_14">
                                                 <Assign.To>
-                                                  <OutArgument x:TypeArguments="s:DateTime">
-                                                    <mca:CSharpReference x:TypeArguments="s:DateTime">Maschine.eProtokoll.AuswertungEnde</mca:CSharpReference>
+                                                  <OutArgument x:TypeArguments="s:Nullable(s:DateTime)">
+                                                    <mca:CSharpReference x:TypeArguments="s:Nullable(s:DateTime)">Maschine.eProtokoll.AuswertungEnde</mca:CSharpReference>
                                                   </OutArgument>
                                                 </Assign.To>
                                                 <Assign.Value>
-                                                  <InArgument x:TypeArguments="s:DateTime">
-                                                    <mca:CSharpValue x:TypeArguments="s:DateTime">DateTime.Now</mca:CSharpValue>
+                                                  <InArgument x:TypeArguments="s:Nullable(s:DateTime)">
+                                                    <mca:CSharpValue x:TypeArguments="s:Nullable(s:DateTime)">DateTime.Now</mca:CSharpValue>
                                                   </InArgument>
                                                 </Assign.Value>
                                               </Assign>
@@ -245,7 +245,7 @@
                                         </FlowStep>
                                       </FlowDecision.True>
                                       <FlowDecision.False>
-                                        <FlowSwitch x:TypeArguments="j:EnumProtokollName" x:Name="__ReferenceID45" sap2010:WorkflowViewState.IdRef="FlowSwitch`1_1">
+                                        <FlowSwitch x:TypeArguments="j:EnumMaschinenArt" x:Name="__ReferenceID45" sap2010:WorkflowViewState.IdRef="FlowSwitch`1_1">
                                           <FlowSwitch.Default>
                                             <FlowStep x:Name="__ReferenceID46" sap2010:WorkflowViewState.IdRef="FlowStep_6">
                                               <Sequence DisplayName="Import Fehler" sap2010:WorkflowViewState.IdRef="Sequence_4" />
@@ -369,9 +369,9 @@
                                                                     </FlowStep>
                                                                   </FlowDecision.True>
                                                                   <FlowDecision.False>
-                                                                    <FlowSwitch x:TypeArguments="j:EnumProtokollName" Default="{x:Reference __ReferenceID2}" x:Name="__ReferenceID53" sap2010:WorkflowViewState.IdRef="FlowSwitch`1_2">
+                                                                    <FlowSwitch x:TypeArguments="j:EnumMaschinenArt" Default="{x:Reference __ReferenceID2}" x:Name="__ReferenceID53" sap2010:WorkflowViewState.IdRef="FlowSwitch`1_2">
                                                                       <FlowSwitch.Expression>
-                                                                        <mca:CSharpValue x:TypeArguments="j:EnumProtokollName">Maschine.ProtokollName</mca:CSharpValue>
+                                                                        <mca:CSharpValue x:TypeArguments="j:EnumMaschinenArt">Maschine.MaschinenArt</mca:CSharpValue>
                                                                       </FlowSwitch.Expression>
                                                                       <FlowStep x:Key="Progress" x:Name="__ReferenceID64" sap2010:WorkflowViewState.IdRef="FlowStep_73">
                                                                         <TryCatch DisplayName="Datei löschen" sap2010:WorkflowViewState.IdRef="TryCatch_7">
@@ -462,7 +462,7 @@
                                             </FlowStep>
                                           </FlowSwitch.Default>
                                           <FlowSwitch.Expression>
-                                            <mca:CSharpValue x:TypeArguments="j:EnumProtokollName">Maschine.ProtokollName</mca:CSharpValue>
+                                            <mca:CSharpValue x:TypeArguments="j:EnumMaschinenArt">Maschine.MaschinenArt</mca:CSharpValue>
                                           </FlowSwitch.Expression>
                                           <FlowStep x:Key="Progress" x:Name="__ReferenceID52" sap2010:WorkflowViewState.IdRef="FlowStep_32">
                                             <Flowchart DisplayName="Import Progress" sap2010:WorkflowViewState.IdRef="Flowchart_4">
@@ -614,13 +614,13 @@
                                                                               </Assign>
                                                                               <Assign DisplayName="DatumEnde" sap2010:WorkflowViewState.IdRef="Assign_134">
                                                                                 <Assign.To>
-                                                                                  <OutArgument x:TypeArguments="s:DateTime">
-                                                                                    <mca:CSharpReference x:TypeArguments="s:DateTime">ds.DatumEnde</mca:CSharpReference>
+                                                                                  <OutArgument x:TypeArguments="s:Nullable(s:DateTime)">
+                                                                                    <mca:CSharpReference x:TypeArguments="s:Nullable(s:DateTime)">ds.DatumEnde</mca:CSharpReference>
                                                                                   </OutArgument>
                                                                                 </Assign.To>
                                                                                 <Assign.Value>
-                                                                                  <InArgument x:TypeArguments="s:DateTime">
-                                                                                    <mca:CSharpValue x:TypeArguments="s:DateTime">Convert.ToDateTime(Felder[7])</mca:CSharpValue>
+                                                                                  <InArgument x:TypeArguments="s:Nullable(s:DateTime)">
+                                                                                    <mca:CSharpValue x:TypeArguments="s:Nullable(s:DateTime)">Convert.ToDateTime(Felder[7])</mca:CSharpValue>
                                                                                   </InArgument>
                                                                                 </Assign.Value>
                                                                               </Assign>
@@ -1234,6 +1234,7 @@
                                                     <mca:CSharpValue x:TypeArguments="s:String[]">Directory.EnumerateFiles(Maschine.PfadDaten, "*.xml", SearchOption.AllDirectories).ToArray()</mca:CSharpValue>
                                                   </Variable.Default>
                                                 </Variable>
+                                                <Variable x:TypeArguments="x:String" Name="variable1" />
                                               </Flowchart.Variables>
                                               <Flowchart.StartNode>
                                                 <FlowStep x:Name="__ReferenceID27" sap2010:WorkflowViewState.IdRef="FlowStep_84">
@@ -1556,13 +1557,13 @@
                                                                                               </Assign>
                                                                                               <Assign DisplayName="DatumEnde eintragen" sap2010:WorkflowViewState.IdRef="Assign_122">
                                                                                                 <Assign.To>
-                                                                                                  <OutArgument x:TypeArguments="s:DateTime">
-                                                                                                    <mca:CSharpReference x:TypeArguments="s:DateTime">ds.DatumEnde</mca:CSharpReference>
+                                                                                                  <OutArgument x:TypeArguments="s:Nullable(s:DateTime)">
+                                                                                                    <mca:CSharpReference x:TypeArguments="s:Nullable(s:DateTime)">ds.DatumEnde</mca:CSharpReference>
                                                                                                   </OutArgument>
                                                                                                 </Assign.To>
                                                                                                 <Assign.Value>
-                                                                                                  <InArgument x:TypeArguments="s:DateTime">
-                                                                                                    <mca:CSharpValue x:TypeArguments="s:DateTime">LfsDatum</mca:CSharpValue>
+                                                                                                  <InArgument x:TypeArguments="s:Nullable(s:DateTime)">
+                                                                                                    <mca:CSharpValue x:TypeArguments="s:Nullable(s:DateTime)">LfsDatum</mca:CSharpValue>
                                                                                                   </InArgument>
                                                                                                 </Assign.Value>
                                                                                               </Assign>
@@ -1891,7 +1892,7 @@
     <x:Reference>__ReferenceID69</x:Reference>
     <x:Reference>__ReferenceID70</x:Reference>
     <x:Reference>__ReferenceID71</x:Reference>
-    <sads:DebugSymbol.Symbol>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</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>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</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -1916,13 +1917,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="caMachineOnline_1" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="caMachineOnline" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="Assign_45" sap:VirtualizedContainerService.HintSize="242,62">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -1938,13 +1933,6 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="Assign_14" sap:VirtualizedContainerService.HintSize="242,62">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="caProtokollSpeichern_2" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -2096,13 +2084,6 @@
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <x:Boolean x:Key="IsPinned">False</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="caDatenSpeichern_1" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -2342,7 +2323,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="200,51">
+      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="418,2617">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -2709,7 +2690,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_5" sap:VirtualizedContainerService.HintSize="200,51">
+      <sap2010:ViewStateData Id="Flowchart_5" sap:VirtualizedContainerService.HintSize="1205,832">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -2771,7 +2752,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Catch`1_8" sap:VirtualizedContainerService.HintSize="404,21">
+      <sap2010:ViewStateData Id="Catch`1_8" sap:VirtualizedContainerService.HintSize="404,357">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -2779,7 +2760,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TryCatch_8" sap:VirtualizedContainerService.HintSize="200,51">
+      <sap2010:ViewStateData Id="TryCatch_8" sap:VirtualizedContainerService.HintSize="418,1159">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -2891,7 +2872,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TryCatch_10" sap:VirtualizedContainerService.HintSize="418,2971">
+      <sap2010:ViewStateData Id="TryCatch_10" sap:VirtualizedContainerService.HintSize="200,51">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -3054,7 +3035,7 @@
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">329,89</av:Point>
             <av:Size x:Key="ShapeSize">242,62</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">450,151 450,186.5</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">450,151 450,181 449.5,181 449.5,186.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>

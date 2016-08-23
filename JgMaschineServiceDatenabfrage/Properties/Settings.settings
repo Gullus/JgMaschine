@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JgMaschineServiceDatenabfrage.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Standort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Heidenau</Value>
+    </Setting>
+    <Setting Name="DatenbankVerbindungsString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)" />
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PfadDatenEvG" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PfadDatenSchnell" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Users\jg\Schnell</Value>
+    </Setting>
+    <Setting Name="PfadDatenProgress" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

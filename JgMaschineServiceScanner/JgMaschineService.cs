@@ -5,7 +5,7 @@ using System.ServiceProcess;
 using JgMaschineLib;
 using JgMaschineLib.Scanner;
 
-namespace JgMaschineService
+namespace JgMaschineServiceScanner
 {
   class Programm
   {

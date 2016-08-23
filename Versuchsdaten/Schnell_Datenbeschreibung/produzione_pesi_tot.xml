@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<PMML version="3.0" xmlns="http://www.dmg.org/PMML-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema_instance">
+	<DATA>
+		<PERIOD start_date="20150716" stop_date="20160126">
+			<PROD time_work="43884" time_auto="123778" diametro="12" peso="4894176.000000" unit="0"/>
+			<PROD time_work="2937" time_auto="13947" diametro="16" peso="1184467.000000" unit="0"/>
+			<PROD time_work="7777" time_auto="23045" diametro="8" peso="308649.000000" unit="0"/>
+		</PERIOD>
+		<ARCHIVE>
+			<FILE name="D:\data\20150807_produzione.xml" date_saved="20150807"/>
+			<FILE name="D:\data\20150902_produzione.xml" date_saved="20150902"/>
+			<FILE name="D:\data\20151002_produzione.xml" date_saved="20151002"/>
+			<FILE name="D:\data\20151102_produzione.xml" date_saved="20151102"/>
+			<FILE name="D:\data\20151201_produzione.xml" date_saved="20151201"/>
+			<FILE name="D:\data\20160105_produzione.xml" date_saved="20160105"/>
+		</ARCHIVE>
+	</DATA>
+</PMML>

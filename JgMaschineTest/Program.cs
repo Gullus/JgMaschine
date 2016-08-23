@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using JgMaschineData;
 using JgMaschineDatafoxLib;
 using JgMaschineLib;
@@ -17,25 +18,69 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
+      var pfadStart = @"C:\Entwicklung\JgMaschine\Versuchsdaten\Schnell";
+
+      Helper.SetzeBackflash(ref pfadStart);
+
+      var dateienAuswertung = Directory.EnumerateFiles(pfadStart, "*.xml", SearchOption.AllDirectories).Select(s => s.ToUpper()).ToList();
+
+      var heute = DateTime.Now.Date;
+      var durchlauf = new DateTime(2015, 8, 1);
+
+      while (durchlauf <= heute)
+      {
+        var datName = @"\" + durchlauf.ToString("yyyyMMdd") + "_PRODUZIONE.XML";
+        var datei = dateienAuswertung.FirstOrDefault(f => f.Contains(datName));
+
+        if (datei != null)
+        {
+          XDocument xdoc = XDocument.Load(datei);
+
+          XElement root = xdoc.Root;
+          var dataName = "{" + root.GetDefaultNamespace().NamespaceName + "}" + "DATA";
+          XElement rootStart = root.Elements().FirstOrDefault(z => z.Name == dataName);
+
+          //int startZeile = 0;
+          //ErgebnisAbfrage ergNeu = null;
+
+          Console.WriteLine("Datei: "  + datei +  "    " +  Path.GetFileName(datei));
 
 
+          foreach (var t in rootStart.Elements())
+          {
+            var tempString = t.Attribute("date").Value;
+            var datum = new DateTime(Convert.ToInt32(tempString.Substring(0, 4)), Convert.ToInt32(tempString.Substring(4, 2)), Convert.ToInt32(tempString.Substring(6, 2)));
 
-      JgFastCube.JgFastCubeStart(Properties.Settings.Default.FastCubeConnection, "Select * From tabBauteilSet", @"C:\Entwicklung\JgMaschine\JgMaschineTest\FcOptionen");
+            Console.WriteLine("Datum: " +  t.Attribute("date").Value + "  " + datum.ToString());
+            foreach (var w in t.Elements())
+            {
+              var dt = new TimeSpan(0, 0, Convert.ToInt32(w.Attribute("time_work").Value));
 
-      //using (var db = new JgMaschineData.JgModelContainer())
-      //{
-      //  var gui = Guid.NewGuid();
+              Console.WriteLine("   " + w.Attribute("time_work").Value + "   " + dt.ToString());
+            }
+          }
+        }
 
-      //  var letzteArbeitszeit = db.tabArbeitszeitSet.Where(w => (w.fBediener == gui) && (w.Abmeldung != null)).Max(m => m.Abmeldung);
-
-      //  Console.WriteLine(letzteArbeitszeit);
-      //  Console.ReadLine();
-      //}
-
+        durchlauf = durchlauf.AddDays(1);
+      }
       Console.ReadKey();
+    }
 
+
+    public DateTime DatumAusYyyyMMdd(string AusString)
+    {
+      return new DateTime(Convert.ToInt32(AusString.Substring(0, 4)), Convert.ToInt32(AusString.Substring(4, 2)), Convert.ToInt32(AusString.Substring(6, 2)));
+    }
+
+
+    private static void SetzeBackflash(ref string Pfad)
+    {
+      if (Pfad[Pfad.Length - 1] != '\\')
+        Pfad += '\\';
     }
   }
+
+
 
 
   public static class JgFastCube

@@ -100,12 +100,10 @@
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="MaschinenName" Type="nvarchar" Nullable="false" MaxLength="120" />
-    <Property Name="ProtokollName" Type="tinyint" Nullable="false" />
+    <Property Name="MaschinenArt" Type="tinyint" Nullable="false" />
     <Property Name="IstStangenschneider" Type="bit" Nullable="false" />
     <Property Name="MaschineAdresse" Type="nvarchar" Nullable="true" MaxLength="100" />
     <Property Name="MaschinePortnummer" Type="int" Nullable="true" />
-    <Property Name="PfadDaten" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="PfadBediener" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="ScannerNummer" Type="nvarchar" Nullable="true" MaxLength="20" />
     <Property Name="ScannerMitDisplay" Type="bit" Nullable="false" />
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
@@ -113,7 +111,7 @@
     <Property Name="VorgabeProStunde" Type="decimal" Nullable="false" DefaultValue="0" Precision="8" Scale="3" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fAktivBauteil" Type="uniqueidentifier" Nullable="true" />
@@ -131,7 +129,7 @@
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fAktivArbeitszeit" Type="uniqueidentifier" Nullable="true" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
@@ -143,18 +141,20 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="DatumStart" Type="datetime" Nullable="false" />
     <Property Name="DatumEnde" Type="datetime" Nullable="true" />
+    <Property Name="ScannZeit" Type="datetime" Nullable="true" />
     <Property Name="IstVorfertigung" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="IdStahlPosition" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="IdStahlBauteil" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="BtAnzahl" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="BtLaenge" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="BtGewicht" Type="int" Nullable="false" DefaultValue="-1" />
+    <Property Name="BtGewicht" Type="int" Nullable="false" />
     <Property Name="BtDurchmesser" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="BtAnzahlBiegungen" Type="tinyint" Nullable="false" />
     <Property Name="BvbsCode" Type="nvarchar(max)" Nullable="true" />
     <Property Name="GeometrieFilter" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="AnzahlBediener" Type="tinyint" Nullable="false" />
     <Property Name="IstHandeingabe" Type="bit" Nullable="false" />
+    <Property Name="IstAbgleichInJgData" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="IdStahlBauteil" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="Kunde" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="Auftrag" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="NummerBauteil" Type="nvarchar" Nullable="true" MaxLength="10" />
@@ -162,7 +162,7 @@
     <Property Name="Buegelname" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
@@ -177,7 +177,7 @@
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
@@ -190,7 +190,7 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="AuswertungStart" Type="datetime" Nullable="false" />
     <Property Name="AuswertungEnde" Type="datetime" Nullable="true" />
-    <Property Name="LetztePositionDatum" Type="datetime" Nullable="false" />
+    <Property Name="LetzteZeile" Type="int" Nullable="false" DefaultValue="0" />
     <Property Name="LetzteDateiDatum" Type="datetime" Nullable="false" />
     <Property Name="ProtokollText" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
@@ -201,7 +201,7 @@
     <Property Name="FehlerDatenSpeichern" Type="int" Nullable="false" DefaultValue="0" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="tabReparaturSet">
@@ -216,7 +216,7 @@
     <Property Name="CoilwechselAnzahl" Type="tinyint" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fVerursacher" Type="uniqueidentifier" Nullable="true" />
@@ -232,7 +232,7 @@
     <Property Name="UpdateBedienerDatafox" Type="bit" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="tabAuswertungSet">
@@ -250,7 +250,7 @@
     <Property Name="FilterAuswertung" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="tabArbeitszeitSet">
@@ -264,7 +264,7 @@
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
@@ -278,7 +278,7 @@
     <Property Name="Abmeldung" Type="datetime" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
-    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fReparatur" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
@@ -626,7 +626,7 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="MaschinenName" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
-          <Property Name="ProtokollName" Type="JgModel.EnumProtokollName" Nullable="false" />
+          <Property Name="MaschinenArt" Type="JgModel.EnumMaschinenArt" Nullable="false" />
           <Property Name="IstStangenschneider" Type="Boolean" Nullable="false" >
             <Documentation>
               <LongDescription>Wenn angehagt, wird das BT bei vorhanden Biegungen  auf IstVorfertigung gesetzt</LongDescription>
@@ -634,8 +634,6 @@
           </Property>
           <Property Name="MaschineAdresse" Type="String" Nullable="true" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="MaschinePortnummer" Type="Int32" Nullable="true" />
-          <Property Name="PfadDaten" Type="String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="PfadBediener" Type="String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
           <Property Name="ScannerNummer" Type="String" Nullable="true" FixedLength="false" MaxLength="20" />
           <Property Name="ScannerMitDisplay" Type="Boolean" Nullable="false" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -683,18 +681,20 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="DatumStart" Type="DateTime" Nullable="false" />
           <Property Name="DatumEnde" Type="DateTime" Nullable="true" />
+          <Property Name="ScannZeit" Type="DateTime" Nullable="true" />
           <Property Name="IstVorfertigung" Type="Boolean" Nullable="false" DefaultValue="False" />
           <Property Name="IdStahlPosition" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="IdStahlBauteil" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="BtAnzahl" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="BtLaenge" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="BtGewicht" Type="Int32" Nullable="false" DefaultValue="-1" />
+          <Property Name="BtGewicht" Type="Int32" Nullable="false" />
           <Property Name="BtDurchmesser" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="BtAnzahlBiegungen" Type="Byte" Nullable="false" />
           <Property Name="BvbsCode" Type="String" Nullable="true" />
           <Property Name="GeometrieFilter" Type="String" Nullable="true" MaxLength="120" />
           <Property Name="AnzahlBediener" Type="Byte" Nullable="false" />
           <Property Name="IstHandeingabe" Type="Boolean" Nullable="false" />
+          <Property Name="IstAbgleichInJgData" Type="Boolean" Nullable="false" DefaultValue="False" />
+          <Property Name="IdStahlBauteil" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="Kunde" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="Auftrag" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="NummerBauteil" Type="String" Nullable="true" MaxLength="10" Unicode="true" FixedLength="false" />
@@ -758,7 +758,7 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="AuswertungStart" Type="DateTime" Nullable="false" />
           <Property Name="AuswertungEnde" Type="DateTime" Nullable="true" />
-          <Property Name="LetztePositionDatum" Type="DateTime" Nullable="false" />
+          <Property Name="LetzteZeile" Type="Int32" Nullable="false" DefaultValue="0" />
           <Property Name="LetzteDateiDatum" Type="DateTime" Nullable="false" />
           <Property Name="ProtokollText" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Status" Type="JgModel.EnumStatusProtkoll" Nullable="false" />
@@ -848,7 +848,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EnumType Name="EnumProtokollName" UnderlyingType="Byte">
+        <EnumType Name="EnumMaschinenArt" UnderlyingType="Byte">
           <Member Name="Handbiegung" Value="0" />
           <Member Name="Progress" Value="1" />
           <Member Name="Evg" Value="2" />
@@ -946,7 +946,7 @@
         <ComplexType Name="DatenAbgleich" >
           <Property Type="DateTime" Name="Datum" Nullable="false" />
           <Property Type="JgModel.EnumStatusDatenabgleich" Name="Status" Nullable="false" />
-          <Property Type="String" Name="Bearbeiter" Nullable="false" />
+          <Property Type="String" Name="Bearbeiter" Nullable="false" MaxLength="60" />
           <Property Type="Boolean" Name="Geloescht" Nullable="false" DefaultValue="False" />
         </ComplexType>
         <Association Name="tabStandorttabArbeitszeit1">
@@ -1093,12 +1093,10 @@
         <MappingFragment StoreEntitySet="tabMaschineSet">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="MaschinenName" ColumnName="MaschinenName" />
-          <ScalarProperty Name="ProtokollName" ColumnName="ProtokollName" />
+          <ScalarProperty Name="MaschinenArt" ColumnName="MaschinenArt" />
           <ScalarProperty Name="IstStangenschneider" ColumnName="IstStangenschneider" />
           <ScalarProperty Name="MaschineAdresse" ColumnName="MaschineAdresse" />
           <ScalarProperty Name="MaschinePortnummer" ColumnName="MaschinePortnummer" />
-          <ScalarProperty Name="PfadDaten" ColumnName="PfadDaten" />
-          <ScalarProperty Name="PfadBediener" ColumnName="PfadBediener" />
           <ScalarProperty Name="ScannerNummer" ColumnName="ScannerNummer" />
           <ScalarProperty Name="ScannerMitDisplay" ColumnName="ScannerMitDisplay" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
@@ -1142,9 +1140,9 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="DatumStart" ColumnName="DatumStart" />
           <ScalarProperty Name="DatumEnde" ColumnName="DatumEnde" />
+          <ScalarProperty Name="ScannZeit" ColumnName="ScannZeit" />
           <ScalarProperty Name="IstVorfertigung" ColumnName="IstVorfertigung" />
           <ScalarProperty Name="IdStahlPosition" ColumnName="IdStahlPosition" />
-          <ScalarProperty Name="IdStahlBauteil" ColumnName="IdStahlBauteil" />
           <ScalarProperty Name="BtAnzahl" ColumnName="BtAnzahl" />
           <ScalarProperty Name="BtLaenge" ColumnName="BtLaenge" />
           <ScalarProperty Name="BtGewicht" ColumnName="BtGewicht" />
@@ -1154,6 +1152,8 @@
           <ScalarProperty Name="GeometrieFilter" ColumnName="GeometrieFilter" />
           <ScalarProperty Name="AnzahlBediener" ColumnName="AnzahlBediener" />
           <ScalarProperty Name="IstHandeingabe" ColumnName="IstHandeingabe" />
+          <ScalarProperty Name="IstAbgleichInJgData" ColumnName="IstAbgleichInJgData" />
+          <ScalarProperty Name="IdStahlBauteil" ColumnName="IdStahlBauteil" />
           <ScalarProperty Name="Kunde" ColumnName="Kunde" />
           <ScalarProperty Name="Auftrag" ColumnName="Auftrag" />
           <ScalarProperty Name="NummerBauteil" ColumnName="NummerBauteil" />
@@ -1195,7 +1195,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AuswertungStart" ColumnName="AuswertungStart" />
           <ScalarProperty Name="AuswertungEnde" ColumnName="AuswertungEnde" />
-          <ScalarProperty Name="LetztePositionDatum" ColumnName="LetztePositionDatum" />
+          <ScalarProperty Name="LetzteZeile" ColumnName="LetzteZeile" />
           <ScalarProperty Name="LetzteDateiDatum" ColumnName="LetzteDateiDatum" />
           <ScalarProperty Name="ProtokollText" ColumnName="ProtokollText" />
           <ScalarProperty Name="Status" ColumnName="Status" />

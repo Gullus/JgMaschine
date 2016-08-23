@@ -1,0 +1,82 @@
+Meaning of items for file produzione_pesi_tot.xml
+Sample:
+	<DATA>
+		<PERIOD start_date="20150716" stop_date="20160126">
+			<PROD time_work="43884" time_auto="123778" diametro="12" peso="4894176.000000" unit="0"/>
+			<PROD time_work="2937" time_auto="13947" diametro="16" peso="1184467.000000" unit="0"/>
+			<PROD time_work="7777" time_auto="23045" diametro="8" peso="308649.000000" unit="0"/>
+		</PERIOD>
+		<ARCHIVE>
+			<FILE name="D:\data\20150807_produzione.xml" date_saved="20150807"/>
+			<FILE name="D:\data\20150902_produzione.xml" date_saved="20150902"/>
+			<FILE name="D:\data\20151002_produzione.xml" date_saved="20151002"/>
+			<FILE name="D:\data\20151102_produzione.xml" date_saved="20151102"/>
+			<FILE name="D:\data\20151201_produzione.xml" date_saved="20151201"/>
+			<FILE name="D:\data\20160105_produzione.xml" date_saved="20160105"/>
+		</ARCHIVE>
+	</DATA>
+	
+<PERIOD> </PERIOD> data section related to the data summary for the date range by diameter
+	start_date = starting date for the summary data in format yyyymmdd
+	stop_date = final date for the summary data in format yyyymmdd
+<PROD> production summary data related to a specific wire diameter for the date range above
+	time_work = total working time used by the machine for the selected line
+	time_auto = total time in auto mode used by the machine for the selected line
+	diametro = wire diameter (in mm)
+	peso = weight of final product of the selected line (in grams or pounds)
+	unit = measuring unit (grams or pounds)
+<ARCHIVE></ARCHIVE> data section with references to files for detailed production data
+<FILE> file details
+	name = file name & full path
+	date_saved = production date for the given data file
+	
+------------------------------------------------------------------------------------------------------------
+
+Meaning of items for file produzione_pesi.xml
+Sample:
+<DAY date="20160105" time_on="1311">
+			<PROD time_auto="512" time_work="403" diametro="12" peso="55056" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="31" tipo_fe="ALFAR"/>
+</DAY>
+
+<DAY> </DAY> data section section related to a specific date
+	date = date in format yyyymmdd
+	time_on = total time the machine has been switched on on the given date (in sec.)
+<PROD> production data related to a specific diameter for the given date
+	time_auto = total time the machine has been set in auto mode (in sec.)
+	time_work = total working time of the machine (in sec.)
+	diametro = wire diameter (in mm)
+	peso = weight of final product of the selected line (in grams or pounds)
+	unit = measuring unit (grams or pounds)
+	id = production ID (for job lists downloaded from the office)
+	length = total length of produced shape
+	n_line = number of program lines
+	codice = code ID (for job lists downloaded from the office)
+	cliente = final customer ID (for job lists downloaded from the office)
+	cantiere = jobsite ID (for job lists downloaded from the office)
+	n_pezzi = total number of pieces done
+	tipo_fe = steel type (if present in the machine settings)
+	
+Meaning of items for file <date>_produzione.xml
+Sample:
+	<DATA>
+		<DAY date="20151002" time_on="999">
+			<PROD time_auto="335" time_work="187" diametro="12" peso="8793" unit="0" id="0" length="1100" n_line="1" codice="" cliente="" cantiere="" n_pezzi="9" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20151006" time_on="2466">
+			<PROD time_auto="2246" time_work="254" diametro="12" peso="15632" unit="0" id="0" length="1100" n_line="1" codice="" cliente="" cantiere="" n_pezzi="16" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20151007" time_on="6008">
+			<PROD time_auto="647" time_work="191" diametro="12" peso="29310" unit="0" id="0" length="1100" n_line="1" codice="" cliente="" cantiere="" n_pezzi="30" tipo_fe="ALFAL"/>
+			<PROD time_auto="525" time_work="101" diametro="12" peso="18648" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="7" tipo_fe="ALFAL"/>
+			<PROD time_auto="230" time_work="63" diametro="12" peso="12432" unit="0" id="0" length="2000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="7" tipo_fe="ALFAL"/>
+			<PROD time_auto="437" time_work="12" diametro="12" peso="1375" unit="0" id="0" length="1548" n_line="3" codice="" cliente="" cantiere="" n_pezzi="1" tipo_fe="ALFAL"/>
+			<PROD time_auto="165" time_work="63" diametro="12" peso="5936" unit="0" id="0" length="1671" n_line="6" codice="" cliente="" cantiere="" n_pezzi="4" tipo_fe="ALFAL"/>
+		</DAY>
+		<DAY date="20151008" time_on="8222">
+			<PROD time_auto="182" time_work="58" diametro="12" peso="9320" unit="0" id="0" length="1050" n_line="1" codice="" cliente="" cantiere="" n_pezzi="10" tipo_fe="ALFAL"/>
+			<PROD time_auto="2226" time_work="350" diametro="12" peso="67413" unit="0" id="0" length="1100" n_line="1" codice="" cliente="" cantiere="" n_pezzi="69" tipo_fe="ALFAL"/>
+			<PROD time_auto="1781" time_work="168" diametro="12" peso="37296" unit="0" id="0" length="3000" n_line="1" codice="" cliente="" cantiere="" n_pezzi="14" tipo_fe="ALFAL"/>
+		</DAY>
+	</DATA>
+	
+Meaning of XML markups for this type of file are the same as the produzione_pesi.xml markups

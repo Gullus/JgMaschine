@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1f8757055d2a477f966ead49ef7f3c84" Name="JgDiagramm" ZoomLevel="100" DisplayType="true" >
-        <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.375" PointX="5.875" PointY="7.25" />
+        <EntityTypeShape EntityType="JgModel.tabMaschine" Width="2.375" PointX="5.875" PointY="7.5" />
         <EntityTypeShape EntityType="JgModel.tabBediener" Width="8.625" PointX="5.875" PointY="13.75" />
         <EntityTypeShape EntityType="JgModel.tabBauteil" Width="3.875" PointX="5.875" PointY="0.5" />
         <EntityTypeShape EntityType="JgModel.tabAnmeldungMaschine" Width="2" PointX="9.5" PointY="9.625" />

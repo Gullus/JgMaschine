@@ -35,7 +35,7 @@
     <DatePicker x:Name="dtpDatumDatei" SelectedDate="{Binding LetzteDateiDatum}" Grid.Column="1" Margin="3"/>
 
     <Label Content="Datum letzte _Position" Target="{Binding ElementName=dtpDatumPosition}" Grid.Row="1"/>
-    <DatePicker x:Name="dtpDatumPosition" SelectedDate="{Binding LetztePositionDatum}" Grid.Column="1" Grid.Row="1" Margin="3" />
+    <TextBox x:Name="dtpDatumPosition" Text="{Binding LetzteZeile}" Grid.Column="1" Grid.Row="1"/>
 
     <Label Content="_Anzahl Durchläufe" Target="{Binding ElementName=tban}" Grid.Row="2" Height="30" VerticalAlignment="Top"/>
     <TextBox x:Name="tbAnzahlDurchlaufe" Text="{Binding AnzahlDurchlauf}" Grid.Column="1" Grid.Row="2" />

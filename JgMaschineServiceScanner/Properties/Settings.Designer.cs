@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JgMaschineService.Properties {
+namespace JgMaschineServiceScanner.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,7 +25,7 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.16.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.22")]
         public string CradleIpAdresse {
             get {
                 return ((string)(this["CradleIpAdresse"]));
@@ -34,7 +34,7 @@ namespace JgMaschineService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("51000")]
         public int CradlePortNummer {
             get {
                 return ((int)(this["CradlePortNummer"]));

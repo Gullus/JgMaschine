@@ -157,7 +157,7 @@ namespace JgMaschineSetup
         AuswertungStart = DateTime.Now.Date,
         AuswertungEnde = DateTime.Now.Date,
         LetzteDateiDatum = DateTime.Today.AddDays(-60),
-        LetztePositionDatum = DateTime.Today.AddDays(-60),
+        LetzteZeile = 0,
         ProtokollText = "Protokoll erstellt",
       };
       JgMaschineLib.DbSichern.AbgleichEintragen(prot.DatenAbgleich, EnumStatusDatenabgleich.Neu);

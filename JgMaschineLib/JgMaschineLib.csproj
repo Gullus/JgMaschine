@@ -59,13 +59,11 @@
   <ItemGroup>
     <Compile Include="DbSichern.cs" />
     <Compile Include="Email\SendEamilOptionen.cs" />
+    <Compile Include="Imports\JgFastCube.cs" />
     <Compile Include="Listen\JgEntityAuto.cs" />
     <Compile Include="Listen\JgEntityList.cs" />
     <Compile Include="NetzwerkVerbindung.cs" />
     <Compile Include="Proto.cs" />
-    <Compile Include="Scanner\DataLogicScanner.cs" />
-    <Compile Include="Scanner\ScannerOptionen.cs" />
-    <Compile Include="Scanner\ScannerProgramm.cs" />
     <Compile Include="Email\SendEmail.cs" />
     <Compile Include="SqlVerbindung\DatenbankVerbindungen.cs" />
     <Compile Include="SqlVerbindung\FormDatenbankVerbindung.cs">
@@ -97,9 +95,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FehlerCode\JgMaschineFehlerSchnell.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Bilder\JgCalendar.ico" />
     <Resource Include="Bilder\JgCancel.ico" />
     <Resource Include="Bilder\JgCheck.ico" />

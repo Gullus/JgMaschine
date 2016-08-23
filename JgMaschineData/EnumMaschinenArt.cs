@@ -11,7 +11,7 @@ namespace JgMaschineData
 {
     using System;
     
-    public enum EnumProtokollName : byte
+    public enum EnumMaschinenArt : byte
     {
         Handbiegung = 0,
         Progress = 1,

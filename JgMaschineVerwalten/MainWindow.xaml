@@ -8,7 +8,7 @@
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
-        x:Class="JgMaschineVerwalten.MainWindow" mc:Ignorable="d" Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1125" 
+        x:Class="JgMaschineVerwalten.MainWindow" mc:Ignorable="d" Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1244" 
         Loaded="Window_Loaded" Closed="Window_Closed" Icon="JgMaschineVerwalten.ico">
 
   <Window.Resources>
@@ -485,6 +485,7 @@
               <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="160"/>
             </DataGrid.Columns>
           </DataGrid>
+          <Button x:Name="btnFastCube" Content="FastCube" Grid.Column="13" Width="75" HorizontalAlignment="Left" Click="btnFastCube_Click"/>
         </Grid>
       </TabItem>
 

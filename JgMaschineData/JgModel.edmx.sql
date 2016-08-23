@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 08/10/2016 13:37:57
+-- Date Created: 08/22/2016 08:57:56
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -121,12 +121,10 @@ GO
 CREATE TABLE [dbo].[tabMaschineSet] (
     [Id] uniqueidentifier  NOT NULL,
     [MaschinenName] nvarchar(120)  NOT NULL,
-    [ProtokollName] tinyint  NOT NULL,
+    [MaschinenArt] tinyint  NOT NULL,
     [IstStangenschneider] bit  NOT NULL,
     [MaschineAdresse] nvarchar(100)  NULL,
     [MaschinePortnummer] int  NULL,
-    [PfadDaten] nvarchar(255)  NULL,
-    [PfadBediener] nvarchar(255)  NULL,
     [ScannerNummer] nvarchar(20)  NULL,
     [ScannerMitDisplay] bit  NOT NULL,
     [Bemerkung] nvarchar(max)  NULL,
@@ -134,7 +132,7 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [VorgabeProStunde] decimal(8,3)  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL,
     [fAktivBauteil] uniqueidentifier  NULL,
@@ -152,7 +150,7 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fAktivArbeitszeit] uniqueidentifier  NULL,
     [fStandort] uniqueidentifier  NOT NULL
@@ -164,9 +162,9 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [Id] uniqueidentifier  NOT NULL,
     [DatumStart] datetime  NOT NULL,
     [DatumEnde] datetime  NULL,
+    [ScannZeit] datetime  NULL,
     [IstVorfertigung] bit  NOT NULL,
     [IdStahlPosition] int  NOT NULL,
-    [IdStahlBauteil] int  NOT NULL,
     [BtAnzahl] int  NOT NULL,
     [BtLaenge] int  NOT NULL,
     [BtGewicht] int  NOT NULL,
@@ -176,6 +174,8 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [GeometrieFilter] nvarchar(120)  NULL,
     [AnzahlBediener] tinyint  NOT NULL,
     [IstHandeingabe] bit  NOT NULL,
+    [IstAbgleichInJgData] bit  NOT NULL,
+    [IdStahlBauteil] int  NOT NULL,
     [Kunde] nvarchar(120)  NULL,
     [Auftrag] nvarchar(120)  NULL,
     [NummerBauteil] nvarchar(10)  NULL,
@@ -183,7 +183,7 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [Buegelname] nvarchar(120)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL
 );
@@ -198,7 +198,7 @@ CREATE TABLE [dbo].[tabAnmeldungMaschineSet] (
     [ManuelleAbmeldung] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL,
@@ -211,7 +211,7 @@ CREATE TABLE [dbo].[tabProtokollSet] (
     [Id] uniqueidentifier  NOT NULL,
     [AuswertungStart] datetime  NOT NULL,
     [AuswertungEnde] datetime  NULL,
-    [LetztePositionDatum] datetime  NOT NULL,
+    [LetzteZeile] int  NOT NULL,
     [LetzteDateiDatum] datetime  NOT NULL,
     [ProtokollText] nvarchar(max)  NULL,
     [Status] tinyint  NOT NULL,
@@ -222,7 +222,7 @@ CREATE TABLE [dbo].[tabProtokollSet] (
     [FehlerDatenSpeichern] int  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
@@ -237,7 +237,7 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [CoilwechselAnzahl] tinyint  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL,
     [fVerursacher] uniqueidentifier  NULL,
@@ -253,7 +253,7 @@ CREATE TABLE [dbo].[tabStandortSet] (
     [UpdateBedienerDatafox] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
@@ -271,7 +271,7 @@ CREATE TABLE [dbo].[tabAuswertungSet] (
     [FilterAuswertung] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
@@ -285,7 +285,7 @@ CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [ManuelleAbmeldung] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL
@@ -299,7 +299,7 @@ CREATE TABLE [dbo].[tabAnmeldungReparaturSet] (
     [Abmeldung] datetime  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
-    [DatenAbgleich_Bearbeiter] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fReparatur] uniqueidentifier  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL

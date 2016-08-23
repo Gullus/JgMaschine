@@ -44,5 +44,51 @@ namespace JgMaschineVerwalten.Properties {
                 return ((string)(this["VerbindungsString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Provider=SQLNCLI11.1;Integrated Security=SSPI;Persist Security Info=False;Initial" +
+            " Catalog=JgMaschine;Data Source=.\\SqlExpress")]
+        public string JgCubeVerbindungsString {
+            get {
+                return ((string)(this["JgCubeVerbindungsString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DECLARE @IdBauteil uniqueidentifier, @DatumVon dateTime, @DatumBis datetime \r\n-- " +
+            "set @IdBauteil = \r\nSet @DatumVon = \'01.01.2016\'\r\nSet @DatumBis = \'01.12.2016\'\r\n\r" +
+            "\nIF OBJECT_ID(\'tempdb..#temp\') IS NOT NULL\r\n  DROP TABLE #temp\r\n\r\nSELECT maschin" +
+            "e.MaschinenName, (bediener.NachName + \', \' + bediener.VorName) as Bediener,\r\n  C" +
+            "ast(bauteil.DatumStart as date) as Datum,\r\n  SUM(bauteil.BtGewicht / bauteil.Anz" +
+            "ahlBediener) as SumGewicht,\r\n  SUM(DATEDIFF(Second, bauteil.DatumStart, bauteil." +
+            "DatumEnde) / 3600.00) AS SumZeitBauteil,\r\n\r\n  ISNULL((SELECT SUM(DateDiff(Second" +
+            ", anmeldung.Anmeldung, anmeldung.Abmeldung) / 3600.00)\r\n    FROM tabAnmeldungMas" +
+            "chineSet AS anmeldung\r\n    WHERE (anmeldung.fBediener = bediener.Id) AND (anmeld" +
+            "ung.fMaschine = maschine.Id)\r\n      AND (CAST(anmeldung.Anmeldung as Date) =  Ca" +
+            "st(bauteil.DatumStart as Date))), 0) as AnmeldungZeit,\r\n\r\n  ISNULL((SELECT SUM(D" +
+            "ateDiff(Second, anmeldung.Anmeldung, anmeldung.Abmeldung) / 3600.00)\r\n    FROM t" +
+            "abAnmeldungReparaturSet AS anmeldung INNER JOIN\r\n      tabReparaturSet AS repara" +
+            "tur ON anmeldung.fReparatur = reparatur.Id\r\n    WHERE (anmeldung.fBediener = bed" +
+            "iener.Id) AND (reparatur.fMaschine = maschine.Id)\r\n      AND (CAST(anmeldung.Anm" +
+            "eldung as Date) = Cast(bauteil.DatumStart as Date))), 0) as ReparaturZeit\r\n\r\nINT" +
+            "O #temp\r\n\r\nFROM tabBauteilSet AS bauteil INNER JOIN\r\n  tabMaschineSet AS maschin" +
+            "e ON bauteil.fMaschine = maschine.Id INNER JOIN\r\n  tabBauteiltabBediener AS baut" +
+            "eilBediener ON bauteil.Id = bauteilBediener.sBauteile_Id INNER JOIN\r\n  tabBedien" +
+            "erSet AS bediener ON bauteilBediener.sBediener_Id = bediener.Id\r\n\r\nWHERE \r\n\t(CAS" +
+            "T(bauteil.DatumStart AS DATE) >= @DatumVon) AND (CAST(bauteil.DatumStart as Date" +
+            ") <= @DatumBis) \r\n\r\nGroup By maschine.MaschinenName, maschine.Id, (bediener.Nach" +
+            "Name + \', \' + bediener.VorName), bediener.Id, Cast(bauteil.DatumStart as date)\r\n" +
+            "\r\n------------------------------------------------------------------------------" +
+            "-------------------------------------------------------------\r\n\r\nSELECT *, (Anme" +
+            "ldungZeit - ReparaturZeit) as AktivZeit, (SumGewicht /  IIF((AnmeldungZeit - Rep" +
+            "araturZeit) = 0, 1, AnmeldungZeit - ReparaturZeit)) as GewichtStunde \r\nFROM #tem" +
+            "p")]
+        public string JgCubeSqlText {
+            get {
+                return ((string)(this["JgCubeSqlText"]));
+            }
+        }
     }
 }

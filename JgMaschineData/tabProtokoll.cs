@@ -17,6 +17,7 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabProtokoll()
         {
+            this.LetzteZeile = 0;
             this.AnzahlDurchlauf = 0;
             this.FehlerVerbindungMaschine = 0;
             this.FehlerPfadZurMaschine = 0;
@@ -28,7 +29,7 @@ namespace JgMaschineData
         public System.Guid Id { get; set; }
         public System.DateTime AuswertungStart { get; set; }
         public Nullable<System.DateTime> AuswertungEnde { get; set; }
-        public System.DateTime LetztePositionDatum { get; set; }
+        public int LetzteZeile { get; set; }
         public System.DateTime LetzteDateiDatum { get; set; }
         public string ProtokollText { get; set; }
         public EnumStatusProtkoll Status { get; set; }

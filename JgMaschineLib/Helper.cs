@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -51,16 +47,6 @@ namespace JgMaschineLib
       return AppDomain.CurrentDomain.BaseDirectory;
     }
 
-    #region Windows Log Datei
-
-    private class DatensatzWinlog
-    {
-      public string pText { get; set; }
-      public EventLogEntryType aBild { get; set; }
-    }
-
-    #endregion
-
     public static string EntferneLetztesZeichen(string Wert, int Anzahl = 1)
     {
       if (Wert.Length > Anzahl)
@@ -79,22 +65,7 @@ namespace JgMaschineLib
       return Wert.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
-    public static string StringInChar(string KommaString)
-    {
-      string erg = "";
-      var ar = KommaString.Split(new char[] { ',', ';' });
-      foreach (var s in ar)
-        erg += Convert.ToChar(Convert.ToByte(s));
-      return erg;
-    }
-
-    public static string ByteInChar(params byte[] ByteWerte)
-    {
-      string erg = "";
-      foreach (var b in ByteWerte)
-        erg += Convert.ToChar(b);
-      return erg;
-    }
+    #region Anzeige von Protokollen verwalten
 
     public enum ProtokollArt
     {
@@ -102,6 +73,7 @@ namespace JgMaschineLib
       Warnung,
       Fehler
     }
+
     public static void Protokoll(string ProtokollText, ProtokollArt ProtokollArt = ProtokollArt.Fehler)
     {
       string caption = "Fehler!";
@@ -134,6 +106,19 @@ namespace JgMaschineLib
       }
 
       Protokoll(msg);
+    }
+
+    #endregion
+
+    public static void SetzeBackflash(ref string Pfad)
+    {
+      if (Pfad[Pfad.Length - 1] != '\\')
+        Pfad += '\\';
+    }
+
+    public static DateTime DatumAusYyyyMMdd(string AusString)
+    {
+      return new DateTime(Convert.ToInt32(AusString.Substring(0, 4)), Convert.ToInt32(AusString.Substring(4, 2)), Convert.ToInt32(AusString.Substring(6, 2)));
     }
   }
 }

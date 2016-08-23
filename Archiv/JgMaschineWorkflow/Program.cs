@@ -49,7 +49,7 @@ namespace JgMaschineWorkflow
         using (var db = new JgMaschineData.JgModelContainer())
         {
           maschinen = db.tabMaschineSet
-            .Where(w => (standorte.Contains(w.eStandort.Bezeichnung.ToUpper())) && (w.ProtokollName != JgMaschineData.EnumProtokollName.Handbiegung) 
+            .Where(w => (standorte.Contains(w.eStandort.Bezeichnung.ToUpper())) && (w.MaschinenArt != JgMaschineData.EnumMaschinenArt.Handbiegung) 
               && (w.Status == JgMaschineData.EnumStatusMaschine.InBetrieb))
             .Include(i => i.eProtokoll).Include(e => e.eStandort)
             .OrderBy(o => o.eStandort.Bezeichnung).ThenBy(t => t.MaschinenName).ToList();

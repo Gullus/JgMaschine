@@ -98,7 +98,7 @@ namespace JgMaschineVerwalten
 
       CommandBindings.Add(new CommandBinding(MyCommands.AnmeldungReparaturBediener, ExecuteAnmeldungBedienerReparatur, (sen, erg) =>
       {
-        erg.CanExecute = _JgReparatur.Current != null;
+        erg.CanExecute = _JgReparatur?.Current != null;
       }));
 
       _Report = new FastReport.Report();
@@ -259,7 +259,7 @@ namespace JgMaschineVerwalten
           eRepAnmeldung.Daten = await _DatenPool.Db.tabAnmeldungReparaturSet.Where(w => eRepAnmeldung.Idis.Contains(w.Id)).ToListAsync();
         _DatenPool.Tabs.Add(JgEntityAuto.TabArt.RepAnmeldung, eRepAnmeldung);
 
-        // Bei Benutzer zusätzliche Viesorce refreshen
+        // Bei Benutzer zusätzliche Viewsorce refreshen
 
         _JgBediener.ViewSorceAuchAktualisieren.AddRange(new CollectionViewSource[] { _JgArbeitszeit.ViewSource, _JgAnmeldung.ViewSource, _JgReparatur.ViewSource, _JgRepAnmeldung.ViewSource });
       }
@@ -847,7 +847,16 @@ namespace JgMaschineVerwalten
     private void button_Click(object sender, RoutedEventArgs e)
     {
       _JgReparatur.ViewSource.View.Refresh();
+    }
 
+    private void btnFastCube_Click(object sender, RoutedEventArgs e)
+    {
+      var dat = Helper.StartVerzeichnis() + @"\jgFastCube";
+      if (!Directory.Exists(dat))
+        Directory.CreateDirectory(dat);
+
+      var prop = Properties.Settings.Default;
+      JgMaschineLib.Imports.JgFastCube.JgFastCubeStart(prop.JgCubeVerbindungsString, prop.JgCubeSqlText, dat);
     }
   }
 }

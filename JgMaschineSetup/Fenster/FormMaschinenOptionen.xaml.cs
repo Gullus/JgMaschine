@@ -21,33 +21,12 @@ namespace JgMaschineSetup.Fenster
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       cmbStatus.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusMaschine));
-      cmbProtokolle.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumProtokollName));
+      cmbProtokolle.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumMaschinenArt));
 
       if (Maschine == null)
         Maschine = new tabMaschine() { Id = Guid.NewGuid(), fStandort = (cmbStandort.Items[0] as tabStandort).Id };
      
       gridMaschine.DataContext = Maschine;
-    }
-
-    private void ButtonPfad_Click(object sender, RoutedEventArgs e)
-    {
-      System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
-      dialog.SelectedPath = Maschine.PfadDaten;
-      if (sender == btnDateiBediener)
-        dialog.SelectedPath = Maschine.PfadBediener;
-      if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-      {
-        if (sender == btnDateiBediener)
-        {
-          Maschine.PfadBediener = dialog.SelectedPath;
-          tbPfadBediener.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
-        }
-        else
-        {
-          Maschine.PfadDaten = dialog.SelectedPath;
-          tbPfadDaten.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
-        }
-      }
     }
 
     private void ButtonOk_Click(object sender, RoutedEventArgs e)

@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>JgMaschineService.Programm</StartupObject>
+    <StartupObject>JgMaschineServiceScanner.Programm</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -66,6 +66,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Scanner\DataLogicScanner.cs" />
+    <Compile Include="Scanner\ScannerOptionen.cs" />
+    <Compile Include="Scanner\ScannerProgramm.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -93,10 +96,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JgMaschineData\JgMaschineData.csproj">
+      <Project>{6bc109e0-7e70-46eb-9137-5e60e8074ccc}</Project>
+      <Name>JgMaschineData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JgMaschineLib\JgMaschineLib.csproj">
       <Project>{69D6B7E0-6DDC-49A5-A44F-D6BFD607AED3}</Project>
       <Name>JgMaschineLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FehlerCode\JgMaschineFehlerSchnell.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

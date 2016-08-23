@@ -16,7 +16,8 @@ namespace JgMaschineLib
       Verwaltung,
       Auswertung,
       ServiceArbeitszeit,
-      ServiceScanner
+      ServiceScanner,
+      ServiceDatenabfrage
     }
 
     public KategorieArt _Kategorie;

@@ -42,11 +42,7 @@ namespace JgMaschineLib.Stahl
 
     public int? Anzahl { get; set; }
     public int? Laenge { get; set; }         // mm
-    public decimal? Gewicht { get; set; }    // kg
-    public int GewichtInKg
-    {
-      get { return Convert.ToInt32(Gewicht * 1000); }
-    }
+    public int? Gewicht { get; set; }        // kg
     public int? Biegerollendurchmesser { get; set; }
     public int? Durchmesser { get; set; }
     public int? BreiteMatte { get; set; }
@@ -55,7 +51,7 @@ namespace JgMaschineLib.Stahl
     public string Lage { get; set; }
     public string DeltaIfuerStaffeleisen { get; set; }
 
-    public int? PruefsummeAusBvsStream { get; set; } 
+    public int? PruefsummeAusBvsStream { get; set; }
 
     public List<BvbsGeometrie> ListeGeometrie = new List<BvbsGeometrie>();
 
@@ -83,7 +79,7 @@ namespace JgMaschineLib.Stahl
     }
 
     public BvbsDatenaustausch(string BvbsString)
-       : this() 
+       : this()
     {
       _BvbsString = BvbsString;
       BvsStringInObjet();
@@ -91,55 +87,55 @@ namespace JgMaschineLib.Stahl
 
     public void BvsStringInObjet()
     {
+      string[] felder = _BvbsString.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+
+      if (felder[0].Length != 4)
+        throw new Exception(string.Format("Länge Obergruppenname {0} ist ungeleich 4", felder[0]));
+
       try
       {
-        string[] felder = _BvbsString.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+        Obergruppe = (Obergruppen)Enum.Parse(typeof(Obergruppen), felder[0], true);
+      }
+      catch
+      {
+        throw new Exception(string.Format("Obergruppenname {0} nicht vorhanden", felder[0]));
+      }
 
-        if (felder[0].Length != 4)
-          throw new Exception(string.Format("Obergruppenname {0} ist ungeleich 4", felder[0]));
+      Bloecke block = Bloecke.Start;
+      char auswahl = ' ';
+      string wert = "";
+      bool neuerBlock = false;
+
+      for (int dl = 1; dl < felder.Length; dl++)
+      {
+        var feld = felder[dl];
+
+        if (feld.Contains(System.Environment.NewLine))
+          return;
+
+        neuerBlock = true;
+
+        switch (feld[0])
+        {
+          case 'H': block = Bloecke.Header; break;
+          case 'G': block = Bloecke.Geometrie; break;
+          case 'C': block = Bloecke.Pruefsumme; break;
+          default: neuerBlock = false; break;
+        }
+
+        if (neuerBlock)
+        {
+          auswahl = feld[1];
+          wert = feld.Substring(2);
+        }
+        else
+        {
+          auswahl = feld[0];
+          wert = feld.Substring(1);
+        }
 
         try
         {
-          Obergruppe = (Obergruppen)Enum.Parse(typeof(Obergruppen), felder[0], true);
-        }
-        catch
-        {
-          throw new Exception(string.Format("Obergruppenname {0} nicht vorhanden", felder[0]));
-        }
-
-        Bloecke block = Bloecke.Start;
-        char auswahl = ' ';
-        string wert = "";
-        bool neuerBlock = false;
-
-        for (int dl = 1; dl < felder.Length; dl++)
-        {
-          var feld = felder[dl];
-
-          if (feld.Contains(System.Environment.NewLine))
-            return;
-
-          neuerBlock = true;
-
-          switch (feld[0])
-          {
-            case 'H': block = Bloecke.Header; break;
-            case 'G': block = Bloecke.Geometrie; break;
-            case 'C': block = Bloecke.Pruefsumme; break;
-            default: neuerBlock = false; break;
-          }
-
-          if (neuerBlock)
-          {
-            auswahl = feld[1];
-            wert = feld.Substring(2);
-          }
-          else
-          {
-            auswahl = feld[0];
-            wert = feld.Substring(1);
-          }
-
           switch (block)
           {
             case Bloecke.Header:
@@ -151,7 +147,7 @@ namespace JgMaschineLib.Stahl
                 case 'p': Position = wert; break;
                 case 'l': Laenge = Convert.ToInt32(wert); break;
                 case 'n': Anzahl = Convert.ToInt32(wert); break;
-                case 'e': Gewicht = Convert.ToDecimal(wert, CultureInfo.InvariantCulture); break;
+                case 'e': Gewicht = Convert.ToInt32(wert); break;
                 case 'd': Durchmesser = Convert.ToInt32(wert); break;
                 case 'g': StahlGuete = wert; break;
                 case 's': Biegerollendurchmesser = Convert.ToInt32(wert); break;
@@ -171,16 +167,17 @@ namespace JgMaschineLib.Stahl
               break;
           }
         }
-      }
-      catch (Exception f)
-      {
-        throw new Exception(f.Message);
+        catch (Exception f)
+        {
+          var msg = $"Fehler bei der Konvertierung Bvbs Code !\nBlock: {block} Auswahl: {auswahl} Feld: {feld}\nWert: '{wert}'\nFehler: {f.Message}";
+          throw new Exception(msg);
+        }
       }
     }
-  
+
     public string WertErstellen(char Zeichen, object Wert)
     {
-      return Wert != null ? Zeichen + Wert.ToString() + "@" : ""; 
+      return Wert != null ? Zeichen + Wert.ToString() + "@" : "";
     }
 
     public string ObjectInBvsStream()
@@ -195,7 +192,7 @@ namespace JgMaschineLib.Stahl
       erg.Append(WertErstellen('p', Position));
       erg.Append(WertErstellen('l', Laenge));
       erg.Append(WertErstellen('n', Anzahl));
-      erg.Append(Gewicht != null ? 'e' + Convert.ToString(Gewicht, CultureInfo.InvariantCulture) + "@": "");
+      erg.Append(Gewicht != null ? 'e' + Convert.ToString(Gewicht, CultureInfo.InvariantCulture) + "@" : "");
       erg.Append(WertErstellen('d', Durchmesser));
       erg.Append(WertErstellen('g', StahlGuete));
       erg.Append(WertErstellen('s', Biegerollendurchmesser));
@@ -209,7 +206,7 @@ namespace JgMaschineLib.Stahl
 
       erg.Append("G");
 
-      foreach(var ds in ListeGeometrie)
+      foreach (var ds in ListeGeometrie)
       {
         switch (ds.Geometrie)
         {

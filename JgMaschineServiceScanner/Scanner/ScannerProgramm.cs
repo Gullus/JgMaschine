@@ -38,7 +38,7 @@ namespace JgMaschineLib.Scanner
         db.tabStandortSet.FirstOrDefault();
       }
 
-      _DlScanner = new DataLogicScanner(_Optionen, ScannerCommunication);
+      _DlScanner = new DataLogicScanner(_Optionen, ScannerKommunikation);
       _DlScanner.Start();
     }
 
@@ -65,12 +65,12 @@ namespace JgMaschineLib.Scanner
 
     private void DatenAnMaschineSenden(tabMaschine Maschine, string SendString)
     {
-      if ((Maschine.ProtokollName == EnumProtokollName.Handbiegung) || (string.IsNullOrWhiteSpace(Maschine.MaschineAdresse)))
+      if ((Maschine.MaschinenArt == EnumMaschinenArt.Handbiegung) || (string.IsNullOrWhiteSpace(Maschine.MaschineAdresse)))
         return;
 
-      switch (Maschine.ProtokollName)
+      switch (Maschine.MaschinenArt)
       {
-        case EnumProtokollName.Schnell:
+        case EnumMaschinenArt.Schnell:
           if (Maschine.MaschinePortnummer != null)
           {
             var datenAnMaschine = Task.Factory.StartNew((mDaten) =>
@@ -121,7 +121,7 @@ namespace JgMaschineLib.Scanner
           }
           break;
 
-        case EnumProtokollName.Evg:
+        case EnumMaschinenArt.Evg:
 
           var datenAnEvg = Task.Factory.StartNew((mDaten) =>
           {
@@ -158,7 +158,7 @@ namespace JgMaschineLib.Scanner
           }, new MaschinenDaten() { BvbsString = SendString, Maschine = Maschine });
           break;
 
-        case EnumProtokollName.Progress:
+        case EnumMaschinenArt.Progress:
 
           var datenAnProgress = Task.Factory.StartNew((mDaten) =>
             {
@@ -217,7 +217,17 @@ namespace JgMaschineLib.Scanner
 
     private void Bf2dEintragen(JgModelContainer Db, tabMaschine Maschine, DataLogicScannerText e)
     {
-      var btNeu = new JgMaschineLib.Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
+      Stahl.BvbsDatenaustausch btNeu = null;
+      try
+      {
+        btNeu = new Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
+      }
+      catch (Exception f)
+      {
+        e.FehlerAusgabe("BVBS Code konnte nicht", "gelesen werden !");
+        _Optionen.Protokoll.Set(f.Message, Proto.ProtoArt.Warnung);
+        return;
+      }
 
       if (Maschine.eAktivBauteil != null)
       {
@@ -226,7 +236,8 @@ namespace JgMaschineLib.Scanner
         DbSichern.AbgleichEintragen(letztesBt.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
 
         if ((letztesBt.NummerBauteil == btNeu.ProjektNummer) && (letztesBt.BtDurchmesser == btNeu.Durchmesser)
-          && (letztesBt.BtGewicht == btNeu.GewichtInKg) && (letztesBt.BtLaenge == btNeu.Laenge))
+          //todo   && (letztesBt.BtGewicht == btNeu.GewichtInKg) 
+          && (letztesBt.BtLaenge == btNeu.Laenge) && (letztesBt.BtAnzahl == btNeu.Anzahl))
         {
           var msg = $"BauteilMaschine: {Maschine.MaschinenName}\nProject: {btNeu.ProjektNummer} erledigt";
           _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
@@ -283,7 +294,7 @@ namespace JgMaschineLib.Scanner
           BtAnzahl = Convert.ToInt32(btNeu.Anzahl),
           BtDurchmesser = Convert.ToInt32(btNeu.Durchmesser),
           //todo Falsches Gewicht in Bvbs Code -> BtGewicht = btNeu.GewichtInKg,
-          BtGewicht = Convert.ToInt32(gewichtProMeter * Convert.ToInt32(btNeu.Laenge)),
+          BtGewicht = Convert.ToInt32(gewichtProMeter * Convert.ToInt32(btNeu.Laenge) / 100),
           BtLaenge = Convert.ToInt32(btNeu.Laenge),
           BtAnzahlBiegungen = (byte)btNeu.ListeGeometrie.Count,
           BvbsCode = btNeu.BvbsString,
@@ -297,8 +308,7 @@ namespace JgMaschineLib.Scanner
 
           AnzahlBediener = (byte)Maschine.sAktiveAnmeldungen.Count(),
 
-          DatumStart = DateTime.Now,
-          DatumEnde = DateTime.Now.AddMinutes(10)
+          DatumStart = DateTime.Now
         };
 
         foreach (var bed in Maschine.sAktiveAnmeldungen)
@@ -307,7 +317,7 @@ namespace JgMaschineLib.Scanner
         Maschine.eAktivBauteil = btNeuErstellt;
         DbSichern.DsSichern<tabBauteil>(Db, btNeuErstellt, EnumStatusDatenabgleich.Neu);
 
-        var msg = $"BT erstellt. Maschine: {Maschine.MaschinenName}\n  Project: {btNeu.ProjektNummer} Anzahl: {btNeu.Anzahl} Gewicht: {btNeu.Gewicht * 1000}";
+        var msg = $"BT erstellt. Maschine: {Maschine.MaschinenName}\n  Project: {btNeu.ProjektNummer} Anzahl: {btNeu.Anzahl} Gewicht: {btNeuErstellt.BtGewicht}";
         _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
       }
     }
@@ -494,7 +504,7 @@ namespace JgMaschineLib.Scanner
       }
     }
 
-    private void ScannerCommunication(DataLogicScannerText e)
+    private void ScannerKommunikation(DataLogicScannerText e)
     {
       #region Sannertext in Datei eintragen
 
