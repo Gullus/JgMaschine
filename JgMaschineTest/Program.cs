@@ -18,6 +18,16 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
+      string skkk = "0.888";
+      Console.WriteLine(skkk.Replace(".", ""));
+      Console.WriteLine(Convert.ToInt32(skkk.Replace(".", "")));
+
+
+
+      Console.ReadLine();
+
+      return;
+
       var pfadStart = @"C:\Entwicklung\JgMaschine\Versuchsdaten\Schnell";
 
       Helper.SetzeBackflash(ref pfadStart);

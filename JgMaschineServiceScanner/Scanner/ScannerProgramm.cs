@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -28,15 +29,53 @@ namespace JgMaschineLib.Scanner
 
     public void Start()
     {
-      var msg = $"Start Scannerprogramm\nScanneradrese: {_Optionen.CradleIpAdresse}\nScannerport: {_Optionen.CradlePortNummer}\nDb Verbindungsstring {_Optionen.DbVerbindungsString}";
+      var msg = $"Start Scannerprogramm\nScanneradresse: {_Optionen.CradleIpAdresse}\nScannerport: {_Optionen.CradlePortNummer}";
       _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
 
-      using (var db = new JgModelContainer())
+      try
       {
-        if (_Optionen.DbVerbindungsString != "")
-          db.Database.Connection.ConnectionString = _Optionen.DbVerbindungsString;
-        db.tabStandortSet.FirstOrDefault();
+        using (var db = new JgModelContainer())
+        {
+          if (_Optionen.DbVerbindungsString != "")
+            db.Database.Connection.ConnectionString = _Optionen.DbVerbindungsString;
+
+          try
+          {
+            var con = new SqlConnection(db.Database.Connection.ConnectionString);
+            con.Open();
+            msg = "Datenbankverbindung OK.";
+            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+            con.Close();
+          }
+          catch (Exception f)
+          {
+            msg = $"Verbindungsaufbau zur Datenbank {db.Database.Connection.ConnectionString} schlug fehl.";
+            _Optionen.Protokoll.Set(msg, f);
+            return;
+          }
+
+          try
+          {
+            db.tabStandortSet.FirstOrDefault();
+            msg = "Abrfrage Entity Framework OK.";
+            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+          }
+          catch (Exception f)
+          {
+            msg = $"1. Entity Framworkabfrage schlug fehl.";
+            _Optionen.Protokoll.Set(msg, f);
+            return;
+          }
+        }
       }
+      catch (Exception f)
+      {
+        msg = $"Initialisierung des Entitiy Framework fehlgeschlagen !";
+        _Optionen.Protokoll.Set(msg, f);
+      }
+
+      msg = "Starte Scanner.";
+      _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
 
       _DlScanner = new DataLogicScanner(_Optionen, ScannerKommunikation);
       _DlScanner.Start();
@@ -263,38 +302,15 @@ namespace JgMaschineLib.Scanner
       else
       {
         e.SendeText(" ", "  - Bauteil O K -");
-
-        // Berechnen des Gewichtes, da aus JgData falsche erte kommen
-
-        decimal gewichtProMeter = 0.00m;
-        switch (Convert.ToInt32(btNeu.Durchmesser))
-        {
-          case 4: gewichtProMeter = 0.099m; break;
-          case 5: gewichtProMeter = 0.154m; break;
-          case 6: gewichtProMeter = 0.222m; break;
-          case 7: gewichtProMeter = 0.302m; break;
-          case 8: gewichtProMeter = 0.395m; break;
-          case 9: gewichtProMeter = 0.499m; break;
-          case 10: gewichtProMeter = 0.617m; break;
-          case 11: gewichtProMeter = 0.746m; break;
-          case 12: gewichtProMeter = 0.888m; break;
-          case 14: gewichtProMeter = 1.21m; break;
-          case 16: gewichtProMeter = 1.58m; break;
-          case 20: gewichtProMeter = 2.47m; break;
-          case 25: gewichtProMeter = 3.85m; break;
-          case 28: gewichtProMeter = 4.83m; break;
-          case 32: gewichtProMeter = 6.31m; break;
-          case 40: gewichtProMeter = 9.86m; break;
-        }
-
         var btNeuErstellt = new tabBauteil()
         {
           Id = Guid.NewGuid(),
           eMaschine = Maschine,
           BtAnzahl = Convert.ToInt32(btNeu.Anzahl),
           BtDurchmesser = Convert.ToInt32(btNeu.Durchmesser),
+          
           //todo Falsches Gewicht in Bvbs Code -> BtGewicht = btNeu.GewichtInKg,
-          BtGewicht = Convert.ToInt32(gewichtProMeter * Convert.ToInt32(btNeu.Laenge) / 100),
+          BtGewicht = Stahl.StahlGewichte.Get((int)btNeu.Laenge, (int)btNeu.Durchmesser),
           BtLaenge = Convert.ToInt32(btNeu.Laenge),
           BtAnzahlBiegungen = (byte)btNeu.ListeGeometrie.Count,
           BvbsCode = btNeu.BvbsString,
@@ -388,7 +404,7 @@ namespace JgMaschineLib.Scanner
           e.FehlerAusgabe(" ", "Sie sind an dieser", "Maschine nicht angemeldet !");
         else
         {
-          e.SendeText(" ",  "- A B M E L D U N G -", " ", Bediener.Name, $"MA: {Maschine.MaschinenName}");
+          e.SendeText(" ", "- A B M E L D U N G -", " ", Bediener.Name, $"MA: {Maschine.MaschinenName}");
 
           BedienerVonMaschineAbmelden(Maschine, Bediener, anmeldungVorhanden);
           BedienerReparaturAbmelden(Maschine, Bediener);

@@ -41,7 +41,8 @@ namespace JgMaschineServiceDatenabfrage
             break;
           }
 
-          var lMaschinen = db.tabMaschineSet.Where(w => (w.fStandort == standort.Id) && (w.Status != EnumStatusMaschine.Stillgelegt) && (w.MaschinenArt != EnumMaschinenArt.Handbiegung)).ToList();
+          var lMaschinen = db.tabMaschineSet.Where(w => (w.fStandort == standort.Id) && (w.Status != EnumStatusMaschine.Stillgelegt) 
+            && (w.MaschinenArt != EnumMaschinenArt.Handbiegung) && (w.ProdDatenabfrage)).ToList();
           if (lMaschinen.Count == 0)
           {
             msg = $"Für Standort {standort.Bezeichnung} sind keine Maschinen vorhanden!";

@@ -6,7 +6,7 @@
     xmlns:xData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:vRules="clr-namespace:JgMaschineLib.ValidationRules;assembly=JgMaschineLib"
     mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormMaschinenOptionen"
-    Title="Maschinen Optionen" Height="438.71" Width="462.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
+    Title="Maschinen Optionen" Height="471.71" Width="434.795" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" 
         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" 
         FocusManager.FocusedElement="{Binding ElementName=cmbStandort}" Icon="/JgMaschineSetup;component/JgMaschineSetup.ico">
   <Window.Resources>
@@ -26,7 +26,9 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
-      <RowDefinition />
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+      <RowDefinition Height="0*" />
       <RowDefinition Height="50"/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
@@ -55,23 +57,24 @@
     <TextBox x:Name="tbMaschinenAdresse" Text="{Binding MaschineAdresse}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" />
 
     <Label Content="Maschine _Port" Target="{Binding ElementName=tbPortnummer}" Grid.Row="5"/>
-    <TextBox x:Name="tbPortnummer" Text="{Binding MaschinePortnummer}" Grid.Column="1" Grid.Row="5" />
+    <TextBox x:Name="tbPortnummer" Text="{Binding MaschinePortnummer}" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2"/>
 
-    <Label Content="_Scannernummer" Target="{Binding ElementName=tbScannernummer}" Grid.Row="6"/>
-    <TextBox x:Name="tbScannernummer" Text="{Binding ScannerNummer}" Grid.Column="1" Grid.Row="6" />
+    <Label Content="_Scannernummer" Target="{Binding ElementName=tbScannernummer}" Grid.Row="7"/>
+    <TextBox x:Name="tbScannernummer" Text="{Binding ScannerNummer}" Grid.Column="1" Grid.Row="7" />
 
-    <CheckBox x:Name="tbScannerMitDisplay" Margin="5" Content="Scanner hat ein Display" IsChecked="{Binding ScannerMitDisplay}" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="3" />
+    <CheckBox x:Name="tbProdDatenAuslesen" Margin="5" Content="Produktionsdaten aus Maschine auslesen" IsChecked="{Binding ProdDatenabfrage}" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="3" />
+    <CheckBox x:Name="tbScannerMitDisplay" Margin="5" Content="Scanner hat ein Display" IsChecked="{Binding ScannerMitDisplay}" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="3" />
 
-    <Label Content="_Vorgabe Stunde" Target="{Binding ElementName=tbVorgabeProStunde}" Grid.Row="8"/>
-    <TextBox x:Name="tbVorgabeProStunde" Text="{Binding VorgabeProStunde}" Grid.Column="1" Grid.Row="8" />
+    <Label Content="_Vorgabe Stunde" Target="{Binding ElementName=tbVorgabeProStunde}" Grid.Row="9"/>
+    <TextBox x:Name="tbVorgabeProStunde" Text="{Binding VorgabeProStunde}" Grid.Column="1" Grid.Row="9" />
 
-    <Label Content="S_tatus Maschine" Target="{Binding ElementName=cmbStatus}" Grid.Row="9"/>
-    <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="9"/>
+    <Label Content="S_tatus Maschine" Target="{Binding ElementName=cmbStatus}" Grid.Row="10"/>
+    <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="10"/>
 
-    <Label Content="_Bemerkung" Target="{Binding ElementName=cmbStatus}" Grid.Row="10"/>
-    <TextBox x:Name="tbBemerkung" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="4" Grid.RowSpan="2" Text="{Binding Bemerkung}" />
+    <Label Content="_Bemerkung" Target="{Binding ElementName=cmbStatus}" Grid.Row="11"/>
+    <TextBox x:Name="tbBemerkung" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="4" Grid.RowSpan="2" Text="{Binding Bemerkung}" />
 
-    <Grid Grid.ColumnSpan="4" Grid.Row="12">
+    <Grid Grid.ColumnSpan="4" Grid.Row="14">
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
         <ColumnDefinition Width="120"/>

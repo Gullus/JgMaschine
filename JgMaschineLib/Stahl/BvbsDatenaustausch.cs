@@ -147,7 +147,9 @@ namespace JgMaschineLib.Stahl
                 case 'p': Position = wert; break;
                 case 'l': Laenge = Convert.ToInt32(wert); break;
                 case 'n': Anzahl = Convert.ToInt32(wert); break;
-                case 'e': Gewicht = Convert.ToInt32(wert); break;
+                case 'e':
+                  wert = wert.Replace(".", "");
+                  Gewicht = Convert.ToInt32(wert); break;
                 case 'd': Durchmesser = Convert.ToInt32(wert); break;
                 case 'g': StahlGuete = wert; break;
                 case 's': Biegerollendurchmesser = Convert.ToInt32(wert); break;

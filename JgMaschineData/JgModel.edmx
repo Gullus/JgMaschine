@@ -106,9 +106,10 @@
     <Property Name="MaschinePortnummer" Type="int" Nullable="true" />
     <Property Name="ScannerNummer" Type="nvarchar" Nullable="true" MaxLength="20" />
     <Property Name="ScannerMitDisplay" Type="bit" Nullable="false" />
+    <Property Name="ProdDatenabfrage" Type="bit" Nullable="false" />
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="VorgabeProStunde" Type="decimal" Nullable="false" DefaultValue="0" Precision="8" Scale="3" />
+    <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -636,11 +637,16 @@
           <Property Name="MaschinePortnummer" Type="Int32" Nullable="true" />
           <Property Name="ScannerNummer" Type="String" Nullable="true" FixedLength="false" MaxLength="20" />
           <Property Name="ScannerMitDisplay" Type="Boolean" Nullable="false" />
+          <Property Name="ProdDatenabfrage" Type="Boolean" Nullable="false" >
+            <Documentation>
+              <LongDescription>Produktionsdaten aus der Maschine auslesen</LongDescription>
+            </Documentation>
+          </Property>
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="VorgabeProStunde" Type="Decimal" Scale="3" Precision="8" DefaultValue="0" Nullable="false" />
           <Property Name="Status" Type="JgModel.EnumStatusMaschine" Nullable="false" />
           <NavigationProperty Name="eProtokoll" Relationship="JgModel.tabMaschinetabProtokoll" FromRole="tabMaschine" ToRole="tabProtokoll" />
           <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabMaschine" FromRole="tabMaschine" ToRole="tabStandort" />
-          <Property Name="VorgabeProStunde" Type="Decimal" Scale="3" Precision="8" DefaultValue="0" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
           <Property Name="fAktivBauteil" Type="Guid" Nullable="true" />
@@ -1099,9 +1105,10 @@
           <ScalarProperty Name="MaschinePortnummer" ColumnName="MaschinePortnummer" />
           <ScalarProperty Name="ScannerNummer" ColumnName="ScannerNummer" />
           <ScalarProperty Name="ScannerMitDisplay" ColumnName="ScannerMitDisplay" />
+          <ScalarProperty Name="ProdDatenabfrage" ColumnName="ProdDatenabfrage" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="VorgabeProStunde" ColumnName="VorgabeProStunde" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

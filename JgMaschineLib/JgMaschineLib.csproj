@@ -80,6 +80,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Stahl\BvbsDatenaustausch.cs" />
+    <Compile Include="Stahl\StahlGewichte.cs" />
     <Compile Include="TcpIpKomponenten\Helper.cs" />
     <Compile Include="TcpIpKomponenten\TcpIpClient.cs" />
     <Compile Include="TcpIpKomponenten\TcpIpServer.cs" />

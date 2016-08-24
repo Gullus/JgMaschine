@@ -33,9 +33,10 @@ namespace JgMaschineData
         public Nullable<int> MaschinePortnummer { get; set; }
         public string ScannerNummer { get; set; }
         public bool ScannerMitDisplay { get; set; }
+        public bool ProdDatenabfrage { get; set; }
         public string Bemerkung { get; set; }
-        public EnumStatusMaschine Status { get; set; }
         public decimal VorgabeProStunde { get; set; }
+        public EnumStatusMaschine Status { get; set; }
         public System.Guid fStandort { get; set; }
         public Nullable<System.Guid> fAktivBauteil { get; set; }
         public Nullable<System.Guid> fAktivReparatur { get; set; }

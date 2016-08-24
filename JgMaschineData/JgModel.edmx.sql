@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 08/22/2016 08:57:56
+-- Date Created: 08/23/2016 21:16:34
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -127,9 +127,10 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [MaschinePortnummer] int  NULL,
     [ScannerNummer] nvarchar(20)  NULL,
     [ScannerMitDisplay] bit  NOT NULL,
+    [ProdDatenabfrage] bit  NOT NULL,
     [Bemerkung] nvarchar(max)  NULL,
-    [Status] tinyint  NOT NULL,
     [VorgabeProStunde] decimal(8,3)  NOT NULL,
+    [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,

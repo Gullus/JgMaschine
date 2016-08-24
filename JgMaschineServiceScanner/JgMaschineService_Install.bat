@@ -2,7 +2,7 @@
 
 cd /d %~dp0
 
-InstallUtil.exe JgMaschineService.exe
+InstallUtil.exe JgMaschineServiceScanner.exe
 
 Pause
 
