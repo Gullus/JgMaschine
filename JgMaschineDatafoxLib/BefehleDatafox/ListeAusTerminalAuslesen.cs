@@ -79,7 +79,7 @@ namespace JgMaschineDatafoxLib
     /// </summary>
     /// <param name="Optionen">Übertragungsoptionen zum Datafox Terminal</param>
     /// <returns>Ausgelesene Datensätze aus dem Terminal</returns>
-    public static List<string> ListeAusTerminalAuslesen(ZeitsteuerungDatafox Optionen)
+    public static List<string> ListeAusTerminalAuslesen(OptionenDatafox Optionen)
     {
       string msg;
       byte[] buf = new byte[256];

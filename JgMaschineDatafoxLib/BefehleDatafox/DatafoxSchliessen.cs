@@ -13,7 +13,7 @@ namespace JgMaschineDatafoxLib
     /// Schliessen der Verbindung
     /// </summary>
     /// <param name="Optionen">Übertragungsoptionen</param>
-    public static void DatafoxSchliessen(ZeitsteuerungDatafox Optionen)
+    public static void DatafoxSchliessen(OptionenDatafox Optionen)
     {
       DFComDLL.DFCComClose(Optionen.Datafox.ChannelId);
     }

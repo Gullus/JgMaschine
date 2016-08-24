@@ -82,7 +82,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="DatafoxDll\DFComDLL.lib" />
+    <None Include="DatafoxDll\DFCom_x64.lib" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DatafoxDll\DFComDLL.dll" />
+    <Content Include="DatafoxDll\DFComSLink.h" />
+    <Content Include="DatafoxDll\DFCom_x64.dll" />
+    <None Include="DFComDLL.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

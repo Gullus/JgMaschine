@@ -11,7 +11,7 @@ namespace JgMaschineDatafoxLib
     /// <param name="Optionen">Übertragungsoptionen</param>
     /// <param name="MessageText">Text, welcher auf dem Display ausgeben werden soll</param>
     /// <param name="Tonfolge">Tonfolge: 0 - Kein Ton; 1-10 siehe Documentation</param>
-    public static void ZeitEinstellen(ZeitsteuerungDatafox Optionen, DateTime DatumZeit)
+    public static void ZeitEinstellen(OptionenDatafox Optionen, DateTime DatumZeit)
     {
       //Buffer[0] = 20;
       //Buffer[1] = 12;

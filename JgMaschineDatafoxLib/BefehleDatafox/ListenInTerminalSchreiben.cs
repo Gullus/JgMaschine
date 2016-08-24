@@ -7,7 +7,7 @@ namespace JgMaschineDatafoxLib
 {
   public partial class ProgDatafox
   {
-    public static void ListenInTerminalSchreiben(ZeitsteuerungDatafox Optionen)
+    public static void ListenInTerminalSchreiben(OptionenDatafox Optionen)
     {
       string msg;
       var errorString = new StringBuilder(255);

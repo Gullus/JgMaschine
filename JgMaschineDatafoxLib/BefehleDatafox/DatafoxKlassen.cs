@@ -31,7 +31,7 @@ namespace JgMaschineDatafoxLib
     public int GehGrund { get; set; }
   }
 
-  public class ZeitsteuerungDatafox
+  public class OptionenDatafox
   {
     public string Standort = "";
     public JgModelContainer Db = null;
@@ -43,7 +43,7 @@ namespace JgMaschineDatafoxLib
     public Proto Protokoll = null;
     public DatafoxOptionen Datafox = null;
 
-    public ZeitsteuerungDatafox()
+    public OptionenDatafox()
     { }
   }
 }

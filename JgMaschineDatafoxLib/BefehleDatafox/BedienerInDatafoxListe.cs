@@ -8,7 +8,7 @@ namespace JgMaschineDatafoxLib
 {
   public static partial class ProgDatafox
   {
-    public static void BedienerInDatafoxDatei(ZeitsteuerungDatafox Optionen, List<tabBediener> ListeBediener)
+    public static void BedienerInDatafoxDatei(OptionenDatafox Optionen, List<tabBediener> ListeBediener)
     {
       var sb = new StringBuilder();
       foreach (var bediener in ListeBediener)

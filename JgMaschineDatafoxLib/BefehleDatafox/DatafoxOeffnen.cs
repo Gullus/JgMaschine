@@ -8,7 +8,7 @@ namespace JgMaschineDatafoxLib
     /// Oeffnen der Datafoc Verbindung
     /// </summary>
     /// <param name="Optionen">Übertragungsoptionen</param>
-    public static void DatafoxOeffnen(ZeitsteuerungDatafox Optionen)
+    public static void DatafoxOeffnen(OptionenDatafox Optionen)
     {
       byte idVerbindung = 3; // <= Verbindung über TcpIp
 

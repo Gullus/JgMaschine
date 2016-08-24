@@ -43,7 +43,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,12 +54,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Maschinen\MaschineDatenabfrage.cs" />
     <Compile Include="Maschinen\MaschinenStamm.cs" />
     <Compile Include="Maschinen\MaschineProgress.cs" />
     <Compile Include="Maschinen\MaschineSchnell.cs" />
-    <Compile Include="Maschinen\Optionen.cs" />
+    <Compile Include="Maschinen\OptionenAbfrage.cs" />
     <Compile Include="Maschinen\MaschineEvg.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="JgMaschineServiceDatenabfrage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

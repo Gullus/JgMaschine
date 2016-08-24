@@ -96,6 +96,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="JgFastCube.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Resource Include="Bilder\JgCalendar.ico" />
     <Resource Include="Bilder\JgCancel.ico" />
     <Resource Include="Bilder\JgCheck.ico" />

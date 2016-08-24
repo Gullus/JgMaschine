@@ -9,14 +9,18 @@ namespace JgMaschineDatafoxLib
 {
   public class ArbeitszeitErfassen
   {
-    private ZeitsteuerungDatafox _ZeitsteuerungOptionen = null;
-    public ZeitsteuerungDatafox ZeitsteuerungOptionen { get { return _ZeitsteuerungOptionen; } }
+    private OptionenDatafox _OptDatafox = null;
+    public OptionenDatafox OptDatafox { get { return _OptDatafox; } } 
     private Timer _SteuerungsTimer;
 
-    public ArbeitszeitErfassen(ZeitsteuerungDatafox ZeitsteuerungOptionen)
+    public ArbeitszeitErfassen(OptionenDatafox OptDatafox)
     {
-      _ZeitsteuerungOptionen = ZeitsteuerungOptionen;
-      _SteuerungsTimer = new Timer(OnTimedEvent, _ZeitsteuerungOptionen, new TimeSpan(0 , 0 , 1), new TimeSpan(0, 0, _ZeitsteuerungOptionen.TimerIntervall));
+      _OptDatafox = OptDatafox;
+    }
+
+    public void Start()
+    {
+      _SteuerungsTimer = new Timer(OnTimedEvent, _OptDatafox, new TimeSpan(0, 0, 1), new TimeSpan(0, 0, _OptDatafox.TimerIntervall));
     }
 
     public void TimerStop()
@@ -26,12 +30,12 @@ namespace JgMaschineDatafoxLib
 
     public void TimerContinue()
     {
-      _SteuerungsTimer.Change(new TimeSpan(0, 0, 1), new TimeSpan(0, 0, _ZeitsteuerungOptionen.TimerIntervall));
+      _SteuerungsTimer.Change(new TimeSpan(0, 0, 1), new TimeSpan(0, 0, _OptDatafox.TimerIntervall));
     }
 
     private static void OnTimedEvent(object state)
     {
-      var zo = (ZeitsteuerungDatafox)state;
+      var zo = (OptionenDatafox)state;
       zo.ZaehlerDatumAktualisieren++;
 
       try
