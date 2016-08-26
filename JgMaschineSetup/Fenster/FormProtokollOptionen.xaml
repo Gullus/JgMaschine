@@ -32,24 +32,24 @@
     <TextBlock Text="Diese Werten werden automatisch vom Programm belegt und sollten nicht geändert werden!" Margin="8" Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" TextWrapping="Wrap" TextAlignment="Center" />
 
     <Label Content="Datum letzte _Datei" Target="{Binding ElementName=dtpDatumDatei}"/>
-    <DatePicker x:Name="dtpDatumDatei" SelectedDate="{Binding LetzteDateiDatum}" Grid.Column="1" Margin="3"/>
+    <DatePicker x:Name="dtpDatumDatei" SelectedDate="{Binding LetzteDateiDatum}" Grid.Column="1" Margin="3" ToolTip="Datum, welche Datei als letztes Ausgelesen wurde "/>
 
-    <Label Content="Datum letzte _Position" Target="{Binding ElementName=dtpDatumPosition}" Grid.Row="1"/>
-    <TextBox x:Name="dtpDatumPosition" Text="{Binding LetzteZeile}" Grid.Column="1" Grid.Row="1"/>
+    <Label Content="Letzte Zeile in Datei" Target="{Binding ElementName=dtpDatumPosition}" Grid.Row="1"/>
+    <TextBox x:Name="dtpDatumPosition" Text="{Binding LetzteZeile}" Grid.Column="1" Grid.Row="1" ToolTip="Zeilenposition der letzten Zeile in letzter Datei."/>
 
     <Label Content="_Anzahl Durchläufe" Target="{Binding ElementName=tban}" Grid.Row="2" Height="30" VerticalAlignment="Top"/>
-    <TextBox x:Name="tbAnzahlDurchlaufe" Text="{Binding AnzahlDurchlauf}" Grid.Column="1" Grid.Row="2" />
+    <TextBox x:Name="tbAnzahlDurchlaufe" Text="{Binding AnzahlDurchlauf}" Grid.Column="1" Grid.Row="2" ToolTip="Anzahl der Durchläufe zum Auslesen der Dateien" />
 
     <Label Content="Fehler _Verbindung" Target="{Binding ElementName=tbFehlerVerbindung}" Grid.Row="3" />
-    <TextBox x:Name="tbFehlerVerbindung" Text="{Binding FehlerVerbindungMaschine}" Grid.Column="1" Grid.Row="3" />
+    <TextBox x:Name="tbFehlerVerbindung" Text="{Binding FehlerVerbindungMaschine}" Grid.Column="1" Grid.Row="3" ToolTip="Anzahl er Fehler beim Verbindungsaufbau" />
 
     <Label Content="Fehler _Pfad" Target="{Binding ElementName=tbFehlerPfad }" Grid.Row="4"/>
-    <TextBox x:Name="tbFehlerPfad" Text="{Binding FehlerPfadZurMaschine}" Grid.Column="1" Grid.Row="4"/>
+    <TextBox x:Name="tbFehlerPfad" Text="{Binding FehlerPfadZurMaschine}" Grid.Column="1" Grid.Row="4" ToolTip="Anzahl Fehler bei Kontrolle der Directorys"/>
 
     <Label Content="Fehler _Import" Target="{Binding ElementName=tbFehlerImport }" Grid.Row="5"/>
-    <TextBox x:Name="tbFehlerImport" Text="{Binding FehlerDatenImport}" Grid.Column="1" Grid.Row="5"/>
+    <TextBox x:Name="tbFehlerImport" Text="{Binding FehlerDatenImport}" Grid.Column="1" Grid.Row="5" ToolTip="Anzahl der Fehler beim import der Daten"/>
 
-    <Label Content="Fehler _Speichern" Target="{Binding ElementName=tbFehlerSpeichern }" Grid.Row="6"/>
+    <Label Content="Fehler _Speichern" Target="{Binding ElementName=tbFehlerSpeichern }" Grid.Row="6" ToolTip="Anzahl der Fehler beim eintragen der Daten in die Datenbanlk"/>
     <TextBox x:Name="tbFehlerSpeichern" Text="{Binding FehlerDatenSpeichern}" Grid.Column="1" Grid.Row="6"/>
 
     <Button Grid.Column="2" Grid.Row="8" IsCancel="True">

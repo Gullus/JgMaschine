@@ -37,7 +37,7 @@ namespace JgMaschineData
         public int IdStahlPosition { get; set; }
         public int BtAnzahl { get; set; }
         public int BtLaenge { get; set; }
-        public int BtGewicht { get; set; }
+        public decimal BtGewicht { get; set; }
         public int BtDurchmesser { get; set; }
         public byte BtAnzahlBiegungen { get; set; }
         public string BvbsCode { get; set; }

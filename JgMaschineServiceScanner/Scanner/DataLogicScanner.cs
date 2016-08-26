@@ -105,7 +105,7 @@ namespace JgMaschineLib.Scanner
             continue;
           }
 
-          var msg = "Verbindung mit Graddel hergestellt.";
+          var msg = "Verbindung mit Cradle hergestellt.";
           _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
 
           _NetStream = _Client.GetStream();

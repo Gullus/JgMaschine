@@ -54,25 +54,25 @@
     <CheckBox Margin="5" Content="Maschine ist ein Stangenschneider" IsChecked="{Binding IstStangenschneider}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" ToolTip="Wenn makiert, werden Bauteile mit Biegungen als 'IstVorfertigung' gekennzeichnet." />
 
     <Label Content="_Maschine Adresse" Target="{Binding ElementName=tbMaschinenAdresse}" Grid.Row="4"/>
-    <TextBox x:Name="tbMaschinenAdresse" Text="{Binding MaschineAdresse}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" />
+    <TextBox x:Name="tbMaschinenAdresse" Text="{Binding MaschineAdresse}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" ToolTip="IP oder Computername der Maschine" />
 
     <Label Content="Maschine _Port" Target="{Binding ElementName=tbPortnummer}" Grid.Row="5"/>
-    <TextBox x:Name="tbPortnummer" Text="{Binding MaschinePortnummer}" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2"/>
+    <TextBox x:Name="tbPortnummer" Text="{Binding MaschinePortnummer}" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" ToolTip="Portnummer der Maschine, an welche der Bvbs Code gesendet werden soll."/>
 
     <Label Content="_Scannernummer" Target="{Binding ElementName=tbScannernummer}" Grid.Row="7"/>
-    <TextBox x:Name="tbScannernummer" Text="{Binding ScannerNummer}" Grid.Column="1" Grid.Row="7" />
+    <TextBox x:Name="tbScannernummer" Text="{Binding ScannerNummer}" Grid.Column="1" Grid.Row="7" ToolTip="Scannernummer des Scanners, welche der Maschine zugeordnet wurde." />
 
-    <CheckBox x:Name="tbProdDatenAuslesen" Margin="5" Content="Produktionsdaten aus Maschine auslesen" IsChecked="{Binding ProdDatenabfrage}" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="3" />
-    <CheckBox x:Name="tbScannerMitDisplay" Margin="5" Content="Scanner hat ein Display" IsChecked="{Binding ScannerMitDisplay}" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="3" />
+    <CheckBox x:Name="tbProdDatenAuslesen" Margin="5" Content="Produktionsdaten aus Maschine auslesen" IsChecked="{Binding ProdDatenabfrage}" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="3" ToolTip="Mit dieser Option werden die Maschinendaten aus der Maschine ausgelesen und die Bauteile mit den Maschinenwerten abglichen." />
+    <CheckBox x:Name="tbScannerMitDisplay" Margin="2,8,8,2" Content="Scanner hat ein Display" IsChecked="{Binding ScannerMitDisplay}" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2" ToolTip="Scanner hat ein Display für Informationen vom Server." />
 
     <Label Content="_Vorgabe Stunde" Target="{Binding ElementName=tbVorgabeProStunde}" Grid.Row="9"/>
     <TextBox x:Name="tbVorgabeProStunde" Text="{Binding VorgabeProStunde}" Grid.Column="1" Grid.Row="9" />
 
     <Label Content="S_tatus Maschine" Target="{Binding ElementName=cmbStatus}" Grid.Row="10"/>
-    <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="10"/>
+    <ComboBox Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="10" ToolTip="Status der Maschine"/>
 
     <Label Content="_Bemerkung" Target="{Binding ElementName=cmbStatus}" Grid.Row="11"/>
-    <TextBox x:Name="tbBemerkung" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="4" Grid.RowSpan="2" Text="{Binding Bemerkung}" />
+    <TextBox x:Name="tbBemerkung" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="4" Grid.RowSpan="2" Text="{Binding Bemerkung}" ToolTip="Bemerkungen zur Maschine" />
 
     <Grid Grid.ColumnSpan="4" Grid.Row="14">
       <Grid.ColumnDefinitions>

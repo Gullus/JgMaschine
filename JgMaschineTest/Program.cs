@@ -18,8 +18,11 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
+      var t = JgMaschineLib.Stahl.StahlGewichte.GetGewichtKgAsString(12, 1224);
+      Console.WriteLine(t);
 
       Console.ReadKey();
+
     }
   }
 }

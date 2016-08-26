@@ -1,14 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace JgMaschineLib.Stahl
 {
   public static class StahlGewichte
   {
-    public static int Get(int LaengeInCm, int Durchmesser)
+    public static decimal GetGewichtKg(int Durchmesser, int Laenge)
+    {
+      return Math.Round(Get(Durchmesser) * Laenge / 1000, 3);
+    }
+
+    public static String GetGewichtKgAsString(int Durchmesser, int Laenge)
+    {
+      return GetGewichtKg(Durchmesser, Laenge).ToString("N3", CultureInfo.InvariantCulture);
+    }
+
+    public static decimal Get(int Durchmesser)
     {
       var gewichtProMeter = 1m;
       switch (Durchmesser)
@@ -31,7 +38,7 @@ namespace JgMaschineLib.Stahl
         case 40: gewichtProMeter = 9.86m; break;
       }
 
-      return Convert.ToInt32(LaengeInCm * gewichtProMeter / 100);
+      return gewichtProMeter;
     }
   }
 }

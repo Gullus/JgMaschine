@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 08/23/2016 21:16:34
+-- Date Created: 08/25/2016 12:14:21
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -168,7 +168,7 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [IdStahlPosition] int  NOT NULL,
     [BtAnzahl] int  NOT NULL,
     [BtLaenge] int  NOT NULL,
-    [BtGewicht] int  NOT NULL,
+    [BtGewicht] decimal(10,3)  NOT NULL,
     [BtDurchmesser] int  NOT NULL,
     [BtAnzahlBiegungen] tinyint  NOT NULL,
     [BvbsCode] nvarchar(max)  NULL,

@@ -274,9 +274,7 @@ namespace JgMaschineLib.Scanner
         letztesBt.DatumEnde = DateTime.Now;
         DbSichern.AbgleichEintragen(letztesBt.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
 
-        if ((letztesBt.NummerBauteil == btNeu.ProjektNummer) && (letztesBt.BtDurchmesser == btNeu.Durchmesser)
-          //todo   && (letztesBt.BtGewicht == btNeu.GewichtInKg) 
-          && (letztesBt.BtLaenge == btNeu.Laenge) && (letztesBt.BtAnzahl == btNeu.Anzahl))
+        if (btNeu.BvbsString == letztesBt.BvbsCode)
         {
           var msg = $"BauteilMaschine: {Maschine.MaschinenName}\nProject: {btNeu.ProjektNummer} erledigt";
           _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
@@ -308,9 +306,9 @@ namespace JgMaschineLib.Scanner
           eMaschine = Maschine,
           BtAnzahl = Convert.ToInt32(btNeu.Anzahl),
           BtDurchmesser = Convert.ToInt32(btNeu.Durchmesser),
-          
-          //todo Falsches Gewicht in Bvbs Code -> BtGewicht = btNeu.GewichtInKg,
-          BtGewicht = Stahl.StahlGewichte.Get((int)btNeu.Laenge, (int)btNeu.Durchmesser),
+
+          //Falsches Gewicht in Bvbs Code ->  BtGewicht = btNeu.Gewicht; //InKg,
+          BtGewicht = Stahl.StahlGewichte.GetGewichtKg((int)btNeu.Durchmesser, (int)btNeu.Laenge) * (int)btNeu.Anzahl,
           BtLaenge = Convert.ToInt32(btNeu.Laenge),
           BtAnzahlBiegungen = (byte)btNeu.ListeGeometrie.Count,
           BvbsCode = btNeu.BvbsString,

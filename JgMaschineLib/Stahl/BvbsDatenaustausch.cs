@@ -42,7 +42,7 @@ namespace JgMaschineLib.Stahl
 
     public int? Anzahl { get; set; }
     public int? Laenge { get; set; }         // mm
-    public int? Gewicht { get; set; }        // kg
+    public decimal? Gewicht { get; set; }        // kg
     public int? Biegerollendurchmesser { get; set; }
     public int? Durchmesser { get; set; }
     public int? BreiteMatte { get; set; }
@@ -194,7 +194,7 @@ namespace JgMaschineLib.Stahl
       erg.Append(WertErstellen('p', Position));
       erg.Append(WertErstellen('l', Laenge));
       erg.Append(WertErstellen('n', Anzahl));
-      erg.Append(Gewicht != null ? 'e' + Convert.ToString(Gewicht, CultureInfo.InvariantCulture) + "@" : "");
+      erg.Append(Gewicht != null ? 'e' + Convert.ToDecimal(Gewicht).ToString("N3", CultureInfo.InvariantCulture) + "@" : "0");
       erg.Append(WertErstellen('d', Durchmesser));
       erg.Append(WertErstellen('g', StahlGuete));
       erg.Append(WertErstellen('s', Biegerollendurchmesser));

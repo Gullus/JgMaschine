@@ -147,7 +147,7 @@
     <Property Name="IdStahlPosition" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="BtAnzahl" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="BtLaenge" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="BtGewicht" Type="int" Nullable="false" />
+    <Property Name="BtGewicht" Type="decimal" Nullable="false" Precision="10" Scale="3" />
     <Property Name="BtDurchmesser" Type="int" Nullable="false" DefaultValue="-1" />
     <Property Name="BtAnzahlBiegungen" Type="tinyint" Nullable="false" />
     <Property Name="BvbsCode" Type="nvarchar(max)" Nullable="true" />
@@ -692,7 +692,7 @@
           <Property Name="IdStahlPosition" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="BtAnzahl" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="BtLaenge" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="BtGewicht" Type="Int32" Nullable="false" />
+          <Property Name="BtGewicht" Type="Decimal" Nullable="false" Scale="3" Precision="10" />
           <Property Name="BtDurchmesser" Type="Int32" Nullable="false" DefaultValue="-1" />
           <Property Name="BtAnzahlBiegungen" Type="Byte" Nullable="false" />
           <Property Name="BvbsCode" Type="String" Nullable="true" />

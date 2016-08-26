@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:JgMaschineSetup"
     xmlns:comand="clr-namespace:JgMaschineSetup.Commands"
     mc:Ignorable="d" x:Class="JgMaschineSetup.MainWindow"    
-    Title="Setup Maschinenauswertung" Height="611" Width="1073" Loaded="Window_Loaded" Icon="JgMaschineSetup.ico" >
+    Title="Setup Maschinenauswertung" Height="611" Width="989" Loaded="Window_Loaded" Icon="JgMaschineSetup.ico" >
 
   <Window.Resources>
     <CollectionViewSource x:Key="vsMaschinen" d:DesignSource="{d:DesignInstance {x:Type xData:tabMaschine}, CreateList=True}"/>
@@ -38,23 +38,23 @@
         <Grid Margin="8">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="124*"/>
+            <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="123*"/>
+            <ColumnDefinition Width="3*"/>
           </Grid.ColumnDefinitions>
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="107*"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="215*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="220"/>
             <RowDefinition Height="70"/>
           </Grid.RowDefinitions>
           <Label Content="Standort"/>
           <TextBox Style="{StaticResource StyleTextBoxReadOnly}" Text="{Binding eStandort.Bezeichnung}" Grid.Column="1" />
 
-          <Label Content="Protokoll" Grid.Column="2"/>
+          <Label Content="M.-Art" Grid.Column="2"/>
           <TextBox Text="{Binding MaschinenArt}" Style="{StaticResource StyleTextBoxReadOnly}" Grid.Column="3" />
 
           <Label Content="Maschine" Grid.Row="1" Height="26" VerticalAlignment="Top" />
@@ -71,9 +71,9 @@
 
 
           <Label Content="Bemerkung" Grid.Row="3" />
-          <TextBox Text="{Binding Bemerkung}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+          <TextBox Text="{Binding Bemerkung}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2"/>
 
-          <Grid Grid.Row="6" Grid.ColumnSpan="4" >
+          <Grid Grid.Row="6" Grid.ColumnSpan="4" HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
               <ColumnDefinition Width="140"/>
@@ -108,7 +108,7 @@
             </Button>
 
           </Grid>
-          <TabControl Grid.ColumnSpan="4" Grid.Row="5" Margin="0,0,3,5">
+          <TabControl Grid.ColumnSpan="4" Grid.Row="5" Margin="3, 8, 3, 8">
             <TabItem Header=" Protokoll letzter Import " Foreground="DarkBlue">
               <Grid Background="#FFE5E5E5">
                 <TextBox Style="{StaticResource StyleTextBoxReadOnly}" Text="{Binding eProtokoll.ProtokollText}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" FontFamily="Lucida Console" />
@@ -217,7 +217,7 @@
             <StackPanel Orientation="Horizontal">
               <Image Source="Bilder\JgSynchronize.ico" Margin="5"/>
               <TextBlock Text="Bediener in Datafox übertragen" VerticalAlignment="Center"  />
-            </StackPanel>            
+            </StackPanel>
           </Button>
 
           <Button Grid.Column="1" Grid.Row="3" Click="ButtonDatenAktualisieren_Click" Tag="Bediener">
@@ -317,9 +317,9 @@
           <TextBlock Margin="10,0,10,0" TextWrapping="Wrap" Grid.Column="1" Text="Um ordnungsgemäße Einträge in der Windows Ereignissanzeige zu gewährleisten, muss hier der Eintrag des Eintragsverzeichnisses vorgenommen werden. Vorraussetzung ist, dass das Programm mit Administrtorrechten gestaretet wurde." />
         </Grid>
       </TabItem>
-    
+
     </TabControl>
-   
+
 
   </Grid>
 </Window>
