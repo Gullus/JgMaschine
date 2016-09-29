@@ -499,6 +499,10 @@ namespace JgMaschineTest
 
     public static void Test()
     {
+
+
+
+
       var ipLocalhost = JgMaschineLib.TcpIp.Helper.GetIpAdressV4(Dns.GetHostName());
       var listener = new TcpListener(ipLocalhost, 5000);
 

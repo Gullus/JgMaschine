@@ -129,7 +129,38 @@ namespace JgMaschineData
   public partial class tabAuswertung
   { }
 
+  public partial class tabBauteilMetaData
+  { }
+
+  [MetadataType(typeof(tabBauteilMetaData))]
+  public partial class tabBauteil
+  {
+    public double ZeitInSekunden
+    {
+      get
+      {
+        if (this.DatumEnde == null)
+          return 0;
+        else
+          return ((DateTime)DatumEnde - DatumStart).TotalSeconds;
+      }
+    }
+
+    public string Bediener
+    {
+      get
+      {
+        if (this.sBediener.Count == 0)
+          return "";
+        else
+          return string.Join("; ", sBediener.Select(s => s.NachName + ", " + s.VorName).ToArray()); 
+      }
+    }
+  }
+
+
   #region bei Speicherung Valodierungsfehler anzeigen
+
   public partial class JgModelContainer
   {
     private static string DbFehlerText(DbEntityValidationException ex)

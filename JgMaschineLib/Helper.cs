@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -119,6 +120,41 @@ namespace JgMaschineLib
     public static DateTime DatumAusYyyyMMdd(string AusString)
     {
       return new DateTime(Convert.ToInt32(AusString.Substring(0, 4)), Convert.ToInt32(AusString.Substring(4, 2)), Convert.ToInt32(AusString.Substring(6, 2)));
+    }
+
+    public static bool IstPingOk(string IpAdresse, Proto Protokoll)
+    {
+      string msg = "";
+
+      if (string.IsNullOrWhiteSpace(IpAdresse))
+      {
+        msg = $"Ip Adresse ist leer!";
+        Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+      }
+      else
+      {
+        var sender = new Ping();
+        PingReply result = null;
+        try
+        {
+          result = sender.Send(IpAdresse);
+
+          if (result.Status == IPStatus.Success)
+            return true;
+          else
+          {
+            msg = $"Bing {IpAdresse} mit Status {result.Status}  fehlgeschlagen!";
+            Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+          }
+        }
+        catch (Exception f)
+        {
+          msg = $"Fehler bei Pingabfrage zu Adresse {IpAdresse}!";
+          Protokoll.Set(msg, f);
+        }
+      }
+
+      return false;
     }
   }
 }

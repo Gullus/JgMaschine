@@ -52,7 +52,7 @@ namespace JgMaschineServiceDatenabfrage
             pr.AuswertungStart = DateTime.Now;
             pr.AnzahlDurchlauf++;
 
-            if (!IstPingOk(maschine, _Optionen.Protokoll))
+            if (!Helper.IstPingOk(maschine.MaschineAdresse, _Optionen.Protokoll))
             {
               maschine.eProtokoll.FehlerVerbindungMaschine++;
               continue;
@@ -110,41 +110,5 @@ namespace JgMaschineServiceDatenabfrage
         }
       }
     }
-
-    private bool IstPingOk(tabMaschine Maschine, Proto Protokoll)
-    {
-      string msg = "";
-
-      if (string.IsNullOrWhiteSpace(Maschine.MaschineAdresse))
-      {
-        msg = $"Ip Adresse von {Maschine.MaschinenName} ist leer!";
-        Protokoll.Set(msg, Proto.ProtoArt.Warnung);
-      }
-      else
-      {
-        var sender = new Ping();
-        PingReply result = null;
-        try
-        {
-          result = sender.Send(Maschine.MaschineAdresse);
-
-          if (result.Status == IPStatus.Success)
-            return true;
-          else
-          {
-            msg = $"Bing {Maschine.MaschineAdresse} mit Status {result.Status} bei Maschine {Maschine.MaschinenName} fehlgeschlagen!";
-            Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
-          }
-        }
-        catch (Exception f)
-        {
-          msg = $"Fehler bei Pingabfrage {Maschine.MaschineAdresse} zu Maschine {Maschine.MaschinenName}!";
-          Protokoll.Set(msg, f);
-        }
-      }
-
-      return false;
-    }
   }
-
 }

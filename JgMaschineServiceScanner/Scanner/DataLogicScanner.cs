@@ -44,34 +44,10 @@ namespace JgMaschineLib.Scanner
 
     private ScannerTextDelegate _ScannerCom = null;
 
-    public DataLogicScanner( ScannerOptionen Optionen, ScannerTextDelegate ScannerText)
+    public DataLogicScanner(ScannerOptionen Optionen, ScannerTextDelegate ScannerText)
     {
       _Optionen = Optionen;
       _ScannerCom = ScannerText;
-    }
-
-    private bool istPingOk()
-    {
-      Ping sender = new Ping();
-      PingReply result = null;
-      try
-      {
-        result = sender.Send(_Optionen.CradleIpAdresse);
-      }
-      catch (Exception f)
-      {
-        var msg = "Fehler bei Pingabfrage!";
-        _Optionen.Protokoll.Set(msg, f);
-        return false;
-      }
-
-      if (result.Status != IPStatus.Success)
-      {
-        var msg = $"Bing mit Status {result.Status} fehlgeschlagen!";
-        _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
-      }
-
-      return result.Status == IPStatus.Success;
     }
 
     public void Close()
@@ -89,7 +65,7 @@ namespace JgMaschineLib.Scanner
     {
       while (true)
       {
-        if (!istPingOk())
+        if (!Helper.IstPingOk(_Optionen.CradleIpAdresse, _Optionen.Protokoll))
           Thread.Sleep(30000);
         else
         {
@@ -127,7 +103,7 @@ namespace JgMaschineLib.Scanner
                 if (ct.IsCancellationRequested)
                   break;
 
-                if (!istPingOk())
+                if (!!Helper.IstPingOk(_Optionen.CradleIpAdresse, _Optionen.Protokoll))
                   break;
 
                 if (ct.IsCancellationRequested)
@@ -156,12 +132,7 @@ namespace JgMaschineLib.Scanner
                 }
               }
 
-              // -1 ist für das herausfiltern des Steuerezichens vom Scanner
-
-              if (anzZeichen <= 1)
-                return "";
-             else
-                return Encoding.ASCII.GetString(bufferEmpfang, 0, anzZeichen - 1);
+              return Encoding.ASCII.GetString(bufferEmpfang, 0, anzZeichen);
 
             }, _NetStream, ct);
 
@@ -171,18 +142,33 @@ namespace JgMaschineLib.Scanner
             if (taskScannen.IsCompleted)
             {
               var textEmpfangen = taskScannen.Result;
-              if (textEmpfangen == _FehlerDatenEmpfang)
+              if ((textEmpfangen == _FehlerDatenEmpfang) || (textEmpfangen.Length <= 1))
               {
+                if (textEmpfangen == _FehlerDatenEmpfang)
+                {
+                  msg = "Fehlertext wurde angesprochen.";
+                  _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+                }
+                else
+                {
+                  var zeichen = "";
+                  if (textEmpfangen.Length == 1)
+                    zeichen = " Text: " + textEmpfangen + " Byte: " + Convert.ToByte(textEmpfangen[0]);
+
+                  msg = $"Unklarer Text empfangen. Anzahl der Zeichen: {textEmpfangen.Length}{zeichen}";
+                  _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+                }
+
                 _Client.Close();
                 break;
               }
-              else if (textEmpfangen.Length > 0)
-              {
-                var scText = new DataLogicScannerText(textEmpfangen);
-                _ScannerCom.Invoke(scText);
-                byte[] senden = scText.PufferSendeText();
-                _NetStream.Write(senden, 0, senden.Length);
-              }
+
+              // Letztes Zeichen, Seuerzeichen entfernen
+
+              var scText = new DataLogicScannerText(textEmpfangen.Substring(0, textEmpfangen.Length - 1));
+              _ScannerCom.Invoke(scText);
+              byte[] senden = scText.PufferSendeText();
+              _NetStream.Write(senden, 0, senden.Length);
             }
             else
             {

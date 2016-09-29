@@ -43,8 +43,8 @@ namespace JgMaschineLib.Scanner
           {
             var con = new SqlConnection(db.Database.Connection.ConnectionString);
             con.Open();
-            msg = "Datenbankverbindung OK.";
-            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+            msg = $"Datenbankverbindung OK.\nConnection: {con.ConnectionString}";
+            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
             con.Close();
           }
           catch (Exception f)
@@ -58,7 +58,7 @@ namespace JgMaschineLib.Scanner
           {
             db.tabStandortSet.FirstOrDefault();
             msg = "Abrfrage Entity Framework OK.";
-            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
           }
           catch (Exception f)
           {

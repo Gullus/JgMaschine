@@ -1,0 +1,62 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JgMaschineVerwalten.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="IdStandort" Type="System.Guid" Scope="User">
+      <Value Profile="(Default)">00000000-0000-0000-0000-000000000000</Value>
+    </Setting>
+    <Setting Name="VerbindungsString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=.\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=.\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="JgCubeVerbindungsString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Provider=SQLNCLI11.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=JgMaschine;Data Source=.\SqlExpress</Value>
+    </Setting>
+    <Setting Name="JgCubeSqlText" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">DECLARE @IdBauteil uniqueidentifier, @DatumVon dateTime, @DatumBis datetime 
+-- set @IdBauteil = 
+Set @DatumVon = '01.01.2016'
+Set @DatumBis = '01.12.2016'
+
+IF OBJECT_ID('tempdb..#temp') IS NOT NULL
+  DROP TABLE #temp
+
+SELECT maschine.MaschinenName, (bediener.NachName + ', ' + bediener.VorName) as Bediener,
+  Cast(bauteil.DatumStart as date) as Datum,
+  SUM(bauteil.BtGewicht / bauteil.AnzahlBediener) as SumGewicht,
+  SUM(DATEDIFF(Second, bauteil.DatumStart, bauteil.DatumEnde) / 3600.00) AS SumZeitBauteil,
+
+  ISNULL((SELECT SUM(DateDiff(Second, anmeldung.Anmeldung, anmeldung.Abmeldung) / 3600.00)
+    FROM tabAnmeldungMaschineSet AS anmeldung
+    WHERE (anmeldung.fBediener = bediener.Id) AND (anmeldung.fMaschine = maschine.Id)
+      AND (CAST(anmeldung.Anmeldung as Date) =  Cast(bauteil.DatumStart as Date))), 0) as AnmeldungZeit,
+
+  ISNULL((SELECT SUM(DateDiff(Second, anmeldung.Anmeldung, anmeldung.Abmeldung) / 3600.00)
+    FROM tabAnmeldungReparaturSet AS anmeldung INNER JOIN
+      tabReparaturSet AS reparatur ON anmeldung.fReparatur = reparatur.Id
+    WHERE (anmeldung.fBediener = bediener.Id) AND (reparatur.fMaschine = maschine.Id)
+      AND (CAST(anmeldung.Anmeldung as Date) = Cast(bauteil.DatumStart as Date))), 0) as ReparaturZeit
+
+INTO #temp
+
+FROM tabBauteilSet AS bauteil INNER JOIN
+  tabMaschineSet AS maschine ON bauteil.fMaschine = maschine.Id INNER JOIN
+  tabBauteiltabBediener AS bauteilBediener ON bauteil.Id = bauteilBediener.sBauteile_Id INNER JOIN
+  tabBedienerSet AS bediener ON bauteilBediener.sBediener_Id = bediener.Id
+
+WHERE 
+	(CAST(bauteil.DatumStart AS DATE) &gt;= @DatumVon) AND (CAST(bauteil.DatumStart as Date) &lt;= @DatumBis) 
+
+Group By maschine.MaschinenName, maschine.Id, (bediener.NachName + ', ' + bediener.VorName), bediener.Id, Cast(bauteil.DatumStart as date)
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT *, (AnmeldungZeit - ReparaturZeit) as AktivZeit, (SumGewicht /  IIF((AnmeldungZeit - ReparaturZeit) = 0, 1, AnmeldungZeit - ReparaturZeit)) as GewichtStunde 
+FROM #temp</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

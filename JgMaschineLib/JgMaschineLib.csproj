@@ -81,10 +81,10 @@
     </Compile>
     <Compile Include="Stahl\BvbsDatenaustausch.cs" />
     <Compile Include="Stahl\StahlGewichte.cs" />
-    <Compile Include="TcpIpKomponenten\Helper.cs" />
-    <Compile Include="TcpIpKomponenten\TcpIpClient.cs" />
-    <Compile Include="TcpIpKomponenten\TcpIpServer.cs" />
-    <Compile Include="TcpIpKomponenten\TcpIpStamm.cs" />
+    <Compile Include="TcpIp\Helper.cs" />
+    <Compile Include="TcpIp\TcpIpClient.cs" />
+    <Compile Include="TcpIp\TcpIpServer.cs" />
+    <Compile Include="TcpIp\TcpIpStamm.cs" />
     <Compile Include="ValidationRules\KontrAnnotations.cs" />
     <Compile Include="Zeit\JgDatumZeit.cs" />
     <Compile Include="Zeit\DatumZeit.cs" />

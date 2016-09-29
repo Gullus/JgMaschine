@@ -24,8 +24,6 @@ namespace JgMaschineSetup
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-
-      
       _ListeStandorte = new JgEntityView<tabStandort>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
@@ -36,8 +34,9 @@ namespace JgMaschineSetup
         }
       };
       _ListeStandorte.DatenAktualisieren();
+      tbDatenbankverbinudng.Text = _ListeStandorte.Db.Database.Connection.ConnectionString;
 
-      _ListeMaschinen = new JgEntityView<tabMaschine>()
+     _ListeMaschinen = new JgEntityView<tabMaschine>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsMaschinen"),
         Tabellen = new DataGrid[] { dgMaschine },
@@ -61,6 +60,8 @@ namespace JgMaschineSetup
 
       cbStatusBediener.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusBediener));
       InitCommands();
+
+      tbNetversion.Text = Helper.GetNetversion();
     }
 
     public void InitCommands()

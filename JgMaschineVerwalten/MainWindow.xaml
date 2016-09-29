@@ -431,7 +431,7 @@
               <DataGridTextColumn Binding="{Binding BtAnzahl}" Header="Stück" Width="50" MinWidth="50"/>
               <DataGridTextColumn Binding="{Binding BtDurchmesser}" Header="BT Ø" Width="50" MinWidth="50"/>
               <DataGridTextColumn Binding="{Binding BtLaenge}" Header="Laenge" Width="50" MinWidth="50"/>
-              <DataGridTextColumn Binding="{Binding BtGewicht}" Header="Gewicht" Width="70" MinWidth="70" CellStyle="{StaticResource ResourceKey=CellRightAlign}"/>
+              <DataGridTextColumn Binding="{Binding BtGewicht}" Header="Gewicht" Width="70" MinWidth="70" CellStyle="{StaticResource ResourceKey=CellRightAlign}" CanUserResize="False"/>
 
               <!--<DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Nummer" Width="70" MinWidth="70"/>-->
               <DataGridTextColumn Binding="{Binding NummerBauteil}" Header="Bauteil" Width="*" MinWidth="120"/>

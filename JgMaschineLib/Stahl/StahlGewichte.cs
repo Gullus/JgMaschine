@@ -7,7 +7,7 @@ namespace JgMaschineLib.Stahl
   {
     public static decimal GetGewichtKg(int Durchmesser, int Laenge)
     {
-      return Math.Round(Get(Durchmesser) * Laenge / 1000, 3);
+      return Math.Round(Get(Durchmesser) * Laenge / 100, 3);
     }
 
     public static String GetGewichtKgAsString(int Durchmesser, int Laenge)

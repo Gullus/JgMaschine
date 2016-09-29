@@ -109,10 +109,12 @@ namespace JgMaschineVerwalten
         try
         {
           repEvent.Report.Save(memStr);
+          _ListeAuswertung.Db.tabAuswertungSet.Attach(_AktAuswertung);
           _AktAuswertung.Report = memStr.ToArray();
           _AktAuswertung.GeaendertDatum = DateTime.Now;
           _AktAuswertung.GeaendertName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          _ListeAuswertung.DsSave();
+          DbSichern.AbgleichEintragen(_AktAuswertung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          _ListeAuswertung.Db.SaveChanges();
         }
         catch (Exception f)
         {
@@ -765,8 +767,8 @@ namespace JgMaschineVerwalten
           else
           {
             _Report.RegisterData(_ListeArbeitszeitAuswahl.Daten, "Daten");
-            _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon);
-            _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis);
+            _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon.Datum);
+            _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis.Datum);
           }
           _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 0);
           break;
@@ -776,15 +778,22 @@ namespace JgMaschineVerwalten
           else
           {
             _Report.RegisterData(_ListeAnmeldungAuswahl.Daten, "Daten");
-            _Report.SetParameterValue("DatumVon", _DzAnmeldungVon);
-            _Report.SetParameterValue("DatumBis", _DzAnmeldungBis);
+            _Report.SetParameterValue("DatumVon", _DzAnmeldungVon.Datum);
+            _Report.SetParameterValue("DatumBis", _DzAnmeldungBis.Datum);
           }
           _Report.SetParameterValue("IstAktuell", tcAnmeldung.SelectedIndex == 0);
           break;
         case EnumFilterAuswertung.Bauteil:
+          if (_Maschine == null)
+          {
+            MessageBox.Show("Wählen Sie eine Maschine aus.");
+            return;
+          }
+
           _Report.RegisterData(_ListeBauteilAuswahl.Daten, "Daten");
-          _Report.SetParameterValue("DatumVon", _DzBauteilVon);
-          _Report.SetParameterValue("DatumBis", _DzBauteilBis);
+          _Report.SetParameterValue("MaschinenName", _Maschine.MaschinenName);
+          _Report.SetParameterValue("DatumVon", _DzBauteilVon.Datum);
+          _Report.SetParameterValue("DatumBis", _DzBauteilBis.Datum);
           break;
         case EnumFilterAuswertung.Reparatur:
           if (tcReparatur.SelectedIndex == 0)
@@ -792,8 +801,8 @@ namespace JgMaschineVerwalten
           else
           {
             _Report.RegisterData(_ListeReparaturAuswahl.Daten, "Daten");
-            _Report.SetParameterValue("DatumVon", _DzReparaturVon);
-            _Report.SetParameterValue("DatumBis", _DzReparaturBis);
+            _Report.SetParameterValue("DatumVon", _DzReparaturVon.Datum);
+            _Report.SetParameterValue("DatumBis", _DzReparaturBis.Datum);
           }
           _Report.SetParameterValue("IstAktuell", tcReparatur.SelectedIndex == 0);
           break;

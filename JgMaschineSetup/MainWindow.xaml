@@ -33,7 +33,7 @@
         <DataGridTextColumn Binding="{Binding Status}" Header="Status" Width="60" MinWidth="60"/>
       </DataGrid.Columns>
     </DataGrid>
-    <TabControl Grid.Column="1" Margin="3">
+    <TabControl Grid.Column="1" Margin="3" >
       <TabItem Header=" Maschinen " Height="30">
         <Grid Margin="8">
           <Grid.ColumnDefinitions>
@@ -306,6 +306,9 @@
           </Grid.ColumnDefinitions>
           <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
           </Grid.RowDefinitions>
 
@@ -315,11 +318,15 @@
             </StackPanel>
           </Button>
           <TextBlock Margin="10,0,10,0" TextWrapping="Wrap" Grid.Column="1" Text="Um ordnungsgemäße Einträge in der Windows Ereignissanzeige zu gewährleisten, muss hier der Eintrag des Eintragsverzeichnisses vorgenommen werden. Vorraussetzung ist, dass das Programm mit Administrtorrechten gestaretet wurde." />
+
+          <Label Content="Net Version" Grid.Row="2" />
+          <TextBox x:Name="tbNetversion" Grid.Column="1" Grid.Row="2" Style="{DynamicResource StyleTextBoxReadOnly}" />
+
+          <Label Content="DatenbankVerbindung" Grid.Row="3" />
+          <TextBox x:Name="tbDatenbankverbinudng" Grid.Column="1" Grid.Row="3" Style="{DynamicResource StyleTextBoxReadOnly}" />
+
         </Grid>
       </TabItem>
-
     </TabControl>
-
-
   </Grid>
 </Window>
