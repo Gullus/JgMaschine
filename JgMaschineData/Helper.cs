@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JgMaschineData
 {
@@ -51,7 +52,7 @@ namespace JgMaschineData
       get { return DateTime.Now - this.Anmeldung; }
     }
   }
-  
+
   public partial class tabProtokollMetaData
   { }
 
@@ -85,9 +86,22 @@ namespace JgMaschineData
     public object MatchCode;
   }
 
+
   [MetadataType(typeof(tabBedienerMetaData))]
   public partial class tabBediener
   {
+    public delegate EnumStatusArbeitszeitAuswertung tabBedienerDelagateStatusArbeitszeit(tabBediener Bediener);
+
+    public tabBedienerDelagateStatusArbeitszeit DelegateStatusArbeitszeit = null;
+    public EnumStatusArbeitszeitAuswertung StatusArbeitszeit
+    {
+      get
+      {
+        if (DelegateStatusArbeitszeit != null)
+          return DelegateStatusArbeitszeit(this);
+        return EnumStatusArbeitszeitAuswertung.Fehler;
+      }
+    }
     public string Name { get { return this.NachName + ", " + VorName; } }
   }
 
@@ -120,8 +134,6 @@ namespace JgMaschineData
 
   public partial class tabAuswertungMetaData
   {
-    [Required]
-    [MinLength(5, ErrorMessage = "Mindestanzahl der Zeichen für den Report ist {1}")]
     public object ReportName;
   }
 
@@ -153,13 +165,67 @@ namespace JgMaschineData
         if (this.sBediener.Count == 0)
           return "";
         else
-          return string.Join("; ", sBediener.Select(s => s.NachName + ", " + s.VorName).ToArray()); 
+          return string.Join("; ", sBediener.Select(s => s.NachName + ", " + s.VorName).ToArray());
+      }
+    }
+  }
+
+  //public partial class tabArbeitszeitAuswertung
+  //{
+
+  //}
+
+  public partial class tabArbeitszeitTag
+  {
+    public string TimeInString(TimeSpan Zeit)
+    {
+      return Zeit.TotalHours.ToString("D2") + ":" + Zeit.Minutes.ToString("D2");
+    }
+
+    public TimeSpan? StringInTime(string Zeit)
+    {
+      try
+      {
+        return TimeSpan.Parse(Zeit);
+      }
+      catch
+      {
+        var msg = "Das Zeitformat muss im Format 'hh:mm' angegeben werden.";
+        MessageBox.Show(msg, "Eingabefehler !", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+        return null;
+      }
+    }
+
+    public string TagString
+    {
+      get { return (new DateTime(this.eArbeitszeitAuswertung.Jahr, this.eArbeitszeitAuswertung.Monat, this.Tag)).ToString("ddd"); }
+    }
+
+    public string ArbeitszeitAnzeige
+    {
+      get { return TimeInString(this.ZeitKorrektur); }
+      set
+      {
+        var t = StringInTime(value);
+        if (t != null)
+          ZeitKorrektur = (TimeSpan)t;
+      }
+    }
+
+    public string NachtschichtAnzeige
+    {
+      get { return TimeInString(this.NachschichtKorrektur); }
+      set
+      {
+        var t = StringInTime(value);
+        if (t != null)
+          NachschichtKorrektur = (TimeSpan)t; 
       }
     }
   }
 
 
-  #region bei Speicherung Valodierungsfehler anzeigen
+  #region bei Speicherung Valedierungsfehler anzeigen
 
   public partial class JgModelContainer
   {
@@ -172,6 +238,8 @@ namespace JgMaschineData
 
       // Join the list to a single string.
       var fullErrorMessage = string.Join("; ", errorMessages);
+
+      MessageBox.Show(fullErrorMessage);
 
       // Combine the original exception message with the new one.
       return string.Concat(ex.Message, " Fehler: ", fullErrorMessage);

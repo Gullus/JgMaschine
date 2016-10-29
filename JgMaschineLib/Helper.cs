@@ -156,5 +156,39 @@ namespace JgMaschineLib
 
       return false;
     }
+
+    public static long NachtZeitBerechnen(int NachtschichtStundeVon, int NachtschichtMinuteVon, int LaengeNachtschichtStunde, int LaengeNachtschichtMinute,
+      DateTime DatumVon, DateTime DatumBis)
+    {
+      long sumNachtschicht = 0;
+
+      // Damit Frühschicht berücksichtigt wird, beginnt Nachtschicht ein Tag vorher 
+      var mDatum = DatumVon.Date.AddDays(-1);
+
+      while (true)
+      {
+        var nsBeginn = new DateTime(mDatum.Year, mDatum.Month, mDatum.Day, NachtschichtStundeVon, NachtschichtMinuteVon, 0);
+        var nsEnde = nsBeginn.AddHours(LaengeNachtschichtStunde).AddMinutes(LaengeNachtschichtMinute);
+        mDatum = mDatum.AddDays(1);
+
+        if (DatumBis < nsBeginn)
+          break;
+
+        if (DatumVon < nsBeginn)
+          DatumVon = nsBeginn;
+
+        if ((DatumVon >= nsBeginn) && (DatumVon < nsEnde))
+        {
+          if (DatumBis <= nsEnde)
+          {
+            sumNachtschicht += (DatumBis - DatumVon).Ticks;
+            break;
+          }
+          sumNachtschicht += (nsEnde - DatumVon).Ticks;
+        }
+      };
+
+      return sumNachtschicht;
+    }
   }
 }

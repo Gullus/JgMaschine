@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 08/25/2016 12:14:21
+-- Date Created: 10/28/2016 10:56:43
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -74,6 +74,15 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabAnmeldungMaschine]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabAnmeldungMaschineSet] DROP CONSTRAINT [FK_tabMaschinetabAnmeldungMaschine];
 GO
+IF OBJECT_ID(N'[dbo].[FK_tabArbeitszeitAuswertungtabArbeitszeit]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabArbeitszeitSet] DROP CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeit];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabBedienertabArbeitszeitAuswertung]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabArbeitszeitAuswertungSet] DROP CONSTRAINT [FK_tabBedienertabArbeitszeitAuswertung];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabArbeitszeitAuswertungtabArbeitszeitTag]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabArbeitszeitTagSet] DROP CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeitTag];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -108,6 +117,15 @@ IF OBJECT_ID(N'[dbo].[tabArbeitszeitSet]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[tabAnmeldungReparaturSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabAnmeldungReparaturSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabArbeitszeitTagSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabArbeitszeitTagSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabFeiertageSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabFeiertageSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabArbeitszeitAuswertungSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabArbeitszeitAuswertungSet];
 GO
 IF OBJECT_ID(N'[dbo].[tabBauteiltabBediener]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabBauteiltabBediener];
@@ -148,6 +166,8 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [VorName] nvarchar(120)  NOT NULL,
     [Bemerkung] nvarchar(max)  NULL,
     [MatchCode] nvarchar(120)  NULL,
+    [Urlaubstage] tinyint  NOT NULL,
+    [UrlaubRestVorjahr] tinyint  NOT NULL,
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
@@ -280,7 +300,7 @@ GO
 -- Creating table 'tabArbeitszeitSet'
 CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [Id] uniqueidentifier  NOT NULL,
-    [Anmeldung] datetime  NULL,
+    [Anmeldung] datetime  NOT NULL,
     [Abmeldung] datetime  NULL,
     [ManuelleAnmeldung] bit  NOT NULL,
     [ManuelleAbmeldung] bit  NOT NULL,
@@ -289,7 +309,8 @@ CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
-    [fStandort] uniqueidentifier  NOT NULL
+    [fStandort] uniqueidentifier  NOT NULL,
+    [fArbeitszeitAuswertung] uniqueidentifier  NULL
 );
 GO
 
@@ -304,6 +325,58 @@ CREATE TABLE [dbo].[tabAnmeldungReparaturSet] (
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fReparatur] uniqueidentifier  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'tabArbeitszeitTagSet'
+CREATE TABLE [dbo].[tabArbeitszeitTagSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Tag] tinyint  NOT NULL,
+    [Zeit] time  NOT NULL,
+    [ZeitKorrektur] time  NOT NULL,
+    [Pause] time  NOT NULL,
+    [Krank] bit  NOT NULL,
+    [Urlaub] bit  NOT NULL,
+    [Feiertag] bit  NOT NULL,
+    [Ueberstunden] time  NOT NULL,
+    [Nachtschicht] time  NOT NULL,
+    [NachschichtKorrektur] time  NOT NULL,
+    [Bemerkung] nvarchar(255)  NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
+    [fArbeitszeitAuswertung] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'tabFeiertageSet'
+CREATE TABLE [dbo].[tabFeiertageSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Datum] nvarchar(max)  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL
+);
+GO
+
+-- Creating table 'tabArbeitszeitAuswertungSet'
+CREATE TABLE [dbo].[tabArbeitszeitAuswertungSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Jahr] smallint  NOT NULL,
+    [Monat] tinyint  NOT NULL,
+    [SollStunden] time  NOT NULL,
+    [IstStunden] time  NOT NULL,
+    [Urlaub] tinyint  NOT NULL,
+    [Ueberstunden] time  NOT NULL,
+    [AuszahlungUeberstunden] time  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
+    [fBediener] uniqueidentifier  NOT NULL,
+    [Status] tinyint  NOT NULL
 );
 GO
 
@@ -375,6 +448,24 @@ GO
 -- Creating primary key on [Id] in table 'tabAnmeldungReparaturSet'
 ALTER TABLE [dbo].[tabAnmeldungReparaturSet]
 ADD CONSTRAINT [PK_tabAnmeldungReparaturSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'tabArbeitszeitTagSet'
+ALTER TABLE [dbo].[tabArbeitszeitTagSet]
+ADD CONSTRAINT [PK_tabArbeitszeitTagSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'tabFeiertageSet'
+ALTER TABLE [dbo].[tabFeiertageSet]
+ADD CONSTRAINT [PK_tabFeiertageSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'tabArbeitszeitAuswertungSet'
+ALTER TABLE [dbo].[tabArbeitszeitAuswertungSet]
+ADD CONSTRAINT [PK_tabArbeitszeitAuswertungSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -659,6 +750,51 @@ GO
 CREATE INDEX [IX_FK_tabMaschinetabAnmeldungMaschine]
 ON [dbo].[tabAnmeldungMaschineSet]
     ([fAktivMaschine]);
+GO
+
+-- Creating foreign key on [fArbeitszeitAuswertung] in table 'tabArbeitszeitSet'
+ALTER TABLE [dbo].[tabArbeitszeitSet]
+ADD CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeit]
+    FOREIGN KEY ([fArbeitszeitAuswertung])
+    REFERENCES [dbo].[tabArbeitszeitTagSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabArbeitszeitAuswertungtabArbeitszeit'
+CREATE INDEX [IX_FK_tabArbeitszeitAuswertungtabArbeitszeit]
+ON [dbo].[tabArbeitszeitSet]
+    ([fArbeitszeitAuswertung]);
+GO
+
+-- Creating foreign key on [fBediener] in table 'tabArbeitszeitAuswertungSet'
+ALTER TABLE [dbo].[tabArbeitszeitAuswertungSet]
+ADD CONSTRAINT [FK_tabBedienertabArbeitszeitAuswertung]
+    FOREIGN KEY ([fBediener])
+    REFERENCES [dbo].[tabBedienerSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabBedienertabArbeitszeitAuswertung'
+CREATE INDEX [IX_FK_tabBedienertabArbeitszeitAuswertung]
+ON [dbo].[tabArbeitszeitAuswertungSet]
+    ([fBediener]);
+GO
+
+-- Creating foreign key on [fArbeitszeitAuswertung] in table 'tabArbeitszeitTagSet'
+ALTER TABLE [dbo].[tabArbeitszeitTagSet]
+ADD CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeitTag]
+    FOREIGN KEY ([fArbeitszeitAuswertung])
+    REFERENCES [dbo].[tabArbeitszeitAuswertungSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabArbeitszeitAuswertungtabArbeitszeitTag'
+CREATE INDEX [IX_FK_tabArbeitszeitAuswertungtabArbeitszeitTag]
+ON [dbo].[tabArbeitszeitTagSet]
+    ([fArbeitszeitAuswertung]);
 GO
 
 -- --------------------------------------------------

@@ -72,6 +72,9 @@
     <Compile Include="EnumReperaturVorgang.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EnumStatusArbeitszeitAuswertung.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EnumStatusBediener.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
@@ -110,6 +113,12 @@
     <Compile Include="tabArbeitszeit.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="tabArbeitszeitAuswertung.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabArbeitszeitTag.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="tabAuswertung.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
@@ -117,6 +126,9 @@
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="tabBediener.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tabFeiertage.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="tabMaschine.cs">
@@ -152,6 +164,28 @@
       <DependentUpon>JgModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\tabAnmeldungMaschine.datasource" />
+    <None Include="Properties\DataSources\tabAnmeldungMaschineMetaData.datasource" />
+    <None Include="Properties\DataSources\tabAnmeldungReparatur.datasource" />
+    <None Include="Properties\DataSources\tabAnmeldungReparaturMetaData.datasource" />
+    <None Include="Properties\DataSources\tabArbeitszeit.datasource" />
+    <None Include="Properties\DataSources\tabArbeitszeitAuswertung.datasource" />
+    <None Include="Properties\DataSources\tabArbeitszeitTag.datasource" />
+    <None Include="Properties\DataSources\tabAuswertung.datasource" />
+    <None Include="Properties\DataSources\tabAuswertungMetaData.datasource" />
+    <None Include="Properties\DataSources\tabBauteil.datasource" />
+    <None Include="Properties\DataSources\tabBauteilMetaData.datasource" />
+    <None Include="Properties\DataSources\tabBediener.datasource" />
+    <None Include="Properties\DataSources\tabBedienerMetaData.datasource" />
+    <None Include="Properties\DataSources\tabFeiertage.datasource" />
+    <None Include="Properties\DataSources\tabMaschine.datasource" />
+    <None Include="Properties\DataSources\tabMaschineMetaData.datasource" />
+    <None Include="Properties\DataSources\tabProtokoll.datasource" />
+    <None Include="Properties\DataSources\tabProtokollMetaData.datasource" />
+    <None Include="Properties\DataSources\tabReparatur.datasource" />
+    <None Include="Properties\DataSources\tabReparaturMetaData.datasource" />
+    <None Include="Properties\DataSources\tabStandort.datasource" />
+    <None Include="Properties\DataSources\tabStandortMetaData.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="JgModel.edmx.sql" />

@@ -36,6 +36,7 @@ namespace JgMaschineDatafoxLib
     private static void OnTimedEvent(object state)
     {
       var zo = (OptionenDatafox)state;
+      zo.Protokoll.Set("Start Durchlauf!", Proto.ProtoArt.Kommentar);
       zo.ZaehlerDatumAktualisieren++;
 
       try
@@ -67,7 +68,7 @@ namespace JgMaschineDatafoxLib
             DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
             Db.SaveChanges();
 
-            var bediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt) && (w.fStandort == idStandort)).ToList();
+            var bediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt)).ToList();
             ProgDatafox.BedienerInDatafoxDatei(zo, bediener);
             ProgDatafox.ListenInTerminalSchreiben(zo);
           }

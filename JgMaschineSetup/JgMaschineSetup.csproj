@@ -76,9 +76,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\MyCommands.cs" />
-    <Compile Include="Fenster\FormAuswahlStandort.xaml.cs">
-      <DependentUpon>FormAuswahlStandort.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Fenster\FormStandort.xaml.cs">
       <DependentUpon>FormStandort.xaml</DependentUpon>
     </Compile>
@@ -88,10 +85,6 @@
     <Compile Include="Fenster\FormProtokollOptionen.xaml.cs">
       <DependentUpon>FormProtokollOptionen.xaml</DependentUpon>
     </Compile>
-    <Page Include="Fenster\FormAuswahlStandort.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Fenster\FormStandort.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -12,32 +12,30 @@ namespace JgMaschineData
     using System;
     using System.Collections.Generic;
     
-    public partial class tabArbeitszeit
+    public partial class tabArbeitszeitAuswertung
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tabArbeitszeit()
+        public tabArbeitszeitAuswertung()
         {
-            this.ManuelleAnmeldung = true;
-            this.ManuelleAbmeldung = true;
-            this.eAktivBediener = new HashSet<tabBediener>();
+            this.sArbeitszeitenTag = new HashSet<tabArbeitszeitTag>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
-        public System.DateTime Anmeldung { get; set; }
-        public Nullable<System.DateTime> Abmeldung { get; set; }
-        public bool ManuelleAnmeldung { get; set; }
-        public bool ManuelleAbmeldung { get; set; }
+        public short Jahr { get; set; }
+        public byte Monat { get; set; }
+        public System.TimeSpan SollStunden { get; set; }
+        public System.TimeSpan IstStunden { get; set; }
+        public byte Urlaub { get; set; }
+        public System.TimeSpan Ueberstunden { get; set; }
+        public System.TimeSpan AuszahlungUeberstunden { get; set; }
         public System.Guid fBediener { get; set; }
-        public System.Guid fStandort { get; set; }
-        public Nullable<System.Guid> fArbeitszeitAuswertung { get; set; }
+        public EnumStatusArbeitszeitAuswertung Status { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     
         public virtual tabBediener eBediener { get; set; }
-        public virtual tabStandort eStandort { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabBediener> eAktivBediener { get; set; }
-        public virtual tabArbeitszeitTag eArbeitszeitAuswertung { get; set; }
+        public virtual ICollection<tabArbeitszeitTag> sArbeitszeitenTag { get; set; }
     }
 }

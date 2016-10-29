@@ -83,6 +83,8 @@ namespace JgMaschineLib
       _Db.Set<K>().Add(DatenSatz);
       _Db.SaveChanges();
 
+      _Daten.Add(DatenSatz);
+
       if (ViewSource?.View != null)
       {
         ViewSource.View.MoveCurrentTo(DatenSatz);
@@ -102,6 +104,20 @@ namespace JgMaschineLib
       _Db.SaveChanges();
       ViewSource?.View?.Refresh();
       ZeileEinstellen();
+    }
+
+    public void AlsGeloeschtKennzeichnen(K DatenSatz = null)
+    {
+      var entr = _Db.Entry(DatenSatz ?? Current);
+      var abgl = (DatenAbgleich)entr.Property<DatenAbgleich>("DatenAbgleich").CurrentValue;
+      abgl.Geloescht = true;
+      DbSichern.AbgleichEintragen(abgl, EnumStatusDatenabgleich.Geaendert);
+      if (entr.State != System.Data.Entity.EntityState.Modified)
+        entr.State = System.Data.Entity.EntityState.Modified;
+      _Db.SaveChanges();
+
+      _Daten.Remove(DatenSatz);
+      Refresh();
     }
 
     public void Reload(K DatenSatz = null)

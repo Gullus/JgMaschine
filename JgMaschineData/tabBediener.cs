@@ -23,6 +23,7 @@ namespace JgMaschineData
             this.sAnmeldungenReparatur = new HashSet<tabAnmeldungReparatur>();
             this.sReparaturVerursacher = new HashSet<tabReparatur>();
             this.sReparaturProtokollanten = new HashSet<tabReparatur>();
+            this.sArbeitszeitAuswertung = new HashSet<tabArbeitszeitAuswertung>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
@@ -31,6 +32,8 @@ namespace JgMaschineData
         public string VorName { get; set; }
         public string Bemerkung { get; set; }
         public string MatchCode { get; set; }
+        public byte Urlaubstage { get; set; }
+        public byte UrlaubRestVorjahr { get; set; }
         public EnumStatusBediener Status { get; set; }
         public Nullable<System.Guid> fAktivArbeitszeit { get; set; }
         public System.Guid fStandort { get; set; }
@@ -51,5 +54,7 @@ namespace JgMaschineData
         public virtual ICollection<tabReparatur> sReparaturVerursacher { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabReparatur> sReparaturProtokollanten { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabArbeitszeitAuswertung> sArbeitszeitAuswertung { get; set; }
     }
 }

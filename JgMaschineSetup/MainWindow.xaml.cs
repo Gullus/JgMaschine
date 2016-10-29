@@ -191,12 +191,14 @@ namespace JgMaschineSetup
 
     private void btnExportBedienerDatafox_Click(object sender, RoutedEventArgs e)
     {
-      var form = new Fenster.FormAuswahlStandort(_ListeStandorte.Daten);
-      if (form.ShowDialog() ?? false)
+      var msg = "Benutzer werden in den Terminals aktualisiert !";
+      MessageBox.Show(msg, "Information", MessageBoxButton.OK);
+      foreach (var standort in _ListeStandorte.Daten)
       {
-        form.Standort.UpdateBedienerDatafox = true;
-        _ListeStandorte.DsSave(form.Standort);
+        standort.UpdateBedienerDatafox = true;
+        DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
+      _ListeStandorte.Db.SaveChanges();
     }
 
     private void PfadEreignissanzeigeEinrichten_Click(object sender, RoutedEventArgs e)

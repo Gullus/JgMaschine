@@ -34,6 +34,12 @@
         <AssociationConnector Association="JgModel.tabReparaturtabMaschine" />
         <AssociationConnector Association="JgModel.tabArbeitszeittabBediener" />
         <AssociationConnector Association="JgModel.tabMaschinetabAnmeldungMaschine" />
+        <EntityTypeShape EntityType="JgModel.tabArbeitszeitTag" Width="2.25" PointX="15.625" PointY="11" />
+        <EntityTypeShape EntityType="JgModel.tabFeiertage" Width="2.25" PointX="15.625" PointY="8.75" />
+        <AssociationConnector Association="JgModel.tabArbeitszeitAuswertungtabArbeitszeit" />
+        <EntityTypeShape EntityType="JgModel.tabArbeitszeitAuswertung" Width="2.25" PointX="15.625" PointY="15.75" />
+        <AssociationConnector Association="JgModel.tabBedienertabArbeitszeitAuswertung" />
+        <AssociationConnector Association="JgModel.tabArbeitszeitAuswertungtabArbeitszeitTag" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

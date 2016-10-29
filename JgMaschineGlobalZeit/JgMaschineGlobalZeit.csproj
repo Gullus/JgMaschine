@@ -114,10 +114,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AnzeigeAuswertungErgebniss.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExtenionsMethods.cs" />
     <Compile Include="Fenster\FormNeuerReport.xaml.cs">
       <DependentUpon>FormNeuerReport.xaml</DependentUpon>
     </Compile>
@@ -148,20 +150,32 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\AnzeigeAuswertungErgebniss.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.DatenAbgleich.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.JgModelContainer.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungMaschine.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungMaschineMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungReparatur.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungReparaturMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabArbeitszeit.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabArbeitszeitAuswertung.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabArbeitszeitTag.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabAuswertung.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabAuswertungMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBauteil.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabBauteilMetaData.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabBediener+tabBedienerDelagateStatusArbeitszeit.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBediener.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBedienerMetaData.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabFeiertage.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabMaschine.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabMaschineMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabProtokoll.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabProtokollMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabReparatur.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabReparaturMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabStandort.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabStandortMetaData.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

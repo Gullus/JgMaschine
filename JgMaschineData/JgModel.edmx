@@ -16,6 +16,9 @@
     <EntitySet Name="tabAuswertungSet" EntityType="JgModel.Store.tabAuswertungSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabArbeitszeitSet" EntityType="JgModel.Store.tabArbeitszeitSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabAnmeldungReparaturSet" EntityType="JgModel.Store.tabAnmeldungReparaturSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="tabArbeitszeitTagSet" EntityType="JgModel.Store.tabArbeitszeitTagSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="tabFeiertageSet" EntityType="JgModel.Store.tabFeiertageSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="tabArbeitszeitAuswertungSet" EntityType="JgModel.Store.tabArbeitszeitAuswertungSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabBauteiltabBediener" EntityType="JgModel.Store.tabBauteiltabBediener" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="tabMaschinetabAnmeldung" Association="JgModel.Store.tabMaschinetabAnmeldung">
       <End Role="tabMaschine" EntitySet="tabMaschineSet" />
@@ -93,6 +96,18 @@
       <End Role="tabMaschine" EntitySet="tabMaschineSet" />
       <End Role="tabAnmeldungMaschine" EntitySet="tabAnmeldungMaschineSet" />
     </AssociationSet>
+    <AssociationSet Name="tabArbeitszeitAuswertungtabArbeitszeit" Association="JgModel.Store.tabArbeitszeitAuswertungtabArbeitszeit">
+      <End Role="tabArbeitszeitAuswertung" EntitySet="tabArbeitszeitTagSet" />
+      <End Role="tabArbeitszeit" EntitySet="tabArbeitszeitSet" />
+    </AssociationSet>
+    <AssociationSet Name="tabBedienertabArbeitszeitAuswertung" Association="JgModel.Store.tabBedienertabArbeitszeitAuswertung">
+      <End Role="tabBediener" EntitySet="tabBedienerSet" />
+      <End Role="tabArbeitszeitAuswertung" EntitySet="tabArbeitszeitAuswertungSet" />
+    </AssociationSet>
+    <AssociationSet Name="tabArbeitszeitAuswertungtabArbeitszeitTag" Association="JgModel.Store.tabArbeitszeitAuswertungtabArbeitszeitTag">
+      <End Role="tabArbeitszeitAuswertung" EntitySet="tabArbeitszeitAuswertungSet" />
+      <End Role="tabArbeitszeitTag" EntitySet="tabArbeitszeitTagSet" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="tabMaschineSet">
     <Key>
@@ -127,6 +142,8 @@
     <Property Name="VorName" Type="nvarchar" Nullable="false" MaxLength="120" />
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
     <Property Name="MatchCode" Type="nvarchar" Nullable="true" MaxLength="120" />
+    <Property Name="Urlaubstage" Type="tinyint" Nullable="false" />
+    <Property Name="UrlaubRestVorjahr" Type="tinyint" Nullable="false" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
@@ -259,7 +276,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Anmeldung" Type="datetime" Nullable="true" />
+    <Property Name="Anmeldung" Type="datetime" Nullable="false" />
     <Property Name="Abmeldung" Type="datetime" Nullable="true" />
     <Property Name="ManuelleAnmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
@@ -269,6 +286,7 @@
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="fArbeitszeitAuswertung" Type="uniqueidentifier" Nullable="true" />
   </EntityType>
   <EntityType Name="tabAnmeldungReparaturSet">
     <Key>
@@ -283,6 +301,58 @@
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fReparatur" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tabArbeitszeitTagSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Tag" Type="tinyint" Nullable="false" />
+    <Property Name="Zeit" Type="time" Nullable="false" />
+    <Property Name="ZeitKorrektur" Type="time" Nullable="false" />
+    <Property Name="Pause" Type="time" Nullable="false" />
+    <Property Name="Krank" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="Urlaub" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="Feiertag" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="Ueberstunden" Type="time" Nullable="false" />
+    <Property Name="Nachtschicht" Type="time" Nullable="false" />
+    <Property Name="NachschichtKorrektur" Type="time" Nullable="false" />
+    <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="fArbeitszeitAuswertung" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tabFeiertageSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Datum" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
+  </EntityType>
+  <EntityType Name="tabArbeitszeitAuswertungSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Jahr" Type="smallint" Nullable="false" />
+    <Property Name="Monat" Type="tinyint" Nullable="false" />
+    <Property Name="SollStunden" Type="time" Nullable="false" Precision="0" />
+    <Property Name="IstStunden" Type="time" Nullable="false" Precision="2" />
+    <Property Name="Urlaub" Type="tinyint" Nullable="false" />
+    <Property Name="Ueberstunden" Type="time" Nullable="false" />
+    <Property Name="AuszahlungUeberstunden" Type="time" Nullable="false" />
+    <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Status" Type="tinyint" Nullable="false" />
   </EntityType>
   <EntityType Name="tabBauteiltabBediener">
     <Key>
@@ -504,6 +574,42 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="tabArbeitszeitAuswertungtabArbeitszeit">
+    <End Role="tabArbeitszeitAuswertung" Type="JgModel.Store.tabArbeitszeitTagSet" Multiplicity="0..1" />
+    <End Role="tabArbeitszeit" Type="JgModel.Store.tabArbeitszeitSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tabArbeitszeitAuswertung">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabArbeitszeit">
+        <PropertyRef Name="fArbeitszeitAuswertung" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="tabBedienertabArbeitszeitAuswertung">
+    <End Role="tabBediener" Type="JgModel.Store.tabBedienerSet" Multiplicity="1" />
+    <End Role="tabArbeitszeitAuswertung" Type="JgModel.Store.tabArbeitszeitAuswertungSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tabBediener">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabArbeitszeitAuswertung">
+        <PropertyRef Name="fBediener" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="tabArbeitszeitAuswertungtabArbeitszeitTag">
+    <End Role="tabArbeitszeitAuswertung" Type="JgModel.Store.tabArbeitszeitAuswertungSet" Multiplicity="1" />
+    <End Role="tabArbeitszeitTag" Type="JgModel.Store.tabArbeitszeitTagSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tabArbeitszeitAuswertung">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabArbeitszeitTag">
+        <PropertyRef Name="fArbeitszeitAuswertung" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_tabBauteiltabBediener_tabBauteil">
     <End Role="tabBauteil" Type="JgModel.Store.tabBauteilSet" Multiplicity="1" />
     <End Role="tabBauteiltabBediener" Type="JgModel.Store.tabBauteiltabBediener" Multiplicity="*" />
@@ -620,6 +726,21 @@
             <End Role="tabMaschine" EntitySet="tabMaschineSet" />
             <End Role="tabAnmeldungMaschine" EntitySet="tabAnmeldungMaschineSet" />
           </AssociationSet>
+          <EntitySet Name="tabArbeitszeitTagSet" EntityType="JgModel.tabArbeitszeitTag" />
+          <EntitySet Name="tabFeiertageSet" EntityType="JgModel.tabFeiertage" />
+          <AssociationSet Name="tabArbeitszeitAuswertungtabArbeitszeit" Association="JgModel.tabArbeitszeitAuswertungtabArbeitszeit">
+            <End Role="tabArbeitszeitAuswertung" EntitySet="tabArbeitszeitTagSet" />
+            <End Role="tabArbeitszeit" EntitySet="tabArbeitszeitSet" />
+          </AssociationSet>
+          <EntitySet Name="tabArbeitszeitAuswertungSet" EntityType="JgModel.tabArbeitszeitAuswertung" />
+          <AssociationSet Name="tabBedienertabArbeitszeitAuswertung" Association="JgModel.tabBedienertabArbeitszeitAuswertung">
+            <End Role="tabBediener" EntitySet="tabBedienerSet" />
+            <End Role="tabArbeitszeitAuswertung" EntitySet="tabArbeitszeitAuswertungSet" />
+          </AssociationSet>
+          <AssociationSet Name="tabArbeitszeitAuswertungtabArbeitszeitTag" Association="JgModel.tabArbeitszeitAuswertungtabArbeitszeitTag">
+            <End Role="tabArbeitszeitAuswertung" EntitySet="tabArbeitszeitAuswertungSet" />
+            <End Role="tabArbeitszeitTag" EntitySet="tabArbeitszeitTagSet" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tabMaschine">
           <Key>
@@ -675,10 +796,13 @@
           <NavigationProperty Name="sReparaturProtokollanten" Relationship="JgModel.tabBedienertabReparatur1" FromRole="tabBediener" ToRole="tabReparatur" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="MatchCode" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
+          <Property Name="Urlaubstage" Type="Byte" Nullable="false" />
+          <Property Name="UrlaubRestVorjahr" Type="Byte" Nullable="false" />
           <Property Name="Status" Type="JgModel.EnumStatusBediener" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fAktivArbeitszeit" Type="Guid" Nullable="true" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="sArbeitszeitAuswertung" Relationship="JgModel.tabBedienertabArbeitszeitAuswertung" FromRole="tabBediener" ToRole="tabArbeitszeitAuswertung" />
         </EntityType>
         <EntityType Name="tabBauteil">
           <Key>
@@ -922,7 +1046,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <Property Name="Anmeldung" Type="DateTime" Nullable="true" />
+          <Property Name="Anmeldung" Type="DateTime" Nullable="false" />
           <Property Name="Abmeldung" Type="DateTime" Nullable="true" />
           <Property Name="ManuelleAnmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />
           <Property Name="ManuelleAbmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />
@@ -932,6 +1056,8 @@
           <Property Name="fStandort" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabArbeitszeit1" FromRole="tabArbeitszeit" ToRole="tabStandort" />
           <NavigationProperty Name="eAktivBediener" Relationship="JgModel.tabArbeitszeittabBediener" FromRole="tabArbeitszeit" ToRole="tabBediener" />
+          <Property Name="fArbeitszeitAuswertung" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="eArbeitszeitAuswertung" Relationship="JgModel.tabArbeitszeitAuswertungtabArbeitszeit" FromRole="tabArbeitszeit" ToRole="tabArbeitszeitAuswertung" />
         </EntityType>
         <Association Name="tabBedienertabArbeitszeit">
           <End Type="JgModel.tabBediener" Role="tabBediener" Multiplicity="1" />
@@ -1088,6 +1214,95 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tabArbeitszeitTag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Tag" Type="Byte" Nullable="false" />
+          <Property Name="Zeit" Type="Time" Nullable="false" />
+          <Property Name="ZeitKorrektur" Type="Time" Nullable="false" />
+          <Property Name="Pause" Type="Time" Nullable="false" />
+          <Property Name="Krank" Type="Boolean" Nullable="false" DefaultValue="False" />
+          <Property Name="Urlaub" Type="Boolean" Nullable="false" DefaultValue="False" />
+          <Property Name="Feiertag" Type="Boolean" Nullable="false" annotation:StoreGeneratedPattern="None" DefaultValue="False" />
+          <Property Name="Ueberstunden" Type="Time" Nullable="false" />
+          <Property Name="Nachtschicht" Type="Time" Nullable="false" />
+          <Property Name="NachschichtKorrektur" Type="Time" Nullable="false" />
+          <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="255" />
+          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
+          <Property Name="fArbeitszeitAuswertung" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="sArbeitszeiten" Relationship="JgModel.tabArbeitszeitAuswertungtabArbeitszeit" FromRole="tabArbeitszeitAuswertung" ToRole="tabArbeitszeit" />
+          <NavigationProperty Name="eArbeitszeitAuswertung" Relationship="JgModel.tabArbeitszeitAuswertungtabArbeitszeitTag" FromRole="tabArbeitszeitTag" ToRole="tabArbeitszeitAuswertung" />
+        </EntityType>
+        <EntityType Name="tabFeiertage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Datum" Type="String" Nullable="false" />
+          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
+        </EntityType>
+        <Association Name="tabArbeitszeitAuswertungtabArbeitszeit">
+          <End Type="JgModel.tabArbeitszeitTag" Role="tabArbeitszeitAuswertung" Multiplicity="0..1" />
+          <End Type="JgModel.tabArbeitszeit" Role="tabArbeitszeit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tabArbeitszeitAuswertung">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabArbeitszeit">
+              <PropertyRef Name="fArbeitszeitAuswertung" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tabArbeitszeitAuswertung">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Jahr" Type="Int16" Nullable="false" />
+          <Property Name="Monat" Type="Byte" Nullable="false" />
+          <Property Name="SollStunden" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="IstStunden" Type="Time" Nullable="false" Precision="2" />
+          <Property Name="Urlaub" Type="Byte" Nullable="false" />
+          <Property Name="Ueberstunden" Type="Time" Nullable="false" />
+          <Property Name="AuszahlungUeberstunden" Type="Time" Nullable="false" />
+          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
+          <Property Name="fBediener" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="eBediener" Relationship="JgModel.tabBedienertabArbeitszeitAuswertung" FromRole="tabArbeitszeitAuswertung" ToRole="tabBediener" />
+          <NavigationProperty Name="sArbeitszeitenTag" Relationship="JgModel.tabArbeitszeitAuswertungtabArbeitszeitTag" FromRole="tabArbeitszeitAuswertung" ToRole="tabArbeitszeitTag" />
+          <Property Name="Status" Type="JgModel.EnumStatusArbeitszeitAuswertung" Nullable="false" />
+        </EntityType>
+        <Association Name="tabBedienertabArbeitszeitAuswertung">
+          <End Type="JgModel.tabBediener" Role="tabBediener" Multiplicity="1" />
+          <End Type="JgModel.tabArbeitszeitAuswertung" Role="tabArbeitszeitAuswertung" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tabBediener">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabArbeitszeitAuswertung">
+              <PropertyRef Name="fBediener" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tabArbeitszeitAuswertungtabArbeitszeitTag">
+          <End Type="JgModel.tabArbeitszeitAuswertung" Role="tabArbeitszeitAuswertung" Multiplicity="1" />
+          <End Type="JgModel.tabArbeitszeitTag" Role="tabArbeitszeitTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tabArbeitszeitAuswertung">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabArbeitszeitTag">
+              <PropertyRef Name="fArbeitszeitAuswertung" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="EnumStatusArbeitszeitAuswertung" UnderlyingType="Byte">
+          <Member Name="Fehler" Value="0" />
+          <Member Name="Leer" Value="1" />
+          <Member Name="Berechnet" Value="2" />
+          <Member Name="Gebucht" Value="3" />
+        </EnumType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1129,6 +1344,8 @@
           <ScalarProperty Name="VorName" ColumnName="VorName" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ScalarProperty Name="MatchCode" ColumnName="MatchCode" />
+          <ScalarProperty Name="Urlaubstage" ColumnName="Urlaubstage" />
+          <ScalarProperty Name="UrlaubRestVorjahr" ColumnName="UrlaubRestVorjahr" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
@@ -1294,6 +1511,7 @@
           </ComplexProperty>
           <ScalarProperty Name="fBediener" ColumnName="fBediener" />
           <ScalarProperty Name="fStandort" ColumnName="fStandort" />
+          <ScalarProperty Name="fArbeitszeitAuswertung" ColumnName="fArbeitszeitAuswertung" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1311,6 +1529,67 @@
           </ComplexProperty>
           <ScalarProperty Name="fReparatur" ColumnName="fReparatur" />
           <ScalarProperty Name="fBediener" ColumnName="fBediener" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tabArbeitszeitTagSet">
+      <EntityTypeMapping TypeName="IsTypeOf(JgModel.tabArbeitszeitTag)">
+        <MappingFragment StoreEntitySet="tabArbeitszeitTagSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Tag" ColumnName="Tag" />
+          <ScalarProperty Name="Zeit" ColumnName="Zeit" />
+          <ScalarProperty Name="ZeitKorrektur" ColumnName="ZeitKorrektur" />
+          <ScalarProperty Name="Pause" ColumnName="Pause" />
+          <ScalarProperty Name="Krank" ColumnName="Krank" />
+          <ScalarProperty Name="Urlaub" ColumnName="Urlaub" />
+          <ScalarProperty Name="Feiertag" ColumnName="Feiertag" />
+          <ScalarProperty Name="Ueberstunden" ColumnName="Ueberstunden" />
+          <ScalarProperty Name="Nachtschicht" ColumnName="Nachtschicht" />
+          <ScalarProperty Name="NachschichtKorrektur" ColumnName="NachschichtKorrektur" />
+          <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
+          <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
+            <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
+            <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
+            <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
+          </ComplexProperty>
+          <ScalarProperty Name="fArbeitszeitAuswertung" ColumnName="fArbeitszeitAuswertung" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tabFeiertageSet">
+      <EntityTypeMapping TypeName="IsTypeOf(JgModel.tabFeiertage)">
+        <MappingFragment StoreEntitySet="tabFeiertageSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Datum" ColumnName="Datum" />
+          <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
+            <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
+            <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
+            <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tabArbeitszeitAuswertungSet">
+      <EntityTypeMapping TypeName="IsTypeOf(JgModel.tabArbeitszeitAuswertung)">
+        <MappingFragment StoreEntitySet="tabArbeitszeitAuswertungSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Jahr" ColumnName="Jahr" />
+          <ScalarProperty Name="Monat" ColumnName="Monat" />
+          <ScalarProperty Name="SollStunden" ColumnName="SollStunden" />
+          <ScalarProperty Name="IstStunden" ColumnName="IstStunden" />
+          <ScalarProperty Name="Urlaub" ColumnName="Urlaub" />
+          <ScalarProperty Name="Ueberstunden" ColumnName="Ueberstunden" />
+          <ScalarProperty Name="AuszahlungUeberstunden" ColumnName="AuszahlungUeberstunden" />
+          <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
+            <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
+            <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
+            <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
+          </ComplexProperty>
+          <ScalarProperty Name="fBediener" ColumnName="fBediener" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
