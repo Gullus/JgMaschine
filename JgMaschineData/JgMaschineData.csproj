@@ -140,6 +140,9 @@
     <Compile Include="tabReparatur.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="tabSollStunden.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="tabStandort.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>

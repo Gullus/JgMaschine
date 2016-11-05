@@ -114,7 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AnzeigeAuswertungErgebniss.cs" />
+    <Compile Include="AnmeldungAuswertung.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -150,7 +150,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="Properties\DataSources\AnzeigeAuswertungErgebniss.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.DatenAbgleich.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.JgModelContainer.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabAnmeldungMaschine.datasource" />
@@ -164,7 +163,6 @@
     <None Include="Properties\DataSources\JgMaschineData.tabAuswertungMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBauteil.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBauteilMetaData.datasource" />
-    <None Include="Properties\DataSources\JgMaschineData.tabBediener+tabBedienerDelagateStatusArbeitszeit.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBediener.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabBedienerMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabFeiertage.datasource" />
@@ -174,6 +172,7 @@
     <None Include="Properties\DataSources\JgMaschineData.tabProtokollMetaData.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabReparatur.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabReparaturMetaData.datasource" />
+    <None Include="Properties\DataSources\JgMaschineData.tabSollStunden.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabStandort.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabStandortMetaData.datasource" />
     <None Include="Properties\Settings.settings">

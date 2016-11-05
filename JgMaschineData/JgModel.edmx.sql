@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/28/2016 10:56:43
+-- Date Created: 11/05/2016 17:50:58
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -127,6 +127,9 @@ GO
 IF OBJECT_ID(N'[dbo].[tabArbeitszeitAuswertungSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabArbeitszeitAuswertungSet];
 GO
+IF OBJECT_ID(N'[dbo].[tabSollStundenSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabSollStundenSet];
+GO
 IF OBJECT_ID(N'[dbo].[tabBauteiltabBediener]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabBauteiltabBediener];
 GO
@@ -167,7 +170,6 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [Bemerkung] nvarchar(max)  NULL,
     [MatchCode] nvarchar(120)  NULL,
     [Urlaubstage] tinyint  NOT NULL,
-    [UrlaubRestVorjahr] tinyint  NOT NULL,
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
@@ -332,15 +334,12 @@ GO
 CREATE TABLE [dbo].[tabArbeitszeitTagSet] (
     [Id] uniqueidentifier  NOT NULL,
     [Tag] tinyint  NOT NULL,
-    [Zeit] time  NOT NULL,
-    [ZeitKorrektur] time  NOT NULL,
     [Pause] time  NOT NULL,
-    [Krank] bit  NOT NULL,
-    [Urlaub] bit  NOT NULL,
-    [Feiertag] bit  NOT NULL,
-    [Ueberstunden] time  NOT NULL,
+    [Zeit] time  NOT NULL,
     [Nachtschicht] time  NOT NULL,
-    [NachschichtKorrektur] time  NOT NULL,
+    [Feiertag] time  NOT NULL,
+    [Urlaub] bit  NOT NULL,
+    [Krank] bit  NOT NULL,
     [Bemerkung] nvarchar(255)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
@@ -353,7 +352,8 @@ GO
 -- Creating table 'tabFeiertageSet'
 CREATE TABLE [dbo].[tabFeiertageSet] (
     [Id] uniqueidentifier  NOT NULL,
-    [Datum] nvarchar(max)  NOT NULL,
+    [Datum] datetime  NOT NULL,
+    [Bezeichnung] nvarchar(255)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
@@ -366,17 +366,34 @@ CREATE TABLE [dbo].[tabArbeitszeitAuswertungSet] (
     [Id] uniqueidentifier  NOT NULL,
     [Jahr] smallint  NOT NULL,
     [Monat] tinyint  NOT NULL,
-    [SollStunden] time  NOT NULL,
-    [IstStunden] time  NOT NULL,
-    [Urlaub] tinyint  NOT NULL,
-    [Ueberstunden] time  NOT NULL,
-    [AuszahlungUeberstunden] time  NOT NULL,
+    [SollStunden] nvarchar(7)  NULL,
+    [IstStunden] nvarchar(7)  NULL,
+    [Nachtschichten] nvarchar(7)  NULL,
+    [Feiertage] nvarchar(7)  NULL,
+    [Urlaub] smallint  NOT NULL,
+    [Krank] smallint  NOT NULL,
+    [Ueberstunden] nvarchar(7)  NULL,
+    [AuszahlungUeberstunden] nvarchar(7)  NULL,
+    [Bemerkung] nvarchar(255)  NULL,
+    [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
-    [fBediener] uniqueidentifier  NOT NULL,
-    [Status] tinyint  NOT NULL
+    [fBediener] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'tabSollStundenSet'
+CREATE TABLE [dbo].[tabSollStundenSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Jahr] smallint  NOT NULL,
+    [Monat] tinyint  NOT NULL,
+    [SollStunden] nvarchar(7)  NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
 
@@ -466,6 +483,12 @@ GO
 -- Creating primary key on [Id] in table 'tabArbeitszeitAuswertungSet'
 ALTER TABLE [dbo].[tabArbeitszeitAuswertungSet]
 ADD CONSTRAINT [PK_tabArbeitszeitAuswertungSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'tabSollStundenSet'
+ALTER TABLE [dbo].[tabSollStundenSet]
+ADD CONSTRAINT [PK_tabSollStundenSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 

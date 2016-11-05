@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JgGlobalZeit
+namespace JgMaschineGlobalZeit
 {
   public static class ExtenionsMethods
   {

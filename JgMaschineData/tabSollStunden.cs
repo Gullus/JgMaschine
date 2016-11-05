@@ -12,17 +12,18 @@ namespace JgMaschineData
     using System;
     using System.Collections.Generic;
     
-    public partial class tabFeiertage
+    public partial class tabSollStunden
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tabFeiertage()
+        public tabSollStunden()
         {
             this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
-        public System.DateTime Datum { get; set; }
-        public string Bezeichnung { get; set; }
+        public short Jahr { get; set; }
+        public byte Monat { get; set; }
+        public string SollStunden { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     }

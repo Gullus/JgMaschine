@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -41,10 +43,6 @@ namespace JgMaschineData
 
   }
 
-  public partial class tabAnmeldungMaschineMetaData
-  { }
-
-  [MetadataType(typeof(tabAnmeldungMaschineMetaData))]
   public partial class tabAnmeldungMaschine
   {
     public TimeSpan ZeitAngemeldet
@@ -86,36 +84,17 @@ namespace JgMaschineData
     public object MatchCode;
   }
 
-
   [MetadataType(typeof(tabBedienerMetaData))]
   public partial class tabBediener
   {
-    public delegate EnumStatusArbeitszeitAuswertung tabBedienerDelagateStatusArbeitszeit(tabBediener Bediener);
-
-    public tabBedienerDelagateStatusArbeitszeit DelegateStatusArbeitszeit = null;
-    public EnumStatusArbeitszeitAuswertung StatusArbeitszeit
-    {
-      get
-      {
-        if (DelegateStatusArbeitszeit != null)
-          return DelegateStatusArbeitszeit(this);
-        return EnumStatusArbeitszeitAuswertung.Fehler;
-      }
-    }
+    public EnumStatusArbeitszeitAuswertung StatusArbeitszeit { get; set; } = EnumStatusArbeitszeitAuswertung.Fehler;
     public string Name { get { return this.NachName + ", " + VorName; } }
+    public tabArbeitszeitAuswertung ErgebnisVorjahr { get; set; } = null;
   }
 
-  public partial class tabReparaturMetaData
-  { }
-
-  [MetadataType(typeof(tabReparaturMetaData))]
   public partial class tabReparatur
   { }
 
-  public partial class tabAnmeldungReparaturMetaData
-  { }
-
-  [MetadataType(typeof(tabAnmeldungReparaturMetaData))]
   public partial class tabAnmeldungReparatur
   {
     public bool IstAktiv { get { return this.Abmeldung == null; } }
@@ -134,6 +113,7 @@ namespace JgMaschineData
 
   public partial class tabAuswertungMetaData
   {
+    [Required]
     public object ReportName;
   }
 
@@ -141,10 +121,6 @@ namespace JgMaschineData
   public partial class tabAuswertung
   { }
 
-  public partial class tabBauteilMetaData
-  { }
-
-  [MetadataType(typeof(tabBauteilMetaData))]
   public partial class tabBauteil
   {
     public double ZeitInSekunden
@@ -170,13 +146,81 @@ namespace JgMaschineData
     }
   }
 
-  //public partial class tabArbeitszeitAuswertung
-  //{
-
-  //}
-
-  public partial class tabArbeitszeitTag
+  public partial class tabSollStunden
   {
+    public string StundenAnzeige
+    {
+      get
+      {
+        return this.SollStunden ?? "00:00";
+      }
+      set
+      {
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+          SollStunden = zeit.AsString;
+      }
+    }
+  }
+
+  public class Zeit
+  {
+    public bool IstOk = true;
+    public int Stunde = 0;
+    public int Minute = 0;
+
+    public string AsString
+    {
+      get { return IstOk ? Stunde.ToString("D2") + ":" + Minute.ToString("D2") : null; }
+    }
+
+    public TimeSpan AsTime
+    {
+      get { return new TimeSpan(Stunde, Minute, 0); }
+    }
+
+    public Zeit(string ZeitString)
+    {
+      if (!string.IsNullOrWhiteSpace(ZeitString))
+      {
+        var werte = ZeitString.Split(new char[] { ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
+        if (werte.Length > 0)
+        {
+          try
+          {
+            Stunde = Convert.ToInt32(werte[0]);
+          }
+          catch { IstOk = false; };
+
+          if (IstOk && (werte.Length > 1))
+          {
+            try
+            {
+              Minute = Convert.ToInt32(werte[1]);
+            }
+            catch { IstOk = false; };
+          }
+        }
+      }
+    }
+  }
+
+  public partial class tabArbeitszeit
+  {
+    public TimeSpan Dauer { get { return (this.Abmeldung == null) ? TimeSpan.Zero : (DateTime)this.Abmeldung - this.Anmeldung; } }
+
+    public string DauerAnzeige { get { return ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
+  }
+
+  public partial class tabArbeitszeitTag : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     public string TimeInString(TimeSpan Zeit)
     {
       return Zeit.TotalHours.ToString("D2") + ":" + Zeit.Minutes.ToString("D2");
@@ -196,34 +240,194 @@ namespace JgMaschineData
       }
     }
 
-    public string TagString
+    public string Wochentag { get; set; }
+
+    public bool IstSonntag { get; set; } = false;
+    public bool IstSonnabend { get; set; } = false;
+    public bool IstFeiertag { get; set; } = false;
+
+    private string ZeitInString(TimeSpan ZeitWert)
     {
-      get { return (new DateTime(this.eArbeitszeitAuswertung.Jahr, this.eArbeitszeitAuswertung.Monat, this.Tag)).ToString("ddd"); }
+      return ZeitWert.Hours.ToString("D2") + ":" + ZeitWert.Minutes.ToString("D2");
     }
 
-    public string ArbeitszeitAnzeige
+    public string PauseAnzeige
     {
-      get { return TimeInString(this.ZeitKorrektur); }
+      get { return ZeitInString(this.Pause); }
       set
       {
-        var t = StringInTime(value);
-        if (t != null)
-          ZeitKorrektur = (TimeSpan)t;
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        {
+          this.Pause = zeit.AsTime;
+          NotifyPropertyChanged();
+        }
       }
     }
+    public TimeSpan PauseBerechnet { get; set; }
+
+    public string ZeitAnzeige
+    {
+      get { return ZeitInString(this.Zeit); }
+      set
+      {
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        {
+          this.Zeit = zeit.AsTime;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+    public TimeSpan ZeitBerechnet { get; set; }
 
     public string NachtschichtAnzeige
     {
-      get { return TimeInString(this.NachschichtKorrektur); }
+      get { return ZeitInString(this.Nachtschicht); }
       set
       {
-        var t = StringInTime(value);
-        if (t != null)
-          NachschichtKorrektur = (TimeSpan)t; 
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        {
+          this.Nachtschicht = zeit.AsTime;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+    public TimeSpan NachtschichtBerechnet { get; set; }
+
+    public string FeiertagAnzeige
+    {
+      get { return ZeitInString(this.Feiertag); }
+      set
+      {
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        {
+          this.Feiertag = zeit.AsTime;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public bool UrlaubAnzeige
+    {
+      get { return this.Urlaub; }
+      set
+      {
+        if (value != this.Urlaub)
+        {
+          this.Urlaub = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public bool KrankAnzeige
+    {
+      get { return this.Krank; }
+      set
+      {
+        if (value != this.Krank)
+        {
+          this.Krank = value;
+          NotifyPropertyChanged();
+        }
       }
     }
   }
 
+  public partial class tabArbeitszeitAuswertung : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public string IstStundenAnzeige
+    {
+      get { return this.IstStunden; }
+      set
+      {
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        { 
+          this.IstStunden = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public string NachtschichtenAnzeige
+    {
+      get { return this.Nachtschichten; }
+      set
+      {
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        {
+          this.Nachtschichten = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public string UeberstundenAnzeige
+    {
+      get { return this.Ueberstunden; }
+      set
+      {
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        {
+          this.Ueberstunden = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public string FeiertageAnzeige
+    {
+      get { return this.Ueberstunden; }
+      set
+      {
+        var zeit = new Zeit(value);
+        if (zeit.IstOk)
+        {
+          this.Feiertage = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public short UrlaubAnzeige
+    {
+      get { return this.Urlaub; }
+      set
+      {
+        if (value != this.Urlaub)
+        {
+          this.Urlaub = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public short KrankAnzeige
+    {
+      get { return this.Krank; }
+      set
+      {
+        if (value != this.Krank)
+        {
+          this.Krank = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+  }
 
   #region bei Speicherung Valedierungsfehler anzeigen
 
@@ -273,4 +477,5 @@ namespace JgMaschineData
   }
 
   #endregion
+
 }

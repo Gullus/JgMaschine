@@ -17,24 +17,20 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabArbeitszeitTag()
         {
-            this.Krank = false;
             this.Urlaub = false;
-            this.Feiertag = false;
+            this.Krank = false;
             this.sArbeitszeiten = new HashSet<tabArbeitszeit>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
         public byte Tag { get; set; }
-        public System.TimeSpan Zeit { get; set; }
-        public System.TimeSpan ZeitKorrektur { get; set; }
         public System.TimeSpan Pause { get; set; }
-        public bool Krank { get; set; }
-        public bool Urlaub { get; set; }
-        public bool Feiertag { get; set; }
-        public System.TimeSpan Ueberstunden { get; set; }
+        public System.TimeSpan Zeit { get; set; }
         public System.TimeSpan Nachtschicht { get; set; }
-        public System.TimeSpan NachschichtKorrektur { get; set; }
+        public System.TimeSpan Feiertag { get; set; }
+        public bool Urlaub { get; set; }
+        public bool Krank { get; set; }
         public string Bemerkung { get; set; }
         public System.Guid fArbeitszeitAuswertung { get; set; }
     

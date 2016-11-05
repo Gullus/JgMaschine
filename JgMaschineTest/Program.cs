@@ -7,11 +7,12 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
+
       using (var db = new JgMaschineData.JgModelContainer())
       {
-        var dsAuswertungVormonat = db.tabArbeitszeitAuswertungSet.FirstOrDefault();
+        var ben = new JgMaschineData.tabBediener();
 
-        Console.WriteLine(dsAuswertungVormonat.Urlaub);
+
       }
 
 
@@ -50,6 +51,23 @@ namespace JgMaschineTest
       };
 
       return sumNachtschicht;
+    }
+  }
+
+  public class Test
+  {
+    public string FeldString { get; set; } = "Juhu";
+
+
+    public Test(string Erster)
+    {
+      //FeldString = Erster;
+      Console.WriteLine(FeldString);
+    }
+
+    public void Test2()
+    {
+      Console.WriteLine(FeldString);
     }
   }
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JgGlobalZeit.Properties {
+namespace JgMaschineGlobalZeit.Properties {
     using System;
     
     

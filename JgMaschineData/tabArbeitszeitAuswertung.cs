@@ -17,6 +17,8 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabArbeitszeitAuswertung()
         {
+            this.Urlaub = 0;
+            this.Krank = 0;
             this.sArbeitszeitenTag = new HashSet<tabArbeitszeitTag>();
             this.DatenAbgleich = new DatenAbgleich();
         }
@@ -24,13 +26,17 @@ namespace JgMaschineData
         public System.Guid Id { get; set; }
         public short Jahr { get; set; }
         public byte Monat { get; set; }
-        public System.TimeSpan SollStunden { get; set; }
-        public System.TimeSpan IstStunden { get; set; }
-        public byte Urlaub { get; set; }
-        public System.TimeSpan Ueberstunden { get; set; }
-        public System.TimeSpan AuszahlungUeberstunden { get; set; }
-        public System.Guid fBediener { get; set; }
+        public string SollStunden { get; set; }
+        public string IstStunden { get; set; }
+        public string Nachtschichten { get; set; }
+        public string Feiertage { get; set; }
+        public short Urlaub { get; set; }
+        public short Krank { get; set; }
+        public string Ueberstunden { get; set; }
+        public string AuszahlungUeberstunden { get; set; }
+        public string Bemerkung { get; set; }
         public EnumStatusArbeitszeitAuswertung Status { get; set; }
+        public System.Guid fBediener { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     
