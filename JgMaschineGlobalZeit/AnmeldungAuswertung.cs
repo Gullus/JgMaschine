@@ -19,6 +19,8 @@ namespace JgMaschineGlobalZeit
     private byte _Monat = 1;
     private Int16 _Jahr = 2000;
 
+    private tabArbeitszeitAuswertung _AktAuswertung = null;
+
     public DateTime MonatErster
     {
       get { return new DateTime(_Jahr, _Monat, 1); }
@@ -32,11 +34,9 @@ namespace JgMaschineGlobalZeit
     private CollectionViewSource _VsBediener;
     private tabBediener _Bediener { get { return (tabBediener)_VsBediener.View.CurrentItem; } }
 
-    private tabSollStunden _DsSollStunden = null;
-
-    public tabArbeitszeitAuswertung AuswertungGesamt = null;
-    public tabArbeitszeitAuswertung AuswertungKumulativ = null;
-    public tabArbeitszeitAuswertung AuswertungMonat = null;
+    public ArbeitszeitAuswertungDs AuswertungGesamt = null;
+    public ArbeitszeitAuswertungDs AuswertungKumulativ = null;
+    public ArbeitszeitAuswertungDs AuswertungMonat = null;
 
     private CollectionViewSource _VsAuswertungTage;
 
@@ -45,26 +45,29 @@ namespace JgMaschineGlobalZeit
 
     private List<tabArbeitszeitAuswertung> _ListeAuswertungen = new List<tabArbeitszeitAuswertung>();
 
+    private TimeSpan _SollStunden = TimeSpan.Zero;
     public short Jahr
     {
       get { return _Jahr; }
       set
       {
         _Jahr = value;
-        MonatOderJahrGeandert();
+        JahrGeandert();
+        MonatGeandert();
       }
     }
-
     public byte Monat
     {
       get { return _Monat; }
       set
       {
         _Monat = value;
-        MonatOderJahrGeandert();
+        MonatGeandert();
       }
     }
 
+    public ObservableCollection<tabPausenzeit> ListePausenzeiten;
+    public ObservableCollection<tabSollStunden> ListeSollStunden;
     public ObservableCollection<tabFeiertage> ListeFeiertage;
     public ObservableCollection<tabBediener> ListeBediener;
 
@@ -81,13 +84,13 @@ namespace JgMaschineGlobalZeit
       for (Int16 i = jahrStart; i < jahrStart + 12; i++)
         _CmbJahr.Items.Add(i);
       _CmbJahr.SelectedItem = _Jahr;
-      _CmbJahr.SelectionChanged += Cmb_SelectionChanged;
+      _CmbJahr.SelectionChanged += Cmb_SelectionChangedJahr;
 
       _CmbMonat = CmbMonat;
       for (int i = 1; i < 13; i++)
         _CmbMonat.Items.Add((new DateTime(2000, i, 1)).ToString("MMMM"));
       _CmbMonat.SelectedIndex = _Monat - 1;
-      _CmbMonat.SelectionChanged += Cmb_SelectionChanged;
+      _CmbMonat.SelectionChanged += Cmb_SelectionChangedMonat;
 
       var bediener = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv)).OrderBy(o => o.NachName).ToList();
       ListeBediener = new ObservableCollection<tabBediener>(bediener);
@@ -100,7 +103,8 @@ namespace JgMaschineGlobalZeit
       };
 
       _VsAuswertungTage = VsAuswertungTage;
-      MonatOderJahrGeandert();
+      JahrGeandert();
+      MonatGeandert();
     }
 
     private void BedienerGeandert()
@@ -109,50 +113,44 @@ namespace JgMaschineGlobalZeit
       AuswertungBedienerTageErstellen(aktAuswertung);
     }
 
-    private void Cmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Cmb_SelectionChangedJahr(object sender, SelectionChangedEventArgs e)
     {
       if ((sender as ComboBox).IsKeyboardFocusWithin)
-        MonatOderJahrGeandert();
+      {
+        JahrGeandert();
+        MonatGeandert();
+      }
     }
 
-    public void MonatOderJahrGeandert()
+    private void Cmb_SelectionChangedMonat(object sender, SelectionChangedEventArgs e)
+    {
+      if ((sender as ComboBox).IsKeyboardFocusWithin)
+        MonatGeandert();
+    }
+
+    public void JahrGeandert()
+    {
+      ListePausenzeiten = new ObservableCollection<tabPausenzeit>(_Db.tabPausenzeitSet.ToList());
+
+      var von = new DateTime(_Jahr, 1, 1);
+      var bis = new DateTime(_Jahr, 12, 31, 23, 59, 59);
+      var feiertage = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= von) && (w.Datum <= bis)).ToList();
+      ListeFeiertage = new ObservableCollection<tabFeiertage>(feiertage);
+
+      var sollStunden = _Db.tabSollStundenSet.Where(w => (w.Jahr == _Jahr)).ToList();
+      ListeSollStunden = new ObservableCollection<tabSollStunden>(sollStunden);
+    }
+
+    public void MonatGeandert()
     {
       _Monat = (byte)(_CmbMonat.SelectedIndex + 1);
       _Jahr = Convert.ToInt16(_CmbJahr.SelectedItem);
 
-      _DsSollStunden = _Db.tabSollStundenSet.FirstOrDefault(f => (f.Jahr == _Jahr) && (f.Monat == _Monat));
-
-      var listeFeiertage = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= MonatErster) && (w.Datum <= MonatLetzter)).OrderBy(o => o.Datum);
-      ListeFeiertage = new ObservableCollection<tabFeiertage>(listeFeiertage.ToList());
-      ListeFeiertage.CollectionChanged += (sen, erg) =>
-      {
-        switch (erg.Action)
-        {
-          case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-            foreach (var ds in erg.NewItems)
-            {
-              var feiertag = (tabFeiertage)ds;
-              feiertag.Id = Guid.NewGuid();
-              feiertag.Datum = DateTime.Now.Date;
-              DbSichern.AbgleichEintragen(feiertag.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-              _Db.tabFeiertageSet.Add(feiertag);
-            }
-            _Db.SaveChanges();
-            break;
-          case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-            foreach (var ds in erg.OldItems)
-            {
-              var feiertag = (tabFeiertage)ds;
-              feiertag.DatenAbgleich.Geloescht = true;
-              DbSichern.AbgleichEintragen(feiertag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-            }
-            break;
-        }
-      };
+      var dsSollstunde = ListeSollStunden.FirstOrDefault(f => f.Monat == _Monat);
+      _SollStunden = (dsSollstunde == null) ? TimeSpan.Zero : StringInZeit(dsSollstunde.SollStunden);
 
       _ListeAuswertungen = _Db.tabArbeitszeitAuswertungSet.Where(w => (IdisBediener.Contains(w.fBediener) && (w.Jahr == _Jahr) && (w.Monat == _Monat))).ToList();
 
-      var merkePos = _VsBediener.View.CurrentPosition;
       foreach (var bediener in ListeBediener)
       {
         var ausw = _ListeAuswertungen.FirstOrDefault(f => f.eBediener == bediener);
@@ -161,8 +159,6 @@ namespace JgMaschineGlobalZeit
         else
           bediener.StatusArbeitszeit = ausw.Status;
       }
-      _VsBediener.View.Refresh();
-      _VsBediener.View.MoveCurrentToPosition(merkePos);
     }
 
     public string ZeitInString(TimeSpan Zeit)
@@ -170,71 +166,109 @@ namespace JgMaschineGlobalZeit
       return ((int)Zeit.TotalHours).ToString("D2") + ":" + Zeit.Minutes.ToString();
     }
 
-    public void AuswertungBedienerTageErstellen(tabArbeitszeitAuswertung Auswertung)
+    public TimeSpan StringInZeit(string Zeit)
     {
-      if (Auswertung == null)
+      var erg = TimeSpan.Zero;
+      if (!string.IsNullOrWhiteSpace(Zeit))
       {
-        Auswertung = new tabArbeitszeitAuswertung()
+        try
+        {
+          var werte = Zeit.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+          var stunde = Convert.ToInt32(werte[0]);
+          var minute = Convert.ToInt32(werte[1]);
+          return new TimeSpan(stunde, stunde < 0 ? -1 * minute : minute, 0);
+        }
+        catch { }
+      }
+      return erg;
+    }
+
+    private void AuswertungInit(tabArbeitszeitAuswertung AuswertungNeu)
+    {
+      _AktAuswertung = AuswertungNeu;
+      if (_AktAuswertung == null)
+      {
+        var dsSollStunden = _Db.tabSollStundenSet.FirstOrDefault(f => (f.Jahr == _Jahr) && (f.Monat == _Monat));
+
+        _AktAuswertung = new tabArbeitszeitAuswertung()
         {
           Id = Guid.NewGuid(),
           eBediener = _Bediener,
           Jahr = _Jahr,
           Monat = _Monat,
-
           Urlaub = 0,
-          Status = EnumStatusArbeitszeitAuswertung.Berechnet,
+          SollStunden = dsSollStunden?.SollStunden,
+          Status = EnumStatusArbeitszeitAuswertung.InArbeit,
         };
-        DbSichern.AbgleichEintragen(Auswertung.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-        _ListeAuswertungen.Add(Auswertung);
-        _Db.tabArbeitszeitAuswertungSet.Add(Auswertung);
+        DbSichern.AbgleichEintragen(_AktAuswertung.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+        _Db.tabArbeitszeitAuswertungSet.Add(_AktAuswertung);
         _Db.SaveChanges();
+        _ListeAuswertungen.Add(_AktAuswertung);
+
+        _AktAuswertung.eBediener.StatusArbeitszeit = EnumStatusArbeitszeitAuswertung.InArbeit;
       }
 
+      // Kumulative Werte für Auswertung erfassen
+      var auswAlle = _Db.tabArbeitszeitAuswertungSet.Where(w => (w.fBediener == _AktAuswertung.fBediener) && (w.Jahr == _Jahr) && (w.Monat < _Monat)).ToList();
+      var ersterAuswertung = auswAlle.FirstOrDefault(w => w.Monat == 0);
+      var auswKumulativ = auswAlle.Where(w => (w.Monat > 0)).ToList();
 
-      var auswKumulativ = _Db.tabArbeitszeitAuswertungSet.Where(w => (w.fBediener == Auswertung.fBediener) && (w.Jahr == _Jahr) && (w.Monat < _Monat)).ToList();
+      var zeitUeberstundenKumulativ = new TimeSpan(auswKumulativ.Sum(s => StringInZeit(s.Ueberstunden).Ticks));
+      var zeitUeberstundenBezahlt = new TimeSpan(auswKumulativ.Sum(s => StringInZeit(s.AuszahlungUeberstunden).Ticks));
+      var ueberstundenVorjahr = StringInZeit((ersterAuswertung == null) ? "00:00" : ersterAuswertung.Ueberstunden);
+      var sollStunden = StringInZeit(_AktAuswertung.SollStunden);
+      var ueberStunden = StringInZeit(_AktAuswertung.Ueberstunden);
 
-      var ueberstunden = TimeSpan.Zero;
-      foreach (var ausw in auswKumulativ)
-      {
-        var ds = ausw.Ueberstunden.Split(':');
-        try
-        {
-          ueberstunden += new TimeSpan(Convert.ToInt32(ds[0]), Convert.ToInt32(ds[1]), 0);
-        }
-        catch { }
-      }
+      AuswertungKumulativ.Ueberstunden = ZeitInString(zeitUeberstundenKumulativ - zeitUeberstundenBezahlt); ;
+      AuswertungMonat.SollStunden = _AktAuswertung.SollStunden;
+      AuswertungMonat.UeberstundenVorjahr = ZeitInString(ueberstundenVorjahr); 
+      AuswertungMonat.Ueberstunden = _AktAuswertung.Ueberstunden;
 
-      AuswertungKumulativ.UeberstundenAnzeige = ZeitInString(ueberstunden);
-      AuswertungKumulativ.UrlaubAnzeige = Convert.ToInt16(auswKumulativ.Sum(s => s.Urlaub));
-     
-      var auswTage = _Db.tabArbeitszeitTagSet.Where(w => w.fArbeitszeitAuswertung == Auswertung.Id).ToList();
+      AuswertungMonat.IstStunden = ZeitInString(sollStunden + ueberStunden);
+      AuswertungGesamt.Ueberstunden = ZeitInString(ueberStunden + ueberstundenVorjahr - zeitUeberstundenKumulativ);
+
+      AuswertungMonat.RestUrlaub = (ersterAuswertung == null) ? (byte)0 : ersterAuswertung.Urlaub;
+      AuswertungKumulativ.Urlaub = (short)auswKumulativ.Where(w => w.Monat > 0).Sum(s => s.Urlaub);
+      AuswertungMonat.UrlaubsTage = _Bediener.Urlaubstage;
+      AuswertungMonat.Urlaub = _AktAuswertung.Urlaub;
+      AuswertungMonat.UrlaubOffen = (short)(_Bediener.Urlaubstage + AuswertungMonat.RestUrlaub - AuswertungKumulativ.Urlaub - _AktAuswertung.Urlaub);
+      AuswertungGesamt.Urlaub = (byte)(_AktAuswertung.Urlaub + AuswertungKumulativ.Urlaub);
+
+      AuswertungKumulativ.Krank = Convert.ToInt16(auswKumulativ.Sum(s => s.Krank));
+      AuswertungMonat.Krank = _AktAuswertung.Krank;
+      AuswertungGesamt.Krank = (short)(_AktAuswertung.Krank + AuswertungKumulativ.Krank);
+
+      AuswertungMonat.Feiertage = _AktAuswertung.Feiertage;
+      AuswertungMonat.Krank = _AktAuswertung.Krank;
+
+      AuswertungMonat.Nachtschichten = _AktAuswertung.Nachtschichten;
+      AuswertungMonat.AuszahlungUeberstunden = _AktAuswertung.AuszahlungUeberstunden;
+    }
+
+    public void AuswertungBedienerTageErstellen(tabArbeitszeitAuswertung AuswertungNeu)
+    {
+      AuswertungInit(AuswertungNeu);
+
+      // Werte für Tage berechnen
+      var auswTage = _Db.tabArbeitszeitTagSet.Where(w => w.fArbeitszeitAuswertung == _AktAuswertung.Id).ToList();
       var anzTage = DateTime.DaysInMonth(_Jahr, _Monat);
       var listeAnzeigeTage = new ObservableCollection<tabArbeitszeitTag>();
 
-      var alleZeiten = _Db.tabArbeitszeitSet.Where(w => (w.fBediener == _Bediener.Id) && (w.Abmeldung != null) && (w.Anmeldung >= MonatErster) && (w.Anmeldung < MonatLetzter)).ToList();
-
+      var alleZeiten = _Db.tabArbeitszeitSet.Where(w => (w.fBediener == _Bediener.Id) && (w.Anmeldung >= MonatErster) && (w.Anmeldung < MonatLetzter)).ToList();
       for (byte tag = 1; tag <= anzTage; tag++)
       {
         var auswTag = auswTage.FirstOrDefault(f => f.Tag == tag);
-        
-
         if (auswTag == null)
         {
           auswTag = new tabArbeitszeitTag()
           {
             Id = Guid.NewGuid(),
-            fArbeitszeitAuswertung = Auswertung.Id,
+            fArbeitszeitAuswertung = _AktAuswertung.Id,
             Tag = tag
           };
           DbSichern.AbgleichEintragen(auswTag.DatenAbgleich, EnumStatusDatenabgleich.Neu);
           _Db.tabArbeitszeitTagSet.Add(auswTag);
         }
-        auswTag.PropertyChanged += (sen, erg) =>
-        {
-          System.Windows.MessageBox.Show(erg.PropertyName);
-        };
-
-        listeAnzeigeTage.Add(auswTag);
 
         var aktDatum = new DateTime(_Jahr, _Monat, tag);
         auswTag.Wochentag = aktDatum.ToString("ddd");
@@ -245,33 +279,114 @@ namespace JgMaschineGlobalZeit
 
         var zeiten = alleZeiten.Where(w => w.Anmeldung.Day == tag).ToList();
 
-        foreach (var zeit in zeiten)
+        if (zeiten.Count > 0)
         {
-          // Kontrolle ob Zeiten an Tagesauswertung hängt
-          if (zeit.eArbeitszeitAuswertung != auswTag)
-            zeit.eArbeitszeitAuswertung = auswTag;
+          //Pausenzeit Eintragen
+          if (auswTag.DatenAbgleich.Status == EnumStatusDatenabgleich.Neu)
+          {
+            auswTag.Pause = new TimeSpan(1, 0, 0);
+            var zeitAnmeldung = zeiten.Min(z => z.Anmeldung);
+            var zeitAuswahl = new TimeSpan(zeitAnmeldung.Hour, zeitAnmeldung.Minute, 0);
+            var dsPause = ListePausenzeiten.FirstOrDefault(w => (zeitAuswahl >= w.ZeitVon) && (zeitAuswahl <= w.ZeitBis));
+            if (dsPause != null)
+              auswTag.Pause = dsPause.Pausenzeit;
+          }
 
-          auswTag.ZeitBerechnet += zeit.Dauer;
-          auswTag.NachtschichtBerechnet += NachtZeitBerechnen(22, 0, 8, 0, zeit.Anmeldung, (DateTime)zeit.Abmeldung);
+          foreach (var zeit in zeiten)
+          {
+            // Kontrolle ob Zeiten an Tagesauswertung hängt
+            if (zeit.eArbeitszeitAuswertung != auswTag)
+              zeit.eArbeitszeitAuswertung = auswTag;
+
+            auswTag.ZeitBerechnet += zeit.Dauer;
+            auswTag.NachtschichtBerechnet += NachtSchichtBerechnen(22, 0, 8, 0, zeit.Anmeldung, (DateTime)zeit.Abmeldung);
+          }
+
+          auswTag.ZeitBerechnet -= auswTag.Pause;
+
+          if (auswTag.DatenAbgleich.Status == EnumStatusDatenabgleich.Neu)
+          {
+            auswTag.Zeit = auswTag.ZeitBerechnet;
+            auswTag.Nachtschicht = auswTag.NachtschichtBerechnet;
+          }
         }
 
-        if (auswTag.DatenAbgleich.Status == EnumStatusDatenabgleich.Neu)
-        {
-          auswTag.Zeit = auswTag.ZeitBerechnet;
-          auswTag.Nachtschicht = auswTag.NachtschichtBerechnet;
-        }
+        listeAnzeigeTage.Add(auswTag);
       }
 
+      foreach (var auswTag in listeAnzeigeTage)
+      {
+        if (auswTag.ArbeitszeitTagGeaendert == null)
+          auswTag.ArbeitszeitTagGeaendert = WertTagGeaendert;
+      }
+
+      _Db.SaveChanges();
       _VsAuswertungTage.Source = listeAnzeigeTage;
+    }
+
+    private void WertTagGeaendert(tabArbeitszeitTag Sender, string PropertyName)
+    {
+      var listeTage = (ObservableCollection<tabArbeitszeitTag>)_VsAuswertungTage.Source;
+
+      if ((PropertyName == "Zeit") || (PropertyName == "Pause"))
+      {
+        var zz = new ZeitHelper(_AktAuswertung.SollStunden, false);
+        var sollStunden = zz.AsTime;
+        var sumZeit = new TimeSpan(listeTage.Sum(c => c.Zeit.Ticks));
+        var sumPause = new TimeSpan(listeTage.Sum(c => c.Pause.Ticks));
+
+        AuswertungMonat.IstStunden = ZeitInString(sumZeit - sumPause);
+
+        var ueberStunden = sumZeit - sollStunden - sumPause;
+        AuswertungMonat.Ueberstunden = ZeitInString(ueberStunden);
+
+        zz = new ZeitHelper(AuswertungKumulativ.Ueberstunden, false);
+        AuswertungGesamt.Ueberstunden = ZeitInString(zz.AsTime + ueberStunden);
+
+        _AktAuswertung.Ueberstunden = AuswertungMonat.Ueberstunden;
+
+      }
+
+      else if (PropertyName == "Urlaub")
+      {
+        var urlaub = Convert.ToByte(listeTage.Count(c => c.Urlaub));
+        AuswertungMonat.Urlaub = urlaub;
+        AuswertungGesamt.Urlaub = (byte)(urlaub + AuswertungKumulativ.Urlaub);
+
+        _AktAuswertung.Urlaub = urlaub;
+        AuswertungMonat.UrlaubOffen = (short)(_Bediener.Urlaubstage + AuswertungMonat.RestUrlaub - AuswertungKumulativ.Urlaub - _AktAuswertung.Urlaub);
+      }
+
+      else if (PropertyName == "Krank")
+      {
+        var krank = Convert.ToInt16(listeTage.Count(c => c.Krank));
+        AuswertungMonat.Krank = krank;
+        AuswertungGesamt.Krank = (short)(krank + AuswertungKumulativ.Krank);
+
+        _AktAuswertung.Krank = krank;
+      }
+
+      else if (PropertyName == "Feiertag")
+      {
+        var sumZeit = new TimeSpan(listeTage.Sum(c => c.Feiertag.Ticks));
+        AuswertungMonat.Feiertage = ZeitInString(sumZeit);
+        _AktAuswertung.Feiertage = AuswertungMonat.Feiertage;
+      }
+
+      else if (PropertyName == "Nachtschicht")
+      {
+        var sumNachtschicht = new TimeSpan(listeTage.Sum(c => c.Nachtschicht.Ticks));
+        AuswertungMonat.Nachtschichten = ZeitInString(sumNachtschicht);
+        _AktAuswertung.Nachtschichten = AuswertungMonat.Nachtschichten;
+      }
+
+      DbSichern.AbgleichEintragen(Sender.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      DbSichern.AbgleichEintragen(_AktAuswertung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       _Db.SaveChanges();
     }
 
-    private void ListeAnzeigeTage_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-      throw new NotImplementedException();
-    }
 
-    public static TimeSpan NachtZeitBerechnen(int NachtschichtStundeVon, int NachtschichtMinuteVon, int LaengeNachtschichtStunde, int LaengeNachtschichtMinute, DateTime DatumVon, DateTime DatumBis)
+    public static TimeSpan NachtSchichtBerechnen(int NachtschichtStundeVon, int NachtschichtMinuteVon, int LaengeNachtschichtStunde, int LaengeNachtschichtMinute, DateTime DatumVon, DateTime DatumBis)
     {
       var sumNachtschicht = TimeSpan.Zero;
 
@@ -302,6 +417,203 @@ namespace JgMaschineGlobalZeit
       };
 
       return sumNachtschicht;
+    }
+
+    public void SetSollstunden(string Sollstunden)
+    {
+      var zeit = new ZeitHelper(Sollstunden, false);
+      if (zeit.IstOk)
+      {
+        AuswertungMonat.SollStunden = zeit.AsString;
+        _AktAuswertung.SollStunden = zeit.AsString;
+        DbSichern.AbgleichEintragen(_AktAuswertung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        _Db.SaveChanges();
+      }
+    }
+  }
+
+  public class ArbeitszeitAuswertungDs : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private string _SollStunden = "00:00";
+    public string SollStunden
+    {
+      get { return this._SollStunden; }
+      set
+      {
+        var zeit = new ZeitHelper(value, false);
+        if (zeit.IstOk)
+        {
+          this._SollStunden = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private string _IstStunden = "00:00";
+    public string IstStunden
+    {
+      get { return this._IstStunden; }
+      set
+      {
+        var zeit = new ZeitHelper(value, false);
+        if (zeit.IstOk)
+        {
+          this._IstStunden = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private string _Nachtschichten = "00:00";
+    public string Nachtschichten
+    {
+      get { return this._Nachtschichten; }
+      set
+      {
+        var zeit = new ZeitHelper(value, false);
+        if (zeit.IstOk)
+        {
+          this._Nachtschichten = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private string _Ueberstunden = "00:00";
+    public string Ueberstunden
+    {
+      get { return this._Ueberstunden; }
+      set
+      {
+        var zeit = new ZeitHelper(value, false);
+        if (zeit.IstOk)
+        {
+          this._Ueberstunden = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private string _UeberstundenVorjahr = "00:00";
+    public string UeberstundenVorjahr
+    {
+      get { return this._UeberstundenVorjahr; }
+      set
+      {
+        var zeit = new ZeitHelper(value, false);
+        if (zeit.IstOk)
+        {
+          this._UeberstundenVorjahr = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private string _UeberstundenBezahlen = "00:00";
+    public string AuszahlungUeberstunden
+    {
+      get { return this._UeberstundenBezahlen; }
+      set
+      {
+        var zeit = new ZeitHelper(value, false);
+        if (zeit.IstOk)
+        {
+          this._UeberstundenBezahlen = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private string _Feiertage = "00:00";
+    public string Feiertage
+    {
+      get { return this._Feiertage; }
+      set
+      {
+        var zeit = new ZeitHelper(value, false);
+        if (zeit.IstOk)
+        {
+          this._Feiertage = zeit.AsString;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private short _UrlaubsTage = 0;
+    public short UrlaubsTage
+    {
+      get { return this._UrlaubsTage; }
+      set
+      {
+        if (value != this._UrlaubsTage)
+        {
+          this._UrlaubsTage = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private short _RestUrlaub = 0;
+    public short RestUrlaub
+    {
+      get { return this._RestUrlaub; }
+      set
+      {
+        if (value != this._RestUrlaub)
+        {
+          this._RestUrlaub = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private short _Urlaub = 0;
+    public short Urlaub
+    {
+      get { return this._Urlaub; }
+      set
+      {
+        if (value != this._Urlaub)
+        {
+          this._Urlaub = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private short _UrlaubOffen = 0;
+    public short UrlaubOffen
+    {
+      get { return this._UrlaubOffen; }
+      set
+      {
+        if (value != this._UrlaubOffen)
+        {
+          this._UrlaubOffen = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    private short _Krank = 0;
+    public short Krank
+    {
+      get { return this._Krank; }
+      set
+      {
+        if (value != this._Krank)
+        {
+          this._Krank = value;
+          NotifyPropertyChanged();
+        }
+      }
     }
   }
 }

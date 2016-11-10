@@ -41,6 +41,7 @@ namespace JgMaschineData
         public virtual DbSet<tabFeiertage> tabFeiertageSet { get; set; }
         public virtual DbSet<tabArbeitszeitAuswertung> tabArbeitszeitAuswertungSet { get; set; }
         public virtual DbSet<tabSollStunden> tabSollStundenSet { get; set; }
+        public virtual DbSet<tabPausenzeit> tabPausenzeitSet { get; set; }
     
         public virtual ObjectResult<Nullable<int>> BauteilInDaten(Nullable<System.DateTime> datum, Nullable<int> idPosition, Nullable<int> idMaschine)
         {

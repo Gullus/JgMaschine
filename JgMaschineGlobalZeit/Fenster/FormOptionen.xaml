@@ -2,12 +2,26 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prop="clr-namespace:JgMaschineGlobalZeit.Properties"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" mc:Ignorable="d" x:Class="JgMaschineGlobalZeit.Fenster.FormOptionen"
-        Title="Optionen" Height="452" Width="498" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Topmost="True" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico" Loaded="Window_Loaded">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" mc:Ignorable="d" 
+        x:Class="JgMaschineGlobalZeit.Fenster.FormOptionen"
+        Title="Optionen" Height="452" Width="431" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Topmost="True" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico" Loaded="Window_Loaded">
     <Window.Resources>
-        <CollectionViewSource x:Key="vsFeiertage" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabFeiertage}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsSollStunden" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabSollStunden}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsFeiertage" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabFeiertage}, CreateList=True}" IsLiveSortingRequested="True">
+            <CollectionViewSource.SortDescriptions>
+                <ComponentModel:SortDescription Direction="Ascending" PropertyName="Datum"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="vsSollStunden" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabSollStunden}, CreateList=True}" IsLiveSortingRequested="True">
+            <CollectionViewSource.SortDescriptions>
+                <ComponentModel:SortDescription Direction="Ascending" PropertyName="Monat"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
         <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabBediener}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsPausen" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabPausenzeit}, CreateList=True}" IsLiveSortingRequested="True">
+            <CollectionViewSource.SortDescriptions>
+                <ComponentModel:SortDescription Direction="Ascending" PropertyName="ZeitVon"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </Window.Resources>
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
@@ -32,13 +46,13 @@
         <TabControl Margin="5" Grid.ColumnSpan="5" Grid.Row="1">
             <TabItem Header=" Benutzereinstellungen ">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsBediener}">
-                    <DataGrid x:Name="tabBedienerDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False">
+                    <DataGrid x:Name="tabBedienerDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Mitarbeiter" IsReadOnly="True" Width="*"/>
                             <DataGridTextColumn Binding="{Binding Urlaubstage}" Header="Urlaubstage" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
 
                             <DataGridTextColumn Binding="{Binding ErgebnisVorjahr.Urlaub}" Header="Rest Urlaub" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding ErgebnisVorjahr.UeberstundenAnzeigen}" Header="Überst. Vorjahr" Width="90" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding ErgebnisVorjahr.UeberstundenAnzeige}" Header="Überst. Vorjahr" Width="90" CellStyle="{StaticResource CellCenterAlign}"/>
 
                         </DataGrid.Columns>
                     </DataGrid>
@@ -48,7 +62,7 @@
 
             <TabItem Header=" Sollstunden " >
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsSollStunden}">
-                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False">
+                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Monat, Mode=OneWay}" Header="Monat" Width="SizeToHeader" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridTextColumn Binding="{Binding StundenAnzeige}" CellStyle="{StaticResource CellCenterAlign}" Header="Stunden" Width="70"/>
@@ -56,9 +70,17 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header=" Feiertage " HorizontalAlignment="Left" Width="72">
+            <TabItem Header=" Feiertage ">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsFeiertage}">
-                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserDeleteRows="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="127*"/>
+                        <ColumnDefinition Width="333*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="243*"/>
+                        <RowDefinition Height="50*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserDeleteRows="False" Grid.ColumnSpan="2" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Datum" Width="120">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -68,9 +90,34 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Binding="{Binding Bezeichnung}" Header="Bezeichnung" Width="*"/>
-                            <DataGridCheckBoxColumn Binding="{Binding DatenAbgleich.Geloescht }" Header="Gelöscht" Width="60"/>
+                            <DataGridCheckBoxColumn Binding="{Binding DatenAbgleich.Geloescht}" Header="Gelöscht" Width="60"/>
                         </DataGrid.Columns>
                     </DataGrid>
+
+                    <Button Content="Neuer Feiertag" Grid.Row="1" Margin="5" Click="btnNeuerFeiertag_Click"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header=" Pausen ">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsPausen}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="127*"/>
+                        <ColumnDefinition Width="333*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="243*"/>
+                        <RowDefinition Height="50*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserDeleteRows="False" Grid.ColumnSpan="2" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding ZeitVon, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="von" Width="70"/>
+                            <DataGridTextColumn Binding="{Binding ZeitBis, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="bis" Width="70"/>
+                            <DataGridTextColumn Binding="{Binding Pausenzeit, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Pausenlänge" Width="*"/>
+                            <DataGridCheckBoxColumn Binding="{Binding DatenAbgleich.Geloescht}" Header="Gelöscht" Width="60"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button Content="Neuer Feiertag" Grid.Row="1" Margin="5" Click="btnNeuePause_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

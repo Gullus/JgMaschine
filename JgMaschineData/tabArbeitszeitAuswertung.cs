@@ -27,12 +27,11 @@ namespace JgMaschineData
         public short Jahr { get; set; }
         public byte Monat { get; set; }
         public string SollStunden { get; set; }
-        public string IstStunden { get; set; }
+        public string Ueberstunden { get; set; }
         public string Nachtschichten { get; set; }
         public string Feiertage { get; set; }
         public short Urlaub { get; set; }
         public short Krank { get; set; }
-        public string Ueberstunden { get; set; }
         public string AuszahlungUeberstunden { get; set; }
         public string Bemerkung { get; set; }
         public EnumStatusArbeitszeitAuswertung Status { get; set; }

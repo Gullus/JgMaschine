@@ -20,6 +20,7 @@
     <EntitySet Name="tabFeiertageSet" EntityType="JgModel.Store.tabFeiertageSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabArbeitszeitAuswertungSet" EntityType="JgModel.Store.tabArbeitszeitAuswertungSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabSollStundenSet" EntityType="JgModel.Store.tabSollStundenSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="tabPausenzeitSet" EntityType="JgModel.Store.tabPausenzeitSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabBauteiltabBediener" EntityType="JgModel.Store.tabBauteiltabBediener" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="tabMaschinetabAnmeldung" Association="JgModel.Store.tabMaschinetabAnmeldung">
       <End Role="tabMaschine" EntitySet="tabMaschineSet" />
@@ -341,12 +342,11 @@
     <Property Name="Jahr" Type="smallint" Nullable="false" />
     <Property Name="Monat" Type="tinyint" Nullable="false" />
     <Property Name="SollStunden" Type="nvarchar" Nullable="true" MaxLength="7" />
-    <Property Name="IstStunden" Type="nvarchar" Nullable="true" MaxLength="7" />
+    <Property Name="Ueberstunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Nachtschichten" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Feiertage" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Urlaub" Type="smallint" Nullable="false" DefaultValue="0" />
     <Property Name="Krank" Type="smallint" Nullable="false" DefaultValue="0" />
-    <Property Name="Ueberstunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="AuszahlungUeberstunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
@@ -364,6 +364,19 @@
     <Property Name="Jahr" Type="smallint" Nullable="false" />
     <Property Name="Monat" Type="tinyint" Nullable="false" />
     <Property Name="SollStunden" Type="nvarchar" Nullable="true" MaxLength="7" />
+    <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
+  </EntityType>
+  <EntityType Name="tabPausenzeitSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ZeitVon" Type="time" Nullable="false" Precision="0" />
+    <Property Name="ZeitBis" Type="time" Nullable="false" Precision="0" />
+    <Property Name="Pausenzeit" Type="time" Nullable="false" Precision="0" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -757,6 +770,7 @@
             <End Role="tabArbeitszeitTag" EntitySet="tabArbeitszeitTagSet" />
           </AssociationSet>
           <EntitySet Name="tabSollStundenSet" EntityType="JgModel.tabSollStunden" />
+          <EntitySet Name="tabPausenzeitSet" EntityType="JgModel.tabPausenzeit" />
           </EntityContainer>
         <EntityType Name="tabMaschine">
           <Key>
@@ -1280,12 +1294,11 @@
             </Documentation>
           </Property>
           <Property Name="SollStunden" Type="String" Nullable="true" MaxLength="7" />
-          <Property Name="IstStunden" Type="String" Nullable="true" MaxLength="7" />
+          <Property Name="Ueberstunden" Type="String" Nullable="true" MaxLength="7" />
           <Property Name="Nachtschichten" Type="String" Nullable="true" MaxLength="7" />
           <Property Name="Feiertage" Type="String" Nullable="true" MaxLength="7" />
           <Property Name="Urlaub" Type="Int16" Nullable="false" DefaultValue="0" />
           <Property Name="Krank" Type="Int16" Nullable="false" DefaultValue="0" />
-          <Property Name="Ueberstunden" Type="String" Nullable="true" MaxLength="7" />
           <Property Name="AuszahlungUeberstunden" Type="String" Nullable="true" MaxLength="7" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="255" />
           <Property Name="Status" Type="JgModel.EnumStatusArbeitszeitAuswertung" Nullable="false" />
@@ -1321,8 +1334,9 @@
         <EnumType Name="EnumStatusArbeitszeitAuswertung" UnderlyingType="Byte">
           <Member Name="Fehler" Value="0" />
           <Member Name="Leer" Value="1" />
-          <Member Name="Berechnet" Value="2" />
-          <Member Name="Gebucht" Value="3" />
+          <Member Name="InArbeit" Value="2" />
+          <Member Name="Fertig" Value="3" />
+          <Member Name="Erledigt" />
         </EnumType>
         <EntityType Name="tabSollStunden">
           <Key>
@@ -1332,6 +1346,16 @@
           <Property Name="Jahr" Type="Int16" Nullable="false" />
           <Property Name="Monat" Type="Byte" Nullable="false" />
           <Property Name="SollStunden" Type="String" MaxLength="7" Nullable="true" />
+          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tabPausenzeit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="ZeitVon" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="ZeitBis" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="Pausenzeit" Type="Time" Nullable="false" Precision="0" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
         </EntityType>
       </Schema>
@@ -1606,12 +1630,11 @@
           <ScalarProperty Name="Jahr" ColumnName="Jahr" />
           <ScalarProperty Name="Monat" ColumnName="Monat" />
           <ScalarProperty Name="SollStunden" ColumnName="SollStunden" />
-          <ScalarProperty Name="IstStunden" ColumnName="IstStunden" />
+          <ScalarProperty Name="Ueberstunden" ColumnName="Ueberstunden" />
           <ScalarProperty Name="Nachtschichten" ColumnName="Nachtschichten" />
           <ScalarProperty Name="Feiertage" ColumnName="Feiertage" />
           <ScalarProperty Name="Urlaub" ColumnName="Urlaub" />
           <ScalarProperty Name="Krank" ColumnName="Krank" />
-          <ScalarProperty Name="Ueberstunden" ColumnName="Ueberstunden" />
           <ScalarProperty Name="AuszahlungUeberstunden" ColumnName="AuszahlungUeberstunden" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -1632,6 +1655,22 @@
           <ScalarProperty Name="Jahr" ColumnName="Jahr" />
           <ScalarProperty Name="Monat" ColumnName="Monat" />
           <ScalarProperty Name="SollStunden" ColumnName="SollStunden" />
+          <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
+            <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
+            <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
+            <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tabPausenzeitSet">
+      <EntityTypeMapping TypeName="IsTypeOf(JgModel.tabPausenzeit)">
+        <MappingFragment StoreEntitySet="tabPausenzeitSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ZeitVon" ColumnName="ZeitVon" />
+          <ScalarProperty Name="ZeitBis" ColumnName="ZeitBis" />
+          <ScalarProperty Name="Pausenzeit" ColumnName="Pausenzeit" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

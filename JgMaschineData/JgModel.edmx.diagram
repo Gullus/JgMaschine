@@ -41,6 +41,7 @@
         <AssociationConnector Association="JgModel.tabBedienertabArbeitszeitAuswertung" />
         <AssociationConnector Association="JgModel.tabArbeitszeitAuswertungtabArbeitszeitTag" />
         <EntityTypeShape EntityType="JgModel.tabSollStunden" Width="2.25" PointX="15.625" PointY="6.375" />
+        <EntityTypeShape EntityType="JgModel.tabPausenzeit" Width="1.5" PointX="15.625" PointY="4" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -31,12 +31,12 @@ namespace JgMaschineGlobalZeit
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      _Erstellung = new AnmeldungAuswertung(new JgModelContainer(), cbJahr, cbMonat, 
+      _Erstellung = new AnmeldungAuswertung(new JgModelContainer(), cbJahr, cbMonat,
         (CollectionViewSource)FindResource("vsBediener"), (CollectionViewSource)FindResource("vsArbeitszeitTage"))
       {
-        AuswertungMonat = (tabArbeitszeitAuswertung)FindResource("AuswertungMonat"),
-        AuswertungKumulativ = (tabArbeitszeitAuswertung)FindResource("AuswertungKumulativ"),
-        AuswertungGesamt = (tabArbeitszeitAuswertung)FindResource("AuswertungGesamt"),
+        AuswertungMonat = (ArbeitszeitAuswertungDs)FindResource("AuswertungMonat"),
+        AuswertungKumulativ = (ArbeitszeitAuswertungDs)FindResource("AuswertungKumulativ"),
+        AuswertungGesamt = (ArbeitszeitAuswertungDs)FindResource("AuswertungGesamt"),
       };
 
       var heute = DateTime.Now.Date;
@@ -170,7 +170,18 @@ namespace JgMaschineGlobalZeit
       var formOptionen = new Fenster.FormOptionen(_Erstellung);
       formOptionen.ShowDialog();
       _Erstellung.Db.SaveChanges();
-      _Erstellung.MonatOderJahrGeandert();
+    }
+
+    private void btnSollStundenEinstellen_Click(object sender, RoutedEventArgs e)
+    {
+      var form = new JgGlobalZeit.Fenster.FormSollstundenEinstellen(_Erstellung.AuswertungMonat.SollStunden);
+      if (form.ShowDialog() ?? false)
+        _Erstellung.SetSollstunden(form.Sollstunden);
+    }
+
+    private void btnUeberstundenAuszahlen_Click(object sender, RoutedEventArgs e)
+    {
+
     }
   }
 }

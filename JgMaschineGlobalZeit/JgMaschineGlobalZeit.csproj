@@ -110,6 +110,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Fenster\FormUeberstundenAuszahlen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Fenster\FormSollstundenEinstellen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -125,6 +133,12 @@
     </Compile>
     <Compile Include="Fenster\FormOptionen.xaml.cs">
       <DependentUpon>FormOptionen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Fenster\FormUeberstundenAuszahlen.xaml.cs">
+      <DependentUpon>FormUeberstundenAuszahlen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Fenster\FormSollstundenEinstellen.xaml.cs">
+      <DependentUpon>FormSollstundenEinstellen.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/05/2016 17:50:58
+-- Date Created: 11/08/2016 12:05:50
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -367,12 +367,11 @@ CREATE TABLE [dbo].[tabArbeitszeitAuswertungSet] (
     [Jahr] smallint  NOT NULL,
     [Monat] tinyint  NOT NULL,
     [SollStunden] nvarchar(7)  NULL,
-    [IstStunden] nvarchar(7)  NULL,
+    [Ueberstunden] nvarchar(7)  NULL,
     [Nachtschichten] nvarchar(7)  NULL,
     [Feiertage] nvarchar(7)  NULL,
     [Urlaub] smallint  NOT NULL,
     [Krank] smallint  NOT NULL,
-    [Ueberstunden] nvarchar(7)  NULL,
     [AuszahlungUeberstunden] nvarchar(7)  NULL,
     [Bemerkung] nvarchar(255)  NULL,
     [Status] tinyint  NOT NULL,
@@ -390,6 +389,19 @@ CREATE TABLE [dbo].[tabSollStundenSet] (
     [Jahr] smallint  NOT NULL,
     [Monat] tinyint  NOT NULL,
     [SollStunden] nvarchar(7)  NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL
+);
+GO
+
+-- Creating table 'tabPausenzeitSet'
+CREATE TABLE [dbo].[tabPausenzeitSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [ZeitVon] time  NOT NULL,
+    [ZeitBis] time  NOT NULL,
+    [Pausenzeit] time  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
@@ -489,6 +501,12 @@ GO
 -- Creating primary key on [Id] in table 'tabSollStundenSet'
 ALTER TABLE [dbo].[tabSollStundenSet]
 ADD CONSTRAINT [PK_tabSollStundenSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'tabPausenzeitSet'
+ALTER TABLE [dbo].[tabPausenzeitSet]
+ADD CONSTRAINT [PK_tabPausenzeitSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 

@@ -15,7 +15,8 @@ namespace JgMaschineData
     {
         Fehler = 0,
         Leer = 1,
-        Berechnet = 2,
-        Gebucht = 3
+        InArbeit = 2,
+        Fertig = 3,
+        Erledigt = 4
     }
 }

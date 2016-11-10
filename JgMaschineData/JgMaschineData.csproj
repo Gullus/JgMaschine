@@ -134,6 +134,9 @@
     <Compile Include="tabMaschine.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="tabPausenzeit.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="tabProtokoll.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>

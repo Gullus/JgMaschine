@@ -22,12 +22,11 @@
         <TextBlock Text=" Abbrechen" VerticalAlignment="Center"/>
       </StackPanel>
     </Button>
-    <Button Click="btnOk_Click" Grid.Column="3" Grid.Row="3" IsDefault="True">
-      <StackPanel Orientation="Horizontal">
-        <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
-        <TextBlock Text=" Ok" VerticalAlignment="Center"/>
-      </StackPanel>
-    </Button>
-
-  </Grid>
+        <Button Click="btnOk_Click" Grid.Column="3" Grid.Row="3" IsDefault="True">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
+                <TextBlock Text=" Ok" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+    </Grid>
 </Window>
