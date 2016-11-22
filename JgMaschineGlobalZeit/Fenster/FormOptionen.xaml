@@ -117,7 +117,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Button Content="Neuer Feiertag" Grid.Row="1" Margin="5" Click="btnNeuePause_Click"/>
+                    <Button Content="Neue Pause" Grid.Row="1" Margin="5" Click="btnNeuePause_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

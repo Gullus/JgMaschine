@@ -174,14 +174,16 @@ namespace JgMaschineGlobalZeit
 
     private void btnSollStundenEinstellen_Click(object sender, RoutedEventArgs e)
     {
-      var form = new JgGlobalZeit.Fenster.FormSollstundenEinstellen(_Erstellung.AuswertungMonat.SollStunden);
+      var form = new JgGlobalZeit.Fenster.FormSollstundenEinstellen(_Erstellung.AuswertungMonat.SollStundenString);
       if (form.ShowDialog() ?? false)
         _Erstellung.SetSollstunden(form.Sollstunden);
     }
 
     private void btnUeberstundenAuszahlen_Click(object sender, RoutedEventArgs e)
     {
-
+      var form = new JgGlobalZeit.Fenster.FormUeberstundenAuszahlen(_Erstellung.AuswertungMonat.UeberstundenBezahltString);
+      if (form.ShowDialog() ?? false)
+        _Erstellung.SetUebestundenAuszahlung(form.UerbstundenAuszahlem);
     }
   }
 }

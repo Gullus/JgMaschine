@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" DoublePass="true" ReportInfo.Created="05/17/2016 10:41:35" ReportInfo.Modified="11/15/2016 16:20:19" ReportInfo.CreatorVersion="2015.3.1.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqhnGuwybM0qDa+e0+aevQvDDXyZnyp2WIRUgXUZfPsr99Yy7/mx7nplWTVBUy43BLM42iWndO5xmMeWvPg1PXKO3x9OG45hMxbpzN74s2UkCBn+HhHcrWf0+7TQbB6gsyoft15NveCx+MeG2KF+kOh1oROj+tDiT89jJEBtTBwpXHIcbkJvrgTRF2to0KJ7FP"/>
+    <BusinessObjectDataSource Name="Daten" ReferenceName="Daten" DataType="System.Collections.ObjectModel.ObservableCollection`1[[JgMaschineData.tabArbeitszeit, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Enabled="true">
+      <Column Name="Dauer" Enabled="false" DataType="System.TimeSpan"/>
+      <Column Name="DauerAnzeige" DataType="System.String"/>
+      <Column Name="AbmeldungIstLeer" Enabled="false" DataType="System.Boolean" BindableControl="CheckBox"/>
+      <Column Name="Id" Enabled="false" DataType="System.Guid"/>
+      <Column Name="Anmeldung" DataType="System.DateTime"/>
+      <Column Name="Abmeldung" DataType="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"/>
+      <Column Name="ManuelleAnmeldung" DataType="System.Boolean" BindableControl="CheckBox"/>
+      <Column Name="ManuelleAbmeldung" DataType="System.Boolean" BindableControl="CheckBox"/>
+      <Column Name="fBediener" Enabled="false" DataType="System.Guid"/>
+      <Column Name="fStandort" Enabled="false" DataType="System.Guid"/>
+      <Column Name="fArbeitszeitAuswertung" Enabled="false" DataType="System.Nullable`1[[System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"/>
+      <Column Name="DatenAbgleich" DataType="JgMaschineData.DatenAbgleich, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Column Name="Datum" DataType="System.DateTime"/>
+        <Column Name="Status" Enabled="false" DataType="JgMaschineData.EnumStatusDatenabgleich, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+        <Column Name="Bearbeiter" DataType="System.String"/>
+        <Column Name="Geloescht" Enabled="false" DataType="System.Boolean" BindableControl="CheckBox"/>
+      </Column>
+      <Column Name="eBediener" DataType="JgMaschineData.tabBediener, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Column Name="eStandort" Enabled="false" DataType="JgMaschineData.tabStandort, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+        <Column Name="eAktivArbeitszeit" Enabled="false" DataType="JgMaschineData.tabArbeitszeit, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+        <Column Name="StatusArbeitszeit" Enabled="false" DataType="JgMaschineData.EnumStatusArbeitszeitAuswertung, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+        <Column Name="Name" DataType="System.String"/>
+        <Column Name="ErgebnisVorjahr" Enabled="false" DataType="JgMaschineData.tabArbeitszeitAuswertung, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+        <Column Name="Id" Enabled="false" DataType="System.Guid"/>
+        <Column Name="NachName" Enabled="false" DataType="System.String"/>
+        <Column Name="VorName" Enabled="false" DataType="System.String"/>
+        <Column Name="Bemerkung" Enabled="false" DataType="System.String"/>
+        <Column Name="MatchCode" Enabled="false" DataType="System.String"/>
+        <Column Name="Urlaubstage" Enabled="false" DataType="System.Byte"/>
+        <Column Name="Status" Enabled="false" DataType="JgMaschineData.EnumStatusBediener, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+        <Column Name="fAktivArbeitszeit" Enabled="false" DataType="System.Nullable`1[[System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"/>
+        <Column Name="fStandort" Enabled="false" DataType="System.Guid"/>
+        <Column Name="DatenAbgleich" Enabled="false" DataType="JgMaschineData.DatenAbgleich, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+        <BusinessObjectDataSource Name="BusinessObjectDataSource1" Alias="sBauteile" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabBauteil, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="sBauteile"/>
+        <BusinessObjectDataSource Name="BusinessObjectDataSource2" Alias="sArbeitszeiten" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabArbeitszeit, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="sArbeitszeiten"/>
+        <BusinessObjectDataSource Name="BusinessObjectDataSource3" Alias="sAnmeldungenMaschine" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabAnmeldungMaschine, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="sAnmeldungenMaschine"/>
+        <BusinessObjectDataSource Name="BusinessObjectDataSource4" Alias="sAnmeldungenReparatur" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabAnmeldungReparatur, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="sAnmeldungenReparatur"/>
+        <BusinessObjectDataSource Name="BusinessObjectDataSource5" Alias="sReparaturVerursacher" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabReparatur, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="sReparaturVerursacher"/>
+        <BusinessObjectDataSource Name="BusinessObjectDataSource6" Alias="sReparaturProtokollanten" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabReparatur, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="sReparaturProtokollanten"/>
+        <BusinessObjectDataSource Name="BusinessObjectDataSource7" Alias="sArbeitszeitAuswertung" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabArbeitszeitAuswertung, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="sArbeitszeitAuswertung"/>
+      </Column>
+      <Column Name="eStandort" Enabled="false" DataType="JgMaschineData.tabStandort, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+      <Column Name="eArbeitszeitAuswertung" Enabled="false" DataType="JgMaschineData.tabArbeitszeitTag, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+      <BusinessObjectDataSource Name="BusinessObjectDataSource8" Alias="eAktivBediener" Enabled="false" DataType="System.Collections.Generic.ICollection`1[[JgMaschineData.tabBediener, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" PropName="eAktivBediener"/>
+    </BusinessObjectDataSource>
+    <Parameter Name="SqlVerbindung" DataType="System.String"/>
+    <Parameter Name="Auswahl" DataType="System.String">
+      <Parameter Name="BedienerName" DataType="System.String"/>
+      <Parameter Name="MaschineName" DataType="System.String"/>
+    </Parameter>
+    <Parameter Name="IstAktuell" DataType="System.Boolean"/>
+    <Parameter Name="DatumVon" DataType="System.DateTime"/>
+    <Parameter Name="DatumBis" DataType="System.DateTime"/>
+  </Dictionary>
+  <ReportPage Name="PageStart" RawPaperSize="9" Guides="9.45,491.4,510.3,680.4,321.3" OutlineExpression="">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="72.93">
+      <TextObject Name="Text1" Left="9.45" Top="9.45" Width="481.95" Height="18.9" Text="Übersicht Arbeitszeiten" Font="Arial, 12pt, style=Bold"/>
+      <TextObject Name="Text2" Left="9.45" Top="37.8" Width="481.95" Height="18.9" Text="Auswertung: [DatumVon] bis [DatumBis]" Font="Arial, 9pt">
+        <Formats>
+          <CustomFormat Format="dd.MM"/>
+          <DateFormat/>
+        </Formats>
+      </TextObject>
+    </ReportTitleBand>
+    <DataBand Name="Data1" Top="118.73" Width="718.2" Height="18.9" DataSource="Daten">
+      <TextObject Name="Text11" Left="9.45" Width="311.85" Height="18.9" Text="[Daten.eBediener.Name]" Font="Arial, 9pt"/>
+      <TextObject Name="Text43" Left="321.3" Width="170.1" Height="18.9" Text="[Daten.Anmeldung]" Format="Custom" Format.Format="dd.MM.yy  HH:mm" HorzAlign="Center" Font="Arial, 9pt"/>
+      <CheckBoxObject Name="CheckBox1" Left="491.4" Width="18.9" Height="18.9" CheckedSymbol="Cross" DataColumn="Daten.ManuelleAnmeldung"/>
+      <TextObject Name="Text46" Left="510.3" Width="170.1" Height="18.9" Text="[Daten.Abmeldung]" Format="Custom" Format.Format="dd.MM.yy  HH:mm" HorzAlign="Center" Font="Arial, 9pt"/>
+      <CheckBoxObject Name="CheckBox2" Left="680.4" Width="18.9" Height="18.9" CheckedSymbol="Cross" DataColumn="Daten.ManuelleAbmeldung"/>
+      <DataHeaderBand Name="DataHeader1" Top="76.93" Width="718.2" Height="37.8">
+        <TextObject Name="Text42" Left="9.45" Top="9.45" Width="311.85" Height="18.9" Border.Lines="Bottom" Text="Name" HorzAlign="Center" Font="Arial, 9pt, style=Bold"/>
+        <TextObject Name="Text45" Left="491.4" Top="9.45" Width="18.9" Height="18.9" Border.Lines="Bottom" Text="M" HorzAlign="Center" Font="Arial, 9pt, style=Bold"/>
+        <TextObject Name="Text47" Left="510.3" Top="9.45" Width="170.1" Height="18.9" Border.Lines="Bottom" Text="Abmeldung" HorzAlign="Center" Font="Arial, 9pt, style=Bold"/>
+        <TextObject Name="Text44" Left="321.3" Top="9.45" Width="170.1" Height="18.9" Border.Lines="Bottom" Text="Anmeldung" HorzAlign="Center" Font="Arial, 9pt, style=Bold"/>
+        <TextObject Name="Text48" Left="680.4" Top="9.45" Width="18.9" Height="18.9" Border.Lines="Bottom" Text="M" HorzAlign="Center" Font="Arial, 9pt, style=Bold"/>
+      </DataHeaderBand>
+      <DataFooterBand Name="DataFooter1" Top="141.63" Width="718.2" Height="9.45"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="155.08" Width="718.2" Height="37.8">
+      <TextObject Name="Text3" Left="9.45" Top="9.45" Width="406.35" Height="18.9" Text="Übersicht Arbeitszeiten" Font="Arial, 9pt"/>
+      <TextObject Name="Text4" Left="179.55" Top="9.45" Width="387.45" Height="18.9" CanBreak="false" Text="Seite [Page] von [TotalPages#]" HorzAlign="Center" WordWrap="false" Font="Arial, 9pt"/>
+      <TextObject Name="Text5" Left="567" Top="9.45" Width="132.3" Height="18.9" Text="[Date]" HorzAlign="Right" Font="Arial, 9pt"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

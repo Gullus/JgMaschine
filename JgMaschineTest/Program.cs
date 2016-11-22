@@ -8,12 +8,20 @@ namespace JgMaschineTest
     static void Main(string[] args)
     {
 
-      using (var db = new JgMaschineData.JgModelContainer())
-      {
-        var ben = new JgMaschineData.tabBediener();
+      var t = new TimeSpan(-8, 0, 0);
+
+      Console.WriteLine(t);
+
+      Console.WriteLine(new TimeSpan(12, 0, 0) + t );
 
 
-      }
+
+      //using (var db = new JgMaschineData.JgModelContainer())
+      //{
+      //  var ben = new JgMaschineData.tabBediener();
+
+
+      //}
 
 
         Console.ReadKey();

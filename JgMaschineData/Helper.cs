@@ -51,10 +51,6 @@ namespace JgMaschineData
     }
   }
 
-  public partial class tabProtokollMetaData
-  { }
-
-  [MetadataType(typeof(tabProtokollMetaData))]
   public partial class tabProtokoll
   {
     public string Laufzeit
@@ -187,9 +183,10 @@ namespace JgMaschineData
   {
     public TimeSpan Dauer { get { return (this.Abmeldung == null) ? TimeSpan.Zero : (DateTime)this.Abmeldung - this.Anmeldung; } }
 
-    public string DauerAnzeige { get { return ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
-  }
+    public string DauerAnzeige { get { return  (Dauer == TimeSpan.Zero) ? "-" : ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
 
+    public bool AbmeldungIstLeer { get { return this.Abmeldung == null; } }
+  }
 
   public partial class tabArbeitszeitAuswertung
   {
@@ -205,8 +202,14 @@ namespace JgMaschineData
     }
   }
 
-  public partial class tabArbeitszeitTag
+  public partial class tabArbeitszeitTag : INotifyPropertyChanged
   {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     public delegate void DelegateArbeitszeitTagGeaendert(tabArbeitszeitTag Sender, string PropertyName);
     public DelegateArbeitszeitTagGeaendert ArbeitszeitTagGeaendert { get; set; } = null;
 
@@ -220,10 +223,15 @@ namespace JgMaschineData
     public bool IstSonntag { get; set; } = false;
     public bool IstSonnabend { get; set; } = false;
     public bool IstFeiertag { get; set; } = false;
+    public bool IstFehlerZeit { get; set; } = false;
+    public bool IstFehlerNachtschicht { get; set; } = false;
+
+    public bool IstZeitUngleich { get { return this.ZeitBerechnet != this.Zeit; } }
+    public bool IstNachtschichtUngleich { get { return this.NachtschichtBerechnet != this.Nachtschicht; } }
 
     private string ZeitInString(TimeSpan ZeitWert)
     {
-      return ZeitWert.Hours.ToString("D2") + ":" + ZeitWert.Minutes.ToString("D2");
+      return ((int)ZeitWert.TotalHours).ToString("D2") + ":" + (ZeitWert.Minutes < 0 ? -1 * ZeitWert.Minutes : ZeitWert.Minutes).ToString("D2");
     }
 
     public string PauseAnzeige
@@ -250,10 +258,15 @@ namespace JgMaschineData
         {
           this.Zeit = zeit.AsTime;
           ArbeitszeitTagGeaendertAusloesen("Zeit");
+          NotifyPropertyChanged("IstZeitUngleich");
         }
       }
     }
     public TimeSpan ZeitBerechnet { get; set; }
+    public string ZeitBerechnetString
+    {
+      get { return ZeitInString(ZeitBerechnet); }
+    } 
 
     public string NachtschichtAnzeige
     {
@@ -265,10 +278,15 @@ namespace JgMaschineData
         {
           this.Nachtschicht = zeit.AsTime;
           ArbeitszeitTagGeaendertAusloesen("Nachtschicht");
+          NotifyPropertyChanged("IstNachtschichtUngleich");
         }
       }
     }
     public TimeSpan NachtschichtBerechnet { get; set; }
+    public string NachtschichtBerechnetString
+    {
+      get { return ZeitInString(NachtschichtBerechnet); }
+    }
 
     public string FeiertagAnzeige
     {
@@ -309,6 +327,8 @@ namespace JgMaschineData
         }
       }
     }
+
+    public string Ueberstunden { get { return this.Zeit != TimeSpan.Zero ?  ZeitInString(this.Zeit + new TimeSpan(-8, 0, 0)) : "00:00"; } }
   }
 
   #region Zeit
@@ -370,7 +390,7 @@ namespace JgMaschineData
   #endregion 
 
   #region bei Speicherung Valedierungsfehler anzeigen
-
+  
   public partial class JgModelContainer
   {
     private static string DbFehlerText(DbEntityValidationException ex)

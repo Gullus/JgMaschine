@@ -104,8 +104,8 @@
                                 <DataGrid x:Name="dgArbeitszeitAktuell" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAktuell}}" Grid.Row="2" Grid.ColumnSpan="5">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightCenter}"/>
-                                        <DataGridTemplateColumn Header="Abmelden" Width="80">
+                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="100" MinWidth="90" CellStyle="{StaticResource CellRightCenter}"/>
+                                        <DataGridTemplateColumn Header="Abmelden" Width="100">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Button Click="ArbeitszeitAbmeldung_Click" Margin="1"/>
@@ -165,8 +165,8 @@
                                 <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
-                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="90" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                                        <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="100" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
+                                        <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" MinWidth="90" CellStyle="{DynamicResource CellRightCenter}"/>
 
                                         <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
