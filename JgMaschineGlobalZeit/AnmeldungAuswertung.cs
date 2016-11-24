@@ -96,6 +96,7 @@ namespace JgMaschineGlobalZeit
       ListeBediener = new ObservableCollection<tabBediener>(bediener);
       IdisBediener = ListeBediener.Select(s => s.Id).ToArray();
       _VsBediener = VsBediener;
+      _VsBediener.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
       _VsBediener.Source = ListeBediener;
       _VsBediener.View.CurrentChanged += (sen, erg) =>
       {

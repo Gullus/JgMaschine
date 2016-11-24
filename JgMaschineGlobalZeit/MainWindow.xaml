@@ -17,7 +17,11 @@
         <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
-        <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}">
+            <CollectionViewSource.LiveGroupingProperties>
+                <System:String>hhhh</System:String>
+            </CollectionViewSource.LiveGroupingProperties>
+        </CollectionViewSource>
         <CollectionViewSource x:Key="vsArbeitszeitTage" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeitTag}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsAnzeigeArbeitszeiten" Source="{Binding sArbeitszeiten, Source={StaticResource vsArbeitszeitTage}}"/>
 
@@ -179,7 +183,31 @@
                     <ComboBox x:Name="cbMonat" Grid.Column="1" Grid.Row="1"/>
 
                     <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="2" EnableRowVirtualization="True" IsReadOnly="True" 
-                              ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="4">
+                              ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="4" SelectionMode="Single">
+
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Foreground" Value="Black" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="BorderBrush" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
+
+                        <DataGrid.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Background="Blue" Foreground="White" TextAlignment="Center" Height="20">
+                                            <Run Text="{Binding Path=Name, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </DataGrid.GroupStyle>
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Mitarbeiter" Width="*"/>
                             <DataGridTextColumn Binding="{Binding StatusArbeitszeit}" Header="Status" Width="60"/>
