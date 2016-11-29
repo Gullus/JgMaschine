@@ -675,7 +675,7 @@ namespace JgMaschineVerwalten
     {
       var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {_ListeArbeitszeitAuswahl.Current.eBediener.Name}.";
 
-      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
+      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung ?? DateTime.Now, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
       if (form.ShowDialog() ?? false)
       {
         if (form.DatumVon != _ListeArbeitszeitAuswahl.Current.Anmeldung)

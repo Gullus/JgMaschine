@@ -182,7 +182,7 @@ namespace JgMaschineLib
 
     public void AnzeigeConsole(string ProtokollText, ProtoArt AnzeigeArt = ProtoArt.Fehler)
     {
-      Console.WriteLine($"{_Kategorie} {AnzeigeArt}: {ProtokollText}");
+      Console.WriteLine($"{DateTime.Now.ToString("dd.MM HH:mm:ss")}  {_Kategorie} {AnzeigeArt}: {ProtokollText}");
     }
 
     public void AnzeigeFenster(string CaptionText, string ProtokollText, ProtoArt AnzeigeArt = ProtoArt.Fehler)

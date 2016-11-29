@@ -25,7 +25,7 @@ namespace JgMaschineTest.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.221")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.100")]
         public string ScannerAdresse {
             get {
                 return ((string)(this["ScannerAdresse"]));

@@ -61,7 +61,7 @@ namespace JgMaschineServiceAbreitszeit.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.57")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.0.143")]
         public string Terminal_IpNummer {
             get {
                 return ((string)(this["Terminal_IpNummer"]));

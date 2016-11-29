@@ -57,8 +57,9 @@ namespace JgMaschineGlobalZeit
       // Auswertung initialisieren ********************************
 
       _ListeAuswertung = new JgEntityView<tabAuswertung>();
-      _ListeAuswertung.Daten = await _ListeArbeitszeitAuswahl.Db.tabAuswertungSet.Where(w => (w.FilterAuswertung != EnumFilterAuswertung.Arbeitszeit))
+      _ListeAuswertung.Daten = await _ListeArbeitszeitAuswahl.Db.tabAuswertungSet.Where(w => (w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) && (!w.DatenAbgleich.Geloescht))
         .OrderBy(o => o.ReportName).ToListAsync();
+      (FindResource("vsAuswertungArbeitszeit") as CollectionViewSource).Source = _ListeAuswertung.Daten;
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -90,7 +91,7 @@ namespace JgMaschineGlobalZeit
     {
       var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {_ListeArbeitszeitAuswahl.Current.eBediener.Name}.";
 
-      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
+      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung ?? DateTime.Now, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
       if (form.ShowDialog() ?? false)
       {
         if (form.DatumVon != _ListeArbeitszeitAuswahl.Current.Anmeldung)
@@ -116,18 +117,24 @@ namespace JgMaschineGlobalZeit
     {
       var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report
       _Report.Clear();
-      if (_AktAuswertung.Report == null)
-        vorgang = 3;
-      else
+
+      if (vorgang != 4)
       {
-        var mem = new MemoryStream(_AktAuswertung.Report);
-        _Report.Load(mem);
+        _AktAuswertung = (tabAuswertung)(FindResource("vsAuswertungArbeitszeit") as CollectionViewSource).View.CurrentItem;
+
+        if (_AktAuswertung.Report == null)
+          vorgang = 3;
+        else
+        {
+          var mem = new MemoryStream(_AktAuswertung.Report);
+          _Report.Load(mem);
+        }
       }
 
       _Report.RegisterData(_ListeArbeitszeitAuswahl.Daten, "Daten");
-      _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon);
-      _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis);
-      _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 0);
+      _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon.Datum);
+      _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis.Datum);
+      _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 1);
 
       if (vorgang == 4)
       {

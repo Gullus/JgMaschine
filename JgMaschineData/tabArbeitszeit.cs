@@ -24,7 +24,7 @@ namespace JgMaschineData
         }
     
         public System.Guid Id { get; set; }
-        public System.DateTime Anmeldung { get; set; }
+        public Nullable<System.DateTime> Anmeldung { get; set; }
         public Nullable<System.DateTime> Abmeldung { get; set; }
         public bool ManuelleAnmeldung { get; set; }
         public bool ManuelleAbmeldung { get; set; }

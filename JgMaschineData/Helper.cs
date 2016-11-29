@@ -181,9 +181,11 @@ namespace JgMaschineData
 
   public partial class tabArbeitszeit
   {
-    public TimeSpan Dauer { get { return (this.Abmeldung == null) ? TimeSpan.Zero : (DateTime)this.Abmeldung - this.Anmeldung; } }
+    public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value : TimeSpan.Zero; } }
 
     public string DauerAnzeige { get { return  (Dauer == TimeSpan.Zero) ? "-" : ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
+
+    public bool AnmeldungIstLeer { get { return this.Anmeldung == null; } }
 
     public bool AbmeldungIstLeer { get { return this.Abmeldung == null; } }
   }
@@ -244,6 +246,10 @@ namespace JgMaschineData
         {
           this.Pause = zeit.AsTime;
           ArbeitszeitTagGeaendertAusloesen("Pause");
+          NotifyPropertyChanged("ZeitBerechnetString");
+          NotifyPropertyChanged("IstZeitUngleich");
+          NotifyPropertyChanged("NachtschichtBerechnetString");
+          NotifyPropertyChanged("IstNachtschichtUngleich");
         }
       }
     }
@@ -262,7 +268,7 @@ namespace JgMaschineData
         }
       }
     }
-    public TimeSpan ZeitBerechnet { get; set; }
+    public TimeSpan ZeitBerechnet { get; set; } = TimeSpan.Zero;
     public string ZeitBerechnetString
     {
       get { return ZeitInString(ZeitBerechnet); }
@@ -282,7 +288,7 @@ namespace JgMaschineData
         }
       }
     }
-    public TimeSpan NachtschichtBerechnet { get; set; }
+    public TimeSpan NachtschichtBerechnet { get; set; } = TimeSpan.Zero;
     public string NachtschichtBerechnetString
     {
       get { return ZeitInString(NachtschichtBerechnet); }

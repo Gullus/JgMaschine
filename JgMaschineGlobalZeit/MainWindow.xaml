@@ -86,8 +86,11 @@
                     <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                            <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightAlign}"/>
-                            <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="90" MinWidth="90" CellStyle="{StaticResource CellRightAlign}"/>
+                            <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+
+                            <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridCheckBoxColumn Binding="{Binding ManuelleAbmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
                             <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -226,7 +229,7 @@
                                         <Setter Property="Background" Value="#FFA4A4A4"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IstFeiertag}" Value="True">
-                                        <Setter Property="Background" Value="Red"/>
+                                        <Setter Property="Background" Value="#FFFF00E8"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -258,6 +261,9 @@
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding ManuelleAnmeldung}" Value="True">
                                                                     <Setter Property="Background" Value="Aquamarine"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding AnmeldungIstLeer}" Value="True">
+                                                                    <Setter Property="Background" Value="red"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -308,7 +314,7 @@
                                                 <Setter Property="Background" Value="#FFA4A4A4"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IstFeiertag}" Value="True">
-                                                <Setter Property="Background" Value="Red"/>
+                                                <Setter Property="Background" Value="#FFFF00E8"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IstFehlerZeit}" Value="True">
                                                 <Setter Property="Background" Value="Red"/>
@@ -347,7 +353,7 @@
                                                 <Setter Property="Background" Value="#FFA4A4A4"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IstFeiertag}" Value="True">
-                                                <Setter Property="Background" Value="Red"/>
+                                                <Setter Property="Background" Value="#FFFF00E8"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IstFehlerNachtschicht}" Value="True">
                                                 <Setter Property="Background" Value="Red"/>

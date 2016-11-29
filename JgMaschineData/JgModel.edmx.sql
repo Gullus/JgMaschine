@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/08/2016 12:05:50
+-- Date Created: 11/25/2016 17:08:19
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -129,6 +129,9 @@ IF OBJECT_ID(N'[dbo].[tabArbeitszeitAuswertungSet]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[tabSollStundenSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabSollStundenSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabPausenzeitSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabPausenzeitSet];
 GO
 IF OBJECT_ID(N'[dbo].[tabBauteiltabBediener]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabBauteiltabBediener];
@@ -302,7 +305,7 @@ GO
 -- Creating table 'tabArbeitszeitSet'
 CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [Id] uniqueidentifier  NOT NULL,
-    [Anmeldung] datetime  NOT NULL,
+    [Anmeldung] datetime  NULL,
     [Abmeldung] datetime  NULL,
     [ManuelleAnmeldung] bit  NOT NULL,
     [ManuelleAbmeldung] bit  NOT NULL,

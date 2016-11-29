@@ -8,22 +8,16 @@ namespace JgMaschineTest
     static void Main(string[] args)
     {
 
-      var t = new TimeSpan(-8, 0, 0);
+      using (var db = new JgMaschineData.JgModelContainer())
+      {
+        var ben = db.tabArbeitszeitSet.Where(w => w.Abmeldung == null).Min(m => m.Abmeldung);
 
-      Console.WriteLine(t);
-
-      Console.WriteLine(new TimeSpan(12, 0, 0) + t );
-
-
-
-      //using (var db = new JgMaschineData.JgModelContainer())
-      //{
-      //  var ben = new JgMaschineData.tabBediener();
+        Console.WriteLine(ben);
 
 
-      //}
+      }
 
-
+      Console.WriteLine("Fertsch");
         Console.ReadKey();
     }
 

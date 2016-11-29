@@ -277,7 +277,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Anmeldung" Type="datetime" Nullable="false" />
+    <Property Name="Anmeldung" Type="datetime" Nullable="true" />
     <Property Name="Abmeldung" Type="datetime" Nullable="true" />
     <Property Name="ManuelleAnmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
@@ -1075,7 +1075,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <Property Name="Anmeldung" Type="DateTime" Nullable="false" />
+          <Property Name="Anmeldung" Type="DateTime" Nullable="true" />
           <Property Name="Abmeldung" Type="DateTime" Nullable="true" />
           <Property Name="ManuelleAnmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />
           <Property Name="ManuelleAbmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />

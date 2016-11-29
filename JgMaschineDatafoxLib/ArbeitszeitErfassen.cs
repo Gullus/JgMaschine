@@ -10,7 +10,7 @@ namespace JgMaschineDatafoxLib
   public class ArbeitszeitErfassen
   {
     private OptionenDatafox _OptDatafox = null;
-    public OptionenDatafox OptDatafox { get { return _OptDatafox; } } 
+    public OptionenDatafox OptDatafox { get { return _OptDatafox; } }
     private Timer _SteuerungsTimer;
 
     public ArbeitszeitErfassen(OptionenDatafox OptDatafox)
@@ -96,9 +96,6 @@ namespace JgMaschineDatafoxLib
     {
       var anmeldTermial = ProgDatafox.KonvertDatafoxExport(ListeArbeitszeitvomTerminal, "MITA_");
 
-      var idisAktiveAnmeldungen = Db.tabBedienerSet.Where(w => w.fAktivArbeitszeit != null).Select(s => s.fAktivArbeitszeit).ToArray();
-      var aktAnmeldungen = Db.tabArbeitszeitSet.Where(w => idisAktiveAnmeldungen.Contains(w.Id)).ToList();
-
       var matchCodes = "'" + string.Join("','", anmeldTermial.Select(s => s.MatchCode).Distinct().ToArray()) + "'";
       var alleBediener = Db.tabBedienerSet.Where(w => matchCodes.Contains(w.MatchCode)).ToList();
 
@@ -111,18 +108,8 @@ namespace JgMaschineDatafoxLib
           continue;
         }
 
-        var arbeitzeitVorhanden = aktAnmeldungen.FirstOrDefault(f => f.eBediener.MatchCode == anmeld.MatchCode);
-
         if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Komme)
         {
-          if (arbeitzeitVorhanden != null)
-          {
-            // Zeitspanne wo erneute Anmeldungen ohne gültige Abmeldung erfolgt, wurde von Herrn Großmann am 13.08.16 fetgelegt.
-
-            if (anmeld.Datum.AddHours(12) < DateTime.Now)
-              continue;
-          }
-
           var arbZeit = new tabArbeitszeit()
           {
             Id = Guid.NewGuid(),
@@ -139,32 +126,27 @@ namespace JgMaschineDatafoxLib
         }
         else if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Gehen)
         {
-          if (arbeitzeitVorhanden != null)
+          if (bediener.eAktivArbeitszeit != null)
           {
-            arbeitzeitVorhanden.Abmeldung = anmeld.Datum;
-            arbeitzeitVorhanden.ManuelleAbmeldung = true;
-            DbSichern.AbgleichEintragen(arbeitzeitVorhanden.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-            bediener.fAktivArbeitszeit = null;
+            bediener.eAktivArbeitszeit.Abmeldung = anmeld.Datum;
+            bediener.eAktivArbeitszeit.ManuelleAbmeldung = false;
+            DbSichern.AbgleichEintragen(bediener.eAktivArbeitszeit.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+            bediener.eAktivArbeitszeit = null;
             DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
           }
           else
           {
-            var letzteArbeitszeit = Db.tabArbeitszeitSet.Where(w => (w.fBediener == bediener.Id) && (w.Abmeldung != null)).Max(m => m.Abmeldung);
-
-            if ((letzteArbeitszeit != null) && (((DateTime)letzteArbeitszeit).AddHours(12) > DateTime.Now))
+            var arbZeit = new tabArbeitszeit()
             {
-              var arbZeit = new tabArbeitszeit()
-              {
-                Id = Guid.NewGuid(),
-                fBediener = bediener.Id,
-                fStandort = IdStandort,
-                Abmeldung = anmeld.Datum,
-                ManuelleAnmeldung = false,
-                ManuelleAbmeldung = false,
-              };
-              DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-              Db.tabArbeitszeitSet.Add(arbZeit);
-            }
+              Id = Guid.NewGuid(),
+              fBediener = bediener.Id,
+              fStandort = IdStandort,
+              Abmeldung = anmeld.Datum,
+              ManuelleAnmeldung = false,
+              ManuelleAbmeldung = false,
+            };
+            DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+            Db.tabArbeitszeitSet.Add(arbZeit);
           }
         }
       }
@@ -175,3 +157,81 @@ namespace JgMaschineDatafoxLib
   }
 }
 
+
+//var anmeldTermial = ProgDatafox.KonvertDatafoxExport(ListeArbeitszeitvomTerminal, "MITA_");
+
+////var idisAktiveAnmeldungen = Db.tabBedienerSet.Where(w => w.fAktivArbeitszeit != null).Select(s => s.fAktivArbeitszeit).ToArray();
+////var aktAnmeldungen = Db.tabArbeitszeitSet.Where(w => idisAktiveAnmeldungen.Contains(w.Id)).ToList();
+
+//var matchCodes = "'" + string.Join("','", anmeldTermial.Select(s => s.MatchCode).Distinct().ToArray()) + "'";
+//var alleBediener = Db.tabBedienerSet.Where(w => matchCodes.Contains(w.MatchCode)).ToList();
+
+//      foreach (var anmeld in anmeldTermial)
+//      {
+//        var bediener = alleBediener.FirstOrDefault(f => f.MatchCode == anmeld.MatchCode);
+//        if (bediener == null)
+//        {
+//          MyProtokoll.Set($"Bediner {anmeld.MatchCode} aus Terminal nicht bekannt!", Proto.ProtoArt.Warnung);
+//          continue;
+//        }
+
+//        //var arbeitzeitVorhanden = aktAnmeldungen.FirstOrDefault(f => f.eBediener.MatchCode == anmeld.MatchCode);
+
+//        if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Komme)
+//        {
+//          if (arbeitzeitVorhanden != null)
+//          {
+//            // Zeitspanne wo erneute Anmeldungen ohne gültige Abmeldung erfolgt, wurde von Herrn Großmann am 13.08.16 fetgelegt.
+
+//            if (anmeld.Datum.AddHours(12) < DateTime.Now)
+//              continue;
+//          }
+
+//          var arbZeit = new tabArbeitszeit()
+//          {
+//            Id = Guid.NewGuid(),
+//            fBediener = bediener.Id,
+//            fStandort = IdStandort,
+//            Anmeldung = anmeld.Datum,
+//            ManuelleAnmeldung = false,
+//            ManuelleAbmeldung = false,
+//          };
+//DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+//          Db.tabArbeitszeitSet.Add(arbZeit);
+//          bediener.fAktivArbeitszeit = arbZeit.Id;
+//          DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+//        }
+//        else if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Gehen)
+//        {
+//          if (arbeitzeitVorhanden != null)
+//          {
+//            arbeitzeitVorhanden.Abmeldung = anmeld.Datum;
+//            arbeitzeitVorhanden.ManuelleAbmeldung = false;
+//            DbSichern.AbgleichEintragen(arbeitzeitVorhanden.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+//            bediener.fAktivArbeitszeit = null;
+//            DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+//          }
+//          else
+//          {
+//            var letzteArbeitszeit = Db.tabArbeitszeitSet.Where(w => (w.fBediener == bediener.Id) && (w.Abmeldung != null)).Max(m => m.Abmeldung);
+
+//            if ((letzteArbeitszeit != null) && (((DateTime)letzteArbeitszeit).AddHours(12) > DateTime.Now))
+//            {
+//              var arbZeit = new tabArbeitszeit()
+//              {
+//                Id = Guid.NewGuid(),
+//                fBediener = bediener.Id,
+//                fStandort = IdStandort,
+//                Abmeldung = anmeld.Datum,
+//                ManuelleAnmeldung = false,
+//                ManuelleAbmeldung = false,
+//              };
+//DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+//              Db.tabArbeitszeitSet.Add(arbZeit);
+//            }
+//          }
+//        }
+//      }
+
+//      Db.SaveChanges();
+//      MyProtokoll.Set($"{ListeArbeitszeitvomTerminal.Count} Arbeitszeiten ins System übertragen!", Proto.ProtoArt.Kommentar);
