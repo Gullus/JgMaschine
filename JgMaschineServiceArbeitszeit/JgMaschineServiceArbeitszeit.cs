@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.ServiceProcess;
+using System.Threading.Tasks;
 using JgMaschineDatafoxLib;
 using JgMaschineLib;
 
@@ -79,14 +80,19 @@ namespace JgMaschineServiceAbreitszeit
     protected override void OnStart(string[] args)
     {
       base.OnStart(args);
-      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeit startet!", Proto.ProtoArt.Info);
-      _ArbErfassung.Start();
+      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeitservice startet!", Proto.ProtoArt.Info);
+
+      var task = new Task(() =>
+      {
+        _ArbErfassung.Start();
+      });
+      task.Start();
     }
 
     protected override void OnShutdown()
     {
       base.OnShutdown();
-      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeit herunter gefahren!", Proto.ProtoArt.Info);
+      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeitservice heruntergefahren!", Proto.ProtoArt.Info);
     }
 
     protected override void OnStop()

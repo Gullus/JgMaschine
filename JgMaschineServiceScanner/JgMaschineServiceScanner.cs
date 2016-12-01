@@ -84,7 +84,7 @@ namespace JgMaschineServiceScanner
     {
       base.OnStart(args);
 
-      _ScannProgramm.Optionen.Protokoll.Set("Serve Programm starten!", Proto.ProtoArt.Info);
+      _ScannProgramm.Optionen.Protokoll.Set("Scannerservice starten!", Proto.ProtoArt.Info);
 
       var task = new Task(() =>
       {
@@ -96,7 +96,7 @@ namespace JgMaschineServiceScanner
     protected override void OnShutdown()
     {
       base.OnShutdown();
-      _ScannProgramm.Optionen.Protokoll.Set("Serve Scanner heruntergefahren!", Proto.ProtoArt.Info);
+      _ScannProgramm.Optionen.Protokoll.Set("Scannerservice heruntergefahren!", Proto.ProtoArt.Info);
     }
   }
 

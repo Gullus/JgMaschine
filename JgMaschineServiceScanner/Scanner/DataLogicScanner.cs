@@ -103,7 +103,7 @@ namespace JgMaschineLib.Scanner
                 if (ct.IsCancellationRequested)
                   break;
 
-                if (!!Helper.IstPingOk(_Optionen.CradleIpAdresse, _Optionen.Protokoll))
+                if (!Helper.IstPingOk(_Optionen.CradleIpAdresse, _Optionen.Protokoll))
                   break;
 
                 if (ct.IsCancellationRequested)
