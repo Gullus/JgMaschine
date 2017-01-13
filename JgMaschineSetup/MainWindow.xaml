@@ -298,14 +298,14 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header=" Zusätliche Einstellungen ">
+      <TabItem Header=" Zusätzliche Einstellungen ">
         <Grid Margin="8">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="160"/>
             <ColumnDefinition/>
           </Grid.ColumnDefinitions>
           <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -317,7 +317,7 @@
               <TextBlock Text="Pfad für Ereignissanzeige erstellen" TextWrapping="Wrap"/>
             </StackPanel>
           </Button>
-          <TextBlock Margin="10,0,10,0" TextWrapping="Wrap" Grid.Column="1" Text="Um ordnungsgemäße Einträge in der Windows Ereignissanzeige zu gewährleisten, muss hier der Eintrag des Eintragsverzeichnisses vorgenommen werden. Vorraussetzung ist, dass das Programm mit Administrtorrechten gestaretet wurde." />
+          <TextBlock Margin="10,0,10,0" TextWrapping="Wrap" Grid.Column="1" Text="Um ordnungsgemäße Einträge in der Windows Ereignissanzeige zu gewährleisten, muss hier der Eintrag des Eintragsverzeichnisses vorgenommen werden. Vorraussetzung ist, dass das Programm mit Administrtorrechten gestartet wurde." />
 
           <Label Content="Net Version" Grid.Row="2" />
           <TextBox x:Name="tbNetversion" Grid.Column="1" Grid.Row="2" Style="{DynamicResource StyleTextBoxReadOnly}" />

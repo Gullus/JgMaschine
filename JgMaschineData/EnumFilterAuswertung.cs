@@ -17,6 +17,7 @@ namespace JgMaschineData
         Arbeitszeit = 1,
         Anmeldung = 2,
         Bauteil = 3,
-        Reparatur = 4
+        Reparatur = 4,
+        ArbeitszeitAuswertung = 5
     }
 }

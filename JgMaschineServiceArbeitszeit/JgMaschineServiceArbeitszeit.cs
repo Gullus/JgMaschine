@@ -41,10 +41,15 @@ namespace JgMaschineServiceAbreitszeit
 
 #if DEBUG
 
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.Console, Proto.AnzeigeArt.Email);
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.Console);
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.Console);
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.Console);
+      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll);
+      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
+      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.WinProtokoll);
+      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.WinProtokoll);
+
+      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.Console, Proto.AnzeigeArt.Email);
+      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.Console);
+      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.Console);
+      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.Console);
 
       var msg = $"Arbeitszeit startet!\nAdresse: {optDatafox.Datafox.IpNummer}  Port: {optDatafox.Datafox.Portnummer}.";
       optDatafox.Protokoll.Set(msg, Proto.ProtoArt.Info);
@@ -80,7 +85,7 @@ namespace JgMaschineServiceAbreitszeit
     protected override void OnStart(string[] args)
     {
       base.OnStart(args);
-      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeitservice startet!", Proto.ProtoArt.Info);
+      _ArbErfassung.OptDatafox.Protokoll.Set("Arbeitszeitservice startet!", Proto.ProtoArt.Info);
 
       var task = new Task(() =>
       {
@@ -120,8 +125,8 @@ namespace JgMaschineServiceAbreitszeit
     {
       _serviceInstall = new ServiceInstaller()
       {
-        ServiceName = "JgMaschineArbeitszeit - Service",
-        DisplayName = "JgMaschineArbeitszeit - Service",
+        ServiceName = "JgMaschine - Arbeitszeit",
+        DisplayName = "JgMaschine - Arbeitszeit",
         Description = "Dienst zum erfassen von Arbeiteitszeit Daten.",
         StartType = ServiceStartMode.Automatic,
         DelayedAutoStart = true,

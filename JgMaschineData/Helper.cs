@@ -337,8 +337,6 @@ namespace JgMaschineData
     public string Ueberstunden { get { return this.Zeit != TimeSpan.Zero ?  ZeitInString(this.Zeit + new TimeSpan(-8, 0, 0)) : "00:00"; } }
   }
 
-  #region Zeit
-
   public class ZeitHelper
   {
     public bool IstOk = true;
@@ -391,9 +389,6 @@ namespace JgMaschineData
       }
     }
   }
-
-
-  #endregion 
 
   #region bei Speicherung Valedierungsfehler anzeigen
   

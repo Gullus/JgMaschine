@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using JgMaschineLib.Email;
 
@@ -17,7 +18,8 @@ namespace JgMaschineLib
       Auswertung,
       ServiceArbeitszeit,
       ServiceScanner,
-      ServiceDatenabfrage
+      ServiceDatenabfrage,
+      ServiceDataMerge
     }
 
     public KategorieArt _Kategorie;
@@ -74,25 +76,40 @@ namespace JgMaschineLib
 
     public static void PfadeInWindowsEreignissAnzeigeSetzten()
     {
-      string fehler = null;
+      var prot = new StringBuilder();
+
       foreach (var name in Enum.GetNames(typeof(KategorieArt)))
       {
+        var logName = "JgMaschine";
         try
         {
-          if (!EventLog.SourceExists(name))
-            EventLog.CreateEventSource(name, "JgMaschine");
+          var kategorie = name.ToString();
+          if (EventLog.SourceExists(kategorie))
+          {
+            var logKontrolle = EventLog.LogNameFromSourceName(kategorie, ".");
+            if (logKontrolle != logName)
+            {
+              EventLog.DeleteEventSource(kategorie);
+              EventLog.CreateEventSource(kategorie, logName);
+              prot.AppendLine($"{kategorie} von {logKontrolle} nach {logName} geändert");
+            }
+            else
+              prot.AppendLine($"{kategorie} - vorhanden");
+          }
+          else
+          { 
+            EventLog.CreateEventSource(kategorie, logName);
+            prot.AppendLine($"{kategorie} - eingetragen"); 
+          }
         }
         catch (Exception f)
         {
-          if (fehler == null)
-            fehler = "Fehler beim Einrichten des Windowsprotokoll!";
-          fehler += $"{name} : {f.Message}";
+          prot.AppendLine($"Fehler: {name} : {f.Message}");
         }
+        prot.AppendLine();
       }
-      if (fehler == null)
-        Helper.Protokoll("Windowsereigniss Pfade erfolgreich eingetragen", Helper.ProtokollArt.Info);
-      else
-        Helper.Protokoll(fehler, Helper.ProtokollArt.Warnung);
+
+      Helper.Protokoll(prot.ToString(), Helper.ProtokollArt.Info);
     }
 
     public void Set(string ProtokollText, Exception Fehler, string Caption = "")
@@ -152,7 +169,9 @@ namespace JgMaschineLib
 
     public void AnzeigeWinProtokoll(string ProtokollText, ProtoArt AnzeigeArt = ProtoArt.Fehler)
     {
-      if (EventLog.SourceExists(_Kategorie.ToString()))
+      var kategorie = _Kategorie.ToString();
+
+      if (EventLog.SourceExists(kategorie))
       {
         var logType = EventLogEntryType.Information;
 
@@ -166,7 +185,7 @@ namespace JgMaschineLib
             logType = EventLogEntryType.Warning; break;
         }
 
-        EventLog.WriteEntry(_Kategorie.ToString(), ProtokollText, logType, 1);
+        EventLog.WriteEntry(kategorie, ProtokollText, logType, 1);
       }
     }
 

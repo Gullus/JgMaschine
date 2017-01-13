@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Windows.Data;
 using JgMaschineData;
 using JgMaschineLib;
 using JgMaschineLib.Zeit;
+using Microsoft.Win32;
 
 namespace JgMaschineGlobalZeit
 {
@@ -16,6 +18,9 @@ namespace JgMaschineGlobalZeit
     private JgEntityView<tabArbeitszeit> _ListeArbeitszeitAuswahl;
     private JgDatumZeit _DzArbeitszeitVon { get { return (JgDatumZeit)FindResource("dzArbeitszeitVon"); } }
     private JgDatumZeit _DzArbeitszeitBis { get { return (JgDatumZeit)FindResource("dzArbeitszeitBis"); } }
+
+    private CollectionViewSource _VsAuswertungArbeitszeit { get { return (CollectionViewSource)FindResource("vsAuswertungArbeitszeit"); } }
+    private CollectionViewSource _VsAuswertungAuswertung { get { return (CollectionViewSource)FindResource("vsAuswertungAuswertung"); } }
 
     private FastReport.Report _Report;
     private tabAuswertung _AktAuswertung = null;
@@ -32,12 +37,14 @@ namespace JgMaschineGlobalZeit
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
       _Erstellung = new AnmeldungAuswertung(new JgModelContainer(), cbJahr, cbMonat,
-        (CollectionViewSource)FindResource("vsBediener"), (CollectionViewSource)FindResource("vsArbeitszeitTage"))
+        (CollectionViewSource)FindResource("vsBediener"))
       {
         AuswertungMonat = (ArbeitszeitAuswertungDs)FindResource("AuswertungMonat"),
         AuswertungKumulativ = (ArbeitszeitAuswertungDs)FindResource("AuswertungKumulativ"),
         AuswertungGesamt = (ArbeitszeitAuswertungDs)FindResource("AuswertungGesamt"),
       };
+
+      (FindResource("vsArbeitszeitTage") as CollectionViewSource).Source = _Erstellung.ListeAnzeigeTage;
 
       var heute = DateTime.Now.Date;
       _DzArbeitszeitVon.DatumZeit = heute;
@@ -57,9 +64,14 @@ namespace JgMaschineGlobalZeit
       // Auswertung initialisieren ********************************
 
       _ListeAuswertung = new JgEntityView<tabAuswertung>();
-      _ListeAuswertung.Daten = await _ListeArbeitszeitAuswahl.Db.tabAuswertungSet.Where(w => (w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) && (!w.DatenAbgleich.Geloescht))
-        .OrderBy(o => o.ReportName).ToListAsync();
-      (FindResource("vsAuswertungArbeitszeit") as CollectionViewSource).Source = _ListeAuswertung.Daten;
+      _ListeAuswertung.Daten = await _ListeArbeitszeitAuswahl.Db.tabAuswertungSet.Where(w => ((w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) || (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)) && (!w.DatenAbgleich.Geloescht)).ToListAsync();
+      var vsArbeitszeit = (CollectionViewSource)FindResource("vsAuswertungArbeitszeit");
+      vsArbeitszeit.Source = _ListeAuswertung.Daten;
+      vsArbeitszeit.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Arbeitszeit;
+
+      var vsAuswertung = (CollectionViewSource)FindResource("vsAuswertungAuswertung");
+      vsAuswertung.Source = _ListeAuswertung.Daten;
+      vsAuswertung.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung;
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -115,13 +127,58 @@ namespace JgMaschineGlobalZeit
 
     private void btnDrucken_Click(object sender, RoutedEventArgs e)
     {
-      var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report
-      _Report.Clear();
+      var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report, 5 - Report Exportieren, 6 - Löschen
+
+      var auswahl = EnumFilterAuswertung.Arbeitszeit;
+      if (tcArbeitszeit.SelectedIndex == 1)
+        auswahl = EnumFilterAuswertung.ArbeitszeitAuswertung;
 
       if (vorgang != 4)
       {
-        _AktAuswertung = (tabAuswertung)(FindResource("vsAuswertungArbeitszeit") as CollectionViewSource).View.CurrentItem;
+        switch (auswahl)
+        {
+          case EnumFilterAuswertung.Arbeitszeit: _AktAuswertung = (tabAuswertung)_VsAuswertungArbeitszeit.View.CurrentItem; break;
+          case EnumFilterAuswertung.ArbeitszeitAuswertung: _AktAuswertung = (tabAuswertung)_VsAuswertungAuswertung.View.CurrentItem; break;
+        }
 
+        if (_AktAuswertung == null)
+        {
+          MessageBox.Show("Es wurde kein Report ausgewählt.", "Fehler !", MessageBoxButton.OK, MessageBoxImage.Information);
+          return;
+        }
+
+        switch (vorgang)
+        {
+          case 5: // Exportieren
+            SaveFileDialog dia = new SaveFileDialog();
+            dia.Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*";
+            dia.FilterIndex = 1;
+            if (dia.ShowDialog() ?? false)
+            {
+              _Report.Save(dia.FileName);
+              MemoryStream mem;
+              mem = new MemoryStream(_AktAuswertung.Report);
+              using (Stream f = File.Create(dia.FileName))
+              {
+                mem.CopyTo(f);
+              }
+            }
+            return;
+          case 6:  // Report löschen
+            var mb = MessageBox.Show($"Report {_AktAuswertung.ReportName} löschen ?", "Löschabfrage", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None);
+            if (mb == MessageBoxResult.Yes)
+            {
+              _ListeAuswertung.AlsGeloeschtKennzeichnen(_AktAuswertung);
+              switch (auswahl)
+              {
+                case EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.Refresh(); break;
+                case EnumFilterAuswertung.Anmeldung: _VsAuswertungAuswertung.View.Refresh(); break;
+              }
+            }
+            return;
+        }
+
+        _Report.Clear();
         if (_AktAuswertung.Report == null)
           vorgang = 3;
         else
@@ -131,33 +188,55 @@ namespace JgMaschineGlobalZeit
         }
       }
 
-      _Report.RegisterData(_ListeArbeitszeitAuswahl.Daten, "Daten");
-      _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon.Datum);
-      _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis.Datum);
-      _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 1);
-
-      if (vorgang == 4)
+      switch (auswahl)
       {
-        Fenster.FormNeuerReport form = new Fenster.FormNeuerReport();
-        if (form.ShowDialog() ?? false)
-        {
-          string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          _AktAuswertung = new JgMaschineData.tabAuswertung()
-          {
-            Id = Guid.NewGuid(),
-            FilterAuswertung = 0,
-            ReportName = form.ReportName,
-            ErstelltDatum = DateTime.Now,
-            ErstelltName = username,
-            GeaendertDatum = DateTime.Now,
-            GeaendertName = username
-          };
-          _ListeAuswertung.Add(_AktAuswertung);
-
-          _ListeAuswertung.ViewSource.View.MoveCurrentTo(_AktAuswertung);
-          _Report.Design();
-        }
+        case EnumFilterAuswertung.Arbeitszeit:
+          _Report.RegisterData(_ListeArbeitszeitAuswahl.Daten, "Daten");
+          _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon.Datum);
+          _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis.Datum);
+          _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 0);
+          break;
+        case EnumFilterAuswertung.ArbeitszeitAuswertung:
+          _Report.RegisterData(new List<ArbeitszeitAuswertungDs>() { _Erstellung.AuswertungKumulativ }, "AuswertungKumulativ");
+          _Report.RegisterData(new List<ArbeitszeitAuswertungDs>() { _Erstellung.AuswertungMonat }, "AuswertungMonat");
+          _Report.RegisterData(new List<ArbeitszeitAuswertungDs>() { _Erstellung.AuswertungGesamt }, "AuswertungGesamt");
+          _Report.RegisterData(_Erstellung.ListeAnzeigeTage, "AuswertungTage");
+          break;
+        default:
+          break;
       }
+
+      if (vorgang == 4) // Neuer Report
+      {
+        var repName = "";
+
+        var formNeu = new Fenster.FormNeuerReport();
+        if (!formNeu.ShowDialog() ?? false)
+          return;
+        repName = formNeu.ReportName;
+
+        string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+        _AktAuswertung = new tabAuswertung()
+        {
+          Id = Guid.NewGuid(),
+          FilterAuswertung = auswahl,
+          ReportName = repName,
+          ErstelltDatum = DateTime.Now,
+          ErstelltName = username,
+          GeaendertDatum = DateTime.Now,
+          GeaendertName = username
+        };
+        _ListeAuswertung.Add(_AktAuswertung);
+
+        switch (auswahl)
+        {
+          case EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.MoveCurrentTo(_AktAuswertung); break;
+          case EnumFilterAuswertung.Anmeldung: _VsAuswertungAuswertung.View.MoveCurrentTo(_AktAuswertung); break;
+        }
+
+        _Report.Design();
+      }
+
       else
         switch (vorgang)
         {

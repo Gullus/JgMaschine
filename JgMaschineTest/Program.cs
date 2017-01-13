@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace JgMaschineTest
@@ -8,17 +9,8 @@ namespace JgMaschineTest
     static void Main(string[] args)
     {
 
-      using (var db = new JgMaschineData.JgModelContainer())
-      {
-        var ben = db.tabArbeitszeitSet.Where(w => w.Abmeldung == null).Min(m => m.Abmeldung);
-
-        Console.WriteLine(ben);
-
-
-      }
-
       Console.WriteLine("Fertsch");
-        Console.ReadKey();
+      Console.ReadKey();
     }
 
     private static double NachtZeitBerechnen(int NachtschichtStundeVon, int NachtschichtMinuteVon, int LaengeNachtschichtStunde, int LaengeNachtschichtMinute,

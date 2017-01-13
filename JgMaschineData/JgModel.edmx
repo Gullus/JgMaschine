@@ -1133,6 +1133,7 @@
           <Member Name="Anmeldung" Value="2" />
           <Member Name="Bauteil" Value="3" />
           <Member Name="Reparatur" Value="4" />
+          <Member Name="ArbeitszeitAuswertung" Value="5" />
         </EnumType>
         <Association Name="tabStandorttabBediener">
           <End Type="JgModel.tabStandort" Role="tabStandort" Multiplicity="1" />

@@ -732,7 +732,7 @@ namespace JgMaschineVerwalten
 
     private void btnDrucken_Click(object sender, RoutedEventArgs e)
     {
-      var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report, 5 - Report Exportieren, 6 - LÖschen
+      var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report, 5 - Report Exportieren, 6 - Löschen
 
       if (vorgang != 4)
       {

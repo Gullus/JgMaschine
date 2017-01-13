@@ -25,6 +25,8 @@
         <CollectionViewSource x:Key="vsArbeitszeitTage" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeitTag}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsAnzeigeArbeitszeiten" Source="{Binding sArbeitszeiten, Source={StaticResource vsArbeitszeitTage}}"/>
 
+        <CollectionViewSource x:Key="vsAuswertungAuswertung" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+
         <local:ArbeitszeitAuswertungDs x:Key="AuswertungKumulativ"/>
         <local:ArbeitszeitAuswertungDs x:Key="AuswertungMonat"/>
         <local:ArbeitszeitAuswertungDs x:Key="AuswertungGesamt"/>
@@ -45,15 +47,15 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="47*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="566*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -104,40 +106,44 @@
 
                     <Grid Grid.Row="3" Grid.ColumnSpan="15">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="160"/>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="80"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
                         <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungArbeitszeit}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
+                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1" ToolTip="Report anzeigen">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
+                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2" ToolTip="Report drucken">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
+                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3" ToolTip="Report bearbeiten">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
+                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4" ToolTip="Neuen Report erstellen">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
+                        <Button Content="Export" Click="btnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
+                        <Button Content="Löschen" Click="btnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
                     </Grid>
                 </Grid>
             </TabItem>
@@ -177,6 +183,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Label Content="Jahr"/>
@@ -186,17 +194,17 @@
                     <ComboBox x:Name="cbMonat" Grid.Column="1" Grid.Row="1"/>
 
                     <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="2" EnableRowVirtualization="True" IsReadOnly="True" 
-                              ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="4" SelectionMode="Single">
+                              ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="7" SelectionMode="Single">
 
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Foreground" Value="Black" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="Red" />
-                                            <Setter Property="BorderBrush" Value="White" />
-                                        </Trigger>
-                                    </Style.Triggers>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Red" />
+                                        <Setter Property="BorderBrush" Value="White" />
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
                         </DataGrid.CellStyle>
 
@@ -217,7 +225,9 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="20" Grid.Column="3" EnableRowVirtualization="False" ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None">
+                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="20" Grid.Column="3" EnableRowVirtualization="False" 
+                              ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
+                              AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None">
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -468,6 +478,48 @@
                     <TextBox Text="{Binding Source={StaticResource AuswertungMonat}, Path=FeiertageString, Mode=OneWay}" TextAlignment="Center" Grid.Column="20" Grid.Row="5" Margin="3"/>
 
                     <Button Content="Optionen" Grid.Column="23" Grid.Row="4" Click="btnOptionen_Click"/>
+
+                    <Grid Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Auswertung" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungAuswertung}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
+                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1" ToolTip="Report anzeigen">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
+                                <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2" ToolTip="Report drucken">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Bilder\JgPrint.ico" Height="14"/>
+                                <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3" ToolTip="Report bearbeiten">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Bilder\JgEdit.ico" Height="14"/>
+                                <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4" ToolTip="Neuen Report erstellen">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Bilder\JgNew.ico" Height="14"/>
+                                <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Content="Export" Click="btnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
+                        <Button Content="Löschen" Click="btnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
+                    </Grid>
 
                 </Grid>
             </TabItem>
