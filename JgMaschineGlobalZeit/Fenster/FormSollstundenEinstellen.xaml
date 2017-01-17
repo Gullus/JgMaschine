@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JgGlobalZeit.Fenster"
         mc:Ignorable="d"
         Title="Sollstunden einstellen" Height="165.625" Width="446.094" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterScreen">
-    <Grid Margin="8">
+    <Grid Margin="8" FocusManager.FocusedElement="{Binding ElementName=tbSollstunden}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="80"/>

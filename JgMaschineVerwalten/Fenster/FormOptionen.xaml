@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prop="clr-namespace:JgMaschineVerwalten.Properties"
         Title="Optionen" Height="128" Width="368" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Topmost="True" Icon="/JgMaschineVerwalten;component/JgMaschineVerwalten.ico">
-  <Grid Margin="8">
+  <Grid Margin="8" FocusManager.FocusedElement="{Binding ElementName=cmbStandort}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"/>
       <ColumnDefinition/>

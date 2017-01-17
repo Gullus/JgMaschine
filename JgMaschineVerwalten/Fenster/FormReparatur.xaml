@@ -11,7 +11,7 @@
     <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
   </Window.Resources>
 
-  <Grid x:Name="gridReparatur" DataContext="{x:Type  data:tabReparatur}" Margin="8">
+  <Grid x:Name="gridReparatur" DataContext="{x:Type  data:tabReparatur}" Margin="8" FocusManager.FocusedElement="{Binding ElementName=dtpRepVon}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"/>
       <ColumnDefinition Width="110"/>

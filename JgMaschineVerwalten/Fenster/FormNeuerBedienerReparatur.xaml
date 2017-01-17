@@ -12,7 +12,7 @@
         <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
     </Window.Resources>
 
-    <Grid x:Name="gridAnmeldungReparatur" DataContext="{x:Type  data:tabAnmeldungReparatur}" Margin="8">
+    <Grid x:Name="gridAnmeldungReparatur" DataContext="{x:Type  data:tabAnmeldungReparatur}" Margin="8" FocusManager.FocusedElement="{Binding ElementName=cmbBediener}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>

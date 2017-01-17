@@ -197,7 +197,7 @@ namespace JgMaschineData
       get { return this.Ueberstunden; }
       set
       {
-        var zeit = new ZeitHelper(value, true);
+        var zeit = new ZeitHelper(value, false);
         if (zeit.IstOk)
           this.Ueberstunden = zeit.AsString;
       }
@@ -345,7 +345,16 @@ namespace JgMaschineData
 
     public string AsString
     {
-      get { return IstOk ? Stunde.ToString("D2") + ":" + (Minute < 0 ? -1 * Minute : Minute).ToString("D2") : null; }
+      get
+      {
+        if (!IstOk)
+          return null;
+
+        if ((Stunde == 0) && (Minute < 0))
+          return "-" + Stunde.ToString("D2") + ":" + (Minute < 0 ? -1 * Minute : Minute).ToString("D2");
+        else
+          return Stunde.ToString("D2") + ":" + (Minute < 0 ? -1 * Minute : Minute).ToString("D2");
+      }
     }
 
     public TimeSpan AsTime

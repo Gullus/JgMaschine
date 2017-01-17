@@ -17,7 +17,7 @@ namespace JgMaschineGlobalZeit
     public JgModelContainer Db { get { return _Db; } }
 
     private byte _Monat = 1;
-    private Int16 _Jahr = 2000;
+    private short _Jahr = 2000;
 
     private tabArbeitszeitAuswertung _AktAuswertung = null;
 
@@ -130,6 +130,7 @@ namespace JgMaschineGlobalZeit
     {
       ListePausenzeiten = new ObservableCollection<tabPausenzeit>(_Db.tabPausenzeitSet.ToList());
 
+      _Jahr = Convert.ToInt16(_CmbJahr.SelectedItem);
       var von = new DateTime(_Jahr, 1, 1);
       var bis = new DateTime(_Jahr, 12, 31, 23, 59, 59);
       var feiertage = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= von) && (w.Datum <= bis)).ToList();
@@ -142,7 +143,6 @@ namespace JgMaschineGlobalZeit
     public void MonatGeandert()
     {
       _Monat = (byte)(_CmbMonat.SelectedIndex + 1);
-      _Jahr = Convert.ToInt16(_CmbJahr.SelectedItem);
 
       var dsSollstunde = ListeSollStunden.FirstOrDefault(f => f.Monat == _Monat);
       _SollStunden = (dsSollstunde == null) ? TimeSpan.Zero : StringInZeit(dsSollstunde.SollStunden);
