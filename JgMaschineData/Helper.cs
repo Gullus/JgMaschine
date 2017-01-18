@@ -134,8 +134,24 @@ namespace JgMaschineData
   }
 
   [MetadataType(typeof(tabAuswertungMetaData))]
-  public partial class tabAuswertung
-  { }
+  public partial class tabAuswertung : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public string AnzeigeReportname
+    {
+      get { return this.ReportName; }
+      set
+      {
+        this.ReportName = value;
+        NotifyPropertyChanged();
+      }
+    }
+  }
 
   public partial class tabBauteil
   {
@@ -233,7 +249,11 @@ namespace JgMaschineData
 
     private string ZeitInString(TimeSpan ZeitWert)
     {
-      return ((int)ZeitWert.TotalHours).ToString("D2") + ":" + (ZeitWert.Minutes < 0 ? -1 * ZeitWert.Minutes : ZeitWert.Minutes).ToString("D2");
+      var stunde = (int)ZeitWert.TotalHours;
+      var zeit = stunde.ToString("D2") + ":" + (ZeitWert.Minutes < 0 ? -1 * ZeitWert.Minutes : ZeitWert.Minutes).ToString("D2");
+      if ((stunde == 0) && (ZeitWert.Minutes < 0))
+        zeit =  "-" + zeit;
+      return zeit;
     }
 
     public string PauseAnzeige
@@ -264,10 +284,12 @@ namespace JgMaschineData
         {
           this.Zeit = zeit.AsTime;
           ArbeitszeitTagGeaendertAusloesen("Zeit");
+          NotifyPropertyChanged("Ueberstunden");
           NotifyPropertyChanged("IstZeitUngleich");
         }
       }
     }
+
     public TimeSpan ZeitBerechnet { get; set; } = TimeSpan.Zero;
     public string ZeitBerechnetString
     {
@@ -334,7 +356,13 @@ namespace JgMaschineData
       }
     }
 
-    public string Ueberstunden { get { return this.Zeit != TimeSpan.Zero ?  ZeitInString(this.Zeit + new TimeSpan(-8, 0, 0)) : "00:00"; } }
+    public string Ueberstunden
+    {
+      get
+      {
+        return Zeit != TimeSpan.Zero ?  ZeitInString(Zeit + new TimeSpan(-8, 0, 0)) : "00:00";
+      }
+    }
   }
 
   public class ZeitHelper
@@ -350,10 +378,10 @@ namespace JgMaschineData
         if (!IstOk)
           return null;
 
+        var zeit = Stunde.ToString("D2") + ":" + (Minute < 0 ? -1 * Minute : Minute).ToString("D2");
         if ((Stunde == 0) && (Minute < 0))
-          return "-" + Stunde.ToString("D2") + ":" + (Minute < 0 ? -1 * Minute : Minute).ToString("D2");
-        else
-          return Stunde.ToString("D2") + ":" + (Minute < 0 ? -1 * Minute : Minute).ToString("D2");
+          zeit = "-" + zeit;
+        return zeit;
       }
     }
 
@@ -447,5 +475,4 @@ namespace JgMaschineData
   }
 
   #endregion
-
 }

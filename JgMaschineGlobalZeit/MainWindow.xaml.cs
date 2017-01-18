@@ -149,8 +149,18 @@ namespace JgMaschineGlobalZeit
 
         switch (vorgang)
         {
+          case 0: // Reportname ändern
+            var formNeu = new Fenster.FormReportName(_AktAuswertung.ReportName);
+            if (formNeu.ShowDialog() ?? false)
+            {
+              _ListeAuswertung.Db.tabAuswertungSet.Attach(_AktAuswertung);
+              _AktAuswertung.AnzeigeReportname = formNeu.ReportName;
+              _ListeAuswertung.Db.SaveChanges();
+            }
+            return;
           case 5: // Exportieren
             SaveFileDialog dia = new SaveFileDialog();
+            dia.FileName = _AktAuswertung.ReportName;
             dia.Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*";
             dia.FilterIndex = 1;
             if (dia.ShowDialog() ?? false)
@@ -191,7 +201,10 @@ namespace JgMaschineGlobalZeit
       switch (auswahl)
       {
         case EnumFilterAuswertung.Arbeitszeit:
+          var bediener = _ListeArbeitszeitAuswahl.Daten.Select(s => new { Id = s.fBediener, Name = s.eBediener.NachName + ", " + s.eBediener.VorName }).Distinct().ToList();
+          _Report.RegisterData(bediener, "Bediener");
           _Report.RegisterData(_ListeArbeitszeitAuswahl.Daten, "Daten");
+
           _Report.SetParameterValue("DatumVon", _DzArbeitszeitVon.Datum);
           _Report.SetParameterValue("DatumBis", _DzArbeitszeitBis.Datum);
           _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 0);
@@ -210,7 +223,7 @@ namespace JgMaschineGlobalZeit
       {
         var repName = "";
 
-        var formNeu = new Fenster.FormNeuerReport();
+        var formNeu = new Fenster.FormReportName();
         if (!formNeu.ShowDialog() ?? false)
           return;
         repName = formNeu.ReportName;

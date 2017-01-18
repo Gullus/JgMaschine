@@ -102,7 +102,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Fenster\FormNeuerReport.xaml">
+    <Page Include="Fenster\FormReportName.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -128,8 +128,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ExtenionsMethods.cs" />
-    <Compile Include="Fenster\FormNeuerReport.xaml.cs">
-      <DependentUpon>FormNeuerReport.xaml</DependentUpon>
+    <Compile Include="Fenster\FormReportName.xaml.cs">
+      <DependentUpon>FormReportName.xaml</DependentUpon>
     </Compile>
     <Compile Include="Fenster\FormOptionen.xaml.cs">
       <DependentUpon>FormOptionen.xaml</DependentUpon>
