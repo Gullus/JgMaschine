@@ -106,6 +106,16 @@ namespace JgMaschineData
 
     public string Name { get { return this.NachName + ", " + VorName; } }
     public tabArbeitszeitAuswertung ErgebnisVorjahr { get; set; } = null;
+
+    public byte AnzeigeUrlaubstage
+    {
+      get { return this.Urlaubstage; }
+      set
+      {
+        this.Urlaubstage = value;
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      }
+    }
   }
 
   public partial class tabReparatur
@@ -126,7 +136,7 @@ namespace JgMaschineData
   [MetadataType(typeof(tabStandortMetaData))]
   public partial class tabStandort
   { }
-
+  
   public partial class tabAuswertungMetaData
   {
     [Required]
@@ -180,7 +190,7 @@ namespace JgMaschineData
 
   public partial class tabSollStunden
   {
-    public string StundenAnzeige
+    public string AnzeigeStunden
     {
       get
       {
@@ -190,32 +200,51 @@ namespace JgMaschineData
       {
         var zeit = new ZeitHelper(value, false);
         if (zeit.IstOk)
+        {
           SollStunden = zeit.AsString;
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
       }
     }
   }
 
   public partial class tabArbeitszeit
   {
-    public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value : TimeSpan.Zero; } }
-
-    public string DauerAnzeige { get { return  (Dauer == TimeSpan.Zero) ? "-" : ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
-
     public bool AnmeldungIstLeer { get { return this.Anmeldung == null; } }
-
     public bool AbmeldungIstLeer { get { return this.Abmeldung == null; } }
+
+    public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value : TimeSpan.Zero; } }
+    public string DauerAnzeige { get { return (Dauer == TimeSpan.Zero) ? "-" : ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
+
+    public Nullable<DateTime> AnmeldungGerundetWert { get; set; } = null;  
+    public Nullable<DateTime> AnmeldungGerundet { get { return this.AnmeldungGerundetWert ?? this.Anmeldung; } }
+    public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value : TimeSpan.Zero; } }
+    public string DauerGerundetAnzeige { get { return (DauerGerundet == TimeSpan.Zero) ? "-" : ((int)DauerGerundet.TotalHours).ToString("D2") + ":" + DauerGerundet.Minutes.ToString("D2"); } }
   }
 
   public partial class tabArbeitszeitAuswertung
   {
-    public string UeberstundenAnzeige
+    public short AnzeigeUrlaub
+    {
+      get { return this.Urlaub; }
+      set
+      {
+        this.Urlaub = value;
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      }
+    }
+
+    public string AnzeigeUeberstunden
     {
       get { return this.Ueberstunden; }
       set
       {
         var zeit = new ZeitHelper(value, false);
         if (zeit.IstOk)
+        {
           this.Ueberstunden = zeit.AsString;
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
       }
     }
   }
@@ -247,18 +276,9 @@ namespace JgMaschineData
     public bool IstZeitUngleich { get { return this.ZeitBerechnet != this.Zeit; } }
     public bool IstNachtschichtUngleich { get { return this.NachtschichtBerechnet != this.Nachtschicht; } }
 
-    private string ZeitInString(TimeSpan ZeitWert)
-    {
-      var stunde = (int)ZeitWert.TotalHours;
-      var zeit = stunde.ToString("D2") + ":" + (ZeitWert.Minutes < 0 ? -1 * ZeitWert.Minutes : ZeitWert.Minutes).ToString("D2");
-      if ((stunde == 0) && (ZeitWert.Minutes < 0))
-        zeit =  "-" + zeit;
-      return zeit;
-    }
-
     public string PauseAnzeige
     {
-      get { return ZeitInString(this.Pause); }
+      get { return ZeitHelper.ZeitInString(this.Pause); }
       set
       {
         var zeit = new ZeitHelper(value, true);
@@ -276,7 +296,7 @@ namespace JgMaschineData
 
     public string ZeitAnzeige
     {
-      get { return ZeitInString(this.Zeit); }
+      get { return ZeitHelper.ZeitInString(this.Zeit); }
       set
       {
         var zeit = new ZeitHelper(value, true);
@@ -293,12 +313,12 @@ namespace JgMaschineData
     public TimeSpan ZeitBerechnet { get; set; } = TimeSpan.Zero;
     public string ZeitBerechnetString
     {
-      get { return ZeitInString(ZeitBerechnet); }
-    } 
+      get { return ZeitHelper.ZeitInString(ZeitBerechnet); }
+    }
 
     public string NachtschichtAnzeige
     {
-      get { return ZeitInString(this.Nachtschicht); }
+      get { return ZeitHelper.ZeitInString(this.Nachtschicht); }
       set
       {
         var zeit = new ZeitHelper(value, true);
@@ -313,12 +333,12 @@ namespace JgMaschineData
     public TimeSpan NachtschichtBerechnet { get; set; } = TimeSpan.Zero;
     public string NachtschichtBerechnetString
     {
-      get { return ZeitInString(NachtschichtBerechnet); }
+      get { return ZeitHelper.ZeitInString(NachtschichtBerechnet); }
     }
 
     public string FeiertagAnzeige
     {
-      get { return ZeitInString(this.Feiertag); }
+      get { return ZeitHelper.ZeitInString(this.Feiertag); }
       set
       {
         var zeit = new ZeitHelper(value, true);
@@ -360,13 +380,189 @@ namespace JgMaschineData
     {
       get
       {
-        return Zeit != TimeSpan.Zero ?  ZeitInString(Zeit + new TimeSpan(-8, 0, 0)) : "00:00";
+        return Zeit != TimeSpan.Zero ? ZeitHelper.ZeitInString(Zeit + new TimeSpan(-8, 0, 0)) : "00:00";
+      }
+    }
+  }
+
+  public partial class tabArbeitszeitRunden : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public ZeitHelper.Monate MonatAnzeige
+    {
+      get { return (ZeitHelper.Monate)this.Monat; }
+      set
+      {
+        this.Monat = (byte)value;
+        NotifyPropertyChanged();
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      }
+    }
+
+    public string AnzeigeZeitVon
+    {
+      get { return ZeitHelper.ZeitInString(this.ZeitVon); }
+      set
+      {
+        var zeit = new ZeitHelper(value, true);
+        if (zeit.IstOk)
+        {
+          this.ZeitVon = zeit.AsTime;
+          NotifyPropertyChanged();
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+      }
+    }
+
+    public string AnzeigeZeitBis
+    {
+      get { return ZeitHelper.ZeitInString(this.ZeitBis); }
+      set
+      {
+        var zeit = new ZeitHelper(value, true);
+        if (zeit.IstOk)
+        {
+          this.ZeitBis = zeit.AsTime;
+          NotifyPropertyChanged();
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+      }
+    }
+
+    public string AnzeigeRundenAufZeit
+    {
+      get { return ZeitHelper.ZeitInString(this.RundenAufZeit); }
+      set
+      {
+        var zeit = new ZeitHelper(value, true);
+        if (zeit.IstOk)
+        {
+          this.RundenAufZeit = zeit.AsTime;
+          NotifyPropertyChanged();
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+      }
+    }
+
+    public bool AnzeigeGeloescht
+    {
+      get { return this.DatenAbgleich.Geloescht; }
+      set
+      {
+        this.DatenAbgleich.Geloescht = value;
+        NotifyPropertyChanged();
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      }
+    }
+  }
+
+  public partial class tabPausenzeit : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public string AnzeigeZeitVon
+    {
+      get { return ZeitHelper.ZeitInString(this.ZeitVon); }
+      set
+      {
+        var zeit = new ZeitHelper(value, true);
+        if (zeit.IstOk)
+        {
+          this.ZeitVon = zeit.AsTime;
+          NotifyPropertyChanged();
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+      }
+    }
+
+    public string AnzeigeZeitBis
+    {
+      get { return ZeitHelper.ZeitInString(this.ZeitBis); }
+      set
+      {
+        var zeit = new ZeitHelper(value, true);
+        if (zeit.IstOk)
+        {
+          this.ZeitBis = zeit.AsTime;
+          NotifyPropertyChanged();
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+      }
+    }
+
+    public string AnzeigePausenzeit
+    {
+      get { return ZeitHelper.ZeitInString(this.Pausenzeit); }
+      set
+      {
+        var zeit = new ZeitHelper(value, true);
+        if (zeit.IstOk)
+        {
+          this.Pausenzeit = zeit.AsTime;
+          NotifyPropertyChanged();
+          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+      }
+    }
+
+    public bool AnzeigeGeloescht
+    {
+      get { return this.DatenAbgleich.Geloescht; }
+      set
+      {
+        this.DatenAbgleich.Geloescht = value;
+        NotifyPropertyChanged();
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      }
+    }
+  }
+
+  public partial class tabFeiertage
+  {
+    public DateTime AnzeigeDatum
+    {
+      get { return this.Datum; }
+      set
+      {
+        this.Datum = value;
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      }
+    }
+
+    public string AnzeigeBezeichnung
+    {
+      get { return this.Bezeichnung; }
+      set
+      {
+        this.Bezeichnung = value;
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+      }
+    }
+
+    public bool AnzeigeGeloescht
+    {
+      get { return this.DatenAbgleich.Geloescht; }
+      set
+      {
+        this.DatenAbgleich.Geloescht = value;
+        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
 
   public class ZeitHelper
   {
+    public enum Monate : byte { Januar = 1, Februar, März, April, Mai, Juni, Juli, August, Septemper, Oktober, November, Dezember }
+
     public bool IstOk = true;
     public int Stunde = 0;
     public int Minute = 0;
@@ -425,10 +621,26 @@ namespace JgMaschineData
         }
       }
     }
+
+    public static string ZeitInString(TimeSpan ZeitWert)
+    {
+      var stunde = (int)ZeitWert.TotalHours;
+      var zeit = stunde.ToString("D2") + ":" + (ZeitWert.Minutes < 0 ? -1 * ZeitWert.Minutes : ZeitWert.Minutes).ToString("D2");
+      if ((stunde == 0) && (ZeitWert.Minutes < 0))
+        zeit = "-" + zeit;
+      return zeit;
+    }
+
+    public static void AbgleichEintragen(DatenAbgleich DatenAbgl, EnumStatusDatenabgleich Status)
+    {
+      DatenAbgl.Status = Status;
+      DatenAbgl.Datum = DateTime.Now;
+      DatenAbgl.Bearbeiter = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+    }
   }
 
   #region bei Speicherung Valedierungsfehler anzeigen
-  
+
   public partial class JgModelContainer
   {
     private static string DbFehlerText(DbEntityValidationException ex)

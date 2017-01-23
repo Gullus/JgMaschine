@@ -1,0 +1,60 @@
+﻿<Window x:Class="JgMaschineGlobalZeit.Fenster.FormArbeitszeitRunden"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JgGlobalZeit.Fenster"
+        xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
+        xmlns:Sytem="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d" Closed="Window_Closed"
+        Title="FormArbeitszeitRunden" Height="261.429" Width="382.857">
+    <Grid x:Name="gridRunden" Margin="8" DataContext="{x:Type JgMaschineData:tabArbeitszeitRunden}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Jahr" />
+        <TextBox x:Name="tbJahr" Grid.Column="1" IsReadOnly="True" Text="{Binding Jahr}"/>
+
+        <Label Content="Niederlassung" Grid.Row="1" />
+        <ComboBox x:Name="cmbNiederlassung" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" DisplayMemberPath="Bezeichnung" SelectedValue="{Binding eStandort}" />
+
+        <Label Content="für Monat" Grid.Row="2"/>
+        <ComboBox x:Name="cmbMonat" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" SelectedValue="{Binding MonatAnzeige}"/>
+
+        <Label Content="Zeit von" Grid.Row="3" />
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding AnzeigeZeitVon}"/>
+
+        <Label Content="Zeit bis" Grid.Row="4" />
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding AnzeigeZeitBis}" />
+
+        <Label Content="aufrunden auf Zeit" Grid.Row="5" />
+        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding AnzeigeRundenAufZeit}"/>
+
+        <Button Grid.Column="1" Grid.Row="7" IsCancel="True" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="..\Bilder\JgCancel.ico" Margin="5"/>
+                <TextBlock Text=" Abbrechen" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button Click="btnOk_Click" Grid.Column="2" Grid.Row="7" IsDefault="True" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
+                <TextBlock Text=" Ok" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+    </Grid>
+</Window>

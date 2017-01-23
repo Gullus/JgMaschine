@@ -17,11 +17,8 @@
         <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
-        <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}">
-            <CollectionViewSource.LiveGroupingProperties>
-                <System:String>hhhh</System:String>
-            </CollectionViewSource.LiveGroupingProperties>
-        </CollectionViewSource>
+        <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}" />
+
         <CollectionViewSource x:Key="vsArbeitszeitTage" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeitTag}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsAnzeigeArbeitszeiten" Source="{Binding sArbeitszeiten, Source={StaticResource vsArbeitszeitTage}}"/>
 
@@ -200,7 +197,7 @@
                     <ComboBox x:Name="cbMonat" Grid.Column="1" Grid.Row="1"/>
 
                     <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="2" EnableRowVirtualization="True" IsReadOnly="True" 
-                              ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="7" SelectionMode="Single">
+                        ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="7" SelectionMode="Single">
 
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
@@ -255,7 +252,7 @@
                             <DataTemplate>
                                 <Border BorderThickness="0,0,0,1" Margin="0,0,0,5" BorderBrush="Gray">
                                     <Grid>
-                                        <DataGrid Margin="30,3,0,3" HorizontalAlignment="Left" Width="300" BorderThickness="0" HeadersVisibility="None"  AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding sArbeitszeiten}" RowDetailsVisibilityMode="VisibleWhenSelected" AlternatingRowBackground="White">
+                                        <DataGrid Margin="30,3,0,3" HorizontalAlignment="Left" Width="400" BorderThickness="0" HeadersVisibility="None"  AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding sArbeitszeiten}" RowDetailsVisibilityMode="VisibleWhenSelected" AlternatingRowBackground="White">
                                             <DataGrid.CellStyle>
                                                 <Style TargetType="DataGridCell">
                                                     <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -263,14 +260,8 @@
                                             </DataGrid.CellStyle>
 
                                             <DataGrid.Columns>
-                                                <DataGridTemplateColumn Header="Symbol" Width="50">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="->" TextAlignment="Center" />
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-                                                <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=HH\\:mm, Mode=OneWay}" Header="Anmeldung" Width="60">
+                                                <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung, Mode=OneWay, StringFormat=> {0}}"  Width="90" /> 
+                                                <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=HH\\:mm, Mode=OneWay}" Header="Anmeldung" Width="61">
                                                     <DataGridTextColumn.CellStyle>
                                                         <Style TargetType="DataGridCell">
                                                             <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -285,7 +276,8 @@
                                                         </Style>
                                                     </DataGridTextColumn.CellStyle>
                                                 </DataGridTextColumn>
-                                                <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=HH\\:mm, Mode=OneWay}" Header="Abmeldung" Width="60">
+                                                <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH\\:mm, Mode=OneWay}" Header="Anmeldung" Width="59" />
+                                                <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=HH\\:mm, Mode=OneWay}" Header="Abmeldung" Width="61">
                                                     <DataGridTextColumn.CellStyle>
                                                         <Style TargetType="DataGridCell">
                                                             <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -300,7 +292,7 @@
                                                         </Style>
                                                     </DataGridTextColumn.CellStyle>
                                                 </DataGridTextColumn>
-                                                <DataGridTextColumn Binding="{Binding DauerAnzeige, Mode=OneWay}" Header="Abmeldung" Width="60" TextBlock.FontStyle="Italic"/>
+                                                <DataGridTextColumn Binding="{Binding DauerGerundetAnzeige, Mode=OneWay}" Header="Abmeldung" Width="60" TextBlock.FontStyle="Italic"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </Grid>
@@ -310,8 +302,7 @@
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Tag, Mode=OneWay}" Header="Tag"  Width="30"/>
-                            <DataGridTextColumn Binding="{Binding Wochentag, Mode=OneWay}" Header="..." IsReadOnly="True" Width="50"/>
-                            <DataGridTextColumn Binding="{Binding Wochentag, Mode=OneWay}" Visibility="Visible" Header="..." IsReadOnly="True" Width="50"/>
+                            <DataGridTextColumn Binding="{Binding Wochentag, Mode=OneWay}" Header="..." IsReadOnly="True" Width="30"/>
                             <DataGridTemplateColumn Header="Pause" Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

@@ -68,6 +68,8 @@ namespace JgMaschineGlobalZeit
     public ObservableCollection<tabSollStunden> ListeSollStunden;
     public ObservableCollection<tabFeiertage> ListeFeiertage;
     public ObservableCollection<tabBediener> ListeBediener;
+    public ObservableCollection<tabArbeitszeitRunden> ListeRunden;
+
     public ObservableCollection<tabArbeitszeitTag> ListeAnzeigeTage = new ObservableCollection<tabArbeitszeitTag>();
 
     public AnmeldungAuswertung(JgModelContainer Db, ComboBox CmbJahr, ComboBox CmbMonat, CollectionViewSource VsBediener)
@@ -85,9 +87,8 @@ namespace JgMaschineGlobalZeit
       _CmbJahr.SelectionChanged += Cmb_SelectionChangedJahr;
 
       _CmbMonat = CmbMonat;
-      for (int i = 1; i < 13; i++)
-        _CmbMonat.Items.Add((new DateTime(2000, i, 1)).ToString("MMMM"));
-      _CmbMonat.SelectedIndex = _Monat - 1;
+      _CmbMonat.ItemsSource = Enum.GetValues(typeof(ZeitHelper.Monate));
+      _CmbMonat.SelectedItem = (ZeitHelper.Monate)_Monat;
       _CmbMonat.SelectionChanged += Cmb_SelectionChangedMonat;
 
       var bediener = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv)).OrderBy(o => o.NachName).ToList();
@@ -136,13 +137,16 @@ namespace JgMaschineGlobalZeit
       var feiertage = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= von) && (w.Datum <= bis)).ToList();
       ListeFeiertage = new ObservableCollection<tabFeiertage>(feiertage);
 
+      var runden = _Db.tabArbeitszeitRundenSet.Where(w => (w.Jahr == _Jahr) && (!w.DatenAbgleich.Geloescht)).ToList();
+      ListeRunden = new ObservableCollection<tabArbeitszeitRunden>(runden);
+
       var sollStunden = _Db.tabSollStundenSet.Where(w => (w.Jahr == _Jahr)).ToList();
       ListeSollStunden = new ObservableCollection<tabSollStunden>(sollStunden);
     }
 
     public void MonatGeandert()
     {
-      _Monat = (byte)(_CmbMonat.SelectedIndex + 1);
+      _Monat = (byte)_CmbMonat.SelectedItem;
 
       var dsSollstunde = ListeSollStunden.FirstOrDefault(f => f.Monat == _Monat);
       _SollStunden = (dsSollstunde == null) ? TimeSpan.Zero : StringInZeit(dsSollstunde.SollStunden);
@@ -260,6 +264,8 @@ namespace JgMaschineGlobalZeit
           )
       ).ToList();
 
+      var listeRunden = ListeRunden.Where(w => w.Monat == _Monat).ToList();
+
       for (byte tag = 1; tag <= anzTage; tag++)
       {
         var auswTag = auswTage.FirstOrDefault(f => f.Tag == tag);
@@ -295,10 +301,19 @@ namespace JgMaschineGlobalZeit
             if (zeit.eArbeitszeitAuswertung != auswTag)
               zeit.eArbeitszeitAuswertung = auswTag;
 
-            if ((zeit.Anmeldung != null) && (zeit.Abmeldung != null))
+            if (zeit.Anmeldung != null)
             {
-              auswTag.ZeitBerechnet += zeit.Dauer;
-              auswTag.NachtschichtBerechnet += NachtSchichtBerechnen(22, 0, 8, 0, zeit.Anmeldung.Value, zeit.Abmeldung.Value);
+              // Anfangszeiten Runden heraussuchen
+              TimeSpan anm = zeit.Anmeldung.Value - zeit.Anmeldung.Value.Date;
+              var wg = listeRunden.FirstOrDefault(f => (anm >= f.ZeitVon) && (anm <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
+              if (wg != null)
+                zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenAufZeit);
+
+              if (zeit.Abmeldung != null)
+              {
+                auswTag.ZeitBerechnet += zeit.DauerGerundet;
+                auswTag.NachtschichtBerechnet += NachtSchichtBerechnen(22, 0, 8, 0, zeit.AnmeldungGerundet.Value, zeit.Abmeldung.Value);
+              }
             }
           }
           auswTag.ZeitBerechnet = ZeitAufMinuteRunden(auswTag.ZeitBerechnet);
@@ -328,7 +343,7 @@ namespace JgMaschineGlobalZeit
 
           if (auswTag.DatenAbgleich.Status == EnumStatusDatenabgleich.Neu)
           {
-            auswTag.Zeit =  (auswTag.IstFehlerZeit) ? TimeSpan.Zero : auswTag.ZeitBerechnet;
+            auswTag.Zeit = (auswTag.IstFehlerZeit) ? TimeSpan.Zero : auswTag.ZeitBerechnet;
             auswTag.Nachtschicht = (auswTag.IstFehlerNachtschicht) ? TimeSpan.Zero : auswTag.NachtschichtBerechnet;
           }
         }
@@ -425,7 +440,7 @@ namespace JgMaschineGlobalZeit
       var hinzuTage = 0;
       foreach (var tag in listeTage)
       {
-        sumZeit += tag.Zeit - tag.Pause;
+        sumZeit += tag.Zeit;
         if (tag.IstFeiertag && !tag.IstSonnabend && !tag.IstSonntag)
           ++hinzuTage;
         else if (tag.Urlaub)

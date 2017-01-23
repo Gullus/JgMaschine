@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="tabAnmeldungReparaturMetaData" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>JgMaschineData.tabAnmeldungReparaturMetaData, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="tabArbeitszeitTag+DelegateArbeitszeitTagGeaendert" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>JgMaschineData.tabArbeitszeitTag+DelegateArbeitszeitTagGeaendert, JgMaschineData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

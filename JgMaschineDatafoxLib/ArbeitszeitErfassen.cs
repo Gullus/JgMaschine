@@ -51,34 +51,45 @@ namespace JgMaschineDatafoxLib
             throw new Exception($"Es wurde kein oder ein falscher Standort bei der Arbeitszeit eingegeben!\nStandort: {zo.Standort}");
           var idStandort = standort.Id;
 
-          ProgDatafox.DatafoxOeffnen(zo);
+          List<string> dsVomTerminal = null;
 
-          // Zeit mit Termimal abgeleichem
-          if (zo.ZaehlerDatumAktualisieren > 50)
+          try
           {
-            zo.ZaehlerDatumAktualisieren = 0;
-            ProgDatafox.ZeitEinstellen(zo, DateTime.Now);
-            zo.Protokoll.Set("Zeit Datafox gestellt!", Proto.ProtoArt.Kommentar);
+            ProgDatafox.DatafoxOeffnen(zo);
+
+            // Zeit mit Termimal abgeleichem
+            if (zo.ZaehlerDatumAktualisieren > 50)
+            {
+              zo.ZaehlerDatumAktualisieren = 0;
+              ProgDatafox.ZeitEinstellen(zo, DateTime.Now);
+              zo.Protokoll.Set("Zeit Datafox gestellt!", Proto.ProtoArt.Kommentar);
+            }
+
+            // Kontrolle, ob Benutzer im Termanl geändert werden müssen
+            if (standort.UpdateBedienerDatafox)
+            {
+              standort.UpdateBedienerDatafox = false;
+              DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+              Db.SaveChanges();
+
+              var bediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt)).ToList();
+              ProgDatafox.BedienerInDatafoxDatei(zo, bediener);
+              ProgDatafox.ListenInTerminalSchreiben(zo);
+            }
+
+            // Anmeldungen aus Terminal auslesen
+            dsVomTerminal = ProgDatafox.ListeAusTerminalAuslesen(zo);
+          }
+          catch (Exception exep)
+          {
+            throw new Exception(exep.Message);
+          }
+          finally
+          {
+            ProgDatafox.DatafoxSchliessen(zo);
           }
 
-          // Kontrolle, ob Benutzer im Termanl geändert werden müssen
-          if (standort.UpdateBedienerDatafox)
-          {
-            standort.UpdateBedienerDatafox = false;
-            DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-            Db.SaveChanges();
-
-            var bediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt)).ToList();
-            ProgDatafox.BedienerInDatafoxDatei(zo, bediener);
-            ProgDatafox.ListenInTerminalSchreiben(zo);
-          }
-
-          // Anmeldungen aus Terminal auslesen
-          var dsVomTerminal = ProgDatafox.ListeAusTerminalAuslesen(zo);
-
-          ProgDatafox.DatafoxSchliessen(zo);
-
-          if (dsVomTerminal.Count > 0)
+          if (dsVomTerminal?.Count > 0)
           {
             ArbeitszeitInDatenbank(Db, dsVomTerminal, standort.Id, zo.Protokoll);
             var msg = $"Es wurden {dsVomTerminal.Count} Arbeitszeiten von Terminal übertragen.";

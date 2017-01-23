@@ -116,6 +116,9 @@
     <Compile Include="tabArbeitszeitAuswertung.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="tabArbeitszeitRunden.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="tabArbeitszeitTag.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>

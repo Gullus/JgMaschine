@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/25/2016 17:08:19
+-- Date Created: 01/19/2017 16:13:19
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -83,6 +83,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_tabArbeitszeitAuswertungtabArbeitszeitTag]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabArbeitszeitTagSet] DROP CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeitTag];
 GO
+IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitzzeitRunden]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabArbeitzzeitRundenSet] DROP CONSTRAINT [FK_tabStandorttabArbeitzzeitRunden];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -132,6 +135,9 @@ IF OBJECT_ID(N'[dbo].[tabSollStundenSet]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[tabPausenzeitSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabPausenzeitSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabArbeitzzeitRundenSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabArbeitzzeitRundenSet];
 GO
 IF OBJECT_ID(N'[dbo].[tabBauteiltabBediener]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabBauteiltabBediener];
@@ -412,6 +418,22 @@ CREATE TABLE [dbo].[tabPausenzeitSet] (
 );
 GO
 
+-- Creating table 'tabArbeitszeitRundenSet'
+CREATE TABLE [dbo].[tabArbeitszeitRundenSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Jahr] smallint  NOT NULL,
+    [Monat] tinyint  NOT NULL,
+    [ZeitVon] time  NOT NULL,
+    [ZeitBis] time  NOT NULL,
+    [RundenAufZeit] time  NOT NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
+    [fStandort] uniqueidentifier  NOT NULL
+);
+GO
+
 -- Creating table 'tabBauteiltabBediener'
 CREATE TABLE [dbo].[tabBauteiltabBediener] (
     [sBauteile_Id] uniqueidentifier  NOT NULL,
@@ -510,6 +532,12 @@ GO
 -- Creating primary key on [Id] in table 'tabPausenzeitSet'
 ALTER TABLE [dbo].[tabPausenzeitSet]
 ADD CONSTRAINT [PK_tabPausenzeitSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'tabArbeitszeitRundenSet'
+ALTER TABLE [dbo].[tabArbeitszeitRundenSet]
+ADD CONSTRAINT [PK_tabArbeitszeitRundenSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -839,6 +867,21 @@ GO
 CREATE INDEX [IX_FK_tabArbeitszeitAuswertungtabArbeitszeitTag]
 ON [dbo].[tabArbeitszeitTagSet]
     ([fArbeitszeitAuswertung]);
+GO
+
+-- Creating foreign key on [fStandort] in table 'tabArbeitszeitRundenSet'
+ALTER TABLE [dbo].[tabArbeitszeitRundenSet]
+ADD CONSTRAINT [FK_tabStandorttabArbeitzzeitRunden]
+    FOREIGN KEY ([fStandort])
+    REFERENCES [dbo].[tabStandortSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabStandorttabArbeitzzeitRunden'
+CREATE INDEX [IX_FK_tabStandorttabArbeitzzeitRunden]
+ON [dbo].[tabArbeitszeitRundenSet]
+    ([fStandort]);
 GO
 
 -- --------------------------------------------------

@@ -20,6 +20,7 @@ namespace JgMaschineData
             this.sMaschinen = new HashSet<tabMaschine>();
             this.sArbeitszeiten = new HashSet<tabArbeitszeit>();
             this.sBediener = new HashSet<tabBediener>();
+            this.sArbeitzzeitRunden = new HashSet<tabArbeitszeitRunden>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
@@ -36,5 +37,7 @@ namespace JgMaschineData
         public virtual ICollection<tabArbeitszeit> sArbeitszeiten { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabBediener> sBediener { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tabArbeitszeitRunden> sArbeitzzeitRunden { get; set; }
     }
 }

@@ -17,8 +17,14 @@ namespace JgMaschineDatafoxLib
         sb.AppendLine($"MITA0{bediener.MatchCode}\tMITA1{bediener.MatchCode}\t{bed}");
       }
 
-      var dat = Optionen.PfadUpdateBediener + @"\PersonalStamm.txt";
+      var dat = Optionen.PfadUpdateBediener;
+      if (! Directory.Exists(Optionen.PfadUpdateBediener))
+      {
+        var msg = $"Pfad '{dat}' zum schreiben der Bedienerdatei ist nicht vorhanden.";
+        throw new Exception(msg);
+      }
 
+      dat += @"\PersonalStamm.txt";
       try
       {
         File.WriteAllText(dat, sb.ToString());

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using JgMaschineData;
 using JgMaschineLib;
@@ -34,10 +35,9 @@ namespace JgMaschineGlobalZeit.Fenster
           _Auswertung.ListeSollStunden.Add(neuSoll);
         };
       }
-      _Auswertung.Db.SaveChanges();
 
-      var auswertungenVorjahr = Auswertung.Db.tabArbeitszeitAuswertungSet.Where(w => (Auswertung.IdisBediener.Contains(w.fBediener)) &&(w.Jahr == Auswertung.Jahr) && (w.Monat == 0)).ToList();
-      foreach(var bediener in _Auswertung.ListeBediener)
+      var auswertungenVorjahr = Auswertung.Db.tabArbeitszeitAuswertungSet.Where(w => (Auswertung.IdisBediener.Contains(w.fBediener)) && (w.Jahr == Auswertung.Jahr) && (w.Monat == 0)).ToList();
+      foreach (var bediener in _Auswertung.ListeBediener)
       {
         var auswVorjahr = auswertungenVorjahr.FirstOrDefault(f => f.fBediener == bediener.Id);
         if (auswVorjahr == null)
@@ -52,12 +52,11 @@ namespace JgMaschineGlobalZeit.Fenster
             Urlaub = 0,
             Status = EnumStatusArbeitszeitAuswertung.Erledigt,
           };
-          JgMaschineLib.DbSichern.AbgleichEintragen(auswVorjahr.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-          Auswertung.Db.tabArbeitszeitAuswertungSet.Add(auswVorjahr);          
+          DbSichern.AbgleichEintragen(auswVorjahr.DatenAbgleich, EnumStatusDatenabgleich.Neu);
+          Auswertung.Db.tabArbeitszeitAuswertungSet.Add(auswVorjahr);
         }
         bediener.ErgebnisVorjahr = auswVorjahr;
       }
-      Auswertung.Db.SaveChanges();
     }
 
     private void ButtonOk_Click(object sender, RoutedEventArgs e)
@@ -75,6 +74,9 @@ namespace JgMaschineGlobalZeit.Fenster
       vsBediener.Source = _Auswertung.ListeBediener;
       var vsPausen = ((CollectionViewSource)(this.FindResource("vsPausen")));
       vsPausen.Source = _Auswertung.ListePausenzeiten;
+      var vsRunde = ((CollectionViewSource)(this.FindResource("vsRunden")));
+      vsRunde.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
+      vsRunde.Source = _Auswertung.ListeRunden;
     }
 
     private void btnNeuerFeiertag_Click(object sender, RoutedEventArgs e)
@@ -86,22 +88,7 @@ namespace JgMaschineGlobalZeit.Fenster
       };
       DbSichern.AbgleichEintragen(feiertag.DatenAbgleich, EnumStatusDatenabgleich.Neu);
       _Auswertung.Db.tabFeiertageSet.Add(feiertag);
-      _Auswertung.Db.SaveChanges();
       _Auswertung.ListeFeiertage.Add(feiertag);
-      //_Db.tabFeiertageSet.Add(feiertag);
-      //      }
-      //      _Db.SaveChanges();
-      //      break;
-      //    case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-      //      foreach (var ds in erg.OldItems)
-      //      {
-      //        var feiertag = (tabFeiertage)ds;
-      //        feiertag.DatenAbgleich.Geloescht = true;
-      //        DbSichern.AbgleichEintragen(feiertag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-      //      }
-      //      break;
-      //  }
-      //};
     }
 
     private void btnNeuePause_Click(object sender, RoutedEventArgs e)
@@ -115,8 +102,19 @@ namespace JgMaschineGlobalZeit.Fenster
       };
       DbSichern.AbgleichEintragen(pause.DatenAbgleich, EnumStatusDatenabgleich.Neu);
       _Auswertung.Db.tabPausenzeitSet.Add(pause);
-      _Auswertung.Db.SaveChanges();
       _Auswertung.ListePausenzeiten.Add(pause);
+    }
+
+    private void btnRundungswert_Click(object sender, RoutedEventArgs e)
+    {
+      var vorg = Convert.ToByte((sender as Button).Tag);  // 0 - Neu, 1 - Bearbeiten 
+      var vsRunden = (CollectionViewSource)FindResource("vsRunden");
+      var runden = (tabArbeitszeitRunden)vsRunden.View.CurrentItem;
+
+      var fo = new FormArbeitszeitRunden(_Auswertung, runden, vorg == 0);
+      if (!(fo.ShowDialog() ?? false))
+        vsRunden.View.Refresh();
+      vsRunden.View.MoveCurrentTo(fo.AktuellerWert);
     }
   }
 }
