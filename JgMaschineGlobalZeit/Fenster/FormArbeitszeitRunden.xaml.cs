@@ -49,7 +49,7 @@ namespace JgMaschineGlobalZeit.Fenster
         DbSichern.AbgleichEintragen(runden.DatenAbgleich, EnumStatusDatenabgleich.Neu);
 
         _Auswertung.Db.tabArbeitszeitRundenSet.Add(runden);
-        _Auswertung.ListeRunden.Add(runden);
+        _Auswertung.ListeRundenJahr.Add(runden);
       }
 
       _Auswertung.Db.SaveChanges();

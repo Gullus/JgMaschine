@@ -33,6 +33,7 @@ namespace JgMaschineData
         public string Bemerkung { get; set; }
         public string MatchCode { get; set; }
         public byte Urlaubstage { get; set; }
+        public string IdBuchhaltung { get; set; }
         public EnumStatusBediener Status { get; set; }
         public Nullable<System.Guid> fAktivArbeitszeit { get; set; }
         public System.Guid fStandort { get; set; }

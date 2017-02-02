@@ -150,6 +150,7 @@
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
     <Property Name="MatchCode" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="Urlaubstage" Type="tinyint" Nullable="false" />
+    <Property Name="IdBuchhaltung" Type="nvarchar" Nullable="false" MaxLength="10" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
@@ -865,6 +866,7 @@
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="MatchCode" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="Urlaubstage" Type="Byte" Nullable="false" />
+          <Property Name="IdBuchhaltung" Type="String" Nullable="false" MaxLength="10" />
           <Property Name="Status" Type="JgModel.EnumStatusBediener" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fAktivArbeitszeit" Type="Guid" Nullable="true" />
@@ -1466,6 +1468,7 @@
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ScalarProperty Name="MatchCode" ColumnName="MatchCode" />
           <ScalarProperty Name="Urlaubstage" ColumnName="Urlaubstage" />
+          <ScalarProperty Name="IdBuchhaltung" ColumnName="IdBuchhaltung" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />

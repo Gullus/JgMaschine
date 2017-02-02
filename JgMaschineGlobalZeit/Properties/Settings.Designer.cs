@@ -90,5 +90,17 @@ namespace JgGlobalZeit.Properties {
                 return ((string)(this["JgCubeSqlText"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NameXmlDatei {
+            get {
+                return ((string)(this["NameXmlDatei"]));
+            }
+            set {
+                this["NameXmlDatei"] = value;
+            }
+        }
     }
 }

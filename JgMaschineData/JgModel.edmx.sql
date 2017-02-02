@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 01/19/2017 16:13:19
+-- Date Created: 02/02/2017 20:04:20
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -84,7 +84,7 @@ IF OBJECT_ID(N'[dbo].[FK_tabArbeitszeitAuswertungtabArbeitszeitTag]', 'F') IS NO
     ALTER TABLE [dbo].[tabArbeitszeitTagSet] DROP CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeitTag];
 GO
 IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitzzeitRunden]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[tabArbeitzzeitRundenSet] DROP CONSTRAINT [FK_tabStandorttabArbeitzzeitRunden];
+    ALTER TABLE [dbo].[tabArbeitszeitRundenSet] DROP CONSTRAINT [FK_tabStandorttabArbeitzzeitRunden];
 GO
 
 -- --------------------------------------------------
@@ -136,8 +136,8 @@ GO
 IF OBJECT_ID(N'[dbo].[tabPausenzeitSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabPausenzeitSet];
 GO
-IF OBJECT_ID(N'[dbo].[tabArbeitzzeitRundenSet]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[tabArbeitzzeitRundenSet];
+IF OBJECT_ID(N'[dbo].[tabArbeitszeitRundenSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabArbeitszeitRundenSet];
 GO
 IF OBJECT_ID(N'[dbo].[tabBauteiltabBediener]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabBauteiltabBediener];
@@ -179,6 +179,7 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [Bemerkung] nvarchar(max)  NULL,
     [MatchCode] nvarchar(120)  NULL,
     [Urlaubstage] tinyint  NOT NULL,
+    [IdBuchhaltung] nvarchar(10)  NOT NULL,
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] int  NOT NULL,

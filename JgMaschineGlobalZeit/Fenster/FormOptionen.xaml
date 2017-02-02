@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" mc:Ignorable="d" 
     xmlns:System="clr-namespace:System;assembly=mscorlib"    
     x:Class="JgMaschineGlobalZeit.Fenster.FormOptionen"
-        Title="Optionen" Height="452" Width="431" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Topmost="True" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico" Loaded="Window_Loaded">
+        Title="Optionen" Height="452" Width="465" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Topmost="True" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <CollectionViewSource x:Key="vsFeiertage" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabFeiertage}, CreateList=True}" IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
@@ -56,11 +56,12 @@
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsBediener}">
                     <DataGrid x:Name="tabBedienerDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Name}" Header="Mitarbeiter" IsReadOnly="True" Width="*"/>
-                            <DataGridTextColumn Binding="{Binding AnzeigeUrlaubstage}" Header="Urlaubstage" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Mitarbeiter" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding Urlaubstage}" Header="Url.-Tage" Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding IdBuchhaltung}" Header="Id.-Buch." Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
 
-                            <DataGridTextColumn Binding="{Binding ErgebnisVorjahr.AnzeigeUrlaub}" Header="Rest Urlaub" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding ErgebnisVorjahr.AnzeigeUeberstunden}" Header="Überst. Vorjahr" Width="90" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.Urlaub}" Header="Rest Urlaub" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.UeberstundenAnzeige}" Header="Überst. Vorj." Width="90" CellStyle="{StaticResource CellCenterAlign}"/>
 
                         </DataGrid.Columns>
                     </DataGrid>

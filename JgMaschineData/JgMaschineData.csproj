@@ -174,7 +174,6 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\tabAnmeldungMaschine.datasource" />
-    <None Include="Properties\DataSources\tabAnmeldungMaschineMetaData.datasource" />
     <None Include="Properties\DataSources\tabAnmeldungReparatur.datasource" />
     <None Include="Properties\DataSources\tabAnmeldungReparaturMetaData.datasource" />
     <None Include="Properties\DataSources\tabArbeitszeit.datasource" />

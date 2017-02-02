@@ -157,6 +157,35 @@ namespace JgMaschineLib
       return false;
     }
 
+    public static DateTime MonatErster(int Jahr, int Monat)
+    {
+      return new DateTime(Jahr, Monat, 1);
+    }
+    public static DateTime MonatLetzter(int Jahr, int Monat)
+    {
+      return new DateTime(Jahr, Monat, DateTime.DaysInMonth(Jahr, Monat), 23, 59, 59);
+    }
 
+    public static TimeSpan StringInZeit(string Zeit)
+    {
+      var erg = TimeSpan.Zero;
+      if (!string.IsNullOrWhiteSpace(Zeit))
+      {
+        try
+        {
+          var werte = Zeit.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+          var stunde = Convert.ToInt32(werte[0]);
+          var minute = Convert.ToInt32(werte[1]);
+          return new TimeSpan(stunde, stunde < 0 ? -1 * minute : minute, 0);
+        }
+        catch { }
+      }
+      return erg;
+    }
+
+    public static string ZeitInString(TimeSpan Zeit)
+    {
+      return ((int)Zeit.TotalHours).ToString("D2") + ":" + ((Zeit.Minutes < 0) ? -1 * Zeit.Minutes : Zeit.Minutes).ToString("D2");
+    }
   }
 }

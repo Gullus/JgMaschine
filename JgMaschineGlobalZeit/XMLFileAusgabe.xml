@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Arbeitszeit Monat: 10.2016 Datum: 02.02.17 20:12-->
+<Root>
+  <Datensatz>
+    <Mitarbeiter>Barthel, Tino</Mitarbeiter>
+    <Nachname>Barthel</Nachname>
+    <Vorname>Tino</Vorname>
+    <IdBuchhaltung>123</IdBuchhaltung>
+    <Urlaubstage>20</Urlaubstage>
+    <SollStunden>60:00</SollStunden>
+    <IstStunden>60:41</IstStunden>
+    <UeberStunden>00:41</UeberStunden>
+    <Krank>16:00</Krank>
+    <Urlaub>00:00</Urlaub>
+    <NachtschichtZuschlag>09:36</NachtschichtZuschlag>
+    <FeiertagsZuschlag>08:00</FeiertagsZuschlag>
+    <UeberstundenAusgezahlt>20:00</UeberstundenAusgezahlt>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Brejora, Olaf</Mitarbeiter>
+    <Nachname>Brejora</Nachname>
+    <Vorname>Olaf</Vorname>
+    <IdBuchhaltung>456</IdBuchhaltung>
+    <Urlaubstage>19</Urlaubstage>
+    <SollStunden>168:00</SollStunden>
+    <IstStunden>00:00</IstStunden>
+    <UeberStunden>-168:00</UeberStunden>
+    <Krank>00:00</Krank>
+    <Urlaub>00:00</Urlaub>
+    <NachtschichtZuschlag>00:00</NachtschichtZuschlag>
+    <FeiertagsZuschlag>00:00</FeiertagsZuschlag>
+    <UeberstundenAusgezahlt>00:00</UeberstundenAusgezahlt>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Hanztsch, Uwe</Mitarbeiter>
+    <Nachname>Hanztsch</Nachname>
+    <Vorname>Uwe</Vorname>
+    <IdBuchhaltung>55</IdBuchhaltung>
+    <Urlaubstage>19</Urlaubstage>
+    <SollStunden>170:00</SollStunden>
+    <IstStunden>00:00</IstStunden>
+    <UeberStunden>-170:00</UeberStunden>
+    <Krank>00:00</Krank>
+    <Urlaub>00:00</Urlaub>
+    <NachtschichtZuschlag>00:00</NachtschichtZuschlag>
+    <FeiertagsZuschlag>00:00</FeiertagsZuschlag>
+    <UeberstundenAusgezahlt>00:00</UeberstundenAusgezahlt>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Manja, Ronny</Mitarbeiter>
+    <Nachname>Manja</Nachname>
+    <Vorname>Ronny</Vorname>
+    <IdBuchhaltung>567</IdBuchhaltung>
+    <Urlaubstage>20</Urlaubstage>
+    <SollStunden>170:00</SollStunden>
+    <IstStunden>00:00</IstStunden>
+    <UeberStunden>-170:00</UeberStunden>
+    <Krank>00:00</Krank>
+    <Urlaub>00:00</Urlaub>
+    <NachtschichtZuschlag>00:00</NachtschichtZuschlag>
+    <FeiertagsZuschlag>00:00</FeiertagsZuschlag>
+    <UeberstundenAusgezahlt>00:00</UeberstundenAusgezahlt>
+  </Datensatz>
+</Root>

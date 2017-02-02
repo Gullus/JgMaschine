@@ -22,7 +22,7 @@ namespace JgMaschineGlobalZeit.Fenster
 
       for (byte i = 1; i <= 12; i++)
       {
-        if (_Auswertung.ListeSollStunden.FirstOrDefault(f => f.Monat == i) == null)
+        if (_Auswertung.ListeSollstundenJahr.FirstOrDefault(f => f.Monat == i) == null)
         {
           var neuSoll = new tabSollStunden()
           {
@@ -32,11 +32,12 @@ namespace JgMaschineGlobalZeit.Fenster
           };
           DbSichern.AbgleichEintragen(neuSoll.DatenAbgleich, EnumStatusDatenabgleich.Neu);
           _Auswertung.Db.tabSollStundenSet.Add(neuSoll);
-          _Auswertung.ListeSollStunden.Add(neuSoll);
+          _Auswertung.ListeSollstundenJahr.Add(neuSoll);
         };
       }
 
-      var auswertungenVorjahr = Auswertung.Db.tabArbeitszeitAuswertungSet.Where(w => (Auswertung.IdisBediener.Contains(w.fBediener)) && (w.Jahr == Auswertung.Jahr) && (w.Monat == 0)).ToList();
+      var idisBediener = Auswertung.ListeBediener.Select(s => s.Id).ToArray();
+      var auswertungenVorjahr = Auswertung.Db.tabArbeitszeitAuswertungSet.Where(w => (idisBediener.Contains(w.fBediener)) && (w.Jahr == Auswertung.Jahr) && (w.Monat == 0)).ToList();
       foreach (var bediener in _Auswertung.ListeBediener)
       {
         var auswVorjahr = auswertungenVorjahr.FirstOrDefault(f => f.fBediener == bediener.Id);
@@ -47,15 +48,16 @@ namespace JgMaschineGlobalZeit.Fenster
             Id = Guid.NewGuid(),
             Jahr = Auswertung.Jahr,
             Monat = 0,
-            eBediener = bediener,
-
+            Ueberstunden = "00:00",
             Urlaub = 0,
+
+            eBediener = bediener,
             Status = EnumStatusArbeitszeitAuswertung.Erledigt,
           };
           DbSichern.AbgleichEintragen(auswVorjahr.DatenAbgleich, EnumStatusDatenabgleich.Neu);
           Auswertung.Db.tabArbeitszeitAuswertungSet.Add(auswVorjahr);
         }
-        bediener.ErgebnisVorjahr = auswVorjahr;
+        bediener.eArbeitszeitHelper = auswVorjahr;
       }
     }
 
@@ -67,16 +69,16 @@ namespace JgMaschineGlobalZeit.Fenster
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       var vsFeiertage = ((CollectionViewSource)(this.FindResource("vsFeiertage")));
-      vsFeiertage.Source = _Auswertung.ListeFeiertage;
+      vsFeiertage.Source = _Auswertung.ListeFeiertageJahr;
       var vsSollStunden = ((CollectionViewSource)(this.FindResource("vsSollStunden")));
-      vsSollStunden.Source = _Auswertung.ListeSollStunden;
+      vsSollStunden.Source = _Auswertung.ListeSollstundenJahr;
       var vsBediener = ((CollectionViewSource)(this.FindResource("vsBediener")));
       vsBediener.Source = _Auswertung.ListeBediener;
       var vsPausen = ((CollectionViewSource)(this.FindResource("vsPausen")));
-      vsPausen.Source = _Auswertung.ListePausenzeiten;
+      vsPausen.Source = _Auswertung.ListePausen;
       var vsRunde = ((CollectionViewSource)(this.FindResource("vsRunden")));
       vsRunde.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
-      vsRunde.Source = _Auswertung.ListeRunden;
+      vsRunde.Source = _Auswertung.ListeRundenJahr;
     }
 
     private void btnNeuerFeiertag_Click(object sender, RoutedEventArgs e)
@@ -88,7 +90,7 @@ namespace JgMaschineGlobalZeit.Fenster
       };
       DbSichern.AbgleichEintragen(feiertag.DatenAbgleich, EnumStatusDatenabgleich.Neu);
       _Auswertung.Db.tabFeiertageSet.Add(feiertag);
-      _Auswertung.ListeFeiertage.Add(feiertag);
+      _Auswertung.ListeFeiertageJahr.Add(feiertag);
     }
 
     private void btnNeuePause_Click(object sender, RoutedEventArgs e)
@@ -102,7 +104,7 @@ namespace JgMaschineGlobalZeit.Fenster
       };
       DbSichern.AbgleichEintragen(pause.DatenAbgleich, EnumStatusDatenabgleich.Neu);
       _Auswertung.Db.tabPausenzeitSet.Add(pause);
-      _Auswertung.ListePausenzeiten.Add(pause);
+      _Auswertung.ListePausen.Add(pause);
     }
 
     private void btnRundungswert_Click(object sender, RoutedEventArgs e)

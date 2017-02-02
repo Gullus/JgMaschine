@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Xml.Linq;
 using JgMaschineData;
 using JgMaschineLib;
 using JgMaschineLib.Zeit;
@@ -36,16 +36,6 @@ namespace JgMaschineGlobalZeit
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      _Erstellung = new AnmeldungAuswertung(new JgModelContainer(), cbJahr, cbMonat,
-        (CollectionViewSource)FindResource("vsBediener"))
-      {
-        AuswertungMonat = (ArbeitszeitAuswertungDs)FindResource("AuswertungMonat"),
-        AuswertungKumulativ = (ArbeitszeitAuswertungDs)FindResource("AuswertungKumulativ"),
-        AuswertungGesamt = (ArbeitszeitAuswertungDs)FindResource("AuswertungGesamt"),
-      };
-
-      (FindResource("vsArbeitszeitTage") as CollectionViewSource).Source = _Erstellung.ListeAnzeigeTage;
-
       var heute = DateTime.Now.Date;
       _DzArbeitszeitVon.DatumZeit = heute;
       _DzArbeitszeitBis.DatumZeit = new DateTime(heute.Year, heute.Month, heute.Day, 23, 59, 59);
@@ -72,6 +62,11 @@ namespace JgMaschineGlobalZeit
       var vsAuswertung = (CollectionViewSource)FindResource("vsAuswertungAuswertung");
       vsAuswertung.Source = _ListeAuswertung.Daten;
       vsAuswertung.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung;
+
+      _Erstellung = new AnmeldungAuswertung(new JgModelContainer(), cbJahr, cbMonat,
+        (CollectionViewSource)FindResource("vsBediener"),
+        (ArbeitszeitSummen)FindResource("AuswertungKumulativ"), (ArbeitszeitSummen)FindResource("AuswertungGesamt"),
+        (CollectionViewSource)FindResource("vsArbeitszeitTage"));
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -210,10 +205,10 @@ namespace JgMaschineGlobalZeit
           _Report.SetParameterValue("IstAktuell", tcArbeitszeit.SelectedIndex == 0);
           break;
         case EnumFilterAuswertung.ArbeitszeitAuswertung:
-          _Report.RegisterData(new List<ArbeitszeitAuswertungDs>() { _Erstellung.AuswertungKumulativ }, "AuswertungKumulativ");
-          _Report.RegisterData(new List<ArbeitszeitAuswertungDs>() { _Erstellung.AuswertungMonat }, "AuswertungMonat");
-          _Report.RegisterData(new List<ArbeitszeitAuswertungDs>() { _Erstellung.AuswertungGesamt }, "AuswertungGesamt");
-          _Report.RegisterData(_Erstellung.ListeAnzeigeTage, "AuswertungTage");
+          //_Report.RegisterData(new List<ArbeitszeitSummen>() { _Erstellung.AktuellerBedienr.AuswertungKumulativ }, "AuswertungKumulativ");
+          //_Report.RegisterData(new List<ArbeitszeitSummen>() { _Erstellung.AktuellerBedienr.AuswertungMonat }, "AuswertungMonat");
+          //_Report.RegisterData(new List<ArbeitszeitSummen>() { _Erstellung.AktuellerBedienr.AuswertungGesamt }, "AuswertungGesamt");
+          //_Report.RegisterData(_Erstellung.ListeAnzeigeTage, "AuswertungTage");
           break;
         default:
           break;
@@ -273,16 +268,100 @@ namespace JgMaschineGlobalZeit
 
     private void btnSollStundenEinstellen_Click(object sender, RoutedEventArgs e)
     {
-      var form = new JgGlobalZeit.Fenster.FormSollstundenEinstellen(_Erstellung.AuswertungMonat.SollStundenString);
+      var form = new JgGlobalZeit.Fenster.FormSollstundenEinstellen(_Erstellung.AktuellerBediener.eArbeitszeitHelper.SollStunden);
       if (form.ShowDialog() ?? false)
-        _Erstellung.SetSollstunden(form.Sollstunden);
+        _Erstellung.AuswertungBediener.SetSollstunden(form.Sollstunden);
     }
 
     private void btnUeberstundenAuszahlen_Click(object sender, RoutedEventArgs e)
     {
-      var form = new JgGlobalZeit.Fenster.FormUeberstundenAuszahlen(_Erstellung.AuswertungMonat.UeberstundenBezahltString);
+      var form = new JgGlobalZeit.Fenster.FormUeberstundenAuszahlen(_Erstellung.AktuellerBediener.eArbeitszeitHelper.AuszahlungUeberstunden);
       if (form.ShowDialog() ?? false)
-        _Erstellung.SetUebestundenAuszahlung(form.UerbstundenAuszahlem);
+        _Erstellung.AuswertungBediener.SetUebestundenAuszahlung(form.UerbstundenAuszahlem);
+    }
+
+    private void btnAuswertungErledigt_Click(object sender, RoutedEventArgs e)
+    {
+      var bediener = _Erstellung.AktuellerBediener;
+      if (bediener?.eArbeitszeitHelper != null)
+      {
+        bediener.eArbeitszeitHelper.StatusAnzeige = (EnumStatusArbeitszeitAuswertung)Convert.ToByte((sender as Button).Tag);
+        DbSichern.AbgleichEintragen(bediener.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        _Erstellung.Db.SaveChanges();
+      }
+    }
+
+    private void btnExporteren_Click(object sender, RoutedEventArgs e)
+    {
+      var datName = JgGlobalZeit.Properties.Settings.Default.NameXmlDatei;
+      if (string.IsNullOrWhiteSpace(datName))
+        datName = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\JgArbeitszeit.xml";
+
+      var fo = new SaveFileDialog()
+      {
+        Title = "Xml Datei speichern",
+        FileName = Path.GetFileName(datName),
+        InitialDirectory = Path.GetDirectoryName(datName),
+        Filter = "Xml Files | *.xml | Alle Dateien | *.*",
+      };
+
+      if (fo.ShowDialog() ?? false)
+      {
+        var daten = _Erstellung.ListeBediener.Where(w => (w.eArbeitszeitHelper != null) && (w.eArbeitszeitHelper.Status == EnumStatusArbeitszeitAuswertung.Fertig)).ToList();
+
+        XDocument xDoc = new XDocument(
+          new XComment($"Arbeitszeit Monat: {_Erstellung.Monat}.{_Erstellung.Jahr} Datum: {DateTime.Now.ToString("dd.MM.yy HH:mm")}"),
+          new XElement("Root",
+
+          from z in daten
+          select new XElement("Datensatz",
+            new XElement("Mitarbeiter", z.Name),
+            new XElement("Nachname", z.NachName),
+            new XElement("Vorname", z.VorName),
+            new XElement("IdBuchhaltung", z.IdBuchhaltung),
+            new XElement("Urlaubstage", z.Urlaubstage),
+
+            new XElement("SollStunden", z.eArbeitszeitHelper.SollStunden),
+            new XElement("IstStunden", z.eArbeitszeitHelper.IstStunden),
+            new XElement("UeberStunden", z.eArbeitszeitHelper.Ueberstunden),
+           
+            new XElement("Krank", new TimeSpan(z.eArbeitszeitHelper.Krank * 8, 0, 0).ToString(@"hh\:mm")),
+            new XElement("Urlaub", new TimeSpan(z.eArbeitszeitHelper.Urlaub * 8, 0, 0).ToString(@"hh\:mm")),
+
+            new XElement("NachtschichtZuschlag", z.eArbeitszeitHelper.Nachtschichten),
+            new XElement("FeiertagsZuschlag", z.eArbeitszeitHelper.Feiertage),
+
+            new XElement("UeberstundenAusgezahlt", z.eArbeitszeitHelper.AuszahlungUeberstunden)
+            )
+          )
+        );
+
+        try
+        {
+          xDoc.Save(fo.FileName);
+        }
+        catch (Exception f)
+        {
+          var msg = $"Datei konnte nicht erstellt werden.\nGrund: {f.Message}";
+          MessageBox.Show(msg, "Fehlermeldung", MessageBoxButton.OK, MessageBoxImage.Error);
+          return;
+        }
+
+        if (JgGlobalZeit.Properties.Settings.Default.NameXmlDatei != fo.FileName)
+        {
+          JgGlobalZeit.Properties.Settings.Default.NameXmlDatei = fo.FileName;
+          JgGlobalZeit.Properties.Settings.Default.Save();
+        }
+
+        foreach (var bed in daten)
+        {
+          bed.eArbeitszeitHelper.StatusAnzeige = EnumStatusArbeitszeitAuswertung.Erledigt;
+          DbSichern.AbgleichEintragen(bed.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+        _Erstellung.Db.SaveChanges();
+
+        MessageBox.Show("Datei gespeichert !", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+      }
     }
   }
 }

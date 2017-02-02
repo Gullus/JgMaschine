@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace JgMaschineTest
 {
@@ -8,20 +9,34 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
-      var s = Enum.GetNames(typeof(JgMaschineData.ZeitHelper.Monate));
 
-      foreach (var ff in s)
-        Console.WriteLine(ff);
+      var t = new TimeSpan(148, 16, 00);
+      var d = DateTime.Now;
+
+      using (var db = new JgMaschineData.JgModelContainer())
+      {
+        XDocument xDoc = new XDocument(
+          new XComment("This is a comment"),
+          new XElement("Root",
+
+            from z in db.tabBedienerSet.ToList()
+            select new XElement("Datensatz", 
+              new XElement("Nachname", z.NachName),
+              new XElement("Vorname", z.VorName),
+              new XElement("Zeit", t.ToString() + ".000"),
+              //new XElement("Datum1", d.ToString("yyyy-MM-dd")),
+              new XElement("Datum2", d.ToString("yyyy-MM-ddTHH:mm:ss"))
+            )
+          )
+        );
 
 
-      string gg = Enum.GetName(typeof(JgMaschineData.ZeitHelper.Monate), 0);
-
-      Console.WriteLine(gg);
+        Console.WriteLine(xDoc);
+      }
 
       Console.ReadKey();
     }
   }
-  
-}
 
+}
 
