@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/02/2017 20:04:20
+-- Date Created: 02/06/2017 16:12:20
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -162,7 +162,7 @@ CREATE TABLE [dbo].[tabMaschineSet] (
     [VorgabeProStunde] decimal(8,3)  NOT NULL,
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL,
@@ -182,7 +182,7 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [IdBuchhaltung] nvarchar(10)  NOT NULL,
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fAktivArbeitszeit] uniqueidentifier  NULL,
@@ -215,7 +215,7 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [NummerPosition] nvarchar(10)  NULL,
     [Buegelname] nvarchar(120)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL
@@ -230,7 +230,7 @@ CREATE TABLE [dbo].[tabAnmeldungMaschineSet] (
     [ManuelleAnmeldung] bit  NOT NULL,
     [ManuelleAbmeldung] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
@@ -254,7 +254,7 @@ CREATE TABLE [dbo].[tabProtokollSet] (
     [FehlerDatenImport] int  NOT NULL,
     [FehlerDatenSpeichern] int  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
@@ -269,7 +269,7 @@ CREATE TABLE [dbo].[tabReparaturSet] (
     [ProtokollText] nvarchar(max)  NULL,
     [CoilwechselAnzahl] tinyint  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fMaschine] uniqueidentifier  NOT NULL,
@@ -282,12 +282,13 @@ GO
 CREATE TABLE [dbo].[tabStandortSet] (
     [Id] uniqueidentifier  NOT NULL,
     [Bezeichnung] nvarchar(120)  NOT NULL,
-    [Bemerkung] nvarchar(120)  NULL,
-    [UpdateBedienerDatafox] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
-    [DatenAbgleich_Geloescht] bit  NOT NULL
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
+    [AuszahlungGehalt] tinyint  NOT NULL,
+    [Bemerkung] nvarchar(120)  NULL,
+    [UpdateBedienerDatafox] bit  NOT NULL
 );
 GO
 
@@ -303,7 +304,7 @@ CREATE TABLE [dbo].[tabAuswertungSet] (
     [Bemerkung] nvarchar(max)  NULL,
     [FilterAuswertung] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
@@ -317,7 +318,7 @@ CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [ManuelleAnmeldung] bit  NOT NULL,
     [ManuelleAbmeldung] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
@@ -332,7 +333,7 @@ CREATE TABLE [dbo].[tabAnmeldungReparaturSet] (
     [Anmeldung] datetime  NOT NULL,
     [Abmeldung] datetime  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fReparatur] uniqueidentifier  NOT NULL,
@@ -352,10 +353,11 @@ CREATE TABLE [dbo].[tabArbeitszeitTagSet] (
     [Krank] bit  NOT NULL,
     [Bemerkung] nvarchar(255)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
-    [fArbeitszeitAuswertung] uniqueidentifier  NOT NULL
+    [fArbeitszeitAuswertung] uniqueidentifier  NOT NULL,
+    [IstManuellGeaendert] bit  NOT NULL
 );
 GO
 
@@ -365,7 +367,7 @@ CREATE TABLE [dbo].[tabFeiertageSet] (
     [Datum] datetime  NOT NULL,
     [Bezeichnung] nvarchar(255)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
@@ -386,7 +388,7 @@ CREATE TABLE [dbo].[tabArbeitszeitAuswertungSet] (
     [Bemerkung] nvarchar(255)  NULL,
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL
@@ -400,7 +402,7 @@ CREATE TABLE [dbo].[tabSollStundenSet] (
     [Monat] tinyint  NOT NULL,
     [SollStunden] nvarchar(7)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
@@ -413,7 +415,7 @@ CREATE TABLE [dbo].[tabPausenzeitSet] (
     [ZeitBis] time  NOT NULL,
     [Pausenzeit] time  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL
 );
@@ -428,7 +430,7 @@ CREATE TABLE [dbo].[tabArbeitszeitRundenSet] (
     [ZeitBis] time  NOT NULL,
     [RundenAufZeit] time  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
-    [DatenAbgleich_Status] int  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fStandort] uniqueidentifier  NOT NULL

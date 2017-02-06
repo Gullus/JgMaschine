@@ -133,7 +133,7 @@
     <Property Name="VorgabeProStunde" Type="decimal" Nullable="false" DefaultValue="0" Precision="8" Scale="3" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
@@ -153,7 +153,7 @@
     <Property Name="IdBuchhaltung" Type="nvarchar" Nullable="false" MaxLength="10" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fAktivArbeitszeit" Type="uniqueidentifier" Nullable="true" />
@@ -186,7 +186,7 @@
     <Property Name="NummerPosition" Type="nvarchar" Nullable="true" MaxLength="10" />
     <Property Name="Buegelname" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
@@ -201,7 +201,7 @@
     <Property Name="ManuelleAnmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
@@ -225,7 +225,7 @@
     <Property Name="FehlerDatenImport" Type="int" Nullable="false" DefaultValue="0" />
     <Property Name="FehlerDatenSpeichern" Type="int" Nullable="false" DefaultValue="0" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
@@ -240,7 +240,7 @@
     <Property Name="ProtokollText" Type="nvarchar(max)" Nullable="true" />
     <Property Name="CoilwechselAnzahl" Type="tinyint" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
@@ -253,12 +253,13 @@
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Bezeichnung" Type="nvarchar" Nullable="false" MaxLength="120" />
-    <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="120" />
-    <Property Name="UpdateBedienerDatafox" Type="bit" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="AuszahlungGehalt" Type="tinyint" Nullable="false" DefaultValue="1" />
+    <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="120" />
+    <Property Name="UpdateBedienerDatafox" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="tabAuswertungSet">
     <Key>
@@ -274,7 +275,7 @@
     <Property Name="Bemerkung" Type="nvarchar(max)" Nullable="true" />
     <Property Name="FilterAuswertung" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
@@ -288,7 +289,7 @@
     <Property Name="ManuelleAnmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
@@ -303,7 +304,7 @@
     <Property Name="Anmeldung" Type="datetime" Nullable="false" />
     <Property Name="Abmeldung" Type="datetime" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fReparatur" Type="uniqueidentifier" Nullable="false" />
@@ -323,10 +324,11 @@
     <Property Name="Krank" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fArbeitszeitAuswertung" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="IstManuellGeaendert" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="tabFeiertageSet">
     <Key>
@@ -336,7 +338,7 @@
     <Property Name="Datum" Type="datetime" Nullable="false" />
     <Property Name="Bezeichnung" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
@@ -357,7 +359,7 @@
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
@@ -371,7 +373,7 @@
     <Property Name="Monat" Type="tinyint" Nullable="false" />
     <Property Name="SollStunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
@@ -384,7 +386,7 @@
     <Property Name="ZeitBis" Type="time" Nullable="false" Precision="0" />
     <Property Name="Pausenzeit" Type="time" Nullable="false" Precision="0" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
@@ -399,7 +401,7 @@
     <Property Name="ZeitBis" Type="time" Nullable="false" />
     <Property Name="RundenAufZeit" Type="time" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
-    <Property Name="DatenAbgleich_Status" Type="int" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
@@ -866,7 +868,7 @@
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="MatchCode" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="Urlaubstage" Type="Byte" Nullable="false" />
-          <Property Name="IdBuchhaltung" Type="String" Nullable="false" MaxLength="10" />
+          <Property Name="IdBuchhaltung" Type="String" MaxLength="10" Nullable="false" />
           <Property Name="Status" Type="JgModel.EnumStatusBediener" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fAktivArbeitszeit" Type="Guid" Nullable="true" />
@@ -1071,11 +1073,12 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Bezeichnung" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
+          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
+          <Property Name="AuszahlungGehalt" Type="Byte" Nullable="false" DefaultValue="1" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="sMaschinen" Relationship="JgModel.tabStandorttabMaschine" FromRole="tabStandort" ToRole="tabMaschine" />
           <NavigationProperty Name="sArbeitszeiten" Relationship="JgModel.tabStandorttabArbeitszeit1" FromRole="tabStandort" ToRole="tabArbeitszeit" />
           <Property Name="UpdateBedienerDatafox" Type="Boolean" Nullable="false" />
-          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <NavigationProperty Name="sBediener" Relationship="JgModel.tabStandorttabBediener" FromRole="tabStandort" ToRole="tabBediener" />
           <NavigationProperty Name="sArbeitzzeitRunden" Relationship="JgModel.tabStandorttabArbeitzzeitRunden" FromRole="tabStandort" ToRole="tabArbeitzzeitRunden" />
         </EntityType>
@@ -1163,7 +1166,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EnumType Name="EnumStatusDatenabgleich" >
+        <EnumType Name="EnumStatusDatenabgleich" UnderlyingType="Byte" >
           <Member Name="Neu" Value="0" />
           <Member Name="Geaendert" Value="1" />
           <Member Name="Abgeglichen" Value="2" />
@@ -1302,6 +1305,7 @@
           <Property Name="fArbeitszeitAuswertung" Type="Guid" Nullable="false" />
           <NavigationProperty Name="sArbeitszeiten" Relationship="JgModel.tabArbeitszeitAuswertungtabArbeitszeit" FromRole="tabArbeitszeitAuswertung" ToRole="tabArbeitszeit" />
           <NavigationProperty Name="eArbeitszeitAuswertung" Relationship="JgModel.tabArbeitszeitAuswertungtabArbeitszeitTag" FromRole="tabArbeitszeitTag" ToRole="tabArbeitszeitAuswertung" />
+          <Property Name="IstManuellGeaendert" Type="Boolean" Nullable="false" DefaultValue="False" />
         </EntityType>
         <EntityType Name="tabFeiertage">
           <Key>
@@ -1586,14 +1590,15 @@
         <MappingFragment StoreEntitySet="tabStandortSet">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Bezeichnung" ColumnName="Bezeichnung" />
-          <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
-          <ScalarProperty Name="UpdateBedienerDatafox" ColumnName="UpdateBedienerDatafox" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
             <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
+          <ScalarProperty Name="AuszahlungGehalt" ColumnName="AuszahlungGehalt" />
+          <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
+          <ScalarProperty Name="UpdateBedienerDatafox" ColumnName="UpdateBedienerDatafox" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1674,6 +1679,7 @@
             <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fArbeitszeitAuswertung" ColumnName="fArbeitszeitAuswertung" />
+          <ScalarProperty Name="IstManuellGeaendert" ColumnName="IstManuellGeaendert" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

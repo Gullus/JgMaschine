@@ -74,8 +74,6 @@ namespace JgMaschineGlobalZeit
         _CmbJahr.Items.Add(i);
       _CmbJahr.SelectedIndex = _CmbJahr.Items.IndexOf((Int16)heute.Year);
 
-      _CmbJahr.SelectedIndex = _CmbJahr.Items.IndexOf((Int16)(heute.Year - 1));
-
       _CmbJahr.SelectionChanged += (sen, erg) =>
       {
         if ((sen as ComboBox).IsKeyboardFocusWithin)
@@ -88,8 +86,6 @@ namespace JgMaschineGlobalZeit
       _CmbMonat = CmbMonat;
       _CmbMonat.ItemsSource = Enum.GetValues(typeof(ZeitHelper.Monate));
       _CmbMonat.SelectedIndex = _CmbMonat.Items.IndexOf((ZeitHelper.Monate)heute.Month);
-
-      _CmbMonat.SelectedIndex = 9;
 
       _CmbMonat.SelectionChanged += (sen, erg) =>
       {
@@ -202,7 +198,11 @@ namespace JgMaschineGlobalZeit
       var auswKumulativ = alleAuswertungenBediener.Where(w => (w.Monat > 0) && (w.Monat < Monat)).ToList();
 
       var sumUeberstunden = new TimeSpan(auswKumulativ.Sum(s => ZeitHelper.StringInZeit(s.Ueberstunden).Ticks));
-      AuswertungKumulativ.UeberstundenBezahltString = ZeitHelper.ZeitInString(sumUeberstunden);
+      AuswertungKumulativ.UeberstundenString = ZeitHelper.ZeitInString(sumUeberstunden);
+
+      var sumUeberstBezahlt = new TimeSpan(auswKumulativ.Sum(s => ZeitHelper.StringInZeit(s.AuszahlungUeberstunden).Ticks));
+      AuswertungKumulativ.UeberstundenBezahltString = ZeitHelper.ZeitInString(sumUeberstBezahlt);
+
       AuswertungKumulativ.KrankAnzeige = (Int16)auswKumulativ.Sum(s => s.Krank);
       AuswertungKumulativ.UrlaubAnzeige = (Int16)auswKumulativ.Sum(s => s.Urlaub);
       AuswertungKumulativ.UrlaubVorjahrAnzeige = auswErster.Urlaub;
@@ -211,14 +211,15 @@ namespace JgMaschineGlobalZeit
 
       ListeFuerJedenTagErstellen(_Db, Bediener.eArbeitszeitHelper, ListeRundenMonat, ListeFeiertageMonat, ListePausen);
 
-      BerechneUeberstunden(ListeTage);
+      BerechneUeberstundenAusTagen(ListeTage);
       BerechneUeberstundenBezahlt();
-
       BerechneUrlaub(ListeTage);
       BerechneKrank(ListeTage);
 
       BerechneNachtschicht(ListeTage);
       BerechneFeiertag(ListeTage);
+
+      BerechneUeberstundenGesamt();
     }
 
     private tabArbeitszeitAuswertung ArbeitszeitAuswertungErstellen(tabBediener Bediener, short Jahr, byte Monat, TimeSpan SollStundenMonat)
@@ -276,7 +277,6 @@ namespace JgMaschineGlobalZeit
           )
       ).ToList();
 
-
       for (byte tag = 1; tag <= anzTageMonat; tag++)
       {
         var auswTag = auswTage.FirstOrDefault(f => f.Tag == tag);
@@ -303,6 +303,7 @@ namespace JgMaschineGlobalZeit
         auswTag.NachtschichtBerechnet = TimeSpan.Zero;
 
         var zeiten = alleZeiten.Where(w => (w.Anmeldung?.Day == tag) || ((w.Abmeldung == null) && (w.Abmeldung?.Day == tag))).ToList();
+        var ersteAnmeldungZeit = TimeSpan.Zero;
 
         if (zeiten.Count > 0)
         {
@@ -315,8 +316,12 @@ namespace JgMaschineGlobalZeit
             if (zeit.Anmeldung != null)
             {
               // Anfangszeiten Runden heraussuchen
-              TimeSpan anm = zeit.Anmeldung.Value - zeit.Anmeldung.Value.Date;
-              var wg = ListeRundenMonat.FirstOrDefault(f => (anm >= f.ZeitVon) && (anm <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
+              var zeitAnmeldung = DatumInZeit(zeit.Anmeldung);
+
+              if ((ersteAnmeldungZeit == TimeSpan.Zero) || (zeitAnmeldung < ersteAnmeldungZeit))
+                ersteAnmeldungZeit = zeitAnmeldung;
+
+              var wg = ListeRundenMonat.FirstOrDefault(f => (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
               if (wg != null)
                 zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenAufZeit);
 
@@ -330,33 +335,20 @@ namespace JgMaschineGlobalZeit
           auswTag.ZeitBerechnet = ZeitAufMinuteRunden(auswTag.ZeitBerechnet);
           auswTag.NachtschichtBerechnet = ZeitAufMinuteRunden(auswTag.NachtschichtBerechnet);
 
-          if (auswTag.DatenAbgleich.Status == EnumStatusDatenabgleich.Neu)
-          {
-            auswTag.Pause = new TimeSpan(1, 0, 0);
-            if (auswTag.ZeitBerechnet < new TimeSpan(4, 0, 0))
-              auswTag.Pause = TimeSpan.Zero;
-            else
-            {
-              var zeitAnmeldung = zeiten.Min(z => z.Anmeldung);
-              if (zeitAnmeldung != null)
-              {
-                var zeitAuswahl = new TimeSpan(zeitAnmeldung.Value.Hour, zeitAnmeldung.Value.Minute, 0);
-                var dsPause = ListePausen.FirstOrDefault(w => (zeitAuswahl >= w.ZeitVon) && (zeitAuswahl <= w.ZeitBis));
-                if (dsPause != null)
-                  auswTag.Pause = dsPause.Pausenzeit;
-              }
-            }
+          // Pause berechnen
+
+          if (ersteAnmeldungZeit == TimeSpan.Zero)
+            auswTag.PauseBerechnet = new TimeSpan(1, 0, 0);
+          else
+          { 
+            var dsPause = ListePausen.FirstOrDefault(w => (ersteAnmeldungZeit >= w.ZeitVon) && (ersteAnmeldungZeit <= w.ZeitBis));
+            if (dsPause != null)
+              auswTag.PauseBerechnet = dsPause.Pausenzeit;
           }
 
-          auswTag.ZeitBerechnet -= auswTag.Pause;
+          auswTag.ZeitBerechnet -= auswTag.PauseBerechnet;
           auswTag.IstFehlerZeit = !Kontrolle24StundenOK(auswTag.ZeitBerechnet);
           auswTag.IstFehlerNachtschicht = !Kontrolle24StundenOK(auswTag.NachtschichtBerechnet);
-
-          if (auswTag.DatenAbgleich.Status == EnumStatusDatenabgleich.Neu)
-          {
-            auswTag.Zeit = (auswTag.IstFehlerZeit) ? TimeSpan.Zero : auswTag.ZeitBerechnet;
-            auswTag.Nachtschicht = (auswTag.IstFehlerNachtschicht) ? TimeSpan.Zero : auswTag.NachtschichtBerechnet;
-          }
         }
 
         ListeTage.Add(auswTag);
@@ -364,9 +356,26 @@ namespace JgMaschineGlobalZeit
 
       foreach (var auswTag in ListeTage)
       {
+        if ((!auswTag.IstManuellGeaendert) && (auswTag.sArbeitszeiten.Count > 0))
+        {
+          auswTag.Pause = auswTag.PauseBerechnet;
+          auswTag.Zeit = (auswTag.IstFehlerZeit) ? TimeSpan.Zero : auswTag.ZeitBerechnet;
+          auswTag.Nachtschicht = (auswTag.IstFehlerNachtschicht) ? TimeSpan.Zero : auswTag.NachtschichtBerechnet;
+          auswTag.IstManuellGeaendert = true;
+
+          DbSichern.AbgleichEintragen(auswTag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+
         if (auswTag.ArbeitszeitTagGeaendert == null)
           auswTag.ArbeitszeitTagGeaendert = WertManuellGeaendert;
       }
+
+      Db.SaveChanges();
+    }
+
+    private TimeSpan DatumInZeit(DateTime? Datum)
+    {
+      return new TimeSpan(Datum.Value.Hour, Datum.Value.Minute, 0);
     }
 
     private void WertManuellGeaendert(tabArbeitszeitTag AuswertungTag, string PropertyName)
@@ -386,19 +395,19 @@ namespace JgMaschineGlobalZeit
         AuswertungTag.ZeitBerechnet = ZeitAufMinuteRunden(AuswertungTag.ZeitBerechnet - AuswertungTag.Pause);
         AuswertungTag.NachtschichtBerechnet = ZeitAufMinuteRunden(AuswertungTag.NachtschichtBerechnet);
 
-        BerechneUeberstunden(ListeTage);
+        BerechneUeberstundenAusTagen(ListeTage);
       }
       else if (PropertyName == "Zeit")
-        BerechneUeberstunden(ListeTage);
+        BerechneUeberstundenAusTagen(ListeTage);
       else if (PropertyName == "Urlaub")
       {
         BerechneUrlaub(ListeTage);
-        BerechneUeberstunden(ListeTage);
+        BerechneUeberstundenAusTagen(ListeTage);
       }
       else if (PropertyName == "Krank")
       {
         BerechneKrank(ListeTage);
-        BerechneUeberstunden(ListeTage);
+        BerechneUeberstundenAusTagen(ListeTage);
       }
       else if (PropertyName == "Feiertag")
         BerechneFeiertag(ListeTage);
@@ -413,7 +422,7 @@ namespace JgMaschineGlobalZeit
     private void BerechneNachtschicht(IEnumerable<tabArbeitszeitTag> listeTage)
     {
       var sumNachtschicht = new TimeSpan(listeTage.Sum(c => c.Nachtschicht.Ticks));
-      _Bediener.eArbeitszeitHelper.NachtschichtenAnzeige = ZeitHelper.ZeitInString(sumNachtschicht); 
+      _Bediener.eArbeitszeitHelper.NachtschichtenAnzeige = ZeitHelper.ZeitInString(sumNachtschicht);
     }
 
     private void BerechneFeiertag(IEnumerable<tabArbeitszeitTag> listeTage)
@@ -444,7 +453,7 @@ namespace JgMaschineGlobalZeit
       AuswertungKumulativ.UrlaubOffenAnzeige = (short)(_Bediener.Urlaubstage + AuswertungKumulativ.fRestUrlaub - urlaub - AuswertungKumulativ.fUrlaub);
     }
 
-    private void BerechneUeberstunden(IEnumerable<tabArbeitszeitTag> listeTage)
+    private void BerechneUeberstundenAusTagen(IEnumerable<tabArbeitszeitTag> listeTage)
     {
       var sollStunden = Helper.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden);
       var sumZeit = TimeSpan.Zero;
@@ -461,7 +470,7 @@ namespace JgMaschineGlobalZeit
       }
 
       var istStunden = new TimeSpan(8 * hinzuTage, 0, 0) + ZeitAufMinuteRunden(sumZeit);
-      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = ZeitHelper.ZeitInString(istStunden- sollStunden);
+      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = ZeitHelper.ZeitInString(istStunden - sollStunden);
 
       BerechneUeberstundenGesamt();
     }
@@ -602,7 +611,7 @@ namespace JgMaschineGlobalZeit
       }
     }
 
-    public short fUrlaub= 0;
+    public short fUrlaub = 0;
     public short UrlaubAnzeige
     {
       get { return fUrlaub; }

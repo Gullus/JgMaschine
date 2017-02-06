@@ -11,7 +11,7 @@ namespace JgMaschineData
 {
     using System;
     
-    public enum EnumStatusDatenabgleich : int
+    public enum EnumStatusDatenabgleich : byte
     {
         Neu = 0,
         Geaendert = 1,

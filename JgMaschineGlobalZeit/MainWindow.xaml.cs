@@ -363,5 +363,47 @@ namespace JgMaschineGlobalZeit
         MessageBox.Show("Datei gespeichert !", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
       }
     }
+
+    private void ErgebnisseNeuBerechnen_Click(object sender, RoutedEventArgs e)
+    {
+      var vorg = Convert.ToByte((sender as Button).Tag);
+      var vorgText = new string[] { "Pausenzeiten", "Arbeitszeiten", "Nachtschichtzuschläge" };
+      var msg = $"Sollen die Werte der {vorgText[vorg]} neu berechnet werden ? Es gehen alle bereits getätigten manuellen Änderungen verloren !";
+      var erg = MessageBox.Show(msg, "Achtung !", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+      if (erg == MessageBoxResult.Yes)
+      {
+        switch (vorg)
+        {
+          case 0:
+            break;
+
+          case 1:
+            break;
+
+
+          case 2:
+
+            break;
+        }
+
+        msg = $"{vorgText[vorg]} erfolgreich aktualisiert !";
+        MessageBox.Show(msg, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+      }
+    }
+
+    private void Datagrid_DoppelClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      var aktTag = (FindResource("vsArbeitszeitTage") as CollectionViewSource).View.CurrentItem;
+      if (aktTag != null)
+      {
+        var aktDs = (tabArbeitszeitTag)aktTag;
+        if (dgArbeitszeit.CurrentColumn == clPauseBerechnet)
+          aktDs.PauseAnzeige = Helper.ZeitInString(aktDs.PauseBerechnet);
+        else if (dgArbeitszeit.CurrentColumn == clZeitBerechnet)
+          aktDs.ZeitAnzeige = Helper.ZeitInString(aktDs.ZeitBerechnet);
+        else if (dgArbeitszeit.CurrentColumn == clNachtschichtBerechnet)
+          aktDs.NachtschichtAnzeige = Helper.ZeitInString(aktDs.NachtschichtBerechnet);
+      }
+    }
   }
 }

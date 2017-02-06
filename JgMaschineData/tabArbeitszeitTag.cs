@@ -19,6 +19,7 @@ namespace JgMaschineData
         {
             this.Urlaub = false;
             this.Krank = false;
+            this.IstManuellGeaendert = false;
             this.sArbeitszeiten = new HashSet<tabArbeitszeit>();
             this.DatenAbgleich = new DatenAbgleich();
         }
@@ -33,6 +34,7 @@ namespace JgMaschineData
         public bool Krank { get; set; }
         public string Bemerkung { get; set; }
         public System.Guid fArbeitszeitAuswertung { get; set; }
+        public bool IstManuellGeaendert { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
     

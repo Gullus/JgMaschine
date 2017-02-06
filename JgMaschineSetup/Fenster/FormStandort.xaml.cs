@@ -13,7 +13,7 @@ namespace JgMaschineSetup.Fenster
       InitializeComponent();
       this.Standort = Standort;
       if (this.Standort == null)
-        this.Standort = new tabStandort() { Id = Guid.NewGuid(), Bezeichnung = "Bezeichnung" };
+        this.Standort = new tabStandort() { Id = Guid.NewGuid() };
       gridStandort.DataContext = this.Standort;
     }
 

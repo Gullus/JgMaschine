@@ -374,13 +374,20 @@ namespace JgMaschineData
         {
           this.Pause = zeit.AsTime;
           ArbeitszeitTagGeaendertAusloesen("Pause");
-          NotifyPropertyChanged("ZeitBerechnetString");
+          NotifyPropertyChanged();
+          NotifyPropertyChanged("ZeitBerechnetAnzeige");
           NotifyPropertyChanged("IstZeitUngleich");
-          NotifyPropertyChanged("NachtschichtBerechnetString");
-          NotifyPropertyChanged("IstNachtschichtUngleich");
+          NotifyPropertyChanged("IstPauseUngleich");
         }
       }
     }
+
+    public bool IstPauseUngleich
+    {
+      get { return PauseBerechnet != Pause; }
+    }
+
+    public TimeSpan PauseBerechnet { get; set; } = TimeSpan.Zero;
 
     public string ZeitAnzeige
     {
@@ -392,6 +399,7 @@ namespace JgMaschineData
         {
           this.Zeit = zeit.AsTime;
           ArbeitszeitTagGeaendertAusloesen("Zeit");
+          NotifyPropertyChanged();
           NotifyPropertyChanged("Ueberstunden");
           NotifyPropertyChanged("IstZeitUngleich");
         }
@@ -399,10 +407,8 @@ namespace JgMaschineData
     }
 
     public TimeSpan ZeitBerechnet { get; set; } = TimeSpan.Zero;
-    public string ZeitBerechnetString
-    {
-      get { return ZeitHelper.ZeitInString(ZeitBerechnet); }
-    }
+
+    public string ZeitBerechnetAnzeige { get { return ZeitHelper.ZeitInString(ZeitBerechnet); } }
 
     public string NachtschichtAnzeige
     {
@@ -413,16 +419,16 @@ namespace JgMaschineData
         if (zeit.IstOk)
         {
           this.Nachtschicht = zeit.AsTime;
+          NotifyPropertyChanged();
           ArbeitszeitTagGeaendertAusloesen("Nachtschicht");
           NotifyPropertyChanged("IstNachtschichtUngleich");
         }
       }
     }
+
     public TimeSpan NachtschichtBerechnet { get; set; } = TimeSpan.Zero;
-    public string NachtschichtBerechnetString
-    {
-      get { return ZeitHelper.ZeitInString(NachtschichtBerechnet); }
-    }
+
+    public string NachtschichtBerechnetAnzeige { get { return ZeitHelper.ZeitInString(NachtschichtBerechnet); } }
 
     public string FeiertagAnzeige
     {

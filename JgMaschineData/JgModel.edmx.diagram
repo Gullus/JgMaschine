@@ -18,7 +18,7 @@
         <AssociationConnector Association="JgModel.tabMaschinetabReparatur" ManuallyRouted="false" >
         </AssociationConnector>
         <AssociationConnector Association="JgModel.tabMaschinetabProtokoll" />
-        <EntityTypeShape EntityType="JgModel.tabStandort" Width="3.5" PointX="10.75" PointY="6.25" />
+        <EntityTypeShape EntityType="JgModel.tabStandort" Width="3.5" PointX="10.75" PointY="6" />
         <AssociationConnector Association="JgModel.tabStandorttabMaschine" />
         <EntityTypeShape EntityType="JgModel.tabAuswertung" Width="2.5" PointX="2.625" PointY="3.125" />
         <EntityTypeShape EntityType="JgModel.tabArbeitszeit" Width="1.875" PointX="12.625" PointY="9.625" />

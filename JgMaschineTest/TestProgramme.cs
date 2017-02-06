@@ -10,6 +10,24 @@ namespace JgMaschineTest
 {
   class TestProgramme
   {
+
+    private void MeinLogger()
+    {
+      //using Microsoft.Practices.EnterpriseLibrary.Logging;
+
+      //Logger.SetLogWriter(new LogWriterFactory().Create());
+
+      //var log = new LogEntry()
+      //{
+      //  Categories = new string[] { "Cat1", "Car2" },
+      //  Message = "My message body",
+      //  Severity = System.Diagnostics.TraceEventType.Critical,
+      //  Priority = 100,
+      //  Title = "Der Titel",
+      //};
+      //Logger.Write(log);
+    }
+
     private void XmlDateiEinlesen()
     {
       //string datXml = @"C:\Entwicklung\JgMaschine\JgMaschineTest\bin\Debug\20151102_produzione.xml";

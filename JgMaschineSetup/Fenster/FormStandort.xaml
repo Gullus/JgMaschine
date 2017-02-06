@@ -8,47 +8,51 @@
     mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormStandort"
     Title="Standort bearbeiten" Height="208" Width="437" ShowInTaskbar="False" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" Topmost="True" TabIndex="5" FocusManager.FocusedElement="{Binding ElementName=tbStandort}" Icon="/JgMaschineSetup;component/JgMaschineSetup.ico">
-  
-  <Window.Resources>
-  </Window.Resources>
 
-  <Grid x:Name="gridStandort" Margin="8" DataContext="{x:Type JgMaschineData:tabStandort}">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition />
-      <RowDefinition Height="50"/>
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto"/>
-      <ColumnDefinition/>
-      <ColumnDefinition Width="120"/>
-      <ColumnDefinition Width="120"/>
-    </Grid.ColumnDefinitions>
+    <Window.Resources>
+    </Window.Resources>
 
-    <Label Content="_Name Standort" Grid.Row="0" Target="{Binding ElementName=tbStandort}"/>
-    <TextBox x:Name="tbStandort" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" TabIndex="0" >
-      <Binding Path="Bezeichnung" UpdateSourceTrigger="PropertyChanged">
-        <Binding.ValidationRules>
-          <vRules:KontrAnnotations/>
-        </Binding.ValidationRules>
-      </Binding>
-    </TextBox>
+    <Grid x:Name="gridStandort" Margin="8" DataContext="{x:Type JgMaschineData:tabStandort}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
 
-    <Label Content="_Bemerkung" Grid.Row="1" Target="{Binding ElementName=tbBemerkung}"/>
-    <TextBox x:Name="tbBemerkung" Text="{Binding Bemerkung, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"/>
+        <Label Content="_Name Standort" Target="{Binding ElementName=tbStandort}"/>
+        <TextBox x:Name="tbStandort" Grid.Column="1" Grid.ColumnSpan="3" TabIndex="0" >
+            <Binding Path="Bezeichnung" UpdateSourceTrigger="PropertyChanged">
+                <Binding.ValidationRules>
+                    <vRules:KontrAnnotations/>
+                </Binding.ValidationRules>
+            </Binding>
+        </TextBox>
 
-    <Button Grid.Column="2" Grid.Row="2" IsCancel="True">
-      <StackPanel Orientation="Horizontal">
-        <Image Source="..\Bilder\JgCancel.ico" Margin="5"/>
-        <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
-      </StackPanel>
-    </Button>
-    <Button Grid.Column="3" Grid.Row="2" IsDefault="True" Click="ButtonOk_Click">
-      <StackPanel Orientation="Horizontal">
-        <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
-        <TextBlock Text="Eintragen" VerticalAlignment="Center"/>
-      </StackPanel>
-    </Button>
+        <Label Content="_Auszahlung Gehalt" Grid.Row="1" Target="{Binding ElementName=tbAuszahlungGehalt}"/>
+        <TextBox x:Name="tbAuszahlungGehalt" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" TabIndex="0" Text="{Binding AuszahlungGehalt}" />
 
-  </Grid>
+        <Label Content="_Bemerkung" Grid.Row="2" Target="{Binding ElementName=tbBemerkung}"/>
+        <TextBox x:Name="tbBemerkung" Text="{Binding Bemerkung, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3"/>
+
+        <Button Grid.Column="2" Grid.Row="3" IsCancel="True">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="..\Bilder\JgCancel.ico" Margin="5"/>
+                <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="3" Grid.Row="3" IsDefault="True" Click="ButtonOk_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
+                <TextBlock Text="Eintragen" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+    </Grid>
 </Window>
