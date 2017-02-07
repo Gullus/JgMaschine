@@ -470,7 +470,8 @@ namespace JgMaschineGlobalZeit
       }
 
       var istStunden = new TimeSpan(8 * hinzuTage, 0, 0) + ZeitAufMinuteRunden(sumZeit);
-      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = ZeitHelper.ZeitInString(istStunden - sollStunden);
+
+      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = ZeitHelper.ZeitInString(Helper.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden) - istStunden);
 
       BerechneUeberstundenGesamt();
     }

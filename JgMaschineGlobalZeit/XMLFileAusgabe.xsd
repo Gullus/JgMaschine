@@ -9,8 +9,10 @@
               <xs:element name="Mitarbeiter" type="xs:string" />
               <xs:element name="Nachname" type="xs:string" />
               <xs:element name="Vorname" type="xs:string" />
-              <xs:element name="IdBuchhaltung" type="xs:string" />
-              <xs:element name="Urlaubstage" type="xs:string" />
+              <xs:element name="IdBuchhaltung" type="xs:unsignedShort" />
+              <xs:element name="Standort" type="xs:string" />
+              <xs:element name="Zahltag" type="xs:unsignedByte" />
+              <xs:element name="Urlaubstage" type="xs:unsignedByte" />
               <xs:element name="SollStunden" type="xs:string" />
               <xs:element name="IstStunden" type="xs:string" />
               <xs:element name="UeberStunden" type="xs:string" />

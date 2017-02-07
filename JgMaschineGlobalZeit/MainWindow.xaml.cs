@@ -319,6 +319,10 @@ namespace JgMaschineGlobalZeit
             new XElement("Nachname", z.NachName),
             new XElement("Vorname", z.VorName),
             new XElement("IdBuchhaltung", z.IdBuchhaltung),
+
+            new XElement("Standort", z.eStandort.Bezeichnung),
+            new XElement("Zahltag", z.eStandort.AuszahlungGehalt),
+
             new XElement("Urlaubstage", z.Urlaubstage),
 
             new XElement("SollStunden", z.eArbeitszeitHelper.SollStunden),

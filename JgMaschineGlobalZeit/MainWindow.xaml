@@ -491,7 +491,7 @@
                     <TextBox Text="{Binding Path=eArbeitszeitHelper.SollstundenAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="4" Grid.Row="4" Margin="3,3,0,3" HorizontalAlignment="Left" Width="54"/>
                     <Button Content="..." Grid.Column="5" Grid.Row="4" Margin="3,3,8,3" Click="btnSollStundenEinstellen_Click" ToolTip="Sollstunde enstellen"/>
                     <Label Content="Ist" Grid.Column="3" Grid.Row="5"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.IstStunden, Mode=OneWay}" TextAlignment="Center" Grid.Column="4" Grid.Row="5" Margin="3"/>
+                    <TextBox Text="{Binding Path=eArbeitszeitHelper.IstStunden, Mode=OneWay}" TextAlignment="Center" Grid.Column="4" Grid.Row="5" Margin="3,0,3,3" Height="20" VerticalAlignment="Bottom"/>
                     <Label Content="Diff." Grid.Column="3" Grid.Row="6"/>
                     <TextBox Text="{Binding Path=eArbeitszeitHelper.UeberstundenAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="4" Grid.Row="6" Margin="3" BorderBrush="Blue"/>
 

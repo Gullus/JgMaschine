@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/06/2017 16:12:20
+-- Date Created: 02/07/2017 12:52:34
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -179,7 +179,7 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [Bemerkung] nvarchar(max)  NULL,
     [MatchCode] nvarchar(120)  NULL,
     [Urlaubstage] tinyint  NOT NULL,
-    [IdBuchhaltung] nvarchar(10)  NOT NULL,
+    [IdBuchhaltung] nvarchar(10)  NULL,
     [Status] tinyint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,

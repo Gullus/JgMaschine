@@ -321,7 +321,7 @@ namespace JgMaschineData
       }
     }
 
-    public string IstStunden { get { return ZeitHelper.ZeitInString(ZeitHelper.ZeitStringAddieren(SollStunden, Ueberstunden)); } } 
+    public string IstStunden { get { return ZeitHelper.ZeitInString(ZeitHelper.StringInZeit(SollStunden) - ZeitHelper.StringInZeit(Ueberstunden)); } } 
 
     public EnumStatusArbeitszeitAuswertung StatusAnzeige
     {
