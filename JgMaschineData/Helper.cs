@@ -321,7 +321,7 @@ namespace JgMaschineData
       }
     }
 
-    public string IstStunden { get { return ZeitHelper.ZeitInString(ZeitHelper.StringInZeit(SollStunden) - ZeitHelper.StringInZeit(Ueberstunden)); } } 
+    public string IstStunden { get { return ZeitHelper.ZeitInString(ZeitHelper.StringInZeit(SollStunden) + ZeitHelper.StringInZeit(Ueberstunden)); } } 
 
     public EnumStatusArbeitszeitAuswertung StatusAnzeige
     {
@@ -727,7 +727,7 @@ namespace JgMaschineData
           try
           {
             var stunde = Convert.ToInt32(werte[0]);
-            var minute = Convert.ToInt32(werte[1]);
+            var minute = stunde < 0 ? -1 * Convert.ToInt32(werte[1]) : Convert.ToInt32(werte[1]);
             return new TimeSpan(stunde, minute, 0);
           }
           catch { };

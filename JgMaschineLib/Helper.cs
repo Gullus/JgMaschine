@@ -175,7 +175,7 @@ namespace JgMaschineLib
         {
           var werte = Zeit.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
           var stunde = Convert.ToInt32(werte[0]);
-          var minute = Convert.ToInt32(werte[1]);
+          var minute = stunde < 0 ? -1 * Convert.ToInt32(werte[1]) : Convert.ToInt32(werte[1]);
           return new TimeSpan(stunde, stunde < 0 ? -1 * minute : minute, 0);
         }
         catch { }
