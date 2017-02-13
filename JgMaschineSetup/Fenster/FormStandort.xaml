@@ -15,7 +15,6 @@
     <Grid x:Name="gridStandort" Margin="8" DataContext="{x:Type JgMaschineData:tabStandort}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
@@ -35,19 +34,16 @@
             </Binding>
         </TextBox>
 
-        <Label Content="_Auszahlung Gehalt" Grid.Row="1" Target="{Binding ElementName=tbAuszahlungGehalt}"/>
-        <TextBox x:Name="tbAuszahlungGehalt" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" TabIndex="0" Text="{Binding AuszahlungGehalt}" />
+        <Label Content="_Bemerkung" Grid.Row="1" Target="{Binding ElementName=tbBemerkung}"/>
+        <TextBox x:Name="tbBemerkung" Text="{Binding Bemerkung, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"/>
 
-        <Label Content="_Bemerkung" Grid.Row="2" Target="{Binding ElementName=tbBemerkung}"/>
-        <TextBox x:Name="tbBemerkung" Text="{Binding Bemerkung, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3"/>
-
-        <Button Grid.Column="2" Grid.Row="3" IsCancel="True">
+        <Button Grid.Column="2" Grid.Row="2" IsCancel="True">
             <StackPanel Orientation="Horizontal">
                 <Image Source="..\Bilder\JgCancel.ico" Margin="5"/>
                 <TextBlock Text="Abbrechen" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
-        <Button Grid.Column="3" Grid.Row="3" IsDefault="True" Click="ButtonOk_Click">
+        <Button Grid.Column="3" Grid.Row="2" IsDefault="True" Click="ButtonOk_Click">
             <StackPanel Orientation="Horizontal">
                 <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
                 <TextBlock Text="Eintragen" VerticalAlignment="Center"/>

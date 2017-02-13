@@ -76,5 +76,5 @@
       </DataGrid.Columns>
     </DataGrid>
 
-  </Grid>
+    </Grid>
 </RibbonWindow>

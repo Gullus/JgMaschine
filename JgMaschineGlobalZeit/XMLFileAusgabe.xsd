@@ -3,24 +3,29 @@
   <xs:element name="Root">
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="Monat" type="xs:string" />
         <xs:element maxOccurs="unbounded" name="Datensatz">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Mitarbeiter" type="xs:string" />
               <xs:element name="Nachname" type="xs:string" />
               <xs:element name="Vorname" type="xs:string" />
-              <xs:element name="IdBuchhaltung" type="xs:unsignedShort" />
+              <xs:element name="IdBuchhaltung" type="xs:string" />
               <xs:element name="Standort" type="xs:string" />
               <xs:element name="Zahltag" type="xs:unsignedByte" />
               <xs:element name="Urlaubstage" type="xs:unsignedByte" />
-              <xs:element name="SollStunden" type="xs:string" />
-              <xs:element name="IstStunden" type="xs:string" />
-              <xs:element name="UeberStunden" type="xs:string" />
-              <xs:element name="Krank" type="xs:string" />
-              <xs:element name="Urlaub" type="xs:string" />
-              <xs:element name="NachtschichtZuschlag" type="xs:string" />
-              <xs:element name="FeiertagsZuschlag" type="xs:string" />
-              <xs:element name="UeberstundenAusgezahlt" type="xs:string" />
+              <xs:element name="SollStunden" type="xs:decimal" />
+              <xs:element name="Normalstunden" type="xs:decimal" />
+              <xs:element name="UeberstundenAusgezahlt" type="xs:decimal" />
+              <xs:element name="Urlaub" type="xs:unsignedByte" />
+              <xs:element name="Krank" type="xs:unsignedByte" />
+              <xs:element name="Feiertage" type="xs:unsignedByte" />
+              <xs:element name="NachtschichtZuschlag" type="xs:decimal" />
+              <xs:element name="NachtschichtZuschlagGerundet" type="xs:decimal" />
+              <xs:element name="FeiertagsZuschlag" type="xs:decimal" />
+              <xs:element name="FeiertagsZuschlagGerundet" type="xs:decimal" />
+              <xs:element name="IstStunden" type="xs:decimal" />
+              <xs:element name="UeberStunden" type="xs:decimal" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

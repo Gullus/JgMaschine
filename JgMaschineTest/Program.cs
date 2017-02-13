@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
+using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
+using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
 
 namespace JgMaschineTest
 {
@@ -18,9 +20,25 @@ namespace JgMaschineTest
         Message = "My message body",
         Severity = System.Diagnostics.TraceEventType.Critical,
         Priority = 100,
-        Title = "Der Titel",
+        Title = "Der Titel"
       };
-      Logger.Write(log);
+
+      //Logger.Write("HalloBallo");
+
+      ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+      
+      try
+      {
+        var i = 0;
+        var z = 50 / i;
+      }
+      catch (Exception f)
+      {
+        bool th = ExceptionPolicy.HandleException(f, "PolicyName");
+
+      }
+
+
 
 
       Console.ReadKey();

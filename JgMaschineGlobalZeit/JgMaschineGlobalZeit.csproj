@@ -131,6 +131,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\Commands.cs" />
     <Compile Include="ExtenionsMethods.cs" />
     <Compile Include="Fenster\FormArbeitszeitRunden.xaml.cs">
       <DependentUpon>FormArbeitszeitRunden.xaml</DependentUpon>
@@ -202,6 +203,7 @@
     <AppDesigner Include="Properties\" />
     <None Include="XMLFileAusgabe.xsd">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +280,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="XMLFileAusgabe.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bilder\JgDelete.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

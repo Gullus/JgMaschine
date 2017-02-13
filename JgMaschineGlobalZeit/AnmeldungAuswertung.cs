@@ -164,11 +164,52 @@ namespace JgMaschineGlobalZeit
   {
     private JgModelContainer _Db;
     private tabBediener _Bediener = null;
+   public tabBediener AktBediener
+    {
+      get { return _Bediener; }
+      set { _Bediener = value; }
+    }
 
-    public ArbeitszeitSummen AuswertungGesamt = null;
-    public ArbeitszeitSummen AuswertungKumulativ = null;
+    public ArbeitszeitSummen AuswertungGesamt { get; set; }
+    public ArbeitszeitSummen AuswertungKumulativ { get; set; }
+    public Guid IdBedienerFuerAuswahlInReport { get { return _Bediener.Id; } }
 
     public ObservableCollection<tabArbeitszeitTag> ListeTage = new ObservableCollection<tabArbeitszeitTag>();
+
+    public class DatenFuerReport
+    {
+      public byte Tag { get; set; }
+      public string Wochentag { get; set; }
+      public bool IstSonnabend { get; set; }
+      public bool IstSonntag { get; set; }
+      public bool IstFeiertag { get; set; }
+      public bool Krank { get; set; }
+      public bool Urlaub { get; set; }
+      public TimeSpan Pause { get; set; }
+      public TimeSpan Arbeitszeit { get; set; }
+      public TimeSpan Nachtschicht { get; set; }
+      public TimeSpan Feiertag { get; set; }
+    }
+    public List<DatenFuerReport> ListeFuerReport
+    {
+      get
+      {
+        return ListeTage.Select(s => new DatenFuerReport()
+        {
+          Tag = s.Tag,
+          Wochentag = s.Wochentag,
+          IstFeiertag = s.IstFeiertag,
+          IstSonntag = s.IstSonnabend,
+          IstSonnabend = s.IstSonnabend,
+          Krank = s.Krank,
+          Urlaub = s.Urlaub,
+          Pause = s.Pause,
+          Arbeitszeit = s.Zeit,
+          Nachtschicht = s.Nachtschicht,
+          Feiertag = s.Feiertag,
+        }).ToList();
+      }
+    } 
 
     public ArbeitszeitBediener(JgModelContainer Db)
     {
@@ -413,6 +454,8 @@ namespace JgMaschineGlobalZeit
         BerechneFeiertag(ListeTage);
       else if (PropertyName == "Nachtschicht")
         BerechneNachtschicht(ListeTage);
+
+      AuswertungTag.IstManuellGeaendert = true;
 
       DbSichern.AbgleichEintragen(AuswertungTag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       DbSichern.AbgleichEintragen(_Bediener.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);

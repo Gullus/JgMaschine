@@ -17,6 +17,7 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabBediener()
         {
+            this.AuszahlungGehalt = 1;
             this.sBauteile = new HashSet<tabBauteil>();
             this.sArbeitszeiten = new HashSet<tabArbeitszeit>();
             this.sAnmeldungenMaschine = new HashSet<tabAnmeldungMaschine>();
@@ -34,6 +35,7 @@ namespace JgMaschineData
         public string MatchCode { get; set; }
         public byte Urlaubstage { get; set; }
         public string IdBuchhaltung { get; set; }
+        public byte AuszahlungGehalt { get; set; }
         public EnumStatusBediener Status { get; set; }
         public Nullable<System.Guid> fAktivArbeitszeit { get; set; }
         public System.Guid fStandort { get; set; }

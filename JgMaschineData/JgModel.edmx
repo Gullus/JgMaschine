@@ -151,6 +151,7 @@
     <Property Name="MatchCode" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="Urlaubstage" Type="tinyint" Nullable="false" />
     <Property Name="IdBuchhaltung" Type="nvarchar" Nullable="true" MaxLength="10" />
+    <Property Name="AuszahlungGehalt" Type="tinyint" Nullable="false" DefaultValue="1" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
@@ -257,7 +258,6 @@
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
-    <Property Name="AuszahlungGehalt" Type="tinyint" Nullable="false" DefaultValue="1" />
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="UpdateBedienerDatafox" Type="bit" Nullable="false" />
   </EntityType>
@@ -869,6 +869,7 @@
           <Property Name="MatchCode" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="Urlaubstage" Type="Byte" Nullable="false" />
           <Property Name="IdBuchhaltung" Type="String" MaxLength="10" Nullable="true" />
+          <Property Name="AuszahlungGehalt" Type="Byte" Nullable="false" DefaultValue="1" />
           <Property Name="Status" Type="JgModel.EnumStatusBediener" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fAktivArbeitszeit" Type="Guid" Nullable="true" />
@@ -1074,7 +1075,6 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Bezeichnung" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
-          <Property Name="AuszahlungGehalt" Type="Byte" Nullable="false" DefaultValue="1" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="sMaschinen" Relationship="JgModel.tabStandorttabMaschine" FromRole="tabStandort" ToRole="tabMaschine" />
           <NavigationProperty Name="sArbeitszeiten" Relationship="JgModel.tabStandorttabArbeitszeit1" FromRole="tabStandort" ToRole="tabArbeitszeit" />
@@ -1473,6 +1473,7 @@
           <ScalarProperty Name="MatchCode" ColumnName="MatchCode" />
           <ScalarProperty Name="Urlaubstage" ColumnName="Urlaubstage" />
           <ScalarProperty Name="IdBuchhaltung" ColumnName="IdBuchhaltung" />
+          <ScalarProperty Name="AuszahlungGehalt" ColumnName="AuszahlungGehalt" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
@@ -1596,7 +1597,6 @@
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
             <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
-          <ScalarProperty Name="AuszahlungGehalt" ColumnName="AuszahlungGehalt" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ScalarProperty Name="UpdateBedienerDatafox" ColumnName="UpdateBedienerDatafox" />
         </MappingFragment>

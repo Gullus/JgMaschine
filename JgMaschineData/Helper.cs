@@ -258,6 +258,8 @@ namespace JgMaschineData
       }
     }
 
+    public decimal NachtschichtGerundet { get { return ZeitHelper.AufHalbeStundeRunden(ZeitHelper.StringInZeit(NachtschichtenAnzeige)); } }
+
     public string FeiertageAnzeige
     {
       get { return this.Feiertage; }
@@ -271,6 +273,7 @@ namespace JgMaschineData
         }
       }
     }
+    public decimal FeiertageGerundet { get { return ZeitHelper.AufHalbeStundeRunden(ZeitHelper.StringInZeit(FeiertageAnzeige)); } }
 
     public string AuszahlungUeberstundenAnzeige
     {
@@ -320,6 +323,7 @@ namespace JgMaschineData
         }
       }
     }
+
 
     public string IstStunden { get { return ZeitHelper.ZeitInString(ZeitHelper.StringInZeit(SollStunden) + ZeitHelper.StringInZeit(Ueberstunden)); } } 
 
@@ -758,6 +762,24 @@ namespace JgMaschineData
       DatenAbgl.Status = Status;
       DatenAbgl.Datum = DateTime.Now;
       DatenAbgl.Bearbeiter = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+    }
+
+    public static int AnzahlFeiertage(JgMaschineData.JgModelContainer Db, int Jahr, byte Monat)
+    {
+      var erster = new DateTime(Jahr, Monat, 1);
+      var letzer = new DateTime(Jahr, Monat, DateTime.DaysInMonth(Jahr, Monat), 23, 59, 59);
+
+      return Db.tabFeiertageSet.Where(w => (w.Datum >= erster) && (w.Datum <= letzer)).Count();
+    }
+
+    public static decimal AufHalbeStundeRunden(TimeSpan Zeitwert)
+    {
+      var stunden = (int)Zeitwert.TotalHours;
+      if ((Zeitwert.Minutes >= 15) && (Zeitwert.Minutes < 45))
+        return Convert.ToDecimal(stunden + 0.5);
+      else if ((Zeitwert.Minutes >= 45) && (Zeitwert.Minutes <= 59))
+        return stunden + 1;
+      return stunden;
     }
   }
 

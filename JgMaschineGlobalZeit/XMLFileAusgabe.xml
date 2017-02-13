@@ -1,55 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--Arbeitszeit Monat: 10.2016 Datum: 06.02.17 17:34-->
+<!--Arbeitszeit Monat: 2.2017 Datum: 09.02.17 15:11-->
 <Root>
+  <Monat>Februar 2017</Monat>
   <Datensatz>
     <Mitarbeiter>Barthel, Tino</Mitarbeiter>
     <Nachname>Barthel</Nachname>
     <Vorname>Tino</Vorname>
-    <IdBuchhaltung>123</IdBuchhaltung>
+    <IdBuchhaltung>abc</IdBuchhaltung>
     <Standort>Heidenau</Standort>
-    <Zahltag>15</Zahltag>
-    <Urlaubstage>20</Urlaubstage>
-    <SollStunden>60:00</SollStunden>
-    <IstStunden>61:39</IstStunden>
-    <UeberStunden>01:39</UeberStunden>
-    <Krank>16:00</Krank>
-    <Urlaub>00:00</Urlaub>
-    <NachtschichtZuschlag>04:36</NachtschichtZuschlag>
-    <FeiertagsZuschlag>08:00</FeiertagsZuschlag>
-    <UeberstundenAusgezahlt>20:00</UeberstundenAusgezahlt>
+    <Zahltag>1</Zahltag>
+    <Urlaubstage>27</Urlaubstage>
+    <SollStunden>160.0</SollStunden>
+    <Normalstunden>160.0</Normalstunden>
+    <UeberstundenAusgezahlt>0.0</UeberstundenAusgezahlt>
+    <Urlaub>0</Urlaub>
+    <Krank>0</Krank>
+    <Feiertage>0</Feiertage>
+    <NachtschichtZuschlag>5.8</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>6.0</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.0</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.0</FeiertagsZuschlagGerundet>
+    <IstStunden>20.9</IstStunden>
+    <UeberStunden>-139.1</UeberStunden>
   </Datensatz>
   <Datensatz>
     <Mitarbeiter>Brejora, Olaf</Mitarbeiter>
     <Nachname>Brejora</Nachname>
     <Vorname>Olaf</Vorname>
-    <IdBuchhaltung>456</IdBuchhaltung>
+    <IdBuchhaltung />
     <Standort>Heidenau</Standort>
-    <Zahltag>15</Zahltag>
-    <Urlaubstage>19</Urlaubstage>
-    <SollStunden>168:00</SollStunden>
-    <IstStunden>00:00</IstStunden>
-    <UeberStunden>-168:00</UeberStunden>
-    <Krank>00:00</Krank>
-    <Urlaub>00:00</Urlaub>
-    <NachtschichtZuschlag>00:00</NachtschichtZuschlag>
-    <FeiertagsZuschlag>00:00</FeiertagsZuschlag>
-    <UeberstundenAusgezahlt>00:00</UeberstundenAusgezahlt>
+    <Zahltag>1</Zahltag>
+    <Urlaubstage>24</Urlaubstage>
+    <SollStunden>160.0</SollStunden>
+    <Normalstunden>160.0</Normalstunden>
+    <UeberstundenAusgezahlt>0.0</UeberstundenAusgezahlt>
+    <Urlaub>0</Urlaub>
+    <Krank>0</Krank>
+    <Feiertage>0</Feiertage>
+    <NachtschichtZuschlag>0.0</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.0</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.0</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.0</FeiertagsZuschlagGerundet>
+    <IstStunden>20.6</IstStunden>
+    <UeberStunden>-139.4</UeberStunden>
   </Datensatz>
   <Datensatz>
-    <Mitarbeiter>Hanztsch, Uwe</Mitarbeiter>
-    <Nachname>Hanztsch</Nachname>
+    <Mitarbeiter>Hanzsch, Uwe</Mitarbeiter>
+    <Nachname>Hanzsch</Nachname>
     <Vorname>Uwe</Vorname>
-    <IdBuchhaltung>55</IdBuchhaltung>
+    <IdBuchhaltung />
     <Standort>Heidenau</Standort>
-    <Zahltag>15</Zahltag>
-    <Urlaubstage>19</Urlaubstage>
-    <SollStunden>170:00</SollStunden>
-    <IstStunden>00:00</IstStunden>
-    <UeberStunden>-170:00</UeberStunden>
-    <Krank>00:00</Krank>
-    <Urlaub>00:00</Urlaub>
-    <NachtschichtZuschlag>00:00</NachtschichtZuschlag>
-    <FeiertagsZuschlag>00:00</FeiertagsZuschlag>
-    <UeberstundenAusgezahlt>00:00</UeberstundenAusgezahlt>
+    <Zahltag>1</Zahltag>
+    <Urlaubstage>25</Urlaubstage>
+    <SollStunden>160.0</SollStunden>
+    <Normalstunden>160.0</Normalstunden>
+    <UeberstundenAusgezahlt>0.0</UeberstundenAusgezahlt>
+    <Urlaub>0</Urlaub>
+    <Krank>0</Krank>
+    <Feiertage>0</Feiertage>
+    <NachtschichtZuschlag>0.0</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.0</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.0</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.0</FeiertagsZuschlagGerundet>
+    <IstStunden>28.4</IstStunden>
+    <UeberStunden>-131.6</UeberStunden>
   </Datensatz>
 </Root>

@@ -17,7 +17,6 @@ namespace JgMaschineData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tabStandort()
         {
-            this.AuszahlungGehalt = 1;
             this.sMaschinen = new HashSet<tabMaschine>();
             this.sArbeitszeiten = new HashSet<tabArbeitszeit>();
             this.sBediener = new HashSet<tabBediener>();
@@ -27,7 +26,6 @@ namespace JgMaschineData
     
         public System.Guid Id { get; set; }
         public string Bezeichnung { get; set; }
-        public byte AuszahlungGehalt { get; set; }
         public string Bemerkung { get; set; }
         public bool UpdateBedienerDatafox { get; set; }
     

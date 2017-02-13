@@ -26,8 +26,8 @@
 
         <CollectionViewSource x:Key="vsRunden" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitRunden}, CreateList=True}">
             <CollectionViewSource.SortDescriptions>
-                <ComponentModel:SortDescription Direction="Ascending" PropertyName="AnzeigeMonat"/>
-                <ComponentModel:SortDescription Direction="Ascending" PropertyName="AnzeigeDatumVon"/>
+                <ComponentModel:SortDescription Direction="Ascending" PropertyName="MonatAnzeige"/>
+                <ComponentModel:SortDescription Direction="Ascending" PropertyName="AnzeigeZeitVon"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </Window.Resources>
@@ -57,11 +57,12 @@
                     <DataGrid x:Name="tabBedienerDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Mitarbeiter" IsReadOnly="True" Width="*"/>
-                            <DataGridTextColumn Binding="{Binding Urlaubstage}" Header="Url.-Tage" Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding IdBuchhaltung}" Header="Id.-Buch." Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding Urlaubstage}" Header="Url.-Tage" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding IdBuchhaltung}" Header="Id.-Buch." Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AuszahlungGehalt}" Header="Zahltag" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
-                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.Urlaub}" Header="Rest Urlaub" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.UeberstundenAnzeige}" Header="Überst. Vorj." Width="90" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.Urlaub}" Header="Rest&#x0a;Urlaub" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.UeberstundenAnzeige}" Header="Überst.&#x0a;Vorjahr" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
                         </DataGrid.Columns>
                     </DataGrid>
@@ -121,7 +122,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding AnzeigeZeitVon, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="von" Width="70"/>
                             <DataGridTextColumn Binding="{Binding AnzeigeZeitBis, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="bis" Width="70"/>
-                            <DataGridTextColumn Binding="{Binding AnzeigePausenzeit, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Pausenlänge" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigePausenzeit, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Pausenlänge" Width="70"/>
                             <DataGridCheckBoxColumn Binding="{Binding AnzeigeGeloescht}" Header="Gelöscht" Width="60"/>
                         </DataGrid.Columns>
                     </DataGrid>

@@ -103,8 +103,11 @@ namespace JgMaschineDatafoxLib
       }
     }
 
-    private static void ArbeitszeitInDatenbank(JgModelContainer Db, List<string> ListeArbeitszeitvomTerminal, Guid IdStandort, Proto MyProtokoll)
+    public static void ArbeitszeitInDatenbank(JgModelContainer Db, List<string> ListeArbeitszeitvomTerminal, Guid IdStandort, Proto MyProtokoll)
     {
+      ListeArbeitszeitvomTerminal = new List<string>();
+      ListeArbeitszeitvomTerminal.Add("EVO 2.8\t1810\tG\tMITA0104\t08.02.2017 12:20:08\t0\t");
+
       var anmeldTermial = ProgDatafox.KonvertDatafoxExport(ListeArbeitszeitvomTerminal, "MITA_");
 
       var matchCodes = "'" + string.Join("','", anmeldTermial.Select(s => s.MatchCode).Distinct().ToArray()) + "'";
@@ -112,12 +115,15 @@ namespace JgMaschineDatafoxLib
 
       foreach (var anmeld in anmeldTermial)
       {
+        var bedienerTextAusgabe = $"{anmeld.MatchCode} {anmeld.Vorgang} {anmeld.Datum}";
         var bediener = alleBediener.FirstOrDefault(f => f.MatchCode == anmeld.MatchCode);
         if (bediener == null)
         {
-          MyProtokoll.Set($"Bediner {anmeld.MatchCode} aus Terminal nicht bekannt!", Proto.ProtoArt.Warnung);
+          MyProtokoll.Set($"Bediner {bedienerTextAusgabe} nicht bekannt!", Proto.ProtoArt.Warnung);
           continue;
         }
+        else
+          MyProtokoll.Set($"Bediener: {bediener.Name}, {bedienerTextAusgabe}", Proto.ProtoArt.Info);
 
         if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Komme)
         {
@@ -168,11 +174,10 @@ namespace JgMaschineDatafoxLib
       }
       catch (Exception f)
       {
-        var msg = $"Fehler beim speichern der Anmeldedaten in der Datenbank";
-        MyProtokoll.Set(msg, f);
+        MyProtokoll.Set("Fehler beim speichern der Anmeldedaten in der Datenbank", f);
       }
 
-      MyProtokoll.Set($"{ListeArbeitszeitvomTerminal.Count} Arbeitszeiten ins System übertragen!", Proto.ProtoArt.Kommentar);
+      MyProtokoll.Set($"{ListeArbeitszeitvomTerminal.Count} Arbeitszeiten in DB gespeichert!", Proto.ProtoArt.Kommentar);
     }
   }
 }

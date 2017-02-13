@@ -6,6 +6,7 @@
     xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:commands="clr-namespace:JgGlobalZeit.Commands"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:JgMaschineGlobalZeit"
     x:Class="JgMaschineGlobalZeit.MainWindow" mc:Ignorable="d" Title="Arbeitszeitverwaltung" Height="549" Width="1272" 
@@ -43,7 +44,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="47*"/>
+                        <ColumnDefinition Width="47"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="Auto"/>
@@ -51,7 +52,8 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="566*" />
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -61,14 +63,14 @@
                     </Grid.RowDefinitions>
 
                     <Label Content="Auswahl vom"/>
-                    <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitVon}}"/>
+                    <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitVon}}" Margin="3,2"/>
                     <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
                     <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
                     <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
                     <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
 
                     <Label Content="bis" Grid.Column="6" />
-                    <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitBis}}" />
+                    <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitBis}}" Margin="3,2" />
                     <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
                     <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
                     <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
@@ -81,15 +83,25 @@
                         </StackPanel>
                     </Button>
 
+                    <Button Grid.Column="13" Command="{x:Static commands:MyCommands.ArbeitszeitLoeschen}">
+                        <StackPanel Orientation="Horizontal" >
+                            <Image Source="Bilder\JgDelete.ico" Height="16" />
+                            <TextBlock Text=" Arbeitszeit Löschen" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
                     <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" Grid.ColumnSpan="15">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="2*" MinWidth="120"/>
-                            <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="160"/>
+                            <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=hh\:mm, TargetNullValue=-}" Header="Gerundet" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Begin" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
                             <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAbmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
+                            <DataGridTextColumn Binding="{Binding DauerGerundetAnzeige, Mode=OneWay}" Header="Arbeitszeit" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
+                            
                             <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -197,7 +209,7 @@
                     <ComboBox x:Name="cbMonat" Grid.Column="1" Grid.Row="1"/>
 
                     <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="2" EnableRowVirtualization="True" IsReadOnly="True" 
-                        ItemsSource="{Binding}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="7" SelectionMode="Single">
+                        ItemsSource="{Binding}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="6" SelectionMode="Single">
 
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
@@ -227,6 +239,24 @@
                             <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.StatusAnzeige, Mode=OneWay}" Header="Status" Width="60"/>
                         </DataGrid.Columns>
                     </DataGrid>
+
+                    <Grid   Grid.ColumnSpan="2" Grid.Row="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Margin="2" Click="btnAuswertungErledigt_Click" Tag="2">
+                            <Image Source="Bilder\JgEdit.ico" Height="17"/>
+                        </Button>
+                        <Button Margin="2" Click="btnAuswertungErledigt_Click" Grid.Column="1" Tag="3">
+                            <Image Source="Bilder\JgCheck.ico" Height="17"/>
+                        </Button>
+                        <Button Margin="2" Click="btnAuswertungErledigt_Click" Grid.Column="2" Tag="4">
+                            <Image Source="Bilder\JgCancel.ico" Height="17"/>
+                        </Button>
+                    </Grid>
 
                     <DataGrid x:Name="dgArbeitszeit" AutoGenerateColumns="False" Grid.ColumnSpan="21" Grid.Column="3" EnableRowVirtualization="True" 
                               ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
@@ -277,7 +307,7 @@
                                                     </DataGridTextColumn.CellStyle>
                                                 </DataGridTextColumn>
                                                 <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH\\:mm, Mode=OneWay}" Header="Anmeldung" Width="59" />
-                                                <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=HH\\:mm, Mode=OneWay}" Header="Abmeldung" Width="61">
+                                                <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=HH\\:mm, TargetNullValue=-, Mode=OneWay}" Header="Abmeldung" Width="61">
                                                     <DataGridTextColumn.CellStyle>
                                                         <Style TargetType="DataGridCell">
                                                             <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -566,24 +596,6 @@
                         </Button>
                         <Button Content="Export" Click="btnDrucken_Click" Grid.Column="7" Tag="5" ToolTip="Report eeportieren" />
                         <Button Content="Löschen" Click="btnDrucken_Click" Grid.Column="8" Tag="6" ToolTip="Report löschen" />
-                    </Grid>
-                    <Grid Grid.ColumnSpan="2" Grid.Column="19" Grid.Row="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-
-                        <Button Margin="2" Click="btnAuswertungErledigt_Click" Tag="2">
-                            <Image Source="Bilder\JgEdit.ico" Height="17"/>
-                        </Button>
-                        <Button Margin="2" Click="btnAuswertungErledigt_Click" Grid.Column="1" Tag="3">
-                            <Image Source="Bilder\JgCheck.ico" Height="17"/>
-                        </Button>
-                        <Button Margin="2" Click="btnAuswertungErledigt_Click" Grid.Column="2" Tag="4">
-                            <Image Source="Bilder\JgCancel.ico" Height="17"/>
-                        </Button>
-
                     </Grid>
                 </Grid>
             </TabItem>
