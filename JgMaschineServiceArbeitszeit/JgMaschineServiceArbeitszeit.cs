@@ -56,15 +56,11 @@ namespace JgMaschineServiceAbreitszeit
       optDatafox.Protokoll.Set(msg, Proto.ProtoArt.Info);
 
       var _ArbeitszeitErfassung = new ArbeitszeitErfassen(optDatafox);
-      // _ArbeitszeitErfassung.Start();
-
-
+      _ArbeitszeitErfassung.Start();
 
       using (var db = new JgMaschineData.JgModelContainer())
       {
         var standort = db.tabStandortSet.FirstOrDefault();
-
-
         ArbeitszeitErfassen.ArbeitszeitInDatenbank(db, null, standort.Id, new Proto(Proto.KategorieArt.Arbeitszeit));
       }
 

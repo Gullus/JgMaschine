@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using JgMaschineData;
 using JgMaschineLib;
+using JgZeitHelper;
 
 namespace JgMaschineGlobalZeit.Fenster
 {
@@ -37,7 +38,7 @@ namespace JgMaschineGlobalZeit.Fenster
       gridRunden.DataContext = runden;
 
       cmbNiederlassung.ItemsSource = Auswertung.Db.tabStandortSet.Where(w => (!w.DatenAbgleich.Geloescht)).OrderBy(o => o.Bezeichnung).ToList();
-      cmbMonat.ItemsSource = Enum.GetValues(typeof(ZeitHelper.Monate));
+      cmbMonat.ItemsSource = Enum.GetValues(typeof(JgZeit.Monate));
     }
 
     private void btnOk_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using JgZeitHelper;
 
 namespace JgMaschineData
 {
@@ -113,7 +115,7 @@ namespace JgMaschineData
       set
       {
         this.Urlaubstage = value;
-        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
@@ -198,11 +200,12 @@ namespace JgMaschineData
       }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var sollStunden = JgZeit.StringInZeit(SollStunden);
+        var zeit = JgZeit.StringInZeit(value, sollStunden);
+        if (zeit != sollStunden)
         {
-          SollStunden = zeit.AsString;
-          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          SollStunden = JgZeit.ZeitInString(zeit);
+          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
@@ -235,10 +238,10 @@ namespace JgMaschineData
       get { return this.SollStunden; }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var sollStunden = JgZeit.StringInStringZeit(value, SollStunden);
+        if (value != sollStunden)
         {
-          this.SollStunden = zeit.AsString;
+          this.SollStunden = sollStunden;
           NotifyPropertyChanged();
         }
       }
@@ -249,41 +252,41 @@ namespace JgMaschineData
       get { return this.Nachtschichten; }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInStringZeit(value, Nachtschichten);
+        if (zeit != Nachtschichten)
         {
-          this.Nachtschichten = zeit.AsString;
+          this.Nachtschichten = zeit;
           NotifyPropertyChanged();
         }
       }
     }
 
-    public decimal NachtschichtGerundet { get { return ZeitHelper.AufHalbeStundeRunden(ZeitHelper.StringInZeit(NachtschichtenAnzeige)); } }
+    public decimal NachtschichtGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(NachtschichtenAnzeige)); } }
 
     public string FeiertageAnzeige
     {
       get { return this.Feiertage; }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInStringZeit(value, Feiertage);
+        if (zeit != Feiertage)
         {
-          this.Feiertage = zeit.AsString;
+          this.Feiertage = zeit;
           NotifyPropertyChanged();
         }
       }
     }
-    public decimal FeiertageGerundet { get { return ZeitHelper.AufHalbeStundeRunden(ZeitHelper.StringInZeit(FeiertageAnzeige)); } }
+    public decimal FeiertageGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(FeiertageAnzeige)); } }
 
     public string AuszahlungUeberstundenAnzeige
     {
       get { return this.AuszahlungUeberstunden; }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInStringZeit(value, AuszahlungUeberstunden);
+        if (zeit != AuszahlungUeberstunden)
         {
-          this.AuszahlungUeberstunden = zeit.AsString;
+          this.AuszahlungUeberstunden = zeit;
           NotifyPropertyChanged();
         }
       }
@@ -314,10 +317,10 @@ namespace JgMaschineData
       get { return this.Ueberstunden; }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInStringZeit(value, Ueberstunden);
+        if (zeit != Ueberstunden)
         {
-          this.Ueberstunden = zeit.AsString;
+          this.Ueberstunden = zeit;
           NotifyPropertyChanged();
           NotifyPropertyChanged("IstStunden");
         }
@@ -325,7 +328,7 @@ namespace JgMaschineData
     }
 
 
-    public string IstStunden { get { return ZeitHelper.ZeitInString(ZeitHelper.StringInZeit(SollStunden) + ZeitHelper.StringInZeit(Ueberstunden)); } } 
+    public string IstStunden { get { return JgZeit.ZeitInString(JgZeit.ZeitStringAddieren(SollStunden, Ueberstunden)); } } 
 
     public EnumStatusArbeitszeitAuswertung StatusAnzeige
     {
@@ -370,13 +373,13 @@ namespace JgMaschineData
 
     public string PauseAnzeige
     {
-      get { return ZeitHelper.ZeitInString(this.Pause); }
+      get { return JgZeit.ZeitInString(this.Pause); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, Pause);
+        if (zeit != Pause)
         {
-          this.Pause = zeit.AsTime;
+          this.Pause = zeit;
           ArbeitszeitTagGeaendertAusloesen("Pause");
           NotifyPropertyChanged();
           NotifyPropertyChanged("ZeitBerechnetAnzeige");
@@ -395,13 +398,13 @@ namespace JgMaschineData
 
     public string ZeitAnzeige
     {
-      get { return ZeitHelper.ZeitInString(this.Zeit); }
+      get { return JgZeit.ZeitInString(this.Zeit); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, Zeit);
+        if (zeit != Zeit)
         {
-          this.Zeit = zeit.AsTime;
+          this.Zeit = zeit;
           ArbeitszeitTagGeaendertAusloesen("Zeit");
           NotifyPropertyChanged();
           NotifyPropertyChanged("Ueberstunden");
@@ -412,17 +415,17 @@ namespace JgMaschineData
 
     public TimeSpan ZeitBerechnet { get; set; } = TimeSpan.Zero;
 
-    public string ZeitBerechnetAnzeige { get { return ZeitHelper.ZeitInString(ZeitBerechnet); } }
+    public string ZeitBerechnetAnzeige { get { return JgZeit.ZeitInString(ZeitBerechnet); } }
 
     public string NachtschichtAnzeige
     {
-      get { return ZeitHelper.ZeitInString(this.Nachtschicht); }
+      get { return JgZeit.ZeitInString(this.Nachtschicht); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, Nachtschicht);
+        if (zeit != Nachtschicht)
         {
-          this.Nachtschicht = zeit.AsTime;
+          this.Nachtschicht = zeit;
           NotifyPropertyChanged();
           ArbeitszeitTagGeaendertAusloesen("Nachtschicht");
           NotifyPropertyChanged("IstNachtschichtUngleich");
@@ -432,17 +435,17 @@ namespace JgMaschineData
 
     public TimeSpan NachtschichtBerechnet { get; set; } = TimeSpan.Zero;
 
-    public string NachtschichtBerechnetAnzeige { get { return ZeitHelper.ZeitInString(NachtschichtBerechnet); } }
+    public string NachtschichtBerechnetAnzeige { get { return JgZeit.ZeitInString(NachtschichtBerechnet); } }
 
     public string FeiertagAnzeige
     {
-      get { return ZeitHelper.ZeitInString(this.Feiertag); }
+      get { return JgZeit.ZeitInString(this.Feiertag); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, Feiertag);
+        if (zeit != Feiertag)
         {
-          this.Feiertag = zeit.AsTime;
+          this.Feiertag = zeit;
           ArbeitszeitTagGeaendertAusloesen("Feiertag");
         }
       }
@@ -476,11 +479,10 @@ namespace JgMaschineData
 
     public string Ueberstunden
     {
-      get
-      {
-        return Zeit != TimeSpan.Zero ? ZeitHelper.ZeitInString(Zeit + new TimeSpan(-8, 0, 0)) : "00:00";
-      }
+      get { return Zeit != TimeSpan.Zero ? JgZeit.ZeitInString(Zeit + new TimeSpan(-8, 0, 0)) : "00:00"; }
     }
+
+    public IEnumerable<tabArbeitszeit> sArbeitszeitenNichtGeloescht { get { return this.sArbeitszeiten.Where(w => !w.DatenAbgleich.Geloescht); } }
   }
 
   public partial class tabArbeitszeitRunden : INotifyPropertyChanged
@@ -491,58 +493,58 @@ namespace JgMaschineData
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public ZeitHelper.Monate MonatAnzeige
+    public JgZeit.Monate MonatAnzeige
     {
-      get { return (ZeitHelper.Monate)this.Monat; }
+      get { return (JgZeit.Monate)this.Monat; }
       set
       {
         this.Monat = (byte)value;
         NotifyPropertyChanged();
-        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
 
     public string AnzeigeZeitVon
     {
-      get { return ZeitHelper.ZeitInString(this.ZeitVon); }
+      get { return JgZeit.ZeitInString(this.ZeitVon); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, ZeitVon);
+        if (zeit != ZeitVon)
         {
-          this.ZeitVon = zeit.AsTime;
+          this.ZeitVon = zeit;
           NotifyPropertyChanged();
-          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
 
     public string AnzeigeZeitBis
     {
-      get { return ZeitHelper.ZeitInString(this.ZeitBis); }
+      get { return JgZeit.ZeitInString(this.ZeitBis); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, ZeitBis);
+        if (zeit != ZeitBis)
         {
-          this.ZeitBis = zeit.AsTime;
+          this.ZeitBis = zeit;
           NotifyPropertyChanged();
-          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
 
     public string AnzeigeRundenAufZeit
     {
-      get { return ZeitHelper.ZeitInString(this.RundenAufZeit); }
+      get { return JgZeit.ZeitInString(this.RundenAufZeit); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, RundenAufZeit);
+        if (zeit != RundenAufZeit)
         {
-          this.RundenAufZeit = zeit.AsTime;
+          this.RundenAufZeit = zeit;
           NotifyPropertyChanged();
-          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
@@ -554,7 +556,7 @@ namespace JgMaschineData
       {
         this.DatenAbgleich.Geloescht = value;
         NotifyPropertyChanged();
-        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
@@ -569,45 +571,45 @@ namespace JgMaschineData
 
     public string AnzeigeZeitVon
     {
-      get { return ZeitHelper.ZeitInString(this.ZeitVon); }
+      get { return JgZeit.ZeitInString(this.ZeitVon); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, this.ZeitVon);
+        if (zeit != ZeitVon)
         {
-          this.ZeitVon = zeit.AsTime;
+          this.ZeitVon = zeit;
           NotifyPropertyChanged();
-          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
 
     public string AnzeigeZeitBis
     {
-      get { return ZeitHelper.ZeitInString(this.ZeitBis); }
+      get { return JgZeit.ZeitInString(this.ZeitBis); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, ZeitBis);
+        if (zeit != ZeitBis)
         {
-          this.ZeitBis = zeit.AsTime;
+          this.ZeitBis = zeit;
           NotifyPropertyChanged();
-          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
 
     public string AnzeigePausenzeit
     {
-      get { return ZeitHelper.ZeitInString(this.Pausenzeit); }
+      get { return JgZeit.ZeitInString(this.Pausenzeit); }
       set
       {
-        var zeit = new ZeitHelper(value, true);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, Pausenzeit);
+        if (zeit != this.Pausenzeit)
         {
-          this.Pausenzeit = zeit.AsTime;
+          this.Pausenzeit = zeit;
           NotifyPropertyChanged();
-          ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
@@ -619,7 +621,7 @@ namespace JgMaschineData
       {
         this.DatenAbgleich.Geloescht = value;
         NotifyPropertyChanged();
-        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
@@ -632,7 +634,7 @@ namespace JgMaschineData
       set
       {
         this.Datum = value;
-        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
 
@@ -642,7 +644,7 @@ namespace JgMaschineData
       set
       {
         this.Bezeichnung = value;
-        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
 
@@ -652,134 +654,18 @@ namespace JgMaschineData
       set
       {
         this.DatenAbgleich.Geloescht = value;
-        ZeitHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
 
-  public class ZeitHelper
+  public class DbHelper
   {
-    public enum Monate : byte { Januar = 1, Februar, März, April, Mai, Juni, Juli, August, Septemper, Oktober, November, Dezember }
-
-    public bool IstOk = true;
-    public int Stunde = 0;
-    public int Minute = 0;
-
-    public string AsString
-    {
-      get
-      {
-        if (IstOk)
-        {
-          var zeit = Stunde.ToString("D2") + ":" + (Minute < 0 ? -1 * Minute : Minute).ToString("D2");
-          if ((Stunde == 0) && (Minute < 0))
-            zeit = "-" + zeit;
-          return zeit;
-        }
-        return "00:00";
-      }
-    }
-
-    public TimeSpan AsTime
-    {
-      get { return new TimeSpan(Stunde, Stunde < 0 ? -1 * Minute : Minute, 0); }
-    }
-
-    public ZeitHelper(string ZeitString, bool KontrolleZeit)
-    {
-      if (!string.IsNullOrWhiteSpace(ZeitString))
-      {
-        var werte = ZeitString.Split(new char[] { ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
-        if (werte.Length > 0)
-        {
-          try
-          {
-            Stunde = Convert.ToInt32(werte[0]);
-          }
-          catch { IstOk = false; };
-
-          if (IstOk && (werte.Length > 1))
-          {
-            try
-            {
-              Minute = Convert.ToInt32(werte[1]);
-            }
-            catch { IstOk = false; };
-          }
-        }
-
-        if (KontrolleZeit)
-        {
-          var zeit = this.AsTime;
-          if ((zeit < TimeSpan.Zero) || (zeit >= new TimeSpan(24, 0, 0)))
-          {
-            var msg = "Die Zeit muss zwischen 00:00 und 23:59 liegen !";
-            MessageBox.Show(msg, "Fehler !", MessageBoxButton.OK);
-            IstOk = false;
-          }
-        }
-      }
-    }
-
-    public static TimeSpan StringInZeit(string ZeitString)
-    {
-      if (!string.IsNullOrWhiteSpace(ZeitString))
-      {
-        var werte = ZeitString.Split(new char[] { ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
-        if (werte.Length > 0)
-        {
-          try
-          {
-            var stunde = Convert.ToInt32(werte[0]);
-            var minute = stunde < 0 ? -1 * Convert.ToInt32(werte[1]) : Convert.ToInt32(werte[1]);
-            return new TimeSpan(stunde, minute, 0);
-          }
-          catch { };
-        }
-      }
-      return TimeSpan.Zero;
-    }
-
-    public static string ZeitInString(TimeSpan ZeitWert)
-    {
-      var stunde = (int)ZeitWert.TotalHours;
-      var zeit = stunde.ToString("D2") + ":" + (ZeitWert.Minutes < 0 ? -1 * ZeitWert.Minutes : ZeitWert.Minutes).ToString("D2");
-      if ((stunde == 0) && (ZeitWert.Minutes < 0))
-        zeit = "-" + zeit;
-      return zeit;
-    }
-
-    public static TimeSpan ZeitStringAddieren(params string[] ZeitString)
-    {
-      var erg = TimeSpan.Zero;
-      foreach (var zeit in ZeitString)
-        erg += StringInZeit(zeit);
-      return erg;
-    }
-
-    public static void AbgleichEintragen(DatenAbgleich DatenAbgl, EnumStatusDatenabgleich Status)
+    public static void AbgleichEintragen(JgMaschineData.DatenAbgleich DatenAbgl, JgMaschineData.EnumStatusDatenabgleich Status)
     {
       DatenAbgl.Status = Status;
       DatenAbgl.Datum = DateTime.Now;
       DatenAbgl.Bearbeiter = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-    }
-
-    public static int AnzahlFeiertage(JgMaschineData.JgModelContainer Db, int Jahr, byte Monat)
-    {
-      var erster = new DateTime(Jahr, Monat, 1);
-      var letzer = new DateTime(Jahr, Monat, DateTime.DaysInMonth(Jahr, Monat), 23, 59, 59);
-
-      return Db.tabFeiertageSet.Where(w => (w.Datum >= erster) && (w.Datum <= letzer)).Count();
-    }
-
-    public static decimal AufHalbeStundeRunden(TimeSpan Zeitwert)
-    {
-      var stunden = (int)Zeitwert.TotalHours;
-      if ((Zeitwert.Minutes >= 15) && (Zeitwert.Minutes < 45))
-        return Convert.ToDecimal(stunden + 0.5);
-      else if ((Zeitwert.Minutes >= 45) && (Zeitwert.Minutes <= 59))
-        return stunden + 1;
-      return stunden;
     }
   }
 

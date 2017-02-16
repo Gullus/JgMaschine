@@ -218,6 +218,10 @@
       <Project>{69d6b7e0-6ddc-49a5-a44f-d6bfd607aed3}</Project>
       <Name>JgMaschineLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JgZeit\JgZeitHelper.csproj">
+      <Project>{251d8de4-e988-424e-9945-ace74d2005d6}</Project>
+      <Name>JgZeitHelper</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Bilder\JgCheck.ico" />

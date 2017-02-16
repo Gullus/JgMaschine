@@ -97,14 +97,14 @@ namespace JgMaschineLib
       }
     }
 
-    public void Delete(K DatenSatz = null)
-    {
-      MerkeZeile();
-      _Db.Set<K>().Remove(DatenSatz ?? Current);
-      _Db.SaveChanges();
-      ViewSource?.View?.Refresh();
-      ZeileEinstellen();
-    }
+    //public void Delete(K DatenSatz = null)
+    //{
+    //  MerkeZeile();
+    //  _Db.Set<K>().Remove(DatenSatz ?? Current);
+    //  _Db.SaveChanges();
+    //  ViewSource?.View?.Refresh();
+    //  ZeileEinstellen();
+    //}
 
     public void AlsGeloeschtKennzeichnen(K DatenSatz = null)
     {
@@ -115,9 +115,6 @@ namespace JgMaschineLib
       if (entr.State != System.Data.Entity.EntityState.Modified)
         entr.State = System.Data.Entity.EntityState.Modified;
       _Db.SaveChanges();
-
-      _Daten.Remove(DatenSatz);
-      Refresh();
     }
 
     public void Reload(K DatenSatz = null)
@@ -135,7 +132,12 @@ namespace JgMaschineLib
         entr.State = System.Data.Entity.EntityState.Modified;
       DbSichern.AbgleichEintragen(entr.Property<DatenAbgleich>("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Geaendert);
       _Db.SaveChanges();
-      Refresh();
+    }
+
+    public void Remove(K DatenSatz)
+    {
+      var entr = _Db.Entry(DatenSatz ?? Current);
+      _Daten.Remove(entr.Entity);
     }
 
     public void Refresh()

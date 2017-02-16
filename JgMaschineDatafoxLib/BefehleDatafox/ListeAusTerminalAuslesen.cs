@@ -112,7 +112,7 @@ namespace JgMaschineDatafoxLib
           // Datensatz lesen
           if ((result = DFComDLL.DFCReadRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buf, out length, out errorID)) < 0)
           {
-            msg = string.Format("Datensatz konnte nicht gelesen werden. Fehlercode: {0}", errorID);
+            msg = string.Format("Datensatz konnte nicht aus Terminal gelesen werden. Fehlercode: {0}", errorID);
             throw new Exception(msg);
           }
 
@@ -129,7 +129,7 @@ namespace JgMaschineDatafoxLib
           // Datensatz quittieren
           if (DFComDLL.DFCQuitRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, out errorID) < 0)
           {
-            msg = string.Format("Datensatz konnte nicht quittiert werden. Fehlercode: {0}", errorID);
+            msg = string.Format("Datensatz konnte nicht im Terminal quittiert werden. Fehlercode: {0}", errorID);
             throw new Exception(msg);
           }
         } while (true);

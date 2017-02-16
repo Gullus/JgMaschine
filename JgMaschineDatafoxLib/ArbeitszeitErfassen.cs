@@ -91,9 +91,9 @@ namespace JgMaschineDatafoxLib
 
           if (dsVomTerminal?.Count > 0)
           {
-            ArbeitszeitInDatenbank(Db, dsVomTerminal, standort.Id, zo.Protokoll);
             var msg = $"Es wurden {dsVomTerminal.Count} Arbeitszeiten von Terminal übertragen.";
             zo.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+            ArbeitszeitInDatenbank(Db, dsVomTerminal, standort.Id, zo.Protokoll);
           }
         }
       }
@@ -105,17 +105,15 @@ namespace JgMaschineDatafoxLib
 
     public static void ArbeitszeitInDatenbank(JgModelContainer Db, List<string> ListeArbeitszeitvomTerminal, Guid IdStandort, Proto MyProtokoll)
     {
-      ListeArbeitszeitvomTerminal = new List<string>();
-      ListeArbeitszeitvomTerminal.Add("EVO 2.8\t1810\tG\tMITA0104\t08.02.2017 12:20:08\t0\t");
-
       var anmeldTermial = ProgDatafox.KonvertDatafoxExport(ListeArbeitszeitvomTerminal, "MITA_");
 
+      // Bediener zu MatchCodes laden
       var matchCodes = "'" + string.Join("','", anmeldTermial.Select(s => s.MatchCode).Distinct().ToArray()) + "'";
       var alleBediener = Db.tabBedienerSet.Where(w => matchCodes.Contains(w.MatchCode)).ToList();
 
       foreach (var anmeld in anmeldTermial)
       {
-        var bedienerTextAusgabe = $"{anmeld.MatchCode} {anmeld.Vorgang} {anmeld.Datum}";
+        var bedienerTextAusgabe = $"{anmeld.MatchCode} | {anmeld.Vorgang} | {anmeld.Datum}";
         var bediener = alleBediener.FirstOrDefault(f => f.MatchCode == anmeld.MatchCode);
         if (bediener == null)
         {

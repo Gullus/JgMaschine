@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using JgMaschineData;
 using JgMaschineLib;
+using JgZeitHelper;
 
 namespace JgMaschineGlobalZeit
 {
@@ -84,8 +85,8 @@ namespace JgMaschineGlobalZeit
       };
 
       _CmbMonat = CmbMonat;
-      _CmbMonat.ItemsSource = Enum.GetValues(typeof(ZeitHelper.Monate));
-      _CmbMonat.SelectedIndex = _CmbMonat.Items.IndexOf((ZeitHelper.Monate)heute.Month);
+      _CmbMonat.ItemsSource = Enum.GetValues(typeof(JgZeit.Monate));
+      _CmbMonat.SelectedIndex = _CmbMonat.Items.IndexOf((JgZeit.Monate)heute.Month);
 
       _CmbMonat.SelectionChanged += (sen, erg) =>
       {
@@ -140,7 +141,7 @@ namespace JgMaschineGlobalZeit
       var monat = Monat;
 
       var sollStunde = ListeSollstundenJahr.FirstOrDefault(f => (f.Monat == monat) && (!f.DatenAbgleich.Geloescht));
-      SollStundenMonat = (sollStunde == null) ? TimeSpan.Zero : Helper.StringInZeit(sollStunde.SollStunden);
+      SollStundenMonat = (sollStunde == null) ? TimeSpan.Zero : JgZeit.StringInZeit(sollStunde.SollStunden);
 
       ListeFeiertageMonat = ListeFeiertageJahr.Where(w => (w.Datum.Month == monat) && (!w.DatenAbgleich.Geloescht)).ToList();
       ListeRundenMonat = _Db.tabArbeitszeitRundenSet.Where(w => (w.Monat == monat) && (!w.DatenAbgleich.Geloescht)).ToList();
@@ -164,7 +165,7 @@ namespace JgMaschineGlobalZeit
   {
     private JgModelContainer _Db;
     private tabBediener _Bediener = null;
-   public tabBediener AktBediener
+    public tabBediener AktBediener
     {
       get { return _Bediener; }
       set { _Bediener = value; }
@@ -209,7 +210,7 @@ namespace JgMaschineGlobalZeit
           Feiertag = s.Feiertag,
         }).ToList();
       }
-    } 
+    }
 
     public ArbeitszeitBediener(JgModelContainer Db)
     {
@@ -238,11 +239,11 @@ namespace JgMaschineGlobalZeit
 
       var auswKumulativ = alleAuswertungenBediener.Where(w => (w.Monat > 0) && (w.Monat < Monat)).ToList();
 
-      var sumUeberstunden = new TimeSpan(auswKumulativ.Sum(s => ZeitHelper.StringInZeit(s.Ueberstunden).Ticks));
-      AuswertungKumulativ.UeberstundenString = ZeitHelper.ZeitInString(sumUeberstunden);
+      var sumUeberstunden = new TimeSpan(auswKumulativ.Sum(s => JgZeit.StringInZeit(s.Ueberstunden).Ticks));
+      AuswertungKumulativ.UeberstundenString = JgZeit.ZeitInString(sumUeberstunden);
 
-      var sumUeberstBezahlt = new TimeSpan(auswKumulativ.Sum(s => ZeitHelper.StringInZeit(s.AuszahlungUeberstunden).Ticks));
-      AuswertungKumulativ.UeberstundenBezahltString = ZeitHelper.ZeitInString(sumUeberstBezahlt);
+      var sumUeberstBezahlt = new TimeSpan(auswKumulativ.Sum(s => JgZeit.StringInZeit(s.AuszahlungUeberstunden).Ticks));
+      AuswertungKumulativ.UeberstundenBezahltString = JgZeit.ZeitInString(sumUeberstBezahlt);
 
       AuswertungKumulativ.KrankAnzeige = (Int16)auswKumulativ.Sum(s => s.Krank);
       AuswertungKumulativ.UrlaubAnzeige = (Int16)auswKumulativ.Sum(s => s.Urlaub);
@@ -273,7 +274,7 @@ namespace JgMaschineGlobalZeit
         Monat = Monat,
         Urlaub = 0,
         AuszahlungUeberstunden = "00:00",
-        SollStunden = Helper.ZeitInString(SollStundenMonat),
+        SollStunden = JgZeit.ZeitInString(SollStundenMonat),
         Status = EnumStatusArbeitszeitAuswertung.InArbeit,
       };
       DbSichern.AbgleichEintragen(az.DatenAbgleich, EnumStatusDatenabgleich.Neu);
@@ -286,9 +287,9 @@ namespace JgMaschineGlobalZeit
     public void BerechneUeberstundenGesamt()
     {
       var erg = AuswertungKumulativ.fUeberstundenVorjahr + AuswertungKumulativ.fUeberstunden
-        + ZeitHelper.StringInZeit(_Bediener.eArbeitszeitHelper.Ueberstunden)
+        + JgZeit.StringInZeit(_Bediener.eArbeitszeitHelper.Ueberstunden)
         - AuswertungGesamt.fUeberstundenBezahlt;
-      AuswertungGesamt.UeberstundenString = ZeitHelper.ZeitInString(erg);
+      AuswertungGesamt.UeberstundenString = JgZeit.ZeitInString(erg);
     }
 
     public bool Kontrolle24StundenOK(TimeSpan Zeit)
@@ -307,10 +308,10 @@ namespace JgMaschineGlobalZeit
       var anzTageMonat = DateTime.DaysInMonth(AuswertungBediener.Jahr, AuswertungBediener.Monat);
       ListeTage.Clear();
 
-      var monatErster = Helper.MonatErster(AuswertungBediener.Jahr, AuswertungBediener.Monat);
-      var monatLetzter = Helper.MonatLetzter(AuswertungBediener.Jahr, AuswertungBediener.Monat);
+      var monatErster = JgZeit.ErsterImMonat(AuswertungBediener.Jahr, AuswertungBediener.Monat);
+      var monatLetzter = JgZeit.LetzerImMonat(AuswertungBediener.Jahr, AuswertungBediener.Monat);
 
-      var alleZeiten = Db.tabArbeitszeitSet.Where(w => (w.fBediener == AuswertungBediener.fBediener)
+      var alleZeiten = Db.tabArbeitszeitSet.Where(w => (w.fBediener == AuswertungBediener.fBediener) && (!w.DatenAbgleich.Geloescht)
         && (
           ((w.Anmeldung != null) && (w.Anmeldung >= monatErster) && (w.Anmeldung <= monatLetzter))
           ||
@@ -381,7 +382,7 @@ namespace JgMaschineGlobalZeit
           if (ersteAnmeldungZeit == TimeSpan.Zero)
             auswTag.PauseBerechnet = new TimeSpan(1, 0, 0);
           else
-          { 
+          {
             var dsPause = ListePausen.FirstOrDefault(w => (ersteAnmeldungZeit >= w.ZeitVon) && (ersteAnmeldungZeit <= w.ZeitBis));
             if (dsPause != null)
               auswTag.PauseBerechnet = dsPause.Pausenzeit;
@@ -392,26 +393,47 @@ namespace JgMaschineGlobalZeit
           auswTag.IstFehlerNachtschicht = !Kontrolle24StundenOK(auswTag.NachtschichtBerechnet);
         }
 
+        auswTag.ArbeitszeitTagGeaendert = WertWurdeManuellGeaendert;
+
         ListeTage.Add(auswTag);
       }
 
-      foreach (var auswTag in ListeTage)
+      if (AuswertungBediener.Status == EnumStatusArbeitszeitAuswertung.InArbeit)
       {
-        if ((!auswTag.IstManuellGeaendert) && (auswTag.sArbeitszeiten.Count > 0))
+        foreach (var auswTag in ListeTage)
         {
-          auswTag.Pause = auswTag.PauseBerechnet;
-          auswTag.Zeit = (auswTag.IstFehlerZeit) ? TimeSpan.Zero : auswTag.ZeitBerechnet;
-          auswTag.Nachtschicht = (auswTag.IstFehlerNachtschicht) ? TimeSpan.Zero : auswTag.NachtschichtBerechnet;
-          auswTag.IstManuellGeaendert = true;
+          if ((!auswTag.IstManuellGeaendert) && (auswTag.sArbeitszeiten.Count > 0))
+          {
+            var geandert = false;
 
-          DbSichern.AbgleichEintragen(auswTag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+            if (auswTag.Pause != auswTag.PauseBerechnet)
+            {
+              auswTag.Pause = auswTag.PauseBerechnet;
+              geandert = true;
+            }
+
+            var z = (auswTag.IstFehlerZeit) ? TimeSpan.Zero : auswTag.ZeitBerechnet;
+            if (z != auswTag.Zeit)
+            {
+              auswTag.Zeit = z;
+              geandert = true;
+            }
+
+            z = (auswTag.IstFehlerNachtschicht) ? TimeSpan.Zero : auswTag.NachtschichtBerechnet;
+            if (z != auswTag.Nachtschicht)
+            {
+              auswTag.Nachtschicht = z;
+              geandert = true;
+
+            }
+
+            if (geandert)
+              DbSichern.AbgleichEintragen(auswTag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          }
         }
 
-        if (auswTag.ArbeitszeitTagGeaendert == null)
-          auswTag.ArbeitszeitTagGeaendert = WertManuellGeaendert;
+        Db.SaveChanges();
       }
-
-      Db.SaveChanges();
     }
 
     private TimeSpan DatumInZeit(DateTime? Datum)
@@ -419,7 +441,7 @@ namespace JgMaschineGlobalZeit
       return new TimeSpan(Datum.Value.Hour, Datum.Value.Minute, 0);
     }
 
-    private void WertManuellGeaendert(tabArbeitszeitTag AuswertungTag, string PropertyName)
+    private void WertWurdeManuellGeaendert(tabArbeitszeitTag AuswertungTag, string PropertyName)
     {
       if (PropertyName == "Pause")
       {
@@ -465,19 +487,19 @@ namespace JgMaschineGlobalZeit
     private void BerechneNachtschicht(IEnumerable<tabArbeitszeitTag> listeTage)
     {
       var sumNachtschicht = new TimeSpan(listeTage.Sum(c => c.Nachtschicht.Ticks));
-      _Bediener.eArbeitszeitHelper.NachtschichtenAnzeige = ZeitHelper.ZeitInString(sumNachtschicht);
+      _Bediener.eArbeitszeitHelper.NachtschichtenAnzeige = JgZeit.ZeitInString(sumNachtschicht);
     }
 
     private void BerechneFeiertag(IEnumerable<tabArbeitszeitTag> listeTage)
     {
       var sumZeit = new TimeSpan(listeTage.Sum(c => c.Feiertag.Ticks));
-      _Bediener.eArbeitszeitHelper.FeiertageAnzeige = ZeitHelper.ZeitInString(sumZeit);
+      _Bediener.eArbeitszeitHelper.FeiertageAnzeige = JgZeit.ZeitInString(sumZeit);
     }
 
     private void BerechneUeberstundenBezahlt()
     {
-      var ueberstundenBezahlt = ZeitHelper.ZeitStringAddieren(AuswertungKumulativ.UeberstundenBezahltString, _Bediener.eArbeitszeitHelper.AuszahlungUeberstunden);
-      AuswertungGesamt.UeberstundenBezahltString = ZeitHelper.ZeitInString(ueberstundenBezahlt);
+      var ueberstundenBezahlt = JgZeit.ZeitStringAddieren(AuswertungKumulativ.UeberstundenBezahltString, _Bediener.eArbeitszeitHelper.AuszahlungUeberstunden);
+      AuswertungGesamt.UeberstundenBezahltString = JgZeit.ZeitInString(ueberstundenBezahlt);
     }
 
     private void BerechneKrank(IEnumerable<tabArbeitszeitTag> listeTage)
@@ -498,7 +520,7 @@ namespace JgMaschineGlobalZeit
 
     private void BerechneUeberstundenAusTagen(IEnumerable<tabArbeitszeitTag> listeTage)
     {
-      var sollStunden = Helper.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden);
+      var sollStunden = JgZeit.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden);
       var sumZeit = TimeSpan.Zero;
       var hinzuTage = 0;
       foreach (var tag in listeTage)
@@ -514,7 +536,7 @@ namespace JgMaschineGlobalZeit
 
       var istStunden = new TimeSpan(8 * hinzuTage, 0, 0) + ZeitAufMinuteRunden(sumZeit);
 
-      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = ZeitHelper.ZeitInString(istStunden - Helper.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden));
+      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = JgZeit.ZeitInString(istStunden - JgZeit.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden));
 
       BerechneUeberstundenGesamt();
     }
@@ -559,11 +581,11 @@ namespace JgMaschineGlobalZeit
 
     public void SetSollstunden(string Sollstunden)
     {
-      var zeit = new ZeitHelper(Sollstunden, false);
-      if (zeit.IstOk)
+      var zeit = JgZeit.StringInStringZeit(Sollstunden, _Bediener.eArbeitszeitHelper.SollstundenAnzeige);
+      if (zeit != _Bediener.eArbeitszeitHelper.SollstundenAnzeige)
       {
-        _Bediener.eArbeitszeitHelper.SollstundenAnzeige = zeit.AsString;
-        _Bediener.eArbeitszeitHelper.Ueberstunden = ZeitHelper.ZeitInString(zeit.AsTime - AuswertungKumulativ.fIstStunden);
+        _Bediener.eArbeitszeitHelper.SollstundenAnzeige = zeit;
+        _Bediener.eArbeitszeitHelper.Ueberstunden = JgZeit.ZeitInString(JgZeit.StringInZeit(zeit) - AuswertungKumulativ.fIstStunden);
         BerechneUeberstundenGesamt();
 
         DbSichern.AbgleichEintragen(_Bediener.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
@@ -573,11 +595,11 @@ namespace JgMaschineGlobalZeit
 
     public void SetUebestundenAuszahlung(string UeberstundenAuszahlung)
     {
-      var zeit = new ZeitHelper(UeberstundenAuszahlung, false);
-      if (zeit.IstOk)
+      var zeit = JgZeit.StringInStringZeit(UeberstundenAuszahlung, _Bediener.eArbeitszeitHelper.AuszahlungUeberstundenAnzeige);
+      if (zeit != _Bediener.eArbeitszeitHelper.AuszahlungUeberstundenAnzeige)
       {
-        _Bediener.eArbeitszeitHelper.AuszahlungUeberstundenAnzeige = zeit.AsString;
-        AuswertungGesamt.UeberstundenBezahltString = ZeitHelper.ZeitInString(AuswertungKumulativ.fUeberstundenBezahlt + zeit.AsTime);
+        _Bediener.eArbeitszeitHelper.AuszahlungUeberstundenAnzeige = zeit;
+        AuswertungGesamt.UeberstundenBezahltString = JgZeit.ZeitInString(AuswertungKumulativ.fUeberstundenBezahlt + JgZeit.StringInZeit(zeit));
         BerechneUeberstundenGesamt();
 
         _Db.SaveChanges();
@@ -597,13 +619,13 @@ namespace JgMaschineGlobalZeit
     public TimeSpan fIstStunden = TimeSpan.Zero;
     public string IstStundenString
     {
-      get { return Helper.ZeitInString(fIstStunden); }
+      get { return JgZeit.ZeitInString(fIstStunden); }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, fIstStunden);
+        if (zeit != fIstStunden)
         {
-          fIstStunden = zeit.AsTime;
+          fIstStunden = zeit;
           NotifyPropertyChanged();
         }
       }
@@ -612,13 +634,13 @@ namespace JgMaschineGlobalZeit
     public TimeSpan fUeberstunden = TimeSpan.Zero;
     public string UeberstundenString
     {
-      get { return Helper.ZeitInString(fUeberstunden); }
+      get { return JgZeit.ZeitInString(fUeberstunden); }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, fUeberstunden);
+        if (zeit != fUeberstunden)
         {
-          fUeberstunden = zeit.AsTime;
+          fUeberstunden = zeit;
           NotifyPropertyChanged();
           NotifyPropertyChanged("Ueberstunden");
         }
@@ -628,13 +650,13 @@ namespace JgMaschineGlobalZeit
     public TimeSpan fUeberstundenVorjahr = TimeSpan.Zero;
     public string UeberstundenVorjahrString
     {
-      get { return Helper.ZeitInString(fUeberstundenVorjahr); }
+      get { return JgZeit.ZeitInString(fUeberstundenVorjahr); }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, fUeberstundenVorjahr);
+        if (zeit != fUeberstundenVorjahr)
         {
-          this.fUeberstundenVorjahr = zeit.AsTime;
+          this.fUeberstundenVorjahr = zeit;
           NotifyPropertyChanged();
         }
       }
@@ -643,13 +665,13 @@ namespace JgMaschineGlobalZeit
     public TimeSpan fUeberstundenBezahlt = TimeSpan.Zero;
     public string UeberstundenBezahltString
     {
-      get { return Helper.ZeitInString(fUeberstundenBezahlt); }
+      get { return JgZeit.ZeitInString(fUeberstundenBezahlt); }
       set
       {
-        var zeit = new ZeitHelper(value, false);
-        if (zeit.IstOk)
+        var zeit = JgZeit.StringInZeit(value, fUeberstundenBezahlt);
+        if (zeit != fUeberstundenBezahlt)
         {
-          this.fUeberstundenBezahlt = zeit.AsTime;
+          this.fUeberstundenBezahlt = zeit;
           NotifyPropertyChanged();
         }
       }

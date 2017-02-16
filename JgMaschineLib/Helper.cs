@@ -157,35 +157,35 @@ namespace JgMaschineLib
       return false;
     }
 
-    public static DateTime MonatErster(int Jahr, int Monat)
+    public static void FensterEinstellung(System.Windows.Window Fenster, System.Configuration.ApplicationSettingsBase Setting)
     {
-      return new DateTime(Jahr, Monat, 1);
-    }
-    public static DateTime MonatLetzter(int Jahr, int Monat)
-    {
-      return new DateTime(Jahr, Monat, DateTime.DaysInMonth(Jahr, Monat), 23, 59, 59);
-    }
-
-    public static TimeSpan StringInZeit(string Zeit)
-    {
-      var erg = TimeSpan.Zero;
-      if (!string.IsNullOrWhiteSpace(Zeit))
+      if (Setting["FensterEinstellung"] != null)
       {
-        try
+        Fenster.Closing += (sen, erg) =>
         {
-          var werte = Zeit.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-          var stunde = Convert.ToInt32(werte[0]);
-          var minute = stunde < 0 ? -1 * Convert.ToInt32(werte[1]) : Convert.ToInt32(werte[1]);
-          return new TimeSpan(stunde, stunde < 0 ? -1 * minute : minute, 0);
-        }
-        catch { }
-      }
-      return erg;
-    }
+          Setting["FensterEinstellung"] = $"{Fenster.Top};{Fenster.Left};{Fenster.Width};{Fenster.Height};{(byte)Fenster.WindowState}";
+        };
 
-    public static string ZeitInString(TimeSpan Zeit)
-    {
-      return ((int)Zeit.TotalHours).ToString("D2") + ":" + ((Zeit.Minutes < 0) ? -1 * Zeit.Minutes : Zeit.Minutes).ToString("D2");
+        var props = Setting["FensterEinstellung"].ToString().Split(new char[] { ';' });
+        if (props.Length == 5)
+        {
+          try
+          {
+            var oben = Convert.ToDouble(props[0]);
+            var links = Convert.ToDouble(props[1]);
+            var breite = Convert.ToDouble(props[2]);
+            var hoehe = Convert.ToDouble(props[3]);
+            var status = (System.Windows.WindowState)Convert.ToByte(props[4]);
+
+            Fenster.Top = oben;
+            Fenster.Left = links;
+            Fenster.Width = breite;
+            Fenster.Height = hoehe;
+            Fenster.WindowState = status;
+          }
+          catch { }
+        }
+      }
     }
   }
 }
