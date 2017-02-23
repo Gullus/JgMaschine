@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text;
 using JgMaschineLib;
+using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineDatafoxLib
 {
@@ -16,82 +18,93 @@ namespace JgMaschineDatafoxLib
       int importCount = 0;
       var import = new DFComDLL.ListImport();
 
-      var lists = new DFComDLL.TableDeclarations(DFComDLL.TableDeclarations.TableType.List, "Lists.xml");
-      if (lists.LoadFromDevice(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, "") == false)
+      try
       {
-        // Fehlertext ermitteln
-        DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
-        msg = string.Format("Lesen der Listenbeschreibung ist fehlgeschlagen.\n\nZurückgelieferte Fehlerbeschreibung:\n{0}", errorString);
-        throw new Exception(msg);
-      }
-
-      if (lists.Tables == null)
-      {
-        msg = $"Es liegen keine Listendefinitionen im Verzeichnis {Optionen.PfadUpdateBediener} vor.";
-        Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
-        return;
-      }
-
-      DFComDLL.DFCClrListenBuffer(Optionen.Datafox.ChannelId);
-
-      // Vorliegende Listendaten importieren und übertragen.
-      for (idx = 0; idx < lists.Tables.Length; idx++)
-      {
-        string fileName = string.Format("{0}*.txt", lists.Tables[idx].Name);
-        var files = Directory.GetFiles(Optionen.PfadUpdateBediener, fileName);
-
-        if (files.Length == 0 || files[0].EndsWith("txt") == false)
-          break;
-
-        if (files.Length > 1)
+        // Listenformate aus Terminal auslesen
+        var lists = new DFComDLL.TableDeclarations(DFComDLL.TableDeclarations.TableType.List, "Lists.xml");
+        if (lists.LoadFromDevice(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, "") == false)
         {
-          msg = string.Format("Für Liste [{0}] liegen mehrere Listendateien vor.", lists.Tables[idx].Name);
-          Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+          // Fehlertext ermitteln
+          DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
+          msg = $"Lesen der Listenbeschreibung ist fehlgeschlagen.\nFehlerbeschreibung: {errorString}";
+          Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
         }
 
-        try
+        if (lists.Tables == null)
         {
-          // Importieren der Listendaten
-          import.Import(lists.Tables[idx], files[0]);
-          res = DFComDLL.DFCMakeListe(Optionen.Datafox.ChannelId, idx, import.RecordCount, import.Size, import.Mem, 0);
+          msg = $"Es liegen keine Listendefinitionen im Verzeichnis {Optionen.PfadUpdateBediener} vor.";
+          Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+          return;
+        }
 
-          if (res == 0)
+        DFComDLL.DFCClrListenBuffer(Optionen.Datafox.ChannelId);
+
+        // Vorliegende Listendaten importieren und übertragen.
+        for (idx = 0; idx < lists.Tables.Length; idx++)
+        {
+          string fileName = string.Format("{0}*.txt", lists.Tables[idx].Name);
+          var files = Directory.GetFiles(Optionen.PfadUpdateBediener, fileName);
+
+          if (files.Length == 0 || files[0].EndsWith("txt") == false)
+            break;
+
+          if (files.Length > 1)
           {
-            msg = string.Format("Übergabe der Listendaten aus der Datei [{0}] ist fehlgeschlagen.", files[0]);
-            Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+            msg = $"Für Liste [{lists.Tables[idx].Name}] liegen mehrere Listendateien vor.";
+            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+          }
+
+          try
+          {
+            // Importieren der Listendaten
+            import.Import(lists.Tables[idx], files[0]);
+            res = DFComDLL.DFCMakeListe(Optionen.Datafox.ChannelId, idx, import.RecordCount, import.Size, import.Mem, 0);
+
+            if (res == 0)
+            {
+              msg = $"Übergabe der Listendaten aus der Datei [{files[0]}] ist fehlgeschlagen.";
+              Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+              continue;
+            }
+
+            msg = $"Liste [{lists.Tables[idx].Name} (Datensätze: {lists.Tables[idx].Name})] wurde importiert. Datei: {files[0]}";
+            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Verbose);
+          }
+          catch (DFComDLL.ListImportException ex)
+          {
+            msg = $"Import von Liste [{lists.Tables[idx].Name}] schlug fehl. Datei: {files[0]}";
+            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
             continue;
           }
 
-          msg = string.Format("Liste [{0} (Datensätze: {1})] wurde importiert. Datei: {2}", lists.Tables[idx].Name, import.RecordCount, files[0]);
-          Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+          importCount++;
         }
-        catch (DFComDLL.ListImportException ex)
+
+        if (importCount == 0)
         {
-          msg = string.Format("Import von Liste [{0}] schlug fehl. Datei: {1}\nFehler: {2}", lists.Tables[idx].Name, files[0], ex.Message);
-          Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
-          continue;
+          msg = "Es liegen keine Listendaten vor.";
+          Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Verbose);
+          return;
         }
 
-        importCount++;
-      }
+        res = DFComDLL.DFCLoadListen(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, out errorID);
+        if (res == 0)
+        {
+          // Fehlertext ermitteln
+          DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
+          msg = $"Übertragung der Listendaten ist fehlgeschlagen.\nFehlerbeschreibung: {errorString}";
+          Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+        }
 
-      if (importCount == 0)
-      {
-        msg = "Es liegen keine Listendaten vor.";
-        Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
-        return;
-      }
+        msg = string.Format("Es wurde{0} {1} von {2} Listen übertragen.", (importCount == 1) ? "" : "n", importCount, lists.Tables.Length);
+        Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
-      res = DFComDLL.DFCLoadListen(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, out errorID);
-      if (res == 0)
-      {
-        // Fehlertext ermitteln
-        DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
-        msg = string.Format("Übertragung der Listendaten ist fehlgeschlagen.\n\nZurückgelieferte Fehlerbeschreibung:\n{0}", errorString);
-        throw new Exception(msg);
       }
-      msg = string.Format("Es wurde{0} {1} von {2} Listen übertragen.", (importCount == 1) ? "" : "n", importCount, lists.Tables.Length);
-      Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+      catch (Exception f)
+      {
+        msg = "Fehler beim eintragen von Daten in das Terminal !";
+        Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+      }
     }
   }
 }

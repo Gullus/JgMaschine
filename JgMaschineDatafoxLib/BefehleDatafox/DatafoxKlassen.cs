@@ -1,6 +1,5 @@
 ﻿using System;
 using JgMaschineData;
-using JgMaschineLib;
 
 namespace JgMaschineDatafoxLib
 {
@@ -33,14 +32,13 @@ namespace JgMaschineDatafoxLib
 
   public class OptionenDatafox
   {
-    public string Standort = "";
     public JgModelContainer Db = null;
+    public string Standort = "";
     public int TimerIntervall = 10000;
     public string VerbindungsString = "";
     public string PfadUpdateBediener = "";
-    public int ZaehlerDatumAktualisieren = 50;
+    public int ZaehlerDatumAktualisieren = 100; // Damit wird zeit beim Start aktualisiert
 
-    public Proto Protokoll = null;
     public DatafoxOptionen Datafox = null;
 
     public OptionenDatafox()

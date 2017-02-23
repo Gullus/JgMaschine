@@ -1,5 +1,5 @@
 ﻿using System;
-using JgMaschineLib;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineDatafoxLib
 {
@@ -31,7 +31,15 @@ namespace JgMaschineDatafoxLib
       buffer[5] = Convert.ToByte(DatumZeit.Minute);
       buffer[6] = Convert.ToByte(DatumZeit.Second); // 04:12:00 Uhrzeit
 
-      var res = DFComDLL.DFCComSetTime(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buffer);
+      try
+      {
+        var res = DFComDLL.DFCComSetTime(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buffer);
+      }
+      catch
+      {
+        var msg = "Fehler beim Einstellen der Zeit im Terminal";
+        Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+      }
     }
   }
 }

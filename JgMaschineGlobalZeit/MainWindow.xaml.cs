@@ -13,9 +13,9 @@ using System.Xml.Linq;
 using JgGlobalZeit.Commands;
 using JgMaschineData;
 using JgMaschineLib;
-using JgMaschineLib.Zeit;
 using Microsoft.Win32;
 using JgZeitHelper;
+using JgGlobalZeit.Fenster;
 
 namespace JgMaschineGlobalZeit
 {
@@ -54,7 +54,7 @@ namespace JgMaschineGlobalZeit
       },
       (sen, erg) =>
       {
-        erg.CanExecute = _ListeArbeitszeitAuswahl.Current != null;
+        erg.CanExecute = _ListeArbeitszeitAuswahl.Current?.DatenAbgleich.Geloescht == false;
       }));
     }
 
@@ -135,22 +135,34 @@ namespace JgMaschineGlobalZeit
 
     private void ArbeitszeitBearbeiten_Click(object sender, RoutedEventArgs e)
     {
-      var anz = $"Korrektur der Arbeitszeit für den Mitarbeiter {_ListeArbeitszeitAuswahl.Current.eBediener.Name}.";
+      var msg = $"Korrektur der Arbeitszeit für den Mitarbeiter {_ListeArbeitszeitAuswahl.Current.eBediener.Name}.";
+      var anm = _ListeArbeitszeitAuswahl.Current.Anmeldung ?? DateTime.Now;
+      var abm = _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now;
 
-      var form = new FormAuswahlDatumVonBis("Berichtigung Arbeitszeit", anz, _ListeArbeitszeitAuswahl.Current.Anmeldung ?? DateTime.Now, _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now);
-      if (form.ShowDialog() ?? false)
+      if (JgZeit.AbfrageZeit(msg, " Zeitabfrage !", ref anm, ref abm))
       {
-        if (form.DatumVon != _ListeArbeitszeitAuswahl.Current.Anmeldung)
+        if (anm != _ListeArbeitszeitAuswahl.Current.Anmeldung)
         {
-          _ListeArbeitszeitAuswahl.Current.Anmeldung = form.DatumVon;
-          _ListeArbeitszeitAuswahl.Current.ManuelleAnmeldung = true;
+          _ListeArbeitszeitAuswahl.Current.AnmeldungGerundetWert = null;
+          if (anm != null)
+          {
+            var zeit = JgZeit.DatumInZeit(anm);
+            var azBegin = _Erstellung.Db.tabArbeitszeitRundenSet.FirstOrDefault(w =>
+              (w.fStandort == _ListeArbeitszeitAuswahl.Current.fStandort)
+              && (zeit >= w.ZeitVon) && (zeit <= w.ZeitBis)
+              && (w.Jahr == anm.Year) && (w.Monat == anm.Month) && (!w.DatenAbgleich.Geloescht));
+            if (azBegin != null)
+              _ListeArbeitszeitAuswahl.Current.AnmeldungGerundetWert = anm.Date + azBegin.RundenAufZeit;
+          }
+
+          _ListeArbeitszeitAuswahl.Current.AnzeigeAnmeldung = anm;
+          _ListeArbeitszeitAuswahl.DsSave();
         }
-        if (form.DatumBis != _ListeArbeitszeitAuswahl.Current.Abmeldung)
+        if (abm != _ListeArbeitszeitAuswahl.Current.Abmeldung)
         {
-          _ListeArbeitszeitAuswahl.Current.Abmeldung = form.DatumBis;
-          _ListeArbeitszeitAuswahl.Current.ManuelleAbmeldung = true;
+          _ListeArbeitszeitAuswahl.Current.AnzeigeAbmeldung = abm;
+          _ListeArbeitszeitAuswahl.DsSave();
         }
-        _ListeArbeitszeitAuswahl.DsSave();
       }
     }
 
@@ -324,7 +336,7 @@ namespace JgMaschineGlobalZeit
 
     private void btnSollStundenEinstellen_Click(object sender, RoutedEventArgs e)
     {
-      var form = new JgGlobalZeit.Fenster.FormSollstundenEinstellen(_Erstellung.AktuellerBediener.eArbeitszeitHelper.SollStunden);
+      var form = new FormSollstundenEinstellen(_Erstellung.AktuellerBediener.eArbeitszeitHelper.SollStunden);
       if (form.ShowDialog() ?? false)
         _Erstellung.AuswertungBediener.SetSollstunden(form.Sollstunden);
     }

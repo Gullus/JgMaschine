@@ -211,8 +211,50 @@ namespace JgMaschineData
     }
   }
 
-  public partial class tabArbeitszeit
+  public partial class tabArbeitszeit : INotifyPropertyChanged
   {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public DateTime? AnzeigeAnmeldung
+    {
+      get { return Anmeldung; }
+      set
+      {
+        if (value != Anmeldung)
+        {
+          Anmeldung = value;
+          ManuelleAnmeldung = true;
+          NotifyPropertyChanged();
+          NotifyPropertyChanged("ManuelleAnmeldung");
+          NotifyPropertyChanged("AnmeldungIstLeer");
+          NotifyPropertyChanged("AnmeldungGerundet");
+          NotifyPropertyChanged("DauerGerundetAnzeige");
+        }
+      }
+    }
+
+    public DateTime? AnzeigeAbmeldung
+    {
+      get { return Abmeldung; }
+      set
+      {
+        if (value != Abmeldung)
+        {
+          Abmeldung = value;
+          ManuelleAbmeldung = true;
+          NotifyPropertyChanged();
+          NotifyPropertyChanged("ManuelleAbmeldung");
+          NotifyPropertyChanged("AbmeldungIstLeer");
+          NotifyPropertyChanged("DauerGerundetAnzeige");
+        }
+      }
+    }
+
+
     public bool AnmeldungIstLeer { get { return this.Anmeldung == null; } }
     public bool AbmeldungIstLeer { get { return this.Abmeldung == null; } }
 
@@ -235,13 +277,13 @@ namespace JgMaschineData
 
     public string SollstundenAnzeige
     {
-      get { return this.SollStunden; }
+      get { return SollStunden; }
       set
       {
-        var sollStunden = JgZeit.StringInStringZeit(value, SollStunden);
-        if (value != sollStunden)
+        var stunden = JgZeit.StringInStringZeit(value, SollStunden);
+        if (value != SollStunden)
         {
-          this.SollStunden = sollStunden;
+          SollStunden = stunden;
           NotifyPropertyChanged();
         }
       }
@@ -376,7 +418,7 @@ namespace JgMaschineData
       get { return JgZeit.ZeitInString(this.Pause); }
       set
       {
-        var zeit = JgZeit.StringInZeit(value, Pause);
+        var zeit = JgZeit.StringInZeit24(value, Pause);
         if (zeit != Pause)
         {
           this.Pause = zeit;
@@ -401,7 +443,7 @@ namespace JgMaschineData
       get { return JgZeit.ZeitInString(this.Zeit); }
       set
       {
-        var zeit = JgZeit.StringInZeit(value, Zeit);
+        var zeit = JgZeit.StringInZeit24(value, Zeit);
         if (zeit != Zeit)
         {
           this.Zeit = zeit;
@@ -422,7 +464,7 @@ namespace JgMaschineData
       get { return JgZeit.ZeitInString(this.Nachtschicht); }
       set
       {
-        var zeit = JgZeit.StringInZeit(value, Nachtschicht);
+        var zeit = JgZeit.StringInZeit24(value, Nachtschicht);
         if (zeit != Nachtschicht)
         {
           this.Nachtschicht = zeit;
@@ -442,7 +484,7 @@ namespace JgMaschineData
       get { return JgZeit.ZeitInString(this.Feiertag); }
       set
       {
-        var zeit = JgZeit.StringInZeit(value, Feiertag);
+        var zeit = JgZeit.StringInZeit24(value, Feiertag);
         if (zeit != Feiertag)
         {
           this.Feiertag = zeit;

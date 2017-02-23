@@ -153,6 +153,19 @@ namespace JgZeitHelper
         return TimeSpan.Zero;
     }
 
+    public static TimeSpan StringInZeit24(string ZeitString, TimeSpan? ZeitAlt = null)
+    {
+      var zeit = StringInZeit(ZeitString, ZeitAlt);
+      if ((zeit < TimeSpan.Zero) || (zeit >= new TimeSpan(24, 0, 0)))
+      {
+        MessageBox.Show("Die Zeit muss sich zwischen 0.00 und 24:00 Uhr befinden!", "Warnung !", MessageBoxButton.OK);
+        if (ZeitAlt != null)
+          return ZeitAlt.Value;
+        return TimeSpan.Zero;
+      }
+      return zeit;
+    }
+
     public static string ZeitInString(TimeSpan ZeitWert)
     {
       var stunde = (int)ZeitWert.TotalHours;
@@ -182,7 +195,7 @@ namespace JgZeitHelper
 
     public static TimeSpan DatumInZeit(DateTime DatumZeit)
     {
-      return new TimeSpan(DatumZeit.Hour, DatumZeit.Minute, 0);
+      return new TimeSpan(DatumZeit.Hour, DatumZeit.Minute, DatumZeit.Second);
     }
 
     public static DateTime ErsterImMonat(DateTime Datum)

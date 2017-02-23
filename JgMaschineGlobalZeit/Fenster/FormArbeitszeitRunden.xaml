@@ -7,7 +7,8 @@
         xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
         xmlns:Sytem="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d" Closed="Window_Closed"
-        Title="FormArbeitszeitRunden" Height="261.429" Width="382.857">
+        Title="FormArbeitszeitRunden" Height="261.429" Width="382.857"
+        FocusManager.FocusedElement="{Binding ElementName=tbJahr}">
     <Grid x:Name="gridRunden" Margin="8" DataContext="{x:Type JgMaschineData:tabArbeitszeitRunden}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

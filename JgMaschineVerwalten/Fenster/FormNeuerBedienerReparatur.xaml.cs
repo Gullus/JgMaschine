@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using JgMaschineData;
-using JgMaschineLib.Zeit;
+using JgZeitHelper;
 
 namespace JgMaschineVerwalten.Fenster
 {
@@ -20,9 +20,9 @@ namespace JgMaschineVerwalten.Fenster
         Anmeldung = DateTime.Now
       };
 
-      var dz = (JgDatumZeit)this.FindResource("dzReparaturVon");
-      dz.DatumZeit = anmeldung.Anmeldung;
-      dz.NeuerWert = (dat) => anmeldung.Anmeldung = dat;
+      var dz = (JgZeit)this.FindResource("dzReparaturVon");
+      dz.AnzeigeDatumZeit = anmeldung.Anmeldung;
+      dz.OnNeuerWert = (datum, zeit) => anmeldung.Anmeldung = datum + zeit;
 
       gridAnmeldungReparatur.DataContext = anmeldung;
     }

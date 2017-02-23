@@ -5,7 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" mc:Ignorable="d" 
     xmlns:System="clr-namespace:System;assembly=mscorlib"    
     x:Class="JgMaschineGlobalZeit.Fenster.FormOptionen"
-        Title="Optionen" Height="452" Width="465" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Topmost="True" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico" Loaded="Window_Loaded">
+    Title="Optionen" Height="452" Width="488" ResizeMode="NoResize" ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner" Topmost="True" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico"     
+    Loaded="Window_Loaded">
     <Window.Resources>
         <CollectionViewSource x:Key="vsFeiertage" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabFeiertage}, CreateList=True}" IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
@@ -45,10 +47,9 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Jahr" />
-
-        <Border Grid.Column="1" BorderThickness="1" BorderBrush="#FF1B78FD">
-            <TextBlock x:Name="tbJahr" Grid.Column="1" Margin="3" TextAlignment="Center"/>
+        <Label Content="für Jahr" />
+        <Border Grid.Column="1" BorderThickness="1" BorderBrush="Silver" Margin="3">
+            <TextBlock x:Name="tbJahr" Grid.Column="1" TextAlignment="Center"/>
         </Border>
 
         <TabControl Margin="5" Grid.ColumnSpan="5" Grid.Row="1">
@@ -158,7 +159,6 @@
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding MonatAnzeige}" CellStyle="{StaticResource CellCenterAlign}" Header="Monat" Width="*"/>
-
                             <DataGridTextColumn Binding="{Binding AnzeigeZeitVon, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="von" Width="60"/>
                             <DataGridTextColumn Binding="{Binding AnzeigeZeitBis, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="bis" Width="60"/>
                             <DataGridTextColumn Binding="{Binding AnzeigeRundenAufZeit, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Runden auf Zeit" Width="*"/>

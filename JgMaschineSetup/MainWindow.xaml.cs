@@ -206,7 +206,9 @@ namespace JgMaschineSetup
 
     private void PfadEreignissanzeigeEinrichten_Click(object sender, RoutedEventArgs e)
     {
-      Proto.PfadeInWindowsEreignissAnzeigeSetzten();
+      //Todo Pfade für WIndows Log setzen 
+
+      //Proto.PfadeInWindowsEreignissAnzeigeSetzten();
     }
   }
 }

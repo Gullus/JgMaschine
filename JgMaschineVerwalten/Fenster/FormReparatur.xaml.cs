@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using JgMaschineData;
-using JgMaschineLib.Zeit;
+using JgZeitHelper;
 
 namespace JgMaschineVerwalten.Fenster
 {
@@ -27,26 +27,22 @@ namespace JgMaschineVerwalten.Fenster
           fMaschine = AktuelleMaschine.Id
         };
 
-        lbEnde2.Visibility = Visibility.Collapsed;
-        lbStunde2.Visibility = Visibility.Collapsed;
-        lbMinute2.Visibility = Visibility.Collapsed;
-
+        lbBisDatum .Visibility = Visibility.Collapsed;
         dtpRepBis.Visibility = Visibility.Collapsed;
-        cmbStunde2.Visibility = Visibility.Collapsed;
-        cmbMinute2.Visibility = Visibility.Collapsed;
-
-        btnAktuelleZeit2.Visibility = Visibility.Collapsed;
+        lbBisPunkt.Visibility = Visibility.Collapsed;
+        tbBisZeit.Visibility = Visibility.Collapsed;
+        btnBisZeit.Visibility = Visibility.Collapsed;
       }
       else
       {
-        var dzBis = (JgDatumZeit)this.FindResource("dzReparaturBis");
-        dzBis.DatumZeit = Reparatur.VorgangEnde ?? DateTime.Now;
-        dzBis.NeuerWert = (dat) => { Reparatur.VorgangEnde = dat; };
+        var dzBis = (JgZeit)this.FindResource("dzReparaturBis");
+        dzBis.AnzeigeDatumZeit = Reparatur.VorgangEnde ?? DateTime.Now;
+        dzBis.OnNeuerWert = (datum, zeit) => Reparatur.VorgangEnde = datum + zeit;
       }
 
-      var dzVon = (JgDatumZeit)this.FindResource("dzReparaturVon");
-      dzVon.DatumZeit = Reparatur.VorgangBeginn;
-      dzVon.NeuerWert = (dat) => Reparatur.VorgangBeginn = dat;
+      var dzVon = (JgZeit)this.FindResource("dzReparaturVon");
+      dzVon.AnzeigeDatumZeit = Reparatur.VorgangBeginn;
+      dzVon.OnNeuerWert = (datum, zeit) => Reparatur.VorgangBeginn = datum + zeit;
 
       gridReparatur.DataContext = Reparatur;
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using JgMaschineLib;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineDatafoxLib
 {
@@ -34,8 +35,8 @@ namespace JgMaschineDatafoxLib
         }
         catch (Exception f)
         {
-          var msg = $"Fehler Konvertierung Vorgang!\nGrund: {f.Message}\nDs: {dsString}";
-          throw new Exception(msg);
+          var msg = $"Fehler Konvertierung Vorgang! ({dsString})";
+          throw new MyException(msg, f);
         }
 
         try
@@ -44,8 +45,8 @@ namespace JgMaschineDatafoxLib
         }
         catch (Exception f)
         {
-          var msg = $"Fehler Konvertierung Matchcode!\nGrund: {f.Message}\nDs: {dsString}";
-          throw new Exception(msg);
+          var msg = $"Fehler Konvertierung Matchcode! ({dsString})";
+          throw new MyException(msg, f);
         }
 
         try
@@ -54,8 +55,8 @@ namespace JgMaschineDatafoxLib
         }
         catch (Exception f)
         {
-          var msg = $"Fehler Konvertierung Datum!\nGrund: {f.Message}\nDs: {dsString}";
-          throw new Exception(msg);
+          var msg = $"Fehler Konvertierung Datum! ({dsString})";
+          throw new MyException(msg, f);
         }
 
         try
@@ -64,8 +65,8 @@ namespace JgMaschineDatafoxLib
         }
         catch (Exception f)
         {
-          var msg = $"Fehler Konvertierung Gehgrund!\nGrund: {f.Message}\nDs: {dsString}";
-          throw new Exception(msg);
+          var msg = $"Fehler Konvertierung Gehgrund! ({dsString})";
+          throw new MyException(msg, f);
         }
 
         liste.Add(ds);
@@ -87,53 +88,62 @@ namespace JgMaschineDatafoxLib
       var listeAntwort = new List<string>();
       var errorString = new StringBuilder(255);
 
-      // Schleife nur um mit break abzubrechen, kein goto verwenden.
-      do
+      try
       {
-        // Lesen der Datensatzbeschreibungen, diese stellen die Tabellendefinitionen dar.
-        DFComDLL.TableDeclarations records = new DFComDLL.TableDeclarations(DFComDLL.TableDeclarations.TableType.Record, "Records.xml");
-        if (records.LoadFromDevice(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, "") == false)
-        {
-          // Fehlertext ermitteln
-          DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
-          msg = string.Format("Lesen der Datensatzbeschreibung ist fehlgeschlagen.\n\nZurückgelieferte Fehlerbeschreibung:\n{0}", errorString);
-          throw new Exception(msg);
-        }
-        if (records.Tables == null)
-        {
-          // Es liegen keine Datensatzbeschreibungen vor.
-          msg = string.Format("Es liegen keine Datensatzbeschreibungen vor.\n\nBitte prüfen Sie das eingespielte Setup.}");
-          throw new Exception(msg);
-        }
-
+        // Schleife nur um mit break abzubrechen, kein goto verwenden.
         do
         {
-          length = buf.Length;
-          // Datensatz lesen
-          if ((result = DFComDLL.DFCReadRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buf, out length, out errorID)) < 0)
+          // Lesen der Datensatzbeschreibungen, diese stellen die Tabellendefinitionen dar.
+          DFComDLL.TableDeclarations records = new DFComDLL.TableDeclarations(DFComDLL.TableDeclarations.TableType.Record, "Records.xml");
+          if (records.LoadFromDevice(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, "") == false)
           {
-            msg = string.Format("Datensatz konnte nicht aus Terminal gelesen werden. Fehlercode: {0}", errorID);
-            throw new Exception(msg);
+            // Fehlertext ermitteln
+            DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
+            msg = string.Format("Lesen der Datensatzbeschreibung ist fehlgeschlagen.\nFehlerbeschreibung: {0}", errorString);
+            throw new MyException(msg);
+          }
+          if (records.Tables == null)
+          {
+            // Es liegen keine Datensatzbeschreibungen vor.
+            msg = string.Format("Es liegen keine Datensatzbeschreibungen vor.\nBitte prüfen Sie das eingespielte Setup.}");
+            throw new MyException(msg);
           }
 
-          if (result == 0)
+          do
           {
-            //msg = string.Format("Es liegt kein Datensatz vor");
-            //Helper.Protokoll(msg);
-            break;
-          }
+            length = buf.Length;
+            // Datensatz lesen
+            if ((result = DFComDLL.DFCReadRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buf, out length, out errorID)) < 0)
+            {
+              msg = string.Format("Datensatz konnte nicht aus Terminal gelesen werden. Fehlercode: {0}", errorID);
+              throw new MyException(msg);
+            }
 
-          DFComDLL.DFRecord rs = new DFComDLL.DFRecord(buf, records);
-          listeAntwort.Add(rs.TabbedString());
+            if (result == 0)
+            {
+              msg = "Es liegen keine Datensätze vor";
+              Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Verbose);
+              break;
+            }
 
-          // Datensatz quittieren
-          if (DFComDLL.DFCQuitRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, out errorID) < 0)
-          {
-            msg = string.Format("Datensatz konnte nicht im Terminal quittiert werden. Fehlercode: {0}", errorID);
-            throw new Exception(msg);
-          }
-        } while (true);
-      } while (false);
+            DFComDLL.DFRecord rs = new DFComDLL.DFRecord(buf, records);
+            listeAntwort.Add(rs.TabbedString());
+
+            // Datensatz quittieren
+            if (DFComDLL.DFCQuitRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, out errorID) < 0)
+            {
+              msg = string.Format("Datensatz konnte nicht im Terminal quittiert werden. Fehlercode: {0}", errorID);
+              throw new MyException(msg);
+            }
+          } while (true);
+        } while (false);
+
+      }
+      catch (Exception f)
+      { 
+        msg = "Fehler beim einlesen der Zeiten aus dem Terminal";
+        throw new Exception(msg, f);
+      }
 
       return listeAntwort;
     }

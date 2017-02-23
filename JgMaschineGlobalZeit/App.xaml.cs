@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace JgMaschineVerwalten
+namespace JgMaschineGlobalZeit
 {
   /// <summary>
   /// Interaktionslogik für "App.xaml"

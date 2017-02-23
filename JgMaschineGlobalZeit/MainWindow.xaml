@@ -4,7 +4,6 @@
     xmlns:lib="clr-namespace:JgMaschineLib;assembly=JgMaschineLib"
     xmlns:local="clr-namespace:JgMaschineGlobalZeit"
     xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
-    xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:commands="clr-namespace:JgGlobalZeit.Commands"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
@@ -16,8 +15,6 @@
     <Window.Resources>
         <jgZeit:JgZeit x:Key="dzArbeitszeitVon" />
         <jgZeit:JgZeit x:Key="dzArbeitszeitBis" />
-
-
 
         <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
@@ -66,7 +63,7 @@
                     <Label Content="bis" Grid.Column="4" />
                     <DatePicker Grid.Column="5" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzArbeitszeitBis}}" Margin="3,2" />
                     <Label Content="Zeit" Grid.Column="6" FontWeight="Normal" FontStyle="Italic"/>
-                    <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzArbeitszeitBis}}" Padding="2,2,0,0"/>
+                    <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzArbeitszeitBis}}" Padding="0,2,0,0" TextAlignment="Center"/>
 
                     <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click">
                         <StackPanel Orientation="Horizontal" >
@@ -86,11 +83,11 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="160"/>
                             <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung}" Header="Standort" Width="120"/>
-                            <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeAnmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=hh\:mm, TargetNullValue=-}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
-                            <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeAbmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAbmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
                             <DataGridTextColumn Binding="{Binding DauerGerundetAnzeige, Mode=OneWay}" Header="Arbeitszeit" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
@@ -163,36 +160,14 @@
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="160"/>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="60"/>
-                        <ColumnDefinition Width="35"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="60"/>
-                        <ColumnDefinition Width="35"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="60"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="60"/>
-                        <ColumnDefinition Width="110"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="5"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
@@ -202,9 +177,7 @@
                     <Label Content="Monat" Grid.Row="1"/>
                     <ComboBox x:Name="cbMonat" Grid.Column="1" Grid.Row="1"/>
 
-                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="2" EnableRowVirtualization="True" IsReadOnly="True" 
-                        ItemsSource="{Binding}" Margin="3" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.RowSpan="6" SelectionMode="Single">
-
+                    <DataGrid Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding}" Grid.Row="2" Grid.RowSpan="2" SelectionMode="Single">
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Foreground" Value="Black" />
@@ -252,7 +225,7 @@
                         </Button>
                     </Grid>
 
-                    <DataGrid x:Name="dgArbeitszeit" AutoGenerateColumns="False" Grid.ColumnSpan="21" Grid.Column="3" EnableRowVirtualization="True" 
+                    <DataGrid x:Name="dgArbeitszeit" AutoGenerateColumns="False" Grid.Column="3" EnableRowVirtualization="True" 
                               ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
                               AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None" MouseDoubleClick="Datagrid_DoppelClick">
                         <DataGrid.CellStyle>
@@ -465,81 +438,208 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Label Content="Vorjahr" Grid.Column="9" Grid.Row="4"/>
-                    <Label Content="Kumulat." Grid.Column="9" Grid.Row="5" />
-                    <Label Content="Gesamt" Grid.Column="9" Grid.Row="6"/>
+                    <Grid Grid.Column="8" Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type Border}" >
+                                <Style.Setters>
+                                    <Setter Property="Margin" Value="3" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                    <Setter Property="BorderBrush" Value="Silver" />
+                                </Style.Setters>
+                            </Style>
 
-                    <TextBlock Text="Überstunden" Grid.Column="9" Grid.ColumnSpan="2" Grid.Row="3" TextAlignment="Center" Margin="5" FontWeight="Bold"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungKumulativ},Path=UeberstundenVorjahrString, Mode=OneWay}" TextAlignment="Center" Grid.Column="10" Grid.Row="4" Margin="3"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungKumulativ}, Path=UeberstundenString, Mode=OneWay}" TextAlignment="Center" Grid.Column="10" Grid.Row="5" Margin="3"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungGesamt}, Path=UeberstundenString, Mode=OneWay}" TextAlignment="Center" Grid.Column="10" Grid.Row="6" Margin="3" BorderBrush="Blue"/>
+                            <Style TargetType="{x:Type TextBlock}" >
+                                <Style.Setters>
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                </Style.Setters>
+                            </Style>
+                        </Grid.Resources>
+                        <TextBlock Text="Überstunden" Grid.Column="8" Grid.ColumnSpan="2" FontWeight="Bold"/>
+                        <Label Content="Vorjahr" Grid.Column="8" Grid.Row="1"/>
+                        <Label Content="Kumulat." Grid.Column="8" Grid.Row="2" />
+                        <Label Content="Gesamt" Grid.Column="8" Grid.Row="3"/>
+                        <Border Grid.Column="9" Grid.Row="1" >
+                            <TextBlock Text="{Binding UeberstundenVorjahrString, Mode=OneWay, Source={StaticResource AuswertungKumulativ}}"/>
+                        </Border>
+                        <Border Grid.Column="9" Grid.Row="2" >
+                            <TextBlock Text="{Binding UeberstundenString, Mode=OneWay, Source={StaticResource AuswertungKumulativ}}"/>
+                        </Border>
+                        <Border Grid.Column="9" Grid.Row="3" BorderBrush="Blue" >
+                            <TextBlock Text="{Binding UeberstundenString, Mode=OneWay, Source={StaticResource AuswertungGesamt}}"/>
+                        </Border>
 
-                    <Border Grid.Column="11" Grid.Row="3" Grid.RowSpan="4" Margin="2" Background="Silver"/>
+                        <TextBlock Text="Auszahlg. Überstunden" Grid.Column="4" Grid.ColumnSpan="3" FontWeight="Bold"/>
+                        <Label Content="Kumulat." Grid.Column="4" Grid.Row="1" />
+                        <Label Content="Auszahlg." Grid.Column="4" Grid.Row="2" Height="26" VerticalAlignment="Bottom" />
+                        <Label Content="Gesamt" Grid.Column="4" Grid.Row="3" />
+                        <Border Grid.Column="5" Grid.Row="1" >
+                            <TextBlock Text="{Binding UeberstundenBezahltString, Mode=OneWay, Source={StaticResource AuswertungKumulativ}}"/>
+                        </Border>
+                        <Border Grid.Column="5" Grid.Row="2" >
+                            <TextBlock Text="{Binding eArbeitszeitHelper.AuszahlungUeberstundenAnzeige}"/>
+                        </Border>
+                        <Border Grid.Column="5" Grid.Row="3" >
+                            <TextBlock Text="{Binding UeberstundenBezahltString, Source={StaticResource AuswertungGesamt}}"/>
+                        </Border>
+                        <Button Content="..." Grid.Column="6" Grid.Row="2"  Click="btnUeberstundenAuszahlen_Click" ToolTip="Sollstunde enstellen"/>
 
-                    <TextBlock Text="Auszahlg. Überstunden" Grid.Column="6" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Margin="5" FontWeight="Bold"/>
-                    <Label Content="Kumulat." Grid.Column="6" Grid.Row="4" />
-                    <TextBox Text="{Binding Source={StaticResource AuswertungKumulativ}, Path=UeberstundenBezahltString, Mode=OneWay}" TextAlignment="Center" Grid.Column="7" Grid.Row="4" Margin="3"/>
-                    <Label Content="Auszahlg." Grid.Column="6" Grid.Row="5" />
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.AuszahlungUeberstundenAnzeige}" TextAlignment="Center" Grid.Column="7" Grid.Row="5" Margin="3"/>
-                    <Button Content="..." Grid.Column="8" Grid.Row="5" Margin="3,3,8,3" Click="btnUeberstundenAuszahlen_Click" ToolTip="Sollstunde enstellen"/>
-                    <Label Content="Gesamt" Grid.Column="6" Grid.Row="6" />
-                    <TextBox Text="{Binding Source={StaticResource AuswertungGesamt}, Path=UeberstundenBezahltString}" TextAlignment="Center" Grid.Column="7" Grid.Row="6" Margin="3"/>
+                        <Label Content="Kumulat." Grid.Column="13" Grid.Row="1"/>
+                        <Label Content="Monat" Grid.Column="13" Grid.Row="2" />
+                        <Label Content="Gesamt" Grid.Column="13" Grid.Row="3"/>
+                        <Border Grid.Column="14" Grid.Row="1" >
+                            <TextBlock Text="{Binding UrlaubAnzeige, Mode=OneWay, Source={StaticResource AuswertungKumulativ}}"/>
+                        </Border>
+                        <Border Grid.Column="14" Grid.Row="2" >
+                            <TextBlock Text="{Binding eArbeitszeitHelper.UrlaubAnzeige, Mode=OneWay}"/>
+                        </Border>
+                        <Border Grid.Column="14" Grid.Row="3" BorderBrush="Blue">
+                            <TextBlock Text="{Binding UrlaubAnzeige, Mode=OneWay, Source={StaticResource AuswertungGesamt}}"/>
+                        </Border>
+
+                        <TextBlock Text="Krank" Grid.Column="16" FontWeight="Bold"/>
+                        <Border Grid.Column="16" Grid.Row="1" >
+                            <TextBlock Text="{Binding KrankAnzeige, Mode=OneWay, Source={StaticResource AuswertungKumulativ}}"/>
+                        </Border>
+                        <Border Grid.Column="16" Grid.Row="2" >
+                            <TextBlock Text="{Binding eArbeitszeitHelper.KrankAnzeige, Mode=OneWay}"/>
+                        </Border>
+                        <Border Grid.Column="16" Grid.Row="3" BorderBrush="Blue">
+                            <TextBlock Text="{Binding KrankAnzeige, Mode=OneWay, Source={StaticResource AuswertungGesamt}}"/>
+                        </Border>
+
+                        <TextBlock Text="Urlaubstage" Grid.Column="11" Grid.ColumnSpan="4" FontWeight="Bold"/>
+                        <Label Content="Tage" Grid.Column="11" Grid.Row="1" />
+                        <Label Content="Vorjahr" Grid.Column="11" Grid.Row="2"/>
+                        <Label Content="Offen" Grid.Column="11" Grid.Row="3"/>
+                        <Border Grid.Column="12" Grid.Row="1" >
+                            <TextBlock Text="{Binding Urlaubstage, Mode=OneWay}"/>
+                        </Border>
+                        <Border Grid.Column="12" Grid.Row="2" >
+                            <TextBlock Text="{Binding RestUrlaubAnzeige, Mode=OneWay, Source={StaticResource AuswertungKumulativ}}"/>
+                        </Border>
+                        <Border Grid.Column="12" Grid.Row="3" >
+                            <TextBlock Text="{Binding UrlaubOffenAnzeige, Mode=OneWay, Source={StaticResource AuswertungKumulativ}}" />
+                        </Border>
+
+                        <TextBlock Text="Stunden im Monat" Grid.ColumnSpan="3" FontWeight="Bold"/>
+                        <Label Content="Soll" Grid.Row="1"/>
+                        <Label Content="Ist" Grid.Row="2"/>
+                        <Label Content="Diff." Grid.Row="3"/>
+                        <Border Grid.Column="1" Grid.Row="1" >
+                            <TextBlock Text="{Binding eArbeitszeitHelper.SollstundenAnzeige, Mode=OneWay}"/>
+                        </Border>
+                        <Border Grid.Column="1" Grid.Row="2" >
+                            <TextBlock Text="{Binding eArbeitszeitHelper.IstStunden, Mode=OneWay}"/>
+                        </Border>
+                        <Border Grid.Column="1" Grid.Row="3" BorderBrush="Blue">
+                            <TextBlock Text="{Binding eArbeitszeitHelper.UeberstundenAnzeige, Mode=OneWay}"/>
+                        </Border>
+                        <Button Content="..." Grid.Column="2" Grid.Row="1" Click="btnSollStundenEinstellen_Click" ToolTip="Sollstunde enstellen"/>
+
+                        <Separator Grid.Column="3" Grid.RowSpan="4" >
+                            <Separator.LayoutTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="90"/>
+                                </TransformGroup>
+                            </Separator.LayoutTransform>
+                        </Separator>
+
+                        <Separator Grid.Column="7" Grid.RowSpan="4" >
+                            <Separator.LayoutTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="90"/>
+                                </TransformGroup>
+                            </Separator.LayoutTransform>
+                        </Separator>
+
+                        <Separator Grid.Column="10" Grid.RowSpan="4" >
+                            <Separator.LayoutTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="90"/>
+                                </TransformGroup>
+                            </Separator.LayoutTransform>
+                        </Separator>
+
+                        <Separator Grid.Column="15" Grid.RowSpan="4" >
+                            <Separator.LayoutTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="90"/>
+                                </TransformGroup>
+                            </Separator.LayoutTransform>
+                        </Separator>
+
+                        <Separator Grid.Column="17" Grid.RowSpan="4" >
+                            <Separator.LayoutTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="90"/>
+                                </TransformGroup>
+                            </Separator.LayoutTransform>
+                        </Separator>
+
+                        <TextBlock Text="Zuschläge" Grid.Column="18" Grid.ColumnSpan="2" FontWeight="Bold"/>
+                        <Label Content="Nachtschicht" Grid.Column="18" Grid.Row="1"/>
+                        <Label Content="Feiertage" Grid.Column="18" Grid.Row="2"/>
+                        <Border Grid.Column="19" Grid.Row="1" >
+                            <TextBlock Text="{Binding eArbeitszeitHelper.NachtschichtenAnzeige, Mode=OneWay}"/>
+                        </Border>
+                        <Border Grid.Column="19" Grid.Row="2" >
+                            <TextBlock Text="{Binding eArbeitszeitHelper.FeiertageAnzeige, Mode=OneWay}"/>
+                        </Border>
+
+                        <Button Grid.Column="21" Grid.Row="1" Click="btnOptionen_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Bilder\JgSettings.ico" Height="14"/>
+                                <TextBlock Text=" Optionen" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Column="21" Grid.Row="2" Grid.RowSpan="2" Click="btnExporteren_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Bilder\JgSynchronize.ico" Height="28"/>
+                                <TextBlock Text=" Exportieren" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
 
 
-                    <Label Content="Kumulat." Grid.Column="14" Grid.Row="4"/>
-                    <Label Content="Monat" Grid.Column="14" Grid.Row="5" />
-                    <Label Content="Gesamt" Grid.Column="14" Grid.Row="6"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungKumulativ}, Path=UrlaubAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="15" Grid.Row="4" Margin="3"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.UrlaubAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="15" Grid.Row="5" Margin="3"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungGesamt}, Path=UrlaubAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="15" Grid.Row="6" Margin="3" BorderBrush="Blue"/>
 
-                    <TextBlock Text="Krank" Grid.Column="17" Grid.Row="3" TextAlignment="Center" Margin="5" FontWeight="Bold"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungKumulativ}, Path=KrankAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="17" Grid.Row="4" Margin="3"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.KrankAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="17" Grid.Row="5" Margin="3"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungGesamt}, Path=KrankAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="17" Grid.Row="6" Margin="3" BorderBrush="Blue"/>
 
-                    <Border Grid.Column="18" Grid.Row="3" Grid.RowSpan="4" Margin="2" Background="Silver"/>
 
-                    <TextBlock Text="Urlaubstage" Grid.Column="12" Grid.Row="3" Grid.ColumnSpan="4" Margin="5" FontWeight="Bold" TextAlignment="Center"/>
-                    <Label Content="Tage" Grid.Column="12" Grid.Row="4" />
-                    <TextBox Text="{Binding Path=Urlaubstage, Mode=OneWay}" TextAlignment="Center" Grid.Column="13" Grid.Row="4" Margin="3"/>
-                    <Label Content="Vorjahr" Grid.Column="12" Grid.Row="5"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungKumulativ}, Path=RestUrlaubAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="13" Grid.Row="5" Margin="3"/>
-                    <Label Content="Offen" Grid.Column="12" Grid.Row="6"/>
-                    <TextBox Text="{Binding Source={StaticResource AuswertungKumulativ}, Path=UrlaubOffenAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="13" Grid.Row="6" Margin="3" BorderBrush="Blue"/>
 
-                    <Border Grid.Column="16" Grid.Row="3" Grid.RowSpan="4" Margin="2" Background="Silver"/>
+                    </Grid>
 
-                    <TextBlock Text="Stunden im Monat" Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="3" Margin="5" FontWeight="Bold" TextAlignment="Center"/>
-                    <Label Content="Soll" Grid.Column="3" Grid.Row="4"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.SollstundenAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="4" Grid.Row="4" Margin="3,3,0,3" HorizontalAlignment="Left" Width="54"/>
-                    <Button Content="..." Grid.Column="5" Grid.Row="4" Margin="3,3,8,3" Click="btnSollStundenEinstellen_Click" ToolTip="Sollstunde enstellen"/>
-                    <Label Content="Ist" Grid.Column="3" Grid.Row="5"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.IstStunden, Mode=OneWay}" TextAlignment="Center" Grid.Column="4" Grid.Row="5" Margin="3,0,3,3" Height="20" VerticalAlignment="Bottom"/>
-                    <Label Content="Diff." Grid.Column="3" Grid.Row="6"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.UeberstundenAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="4" Grid.Row="6" Margin="3" BorderBrush="Blue"/>
-
-                    <TextBlock Text="Zuschläge" Grid.Column="19" Grid.ColumnSpan="2" Grid.Row="3" FontWeight="Bold" TextAlignment="Center" Margin="5" />
-                    <Label Content="Nachtschicht" Grid.Column="19" Grid.Row="4"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.NachtschichtenAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="20" Grid.Row="4" Margin="3"/>
-                    <Label Content="Feiertage" Grid.Column="19" Grid.Row="5"/>
-                    <TextBox Text="{Binding Path=eArbeitszeitHelper.FeiertageAnzeige, Mode=OneWay}" TextAlignment="Center" Grid.Column="20" Grid.Row="5" Margin="3"/>
-
-                    <Button Grid.Column="21" Grid.Row="4" Click="btnOptionen_Click" >
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="Bilder\JgSettings.ico" Height="14"/>
-                            <TextBlock Text=" Optionen" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Grid.Column="21" Grid.Row="5" Grid.RowSpan="2" Click="btnExporteren_Click" >
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="Bilder\JgSynchronize.ico" Height="28"/>
-                            <TextBlock Text=" Exportieren" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Grid Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="21">
+                    <Grid Grid.Row="5" Grid.Column="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="160"/>

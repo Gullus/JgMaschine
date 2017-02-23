@@ -581,15 +581,17 @@ namespace JgMaschineGlobalZeit
 
     public void SetSollstunden(string Sollstunden)
     {
-      var zeit = JgZeit.StringInStringZeit(Sollstunden, _Bediener.eArbeitszeitHelper.SollstundenAnzeige);
-      if (zeit != _Bediener.eArbeitszeitHelper.SollstundenAnzeige)
+      var sSollstunden = JgZeit.StringInStringZeit(Sollstunden, _Bediener.eArbeitszeitHelper.SollStunden);
+      if (sSollstunden != _Bediener.eArbeitszeitHelper.SollStunden)
       {
-        _Bediener.eArbeitszeitHelper.SollstundenAnzeige = zeit;
-        _Bediener.eArbeitszeitHelper.Ueberstunden = JgZeit.ZeitInString(JgZeit.StringInZeit(zeit) - AuswertungKumulativ.fIstStunden);
-        BerechneUeberstundenGesamt();
-
+        var zIstStunden = JgZeit.StringInZeit(_Bediener.eArbeitszeitHelper.IstStunden);
+        var zSollStunden = JgZeit.StringInZeit(sSollstunden);
+        _Bediener.eArbeitszeitHelper.SollstundenAnzeige = sSollstunden;
+        _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = JgZeit.ZeitInString(zIstStunden - zSollStunden);
         DbSichern.AbgleichEintragen(_Bediener.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         _Db.SaveChanges();
+
+        BerechneUeberstundenGesamt();
       }
     }
 

@@ -13,5 +13,6 @@ namespace JgMaschineSetup
   /// </summary>
   public partial class App : Application
   {
+    
   }
 }

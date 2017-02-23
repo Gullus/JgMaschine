@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using JgMaschineData;
+using JgMaschineLib;
 
 namespace JgMaschineDatafoxLib
 {
@@ -18,7 +19,7 @@ namespace JgMaschineDatafoxLib
       }
 
       var dat = Optionen.PfadUpdateBediener;
-      if (! Directory.Exists(Optionen.PfadUpdateBediener))
+      if (!Directory.Exists(Optionen.PfadUpdateBediener))
       {
         var msg = $"Pfad '{dat}' zum schreiben der Bedienerdatei ist nicht vorhanden.";
         throw new Exception(msg);
@@ -31,8 +32,8 @@ namespace JgMaschineDatafoxLib
       }
       catch (Exception f)
       {
-        var msg = $"Fehler beim schreiben der Bedienerdatei {dat}!\nGrund: {f.Message}";
-        throw new Exception(msg);
+        var msg = $"Fehler beim schreiben der Bedienerdatei {dat}!";
+        throw new MyException(msg, f);
       }
     }
   }

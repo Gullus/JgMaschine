@@ -122,14 +122,11 @@ namespace JgMaschineLib
       return new DateTime(Convert.ToInt32(AusString.Substring(0, 4)), Convert.ToInt32(AusString.Substring(4, 2)), Convert.ToInt32(AusString.Substring(6, 2)));
     }
 
-    public static bool IstPingOk(string IpAdresse, Proto Protokoll)
+    public static bool IstPingOk(string IpAdresse, ref string Fehlertext)
     {
-      string msg = "";
-
       if (string.IsNullOrWhiteSpace(IpAdresse))
       {
-        msg = $"Ip Adresse ist leer!";
-        Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+        Fehlertext = "Ip Adresse ist leer!";
       }
       else
       {
@@ -143,14 +140,12 @@ namespace JgMaschineLib
             return true;
           else
           {
-            msg = $"Bing {IpAdresse} mit Status {result.Status}  fehlgeschlagen!";
-            Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+            Fehlertext = $"Bing {IpAdresse} mit Status {result.Status}  fehlgeschlagen!";
           }
         }
         catch (Exception f)
         {
-          msg = $"Fehler bei Pingabfrage zu Adresse {IpAdresse}!";
-          Protokoll.Set(msg, f);
+          Fehlertext = $"Fehler bei Pingabfrage zu Adresse {IpAdresse}!\nGrund: {f.Message}";
         }
       }
 

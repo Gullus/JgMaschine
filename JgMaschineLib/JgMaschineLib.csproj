@@ -62,8 +62,8 @@
     <Compile Include="Imports\JgFastCube.cs" />
     <Compile Include="Listen\JgEntityAuto.cs" />
     <Compile Include="Listen\JgEntityList.cs" />
+    <Compile Include="MyExeption.cs" />
     <Compile Include="NetzwerkVerbindung.cs" />
-    <Compile Include="Proto.cs" />
     <Compile Include="Email\SendEmail.cs" />
     <Compile Include="SqlVerbindung\DatenbankVerbindungen.cs" />
     <Compile Include="SqlVerbindung\FormDatenbankVerbindung.cs">
@@ -86,14 +86,6 @@
     <Compile Include="TcpIp\TcpIpServer.cs" />
     <Compile Include="TcpIp\TcpIpStamm.cs" />
     <Compile Include="ValidationRules\KontrAnnotations.cs" />
-    <Compile Include="Zeit\JgDatumZeit.cs" />
-    <Compile Include="Zeit\DatumZeit.cs" />
-    <Compile Include="Zeit\FormAuswahlDatumVonBis.xaml.cs">
-      <DependentUpon>FormAuswahlDatumVonBis.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Zeit\FormAuswahlDatumZeit.xaml.cs">
-      <DependentUpon>FormAuswahlDatumZeit.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="JgFastCube.dll">
@@ -142,16 +134,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Zeit\FormAuswahlDatumVonBis.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Zeit\FormAuswahlDatumZeit.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

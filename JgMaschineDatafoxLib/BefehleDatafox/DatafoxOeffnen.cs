@@ -1,4 +1,5 @@
 ﻿using System;
+using JgMaschineLib;
 
 namespace JgMaschineDatafoxLib
 {
@@ -14,8 +15,8 @@ namespace JgMaschineDatafoxLib
 
       if (DFComDLL.DFCComOpenIV(Optionen.Datafox.ChannelId, 0, idVerbindung, Optionen.Datafox.IpNummer, Optionen.Datafox.Portnummer, Optionen.Datafox.TimeOut) == 0)
       {
-        var msg = string.Format("Schnittstelle oder Verbindung zum Gerät konnte nicht geöffnet werden.\n\nBitte überprüfen Sie die Einstellungen der Kommunikation und Erreichbarkeit des Terminals.");
-        throw new Exception(msg);
+        var msg = string.Format("Schnittstelle oder Verbindung zum Gerät konnte nicht geöffnet werden. Überprüfen Sie die Einstellungen der Kommunikation und Erreichbarkeit des Terminals.");
+        throw new MyException(msg);
       }
     }
   }

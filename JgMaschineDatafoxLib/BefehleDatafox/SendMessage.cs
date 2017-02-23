@@ -1,6 +1,4 @@
-﻿using JgMaschineLib;
-
-namespace JgMaschineDatafoxLib
+﻿namespace JgMaschineDatafoxLib
 {
   public static partial class ProgDatafox
   {

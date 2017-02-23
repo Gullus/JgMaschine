@@ -4,6 +4,7 @@
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
+        
         <Style TargetType="{x:Type Button}" >
             <Style.Setters>
                 <Setter Property="Margin" Value="3" />
@@ -14,19 +15,11 @@
             <Style.Setters>
                 <Setter Property="Margin" Value="3" />
             </Style.Setters>
-            <Style.Triggers>
+            <!--<Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
                     <Setter Property="ToolTip"  Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
                 </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="StyleTextBoxReadOnly" TargetType="{x:Type TextBox}" >
-            <Style.Setters>
-                <Setter Property="Margin" Value="3" />
-                <Setter Property="IsReadOnly" Value="False" />
-                <Setter Property="Background" Value="#FFF5F9FD" />
-            </Style.Setters>
+            </Style.Triggers>-->
         </Style>
 
         <Style TargetType="{x:Type Label}" >

@@ -1,11 +1,10 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using JgMaschineDatafoxLib;
-using JgMaschineLib;
+using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineServiceAbreitszeit
 {
@@ -13,7 +12,14 @@ namespace JgMaschineServiceAbreitszeit
   {
     static void Main(string[] args)
     {
+      Logger.SetLogWriter(new LogWriterFactory().Create());
+      ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+
       var prop = Properties.Settings.Default;
+
+      var msg = "Programm startet. Initialisierung Datafox Optionen.";
+      Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Start);
+      
       var optDatafox = new OptionenDatafox()
       {
         Standort = prop.Standort,
@@ -27,44 +33,17 @@ namespace JgMaschineServiceAbreitszeit
           Portnummer = prop.Terminal_PortNummer,
           TimeOut = prop.Terminal_TimeOut
         },
-
-        Protokoll = new Proto(Proto.KategorieArt.ServiceArbeitszeit, new JgMaschineLib.Email.SendEmailOptionen()
-        {
-          AdresseAbsender = prop.EmailAbsender,
-          AdressenEmpfaenger = prop.EmailListeEmpfaenger,
-          Betreff = prop.EmailBetreff,
-          ServerAdresse = prop.EmailServerAdresse,
-          ServerPort = prop.EmailServerPortNummer,
-          ServerBenutzername = prop.EmailServerBenutzerName,
-          ServerPasswort = prop.EmailServerBenutzerKennwort
-        })
       };
+
+      msg = $"Arbeitszeit startet!\nTerminal Adresse: {optDatafox.Datafox.IpNummer}  Port: {optDatafox.Datafox.Portnummer}.";
+      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
 #if DEBUG
 
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll);
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.WinProtokoll);
-      optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.WinProtokoll);
-
-      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.Console, Proto.AnzeigeArt.Email);
-      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.Console);
-      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.Console);
-      //optDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.Console);
-
-      var msg = $"Arbeitszeit startet!\nAdresse: {optDatafox.Datafox.IpNummer}  Port: {optDatafox.Datafox.Portnummer}.";
-      optDatafox.Protokoll.Set(msg, Proto.ProtoArt.Info);
-
       var _ArbeitszeitErfassung = new ArbeitszeitErfassen(optDatafox);
-      _ArbeitszeitErfassung.Start();
+      
+      ArbeitszeitErfassen.OnTimedEvent(optDatafox);
 
-      using (var db = new JgMaschineData.JgModelContainer())
-      {
-        var standort = db.tabStandortSet.FirstOrDefault();
-        ArbeitszeitErfassen.ArbeitszeitInDatenbank(db, null, standort.Id, new Proto(Proto.KategorieArt.Arbeitszeit));
-      }
-
-      Console.ReadKey();
 #else
 
       var ServiceToRun = new ServiceBase[] { new JgMaschineServiceArbeitszeit(optDatafox) };
@@ -81,18 +60,14 @@ namespace JgMaschineServiceAbreitszeit
 
     public JgMaschineServiceArbeitszeit(OptionenDatafox OptDatafox)
     {
-      OptDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll, Proto.AnzeigeArt.Email);
-      OptDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
-      OptDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.WinProtokoll);
-      OptDatafox.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.WinProtokoll);
-
       _ArbErfassung = new ArbeitszeitErfassen(OptDatafox);
     }
 
     protected override void OnStart(string[] args)
     {
       base.OnStart(args);
-      _ArbErfassung.OptDatafox.Protokoll.Set("Arbeitszeitservice startet!", Proto.ProtoArt.Info);
+      var msg = "ServiceTask startet!";
+      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
       var task = new Task(() =>
       {
@@ -104,21 +79,24 @@ namespace JgMaschineServiceAbreitszeit
     protected override void OnShutdown()
     {
       base.OnShutdown();
-      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeitservice heruntergefahren!", Proto.ProtoArt.Info);
+      var msg = "Service wurde heruntergefahren!";
+      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
     }
 
     protected override void OnStop()
     {
       base.OnStop();
       _ArbErfassung.TimerStop();
-      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeit angehalten!", Proto.ProtoArt.Info);
+      var msg = "Service wurde gestoppt!";
+      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
     }
 
     protected override void OnContinue()
     {
       base.OnContinue();
       _ArbErfassung.TimerContinue();
-      _ArbErfassung.OptDatafox.Protokoll.AnzeigeWinProtokoll("Arbeitszeit wieder gestartet!", Proto.ProtoArt.Info);
+      var msg = "Service wurde wieder gestartet!";
+      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
     }
   }
 

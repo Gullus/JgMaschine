@@ -5,7 +5,7 @@
     xmlns:prop="clr-namespace:JgMaschineVerwalten.Properties"
     xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:comands="clr-namespace:JgMaschineVerwalten.Commands"
-    xmlns:libZeit="clr-namespace:JgMaschineLib.Zeit;assembly=JgMaschineLib"
+    xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
         x:Class="JgMaschineVerwalten.MainWindow" mc:Ignorable="d" Title="Anmeldung u. Maschinenverwaltung" Height="549" Width="1244" 
@@ -36,17 +36,17 @@
         <CollectionViewSource x:Key="vsBauteilAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabBauteil}, CreateList=True}"/>
         <CollectionViewSource x:Key="vsBedienerBauteil" Source="{Binding sBediener, Source={StaticResource vsBauteilAuswahl}}"/>
 
-        <libZeit:JgDatumZeit x:Key="dzArbeitszeitVon" />
-        <libZeit:JgDatumZeit x:Key="dzArbeitszeitBis" />
+        <jgZeit:JgZeit x:Key="dzArbeitszeitVon" />
+        <jgZeit:JgZeit x:Key="dzArbeitszeitBis" />
 
-        <libZeit:JgDatumZeit x:Key="dzAnmeldungVon" />
-        <libZeit:JgDatumZeit x:Key="dzAnmeldungBis" />
+        <jgZeit:JgZeit x:Key="dzAnmeldungVon" />
+        <jgZeit:JgZeit x:Key="dzAnmeldungBis" />
 
-        <libZeit:JgDatumZeit x:Key="dzBauteilVon" />
-        <libZeit:JgDatumZeit x:Key="dzBauteilBis" />
+        <jgZeit:JgZeit x:Key="dzBauteilVon" />
+        <jgZeit:JgZeit x:Key="dzBauteilBis" />
 
-        <libZeit:JgDatumZeit x:Key="dzReparaturVon" />
-        <libZeit:JgDatumZeit x:Key="dzReparaturBis" />
+        <jgZeit:JgZeit x:Key="dzReparaturVon" />
+        <jgZeit:JgZeit x:Key="dzReparaturBis" />
 
     </Window.Resources>
 
@@ -123,15 +123,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="5"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
@@ -142,20 +139,16 @@
                                 </Grid.RowDefinitions>
 
                                 <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitVon}}"/>
-                                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                                <DatePicker Grid.Column="1" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzArbeitszeitVon}}"/>
+                                <Label Content=":" Grid.Column="2"/>
+                                <TextBox Grid.Column="3" Text="{Binding AnzeigeZeit, Source={StaticResource dzArbeitszeitVon}}"/>
 
-                                <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzArbeitszeitBis}}" />
-                                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzArbeitszeitBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                                <Label Content="bis" Grid.Column="4" />
+                                <DatePicker Grid.Column="5" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzArbeitszeitBis}}" />
+                                <Label Content=":" Grid.Column="6"/>
+                                <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzArbeitszeitBis}}"/>
 
-                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="1" >
+                                <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click" Tag="1" >
                                     <StackPanel Orientation="Horizontal" >
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" />
                                         <TextBlock Text=" aktualisieren" VerticalAlignment="Center"/>
@@ -280,15 +273,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="5"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
@@ -298,20 +288,16 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungVon}}"/>
-                                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                                <DatePicker Grid.Column="1" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzAnmeldungVon}}"/>
+                                <Label Content=":" Grid.Column="2"/>
+                                <TextBox Grid.Column="3" Text="{Binding AnzeigeZeit, Source={StaticResource dzAnmeldungVon}}"/>
 
-                                <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzAnmeldungBis}}" />
-                                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzAnmeldungBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                                <Label Content="bis" Grid.Column="4" />
+                                <DatePicker Grid.Column="5" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzAnmeldungBis}}" />
+                                <Label Content=":" Grid.Column="6"/>
+                                <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzAnmeldungBis}}"/>
 
-                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="2" >
+                                <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click" Tag="2" >
                                     <StackPanel Orientation="Horizontal" >
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" />
                                         <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -389,15 +375,12 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
@@ -410,20 +393,16 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label Content="Auswahl vom"/>
-                    <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilVon}}"/>
-                    <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                    <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                    <DatePicker Grid.Column="1" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzBauteilVon}}"/>
+                    <Label Content=":" Grid.Column="2"/>
+                    <TextBox Grid.Column="3" Text="{Binding AnzeigeZeit, Source={StaticResource dzBauteilVon}}"/>
 
-                    <Label Content="Bis" Grid.Column="6" />
-                    <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzBauteilBis}}" />
-                    <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                    <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                    <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzBauteilBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                    <Label Content="bis" Grid.Column="4" />
+                    <DatePicker Grid.Column="5" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzBauteilBis}}" />
+                    <Label Content=":" Grid.Column="6"/>
+                    <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzBauteilBis}}"/>
 
-                    <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="3">
+                    <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click" Tag="3">
                         <StackPanel Orientation="Horizontal" >
                             <Image Source="Bilder\JgRefresh.ico" Height="16" />
                             <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -495,7 +474,7 @@
                             <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="160"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button x:Name="btnFastCube" Content="FastCube" Grid.Column="13" Width="75" HorizontalAlignment="Left" Click="btnFastCube_Click"/>
+                    <Button x:Name="btnFastCube" Content="FastCube" Grid.Column="10" Width="75" HorizontalAlignment="Left" Click="btnFastCube_Click"/>
                 </Grid>
             </TabItem>
 
@@ -509,7 +488,7 @@
 
                     <TabControl x:Name="tcReparatur">
                         <TabItem Header="  Aktuelle Reparaturen  " Height="30">
-                            <Grid  DataContext="{StaticResource vsReparaturAktuell}" >
+                            <Grid  DataContext="{StaticResource vsReparaturAktuell}" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="160"/>
                                     <ColumnDefinition Width="300"/>
@@ -598,20 +577,17 @@
                         <TabItem Header="  Ausgewählte Reparaturen  ">
                             <Grid Margin="5" DataContext="{StaticResource vsReparaturAuswahl}">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="89*"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="5"/>
                                     <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="257*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -623,20 +599,16 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Content="Auswahl vom"/>
-                                <DatePicker Grid.Column="1" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturVon}}" Height="Auto" Margin="3,2"/>
-                                <Label Content="S" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="3" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="4" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="5" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturVon}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitVon}}" ItemStringFormat="{}{0:D2}"/>
+                                <DatePicker Grid.Column="1" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzReparaturVon}}" Height="Auto" Margin="3,2"/>
+                                <Label Content=":" Grid.Column="2"/>
+                                <TextBox Grid.Column="3" Text="{Binding AnzeigeZeit, Source={StaticResource dzReparaturVon}}"/>
 
-                                <Label Content="bis" Grid.Column="6" />
-                                <DatePicker Grid.Column="7" SelectedDate="{Binding Datum, Source={StaticResource dzReparaturBis}}" Height="Auto" Margin="3,2" />
-                                <Label Content="S" Grid.Column="8" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="9" SelectedValue="{Binding Stunde, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeStunden, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
-                                <Label Content="M" Grid.Column="10" FontWeight="Normal" FontStyle="Italic"/>
-                                <ComboBox Grid.Column="11" SelectedValue="{Binding Minute, Source={StaticResource dzReparaturBis}}" ItemsSource="{Binding VorgabeMinuten, Source={StaticResource dzArbeitszeitBis}}" ItemStringFormat="{}{0:D2}"/>
+                                <Label Content="bis" Grid.Column="4" />
+                                <DatePicker Grid.Column="5" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzReparaturBis}}" Height="Auto" Margin="3,2" />
+                                <Label Content=":" Grid.Column="6"/>
+                                <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzReparaturBis}}" />
 
-                                <Button Grid.Column="12" Click="btnAuswahlAktualisieren_Click" Tag="4">
+                                <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click" Tag="4">
                                     <StackPanel Orientation="Horizontal" >
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" />
                                         <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
