@@ -20,10 +20,8 @@
         <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
         <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}" />
-
         <CollectionViewSource x:Key="vsArbeitszeitTage" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeitTag}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsAnzeigeArbeitszeiten" Source="{Binding sArbeitszeitenNichtGeloescht, Source={StaticResource vsArbeitszeitTage}}"/>
-
+        
         <CollectionViewSource x:Key="vsAuswertungAuswertung" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
         <local:ArbeitszeitSummen x:Key="AuswertungKumulativ"/>
@@ -57,12 +55,12 @@
 
                     <Label Content="Auswahl vom"/>
                     <DatePicker Grid.Column="1" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzArbeitszeitVon}}" Margin="3,3,3,1"/>
-                    <Label Content="Zeit" Grid.Column="2" FontWeight="Normal" FontStyle="Italic"/>
+                    <Label Content=":" Grid.Column="2" FontWeight="Normal"/>
                     <TextBox Grid.Column="3" Text="{Binding AnzeigeZeit, Source={StaticResource dzArbeitszeitVon}}" Padding="2,2,0,0"/>
 
                     <Label Content="bis" Grid.Column="4" />
                     <DatePicker Grid.Column="5" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource dzArbeitszeitBis}}" Margin="3,2" />
-                    <Label Content="Zeit" Grid.Column="6" FontWeight="Normal" FontStyle="Italic"/>
+                    <Label Content=":" Grid.Column="6" FontWeight="Normal"/>
                     <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzArbeitszeitBis}}" Padding="0,2,0,0" TextAlignment="Center"/>
 
                     <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click">
@@ -89,10 +87,8 @@
 
                             <DataGridTextColumn Binding="{Binding AnzeigeAbmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAbmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
-
                             <DataGridTextColumn Binding="{Binding DauerGerundetAnzeige, Mode=OneWay}" Header="Arbeitszeit" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
-
-                            <DataGridCheckBoxColumn Binding="{Binding DatenAbgleich.Geloescht, Mode=OneWay}" Header="Geloescht" Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridCheckBoxColumn Binding="{Binding AnzeigeGeloescht, Mode=OneWay}" Header="Geloescht" Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
 
                             <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -249,7 +245,7 @@
                             <DataTemplate>
                                 <Border BorderThickness="0,0,0,1" Margin="0,0,0,5" BorderBrush="Gray">
                                     <Grid>
-                                        <DataGrid Margin="30,3,0,3" HorizontalAlignment="Left" Width="400" BorderThickness="0" HeadersVisibility="None"  AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding sArbeitszeiten}" RowDetailsVisibilityMode="VisibleWhenSelected" AlternatingRowBackground="White">
+                                        <DataGrid Margin="30,3,0,3" HorizontalAlignment="Left" Width="400" BorderThickness="0" HeadersVisibility="None"  AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding sArbeitszeitenNichtGeloescht}" RowDetailsVisibilityMode="VisibleWhenSelected" AlternatingRowBackground="White">
                                             <DataGrid.CellStyle>
                                                 <Style TargetType="DataGridCell">
                                                     <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -631,12 +627,6 @@
                                 <TextBlock Text=" Exportieren" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-
-
-
-
-
-
                     </Grid>
 
                     <Grid Grid.Row="5" Grid.Column="3">

@@ -254,7 +254,6 @@ namespace JgMaschineData
       }
     }
 
-
     public bool AnmeldungIstLeer { get { return this.Anmeldung == null; } }
     public bool AbmeldungIstLeer { get { return this.Abmeldung == null; } }
 
@@ -265,6 +264,19 @@ namespace JgMaschineData
     public Nullable<DateTime> AnmeldungGerundet { get { return this.AnmeldungGerundetWert ?? this.Anmeldung; } }
     public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value : TimeSpan.Zero; } }
     public string DauerGerundetAnzeige { get { return (DauerGerundet == TimeSpan.Zero) ? "-" : ((int)DauerGerundet.TotalHours).ToString("D2") + ":" + DauerGerundet.Minutes.ToString("D2"); } }
+
+    public bool AnzeigeGeloescht
+    {
+      get { return this.DatenAbgleich.Geloescht; }
+      set
+      {
+        if (value != DatenAbgleich.Geloescht)
+        {
+          DatenAbgleich.Geloescht = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
   }
 
   public partial class tabArbeitszeitAuswertung : INotifyPropertyChanged

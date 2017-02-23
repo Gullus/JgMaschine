@@ -48,8 +48,9 @@ namespace JgMaschineGlobalZeit
         var ergBox = MessageBox.Show(msg, "Löschabfrage", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);  
         if (ergBox == MessageBoxResult.Yes)
         {
-          _ListeArbeitszeitAuswahl.AlsGeloeschtKennzeichnen(az);
-          _ListeArbeitszeitAuswahl.Remove(az);
+          az.AnzeigeGeloescht = true;
+          DbSichern.AbgleichEintragen(az.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          _ListeArbeitszeitAuswahl.Db.SaveChanges();
         }
       },
       (sen, erg) =>
