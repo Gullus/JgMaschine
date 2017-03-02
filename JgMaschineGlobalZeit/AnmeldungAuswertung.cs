@@ -402,7 +402,7 @@ namespace JgMaschineGlobalZeit
       {
         foreach (var auswTag in ListeTage)
         {
-          if ((!auswTag.IstManuellGeaendert) && (auswTag.sArbeitszeiten.Count > 0))
+          if (!auswTag.IstManuellGeaendert)
           {
             var geandert = false;
 

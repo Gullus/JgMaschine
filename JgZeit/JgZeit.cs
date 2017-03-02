@@ -17,7 +17,7 @@ namespace JgZeitHelper
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public enum Monate : byte { Januar = 1, Februar, März, April, Mai, Juni, Juli, August, Septemper, Oktober, November, Dezember }
+    public enum Monate : byte { Januar = 1, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember }
 
     public enum KontrolleZeiten : byte { Keine, Positiv24 }
 

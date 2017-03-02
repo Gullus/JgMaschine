@@ -106,6 +106,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Fenster\FormNeueArbeitszeit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Fenster\FormReportName.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -135,6 +139,9 @@
     <Compile Include="ExtenionsMethods.cs" />
     <Compile Include="Fenster\FormArbeitszeitRunden.xaml.cs">
       <DependentUpon>FormArbeitszeitRunden.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Fenster\FormNeueArbeitszeit.xaml.cs">
+      <DependentUpon>FormNeueArbeitszeit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Fenster\FormReportName.xaml.cs">
       <DependentUpon>FormReportName.xaml</DependentUpon>

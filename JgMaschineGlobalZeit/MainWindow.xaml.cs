@@ -462,5 +462,26 @@ namespace JgMaschineGlobalZeit
           aktDs.NachtschichtAnzeige = JgZeit.ZeitInString(aktDs.NachtschichtBerechnet);
       }
     }
+
+    private void NeueArbeitszeit_Click(object sender, RoutedEventArgs e)
+    {
+      var standorte = _Erstellung.Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
+      var form = new JgMaschineSetup.Fenster.FormNeueArbeitszeit(standorte, _Erstellung.ListeBediener);
+      if (form.ShowDialog() ?? false)
+      {
+        var az = new tabArbeitszeit()
+        {
+          Id = Guid.NewGuid(),
+          fStandort = form.Standort.Id,
+          fBediener = form.Bediener.Id,
+          Anmeldung = form.DatumVon,
+         ManuelleAnmeldung = true,
+         Abmeldung = form.DatumBis,
+          ManuelleAbmeldung = true,
+        };
+        _ListeArbeitszeitAuswahl.Add(az);
+
+      }
+    }
   }
 }
