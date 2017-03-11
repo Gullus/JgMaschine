@@ -13,9 +13,9 @@ namespace JgMaschineSetup
 {
   public partial class MainWindow : Window
   {
-    private JgEntityView<tabMaschine> _ListeMaschinen;
-    private JgEntityView<tabStandort> _ListeStandorte;
-    private JgEntityView<tabBediener> _ListeBediener;
+    private JgEntityTab<tabMaschine> _ListeMaschinen;
+    private JgEntityTab<tabStandort> _ListeStandorte;
+    private JgEntityTab<tabBediener> _ListeBediener;
 
     public MainWindow()
     {
@@ -24,39 +24,39 @@ namespace JgMaschineSetup
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      _ListeStandorte = new JgEntityView<tabStandort>()
+      _ListeStandorte = new JgEntityTab<tabStandort>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
         Tabellen = new DataGrid[] { dgStandort },
-        DatenErstellen = (db) =>
+        OnDatenLaden = (d, p) =>
         {
-          return db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
+          return d.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
         }
       };
-      _ListeStandorte.DatenAktualisieren();
+      _ListeStandorte.DatenLaden();
       tbDatenbankverbinudng.Text = _ListeStandorte.Db.Database.Connection.ConnectionString;
 
-     _ListeMaschinen = new JgEntityView<tabMaschine>()
+     _ListeMaschinen = new JgEntityTab<tabMaschine>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsMaschinen"),
         Tabellen = new DataGrid[] { dgMaschine },
-        DatenErstellen = (db) =>
+        OnDatenLaden = (d, p) =>
         {
-          return db.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll).OrderBy(o => o.MaschinenName).ToList();
+          return d.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll).OrderBy(o => o.MaschinenName).ToList();
         }
       };
-      _ListeMaschinen.DatenAktualisieren();
+      _ListeMaschinen.DatenLaden();
 
-      _ListeBediener = new JgEntityView<tabBediener>()
+      _ListeBediener = new JgEntityTab<tabBediener>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsBediener"),
         Tabellen = new DataGrid[] { dgBediener },
-        DatenErstellen = (db) =>
+        OnDatenLaden = (d, p) =>
         {
-          return db.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToList();
+          return d.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToList();
         }
       };
-      _ListeBediener.DatenAktualisieren();
+      _ListeBediener.DatenLaden();
 
       cbStatusBediener.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusBediener));
       InitCommands();
@@ -82,10 +82,7 @@ namespace JgMaschineSetup
       CommandBindings.Add(new CommandBinding(MyCommands.BedienerBeabeiten, (sen, erg) =>
       {
         var form = new Fenster.FormBediener(_ListeBediener.Current, _ListeStandorte.Daten);
-        if (form.ShowDialog() ?? false)
-          _ListeBediener.DsSave();
-        else
-          _ListeBediener.Reload();
+        _ListeBediener.ErgebnissFormular(form.ShowDialog(), false, form.Bediener);
       }, (sen, erg) =>
       {
         erg.CanExecute = _ListeBediener.Current != null;
@@ -94,10 +91,7 @@ namespace JgMaschineSetup
       CommandBindings.Add(new CommandBinding(MyCommands.StandortBearbeiten, (sen, erg) =>
       {
         var form = new Fenster.FormStandort(_ListeStandorte.Current);
-        if (form.ShowDialog() ?? false)
-          _ListeStandorte.DsSave();
-        else
-          _ListeStandorte.Reload();
+        _ListeStandorte.ErgebnissFormular(form.ShowDialog(), false, form.Standort);
       }
       , (sen, erg) =>
       {
@@ -111,10 +105,7 @@ namespace JgMaschineSetup
           prot = ProtokollErstellen(_ListeMaschinen.Current);
         var form = new FormProtokollOptionen(_ListeMaschinen.Current.eProtokoll);
         if (form.ShowDialog() ?? false)
-        {
-          DbSichern.AbgleichEintragen(form.Protokoll.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
           _ListeMaschinen.Db.SaveChanges();
-        }
         else
           _ListeMaschinen.Db.Entry(form.Protokoll);
       }, (sen, erg) =>
@@ -126,8 +117,7 @@ namespace JgMaschineSetup
     private void ButtonNeuerStandort_Click(object sender, RoutedEventArgs e)
     {
       var form = new JgMaschineSetup.Fenster.FormStandort(null);
-      if (form.ShowDialog() ?? false)
-        _ListeStandorte.Add(form.Standort);
+      _ListeStandorte.ErgebnissFormular(form.ShowDialog(), true, form.Standort);
     }
 
     private void ButtonNeuerBediener_Click(object sender, RoutedEventArgs e)
@@ -136,8 +126,7 @@ namespace JgMaschineSetup
         return;
 
       var form = new JgMaschineSetup.Fenster.FormBediener(null, _ListeStandorte.Daten);
-      if (form.ShowDialog() ?? false)
-        _ListeBediener.Add(form.Bediener);
+      _ListeBediener.ErgebnissFormular(form.ShowDialog(), true, form.Bediener);
     }
 
     private bool KontrolleStandorte()
@@ -161,7 +150,6 @@ namespace JgMaschineSetup
         LetzteZeile = 0,
         ProtokollText = "Protokoll erstellt",
       };
-      JgMaschineLib.DbSichern.AbgleichEintragen(prot.DatenAbgleich, EnumStatusDatenabgleich.Neu);
       _ListeMaschinen.Db.tabProtokollSet.Add(prot);
       return prot;
     }
@@ -183,9 +171,9 @@ namespace JgMaschineSetup
     {
       switch ((sender as Button).Tag.ToString())
       {
-        case "Maschine": _ListeMaschinen.DatenAktualisieren(); break;
-        case "Standort": _ListeStandorte.DatenAktualisieren(); break;
-        case "Bediener": _ListeBediener.DatenAktualisieren(); break;
+        case "Maschine": _ListeMaschinen.DatenNeuLaden(); break;
+        case "Standort": _ListeStandorte.DatenNeuLaden(); break;
+        case "Bediener": _ListeBediener.DatenNeuLaden(); break;
       }
     }
 
@@ -195,11 +183,15 @@ namespace JgMaschineSetup
       var erg = MessageBox.Show(msg, "Information", MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK);
       if (erg == MessageBoxResult.OK)
       {
-        foreach (var standort in _ListeStandorte.Daten)
+        using (var db = new JgModelContainer())
         {
-          standort.UpdateBedienerDatafox = true;
-          DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+          var sqlText = "UPDATE[dbo].[tabArbeitszeitTerminalSet] SET [UpdateTerminal] = 1";
+          var anz = db.Database.ExecuteSqlCommand(sqlText);
+
+          msg = $"{anz} Terminals werden aktualisiert.";
+          MessageBox.Show(msg, "Information", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
+
         _ListeStandorte.Db.SaveChanges();
       }
     }

@@ -8,7 +8,7 @@
     /// <param name="Optionen">Übertragungsoptionen</param>
     public static void DatafoxSchliessen(OptionenDatafox Optionen)
     {
-      DFComDLL.DFCComClose(Optionen.Datafox.ChannelId);
+      DFComDLL.DFCComClose(Optionen.Terminal.ChannelId);
     }
   }
 }

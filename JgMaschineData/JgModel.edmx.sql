@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/09/2017 15:23:25
+-- Date Created: 03/08/2017 15:06:16
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -86,6 +86,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitzzeitRunden]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabArbeitszeitRundenSet] DROP CONSTRAINT [FK_tabStandorttabArbeitzzeitRunden];
 GO
+IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitszeitTerminal]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabArbeitszeitTerminalSet] DROP CONSTRAINT [FK_tabStandorttabArbeitszeitTerminal];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -138,6 +141,9 @@ IF OBJECT_ID(N'[dbo].[tabPausenzeitSet]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[tabArbeitszeitRundenSet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabArbeitszeitRundenSet];
+GO
+IF OBJECT_ID(N'[dbo].[tabArbeitszeitTerminalSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[tabArbeitszeitTerminalSet];
 GO
 IF OBJECT_ID(N'[dbo].[tabBauteiltabBediener]', 'U') IS NOT NULL
     DROP TABLE [dbo].[tabBauteiltabBediener];
@@ -283,12 +289,11 @@ GO
 CREATE TABLE [dbo].[tabStandortSet] (
     [Id] uniqueidentifier  NOT NULL,
     [Bezeichnung] nvarchar(120)  NOT NULL,
+    [Bemerkung] nvarchar(120)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
-    [DatenAbgleich_Geloescht] bit  NOT NULL,
-    [Bemerkung] nvarchar(120)  NULL,
-    [UpdateBedienerDatafox] bit  NOT NULL
+    [DatenAbgleich_Geloescht] bit  NOT NULL
 );
 GO
 
@@ -428,7 +433,23 @@ CREATE TABLE [dbo].[tabArbeitszeitRundenSet] (
     [Monat] tinyint  NOT NULL,
     [ZeitVon] time  NOT NULL,
     [ZeitBis] time  NOT NULL,
-    [RundenAufZeit] time  NOT NULL,
+    [RundenArbeitszeitBeginn] time  NOT NULL,
+    [RundenArbeitszeitLaenge] time  NULL,
+    [DatenAbgleich_Datum] datetime  NOT NULL,
+    [DatenAbgleich_Status] tinyint  NOT NULL,
+    [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
+    [DatenAbgleich_Geloescht] bit  NOT NULL,
+    [fStandort] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'tabArbeitszeitTerminalSet'
+CREATE TABLE [dbo].[tabArbeitszeitTerminalSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Bezeichnung] nvarchar(120)  NOT NULL,
+    [IpNummer] nvarchar(30)  NOT NULL,
+    [PortNummer] int  NOT NULL,
+    [UpdateTerminal] bit  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
@@ -541,6 +562,12 @@ GO
 -- Creating primary key on [Id] in table 'tabArbeitszeitRundenSet'
 ALTER TABLE [dbo].[tabArbeitszeitRundenSet]
 ADD CONSTRAINT [PK_tabArbeitszeitRundenSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'tabArbeitszeitTerminalSet'
+ALTER TABLE [dbo].[tabArbeitszeitTerminalSet]
+ADD CONSTRAINT [PK_tabArbeitszeitTerminalSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -884,6 +911,21 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_tabStandorttabArbeitzzeitRunden'
 CREATE INDEX [IX_FK_tabStandorttabArbeitzzeitRunden]
 ON [dbo].[tabArbeitszeitRundenSet]
+    ([fStandort]);
+GO
+
+-- Creating foreign key on [fStandort] in table 'tabArbeitszeitTerminalSet'
+ALTER TABLE [dbo].[tabArbeitszeitTerminalSet]
+ADD CONSTRAINT [FK_tabStandorttabArbeitszeitTerminal]
+    FOREIGN KEY ([fStandort])
+    REFERENCES [dbo].[tabStandortSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabStandorttabArbeitszeitTerminal'
+CREATE INDEX [IX_FK_tabStandorttabArbeitszeitTerminal]
+ON [dbo].[tabArbeitszeitTerminalSet]
     ([fStandort]);
 GO
 

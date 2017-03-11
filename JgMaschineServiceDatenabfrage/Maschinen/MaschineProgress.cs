@@ -7,10 +7,9 @@ namespace JgMaschineServiceDatenabfrage.Maschinen
 {
   internal class MaschineProgress : MaschinenStamm
   {
-    public MaschineProgress(JgModelContainer Db, Proto Protokoll, string PfadStart)
+    public MaschineProgress(JgModelContainer Db, string PfadStart)
     {
       _Db = Db;
-      _Protokoll = Protokoll;
       _StartPfad = PfadStart;
     }
 

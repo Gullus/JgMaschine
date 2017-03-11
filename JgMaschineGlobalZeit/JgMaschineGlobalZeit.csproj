@@ -118,6 +118,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Fenster\FormTerminal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Fenster\FormUeberstundenAuszahlen.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -148,6 +152,9 @@
     </Compile>
     <Compile Include="Fenster\FormOptionen.xaml.cs">
       <DependentUpon>FormOptionen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Fenster\FormTerminal.xaml.cs">
+      <DependentUpon>FormTerminal.xaml</DependentUpon>
     </Compile>
     <Compile Include="Fenster\FormUeberstundenAuszahlen.xaml.cs">
       <DependentUpon>FormUeberstundenAuszahlen.xaml</DependentUpon>
@@ -202,7 +209,6 @@
     <None Include="Properties\DataSources\JgMaschineData.tabSollStunden.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabStandort.datasource" />
     <None Include="Properties\DataSources\JgMaschineData.tabStandortMetaData.datasource" />
-    <None Include="Properties\DataSources\JgMaschineData.ZeitHelper.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

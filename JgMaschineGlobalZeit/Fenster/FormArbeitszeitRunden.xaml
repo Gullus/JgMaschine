@@ -7,8 +7,8 @@
         xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
         xmlns:Sytem="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d" Closed="Window_Closed"
-        Title="FormArbeitszeitRunden" Height="261.429" Width="382.857"
-        FocusManager.FocusedElement="{Binding ElementName=tbJahr}">
+        Title="Beginn und Arbeitszeit Runden" Height="337.551" Width="379.781"
+        FocusManager.FocusedElement="{Binding ElementName=tbJahr}" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
     <Grid x:Name="gridRunden" Margin="8" DataContext="{x:Type JgMaschineData:tabArbeitszeitRunden}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -16,44 +16,49 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Jahr" />
-        <TextBox x:Name="tbJahr" Grid.Column="1" IsReadOnly="True" Text="{Binding Jahr}"/>
+        <TextBlock Text="Eintragen von Zeiten zum Runden auf einen Arbeitsbeginn und die Länge einer Arbeitszeit in einem festgelegten Zeitraum." Margin="10" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+        <Label Content="Jahr" Grid.Row="1" />
+        <TextBox x:Name="tbJahr" Grid.Column="1" IsReadOnly="True" Text="{Binding Jahr}" Grid.Row="1"/>
 
-        <Label Content="Niederlassung" Grid.Row="1" />
-        <ComboBox x:Name="cmbNiederlassung" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" DisplayMemberPath="Bezeichnung" SelectedValue="{Binding eStandort}" />
+        <Label Content="Niederlassung" Grid.Row="2" />
+        <ComboBox x:Name="cmbNiederlassung" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" DisplayMemberPath="Bezeichnung" SelectedValue="{Binding eStandort}" />
 
-        <Label Content="für Monat" Grid.Row="2"/>
-        <ComboBox x:Name="cmbMonat" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" SelectedValue="{Binding MonatAnzeige}"/>
+        <Label Content="für Monat" Grid.Row="3"/>
+        <ComboBox x:Name="cmbMonat" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" SelectedValue="{Binding MonatAnzeige}"/>
 
-        <Label Content="Zeit von" Grid.Row="3" />
-        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding AnzeigeZeitVon}"/>
+        <Label Content="Zeit von" Grid.Row="4" />
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding AnzeigeZeitVon}"/>
 
-        <Label Content="Zeit bis" Grid.Row="4" />
-        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding AnzeigeZeitBis}" />
+        <Label Content="Zeit bis" Grid.Row="5" />
+        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding AnzeigeZeitBis}" />
 
-        <Label Content="aufrunden auf Zeit" Grid.Row="5" />
-        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding AnzeigeRundenAufZeit}"/>
+        <Label Content="Beginn Arbeitszeit" Grid.Row="6" />
+        <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding RundenAufZeit}"/>
 
-        <Button Grid.Column="1" Grid.Row="7" IsCancel="True" Margin="5">
+        <Label Content="Länge Arbeitszeit" Grid.Row="7" />
+        <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding RundenAufZeit}"/>
+
+        <Button Grid.Column="1" Grid.Row="9" IsCancel="True" Margin="5">
             <StackPanel Orientation="Horizontal">
                 <Image Source="..\Bilder\JgCancel.ico" Margin="5"/>
                 <TextBlock Text=" Abbrechen" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
-        <Button Click="btnOk_Click" Grid.Column="2" Grid.Row="7" IsDefault="True" Margin="5">
+        <Button Click="btnOk_Click" Grid.Column="2" Grid.Row="9" IsDefault="True" Margin="5">
             <StackPanel Orientation="Horizontal">
                 <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
-                <TextBlock Text=" Ok" VerticalAlignment="Center"/>
+                <TextBlock Text=" Eintragen" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
 

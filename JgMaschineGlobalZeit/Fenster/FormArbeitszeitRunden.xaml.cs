@@ -29,7 +29,7 @@ namespace JgMaschineGlobalZeit.Fenster
           Jahr = _Auswertung.Jahr,
           ZeitVon = (WertBearbeiten != null) ? WertBearbeiten.ZeitVon : new TimeSpan(5, 30, 0),
           ZeitBis = (WertBearbeiten != null) ? WertBearbeiten.ZeitBis : new TimeSpan(6, 0, 0),
-          RundenAufZeit = (WertBearbeiten != null) ? WertBearbeiten.RundenAufZeit : new TimeSpan(6, 0, 0),
+          RundenArbeitszeitBeginn = (WertBearbeiten != null) ? WertBearbeiten.RundenArbeitszeitBeginn : new TimeSpan(6, 0, 0),
 
           Monat = (WertBearbeiten != null) ? (byte)WertBearbeiten.Monat : (byte)1,
           eStandort = WertBearbeiten?.eStandort,
@@ -47,7 +47,6 @@ namespace JgMaschineGlobalZeit.Fenster
       if (_Erstellen)
       {
         runden.Id = Guid.NewGuid();
-        DbSichern.AbgleichEintragen(runden.DatenAbgleich, EnumStatusDatenabgleich.Neu);
 
         _Auswertung.Db.tabArbeitszeitRundenSet.Add(runden);
         _Auswertung.ListeRundenJahr.Add(runden);

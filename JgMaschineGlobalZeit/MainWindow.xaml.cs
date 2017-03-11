@@ -21,16 +21,14 @@ namespace JgMaschineGlobalZeit
 {
   public partial class MainWindow : Window
   {
-    private JgEntityView<tabArbeitszeit> _ListeArbeitszeitAuswahl;
+    private JgEntityTab<tabArbeitszeit> _ListeArbeitszeitenAuswahl;
     private JgZeit _DzArbeitszeitVon { get { return (JgZeit)FindResource("dzArbeitszeitVon"); } }
     private JgZeit _DzArbeitszeitBis { get { return (JgZeit)FindResource("dzArbeitszeitBis"); } }
 
-    private CollectionViewSource _VsAuswertungArbeitszeit { get { return (CollectionViewSource)FindResource("vsAuswertungArbeitszeit"); } }
-    private CollectionViewSource _VsAuswertungAuswertung { get { return (CollectionViewSource)FindResource("vsAuswertungAuswertung"); } }
-
+    private JgEntityTab<tabAuswertung> _ListeReporteArbeitszeiten;
+    private JgEntityTab<tabAuswertung> _ListeReporteAuswertung;
+    private tabAuswertung _AktuellerReport = null;
     private FastReport.Report _Report;
-    private tabAuswertung _AktAuswertung = null;
-    private JgEntityView<tabAuswertung> _ListeAuswertung;
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
     private AnmeldungAuswertung _Erstellung;
@@ -43,70 +41,91 @@ namespace JgMaschineGlobalZeit
 
       CommandBindings.Add(new CommandBinding(MyCommands.ArbeitszeitLoeschen, (sen, erg) =>
       {
-        var az = _ListeArbeitszeitAuswahl.Current;
+        var az = _ListeArbeitszeitenAuswahl.Current;
         var msg = $"Arbeitszeit von {az.eBediener.Name} löschen ?";
-        var ergBox = MessageBox.Show(msg, "Löschabfrage", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);  
+        var ergBox = MessageBox.Show(msg, "Löschabfrage", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
         if (ergBox == MessageBoxResult.Yes)
         {
           az.AnzeigeGeloescht = true;
-          DbSichern.AbgleichEintragen(az.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-          _ListeArbeitszeitAuswahl.Db.SaveChanges();
+          _ListeArbeitszeitenAuswahl.DsSave();
         }
       },
       (sen, erg) =>
       {
-        erg.CanExecute = _ListeArbeitszeitAuswahl.Current?.DatenAbgleich.Geloescht == false;
+        erg.CanExecute = _ListeArbeitszeitenAuswahl.Current?.DatenAbgleich.Geloescht == false;
       }));
     }
 
-    private async void Window_Loaded(object sender, RoutedEventArgs e)
+    private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       var heute = DateTime.Now.Date;
       _DzArbeitszeitVon.AnzeigeDatumZeit = heute;
       _DzArbeitszeitBis.AnzeigeDatumZeit = new DateTime(heute.Year, heute.Month, heute.Day, 23, 59, 59);
 
-      _ListeArbeitszeitAuswahl = new JgEntityView<tabArbeitszeit>()
+      _ListeArbeitszeitenAuswahl = new JgEntityTab<tabArbeitszeit>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsArbeitszeitAuswahl"),
         Tabellen = new DataGrid[] { dgArbeitszeitAuswahl },
-        DatenErstellen = (dbIntern) =>
+        OnDatenLaden = (d, p) =>
         {
-          var tabZeiten = dbIntern.tabArbeitszeitSet.Where(w => (((w.Anmeldung >= _DzArbeitszeitVon.AnzeigeDatumZeit) && (w.Anmeldung <= _DzArbeitszeitBis.AnzeigeDatumZeit)) 
-            || ((w.Anmeldung == null) && (w.Abmeldung >= _DzArbeitszeitVon.AnzeigeDatumZeit) && (w.Abmeldung <= _DzArbeitszeitBis.AnzeigeDatumZeit))))
+          var datVom = (DateTime)p["DatumVon"];
+          var datBis = (DateTime)p["DatumBis"];
+
+          var tabZeiten = d.tabArbeitszeitSet.Where(w => (((w.Anmeldung >= datVom) && (w.Anmeldung <= datBis))
+            || ((w.Anmeldung == null) && (w.Abmeldung >= datVom) && (w.Abmeldung <= datBis))))
             .OrderBy(o => o.Anmeldung).ToList();
 
-          var listeGerundet = dbIntern.tabArbeitszeitRundenSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
-          foreach(var zeit in tabZeiten)
+          var listeGerundet = d.tabArbeitszeitRundenSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
+          foreach (var zeit in tabZeiten)
           {
             if (zeit.Anmeldung != null)
             {
               var zeitAnmeldung = new TimeSpan(zeit.Anmeldung.Value.Hour, zeit.Anmeldung.Value.Minute, 0);
               var wg = listeGerundet.FirstOrDefault(f => (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
               if (wg != null)
-                zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenAufZeit);
+                zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenArbeitszeitBeginn);
             }
           }
 
           return tabZeiten;
         }
       };
+      _ListeArbeitszeitenAuswahl.Parameter = new Dictionary<string, object>()
+      {
+        { "DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit },
+        { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
+      };
+      _ListeArbeitszeitenAuswahl.DatenLaden();
 
-      // Auswertung initialisieren ********************************
+      // Report initialisieren ********************************
 
-      _ListeAuswertung = new JgEntityView<tabAuswertung>();
-      _ListeAuswertung.Daten = await _ListeArbeitszeitAuswahl.Db.tabAuswertungSet.Where(w => ((w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) || (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)) && (!w.DatenAbgleich.Geloescht)).ToListAsync();
-      var vsArbeitszeit = (CollectionViewSource)FindResource("vsAuswertungArbeitszeit");
-      vsArbeitszeit.Source = _ListeAuswertung.Daten;
-      vsArbeitszeit.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Arbeitszeit;
+      _ListeReporteArbeitszeiten = new JgEntityTab<tabAuswertung>()
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsReporteArbeitszeit")
+      };
+      var ausw = _ListeReporteArbeitszeiten.Db.tabAuswertungSet
+        .Where(w => ((w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) || (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)) && (!w.DatenAbgleich.Geloescht))
+        .ToList();
+      _ListeReporteArbeitszeiten.Daten = ausw
+        .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit)
+        .OrderBy(o => o.AnzeigeReportname).ToList();
 
-      var vsAuswertung = (CollectionViewSource)FindResource("vsAuswertungAuswertung");
-      vsAuswertung.Source = _ListeAuswertung.Daten;
-      vsAuswertung.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung;
+      _ListeReporteAuswertung = new JgEntityTab<tabAuswertung>(_ListeReporteArbeitszeiten.Db)
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsReporteAuswertung")
+      };
+      _ListeReporteArbeitszeiten.Daten = ausw
+        .Where(w => w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)
+        .OrderBy(o => o.AnzeigeReportname).ToList();
+
+      // Auswerung intitialisieren
 
       _Erstellung = new AnmeldungAuswertung(new JgModelContainer(), cbJahr, cbMonat,
         (CollectionViewSource)FindResource("vsBediener"),
         (ArbeitszeitSummen)FindResource("AuswertungKumulativ"), (ArbeitszeitSummen)FindResource("AuswertungGesamt"),
         (CollectionViewSource)FindResource("vsArbeitszeitTage"));
+
+      // Report für Auswertung erstellen
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -116,12 +135,14 @@ namespace JgMaschineGlobalZeit
         try
         {
           repEvent.Report.Save(memStr);
-          _ListeAuswertung.Db.tabAuswertungSet.Attach(_AktAuswertung);
-          _AktAuswertung.Report = memStr.ToArray();
-          _AktAuswertung.GeaendertDatum = DateTime.Now;
-          _AktAuswertung.GeaendertName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          DbSichern.AbgleichEintragen(_AktAuswertung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-          _ListeAuswertung.Db.SaveChanges();
+          _AktuellerReport.Report = memStr.ToArray();
+          _AktuellerReport.GeaendertDatum = DateTime.Now;
+          _AktuellerReport.GeaendertName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+          _ListeReporteArbeitszeiten.DsSave(_AktuellerReport);
+          if (_AktuellerReport.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)
+            _ListeReporteAuswertung.Refresh();
+          else
+            _ListeReporteArbeitszeiten.Refresh();
         }
         catch (Exception f)
         {
@@ -136,33 +157,34 @@ namespace JgMaschineGlobalZeit
 
     private void ArbeitszeitBearbeiten_Click(object sender, RoutedEventArgs e)
     {
-      var msg = $"Korrektur der Arbeitszeit für den Mitarbeiter {_ListeArbeitszeitAuswahl.Current.eBediener.Name}.";
-      var anm = _ListeArbeitszeitAuswahl.Current.Anmeldung ?? DateTime.Now;
-      var abm = _ListeArbeitszeitAuswahl.Current.Abmeldung ?? DateTime.Now;
+      var az = _ListeArbeitszeitenAuswahl.Current;
+      var msg = $"Korrektur der Arbeitszeit für den Mitarbeiter {az.eBediener.Name}.";
+      var anm = az.Anmeldung ?? DateTime.Now;
+      var abm = az.Abmeldung ?? DateTime.Now;
 
       if (JgZeit.AbfrageZeit(msg, " Zeitabfrage !", ref anm, ref abm))
       {
-        if (anm != _ListeArbeitszeitAuswahl.Current.Anmeldung)
+        if (anm != az.Anmeldung)
         {
-          _ListeArbeitszeitAuswahl.Current.AnmeldungGerundetWert = null;
+          az.AnmeldungGerundetWert = null;
           if (anm != null)
           {
             var zeit = JgZeit.DatumInZeit(anm);
             var azBegin = _Erstellung.Db.tabArbeitszeitRundenSet.FirstOrDefault(w =>
-              (w.fStandort == _ListeArbeitszeitAuswahl.Current.fStandort)
+              (w.fStandort == az.fStandort)
               && (zeit >= w.ZeitVon) && (zeit <= w.ZeitBis)
               && (w.Jahr == anm.Year) && (w.Monat == anm.Month) && (!w.DatenAbgleich.Geloescht));
             if (azBegin != null)
-              _ListeArbeitszeitAuswahl.Current.AnmeldungGerundetWert = anm.Date + azBegin.RundenAufZeit;
+              az.AnmeldungGerundetWert = anm.Date + azBegin.RundenArbeitszeitBeginn;
           }
 
-          _ListeArbeitszeitAuswahl.Current.AnzeigeAnmeldung = anm;
-          _ListeArbeitszeitAuswahl.DsSave();
+          az.AnzeigeAnmeldung = anm;
+          _ListeArbeitszeitenAuswahl.DsSave();
         }
-        if (abm != _ListeArbeitszeitAuswahl.Current.Abmeldung)
+        if (abm != az.Abmeldung)
         {
-          _ListeArbeitszeitAuswahl.Current.AnzeigeAbmeldung = abm;
-          _ListeArbeitszeitAuswahl.DsSave();
+          az.AnzeigeAbmeldung = abm;
+          _ListeArbeitszeitenAuswahl.DsSave();
         }
       }
     }
@@ -184,11 +206,11 @@ namespace JgMaschineGlobalZeit
       {
         switch (auswahl)
         {
-          case EnumFilterAuswertung.Arbeitszeit: _AktAuswertung = (tabAuswertung)_VsAuswertungArbeitszeit.View.CurrentItem; break;
-          case EnumFilterAuswertung.ArbeitszeitAuswertung: _AktAuswertung = (tabAuswertung)_VsAuswertungAuswertung.View.CurrentItem; break;
+          case EnumFilterAuswertung.Arbeitszeit: _AktuellerReport = _ListeReporteArbeitszeiten.Current; break;
+          case EnumFilterAuswertung.ArbeitszeitAuswertung: _AktuellerReport = _ListeReporteAuswertung.Current; break;
         }
 
-        if (_AktAuswertung == null)
+        if (_AktuellerReport == null)
         {
           MessageBox.Show("Es wurde kein Report ausgewählt.", "Fehler !", MessageBoxButton.OK, MessageBoxImage.Information);
           return;
@@ -197,24 +219,23 @@ namespace JgMaschineGlobalZeit
         switch (vorgang)
         {
           case 0: // Reportname ändern
-            var formNeu = new Fenster.FormReportName(_AktAuswertung.ReportName);
+            var formNeu = new Fenster.FormReportName(_AktuellerReport.ReportName);
             if (formNeu.ShowDialog() ?? false)
             {
-              _ListeAuswertung.Db.tabAuswertungSet.Attach(_AktAuswertung);
-              _AktAuswertung.AnzeigeReportname = formNeu.ReportName;
-              _ListeAuswertung.Db.SaveChanges();
+              _AktuellerReport.AnzeigeReportname = formNeu.ReportName;
+              _ListeReporteArbeitszeiten.DsSave();
             }
             return;
           case 5: // Exportieren
             SaveFileDialog dia = new SaveFileDialog();
-            dia.FileName = _AktAuswertung.ReportName;
+            dia.FileName = _AktuellerReport.ReportName;
             dia.Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*";
             dia.FilterIndex = 1;
             if (dia.ShowDialog() ?? false)
             {
               _Report.Save(dia.FileName);
               MemoryStream mem;
-              mem = new MemoryStream(_AktAuswertung.Report);
+              mem = new MemoryStream(_AktuellerReport.Report);
               using (Stream f = File.Create(dia.FileName))
               {
                 mem.CopyTo(f);
@@ -222,25 +243,25 @@ namespace JgMaschineGlobalZeit
             }
             return;
           case 6:  // Report löschen
-            var mb = MessageBox.Show($"Report {_AktAuswertung.ReportName} löschen ?", "Löschabfrage", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None);
+            var mb = MessageBox.Show($"Report {_AktuellerReport.ReportName} löschen ?", "Löschabfrage", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None);
             if (mb == MessageBoxResult.Yes)
             {
-              _ListeAuswertung.AlsGeloeschtKennzeichnen(_AktAuswertung);
+              _AktuellerReport.DatenAbgleich.Geloescht = true;
               switch (auswahl)
               {
-                case EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.Refresh(); break;
-                case EnumFilterAuswertung.Anmeldung: _VsAuswertungAuswertung.View.Refresh(); break;
+                case EnumFilterAuswertung.Arbeitszeit: _ListeReporteArbeitszeiten.Remove(_AktuellerReport); break;
+                case EnumFilterAuswertung.ArbeitszeitAuswertung: _ListeReporteAuswertung.Remove(_AktuellerReport); break;
               }
             }
             return;
         }
 
         _Report.Clear();
-        if (_AktAuswertung.Report == null)
+        if (_AktuellerReport.Report == null)
           vorgang = 3;
         else
         {
-          var mem = new MemoryStream(_AktAuswertung.Report);
+          var mem = new MemoryStream(_AktuellerReport.Report);
           _Report.Load(mem);
         }
       }
@@ -248,9 +269,9 @@ namespace JgMaschineGlobalZeit
       switch (auswahl)
       {
         case EnumFilterAuswertung.Arbeitszeit:
-          var bediener = _ListeArbeitszeitAuswahl.Daten.Select(s => new { Id = s.fBediener, Name = s.eBediener.NachName + ", " + s.eBediener.VorName }).Distinct().ToList();
+          var bediener = _ListeArbeitszeitenAuswahl.Daten.Select(s => new { Id = s.fBediener, Name = s.eBediener.NachName + ", " + s.eBediener.VorName }).Distinct().ToList();
           _Report.RegisterData(bediener, "Bediener");
-          _Report.RegisterData(_ListeArbeitszeitAuswahl.Daten, "Daten");
+          _Report.RegisterData(_ListeArbeitszeitenAuswahl.Daten, "Daten");
 
           _Report.SetParameterValue("Zeitraum.DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit);
           _Report.SetParameterValue("Zeitraum.DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit);
@@ -259,7 +280,7 @@ namespace JgMaschineGlobalZeit
         case EnumFilterAuswertung.ArbeitszeitAuswertung:
           var aktStandort = _Erstellung.AktuellerBediener.eStandort;
 
-          var bedienerStandort = _Erstellung.ListeBediener.Where(w => w.fStandort == aktStandort.Id).ToList();
+          var bedienerStandort = _Erstellung.ListeBediener.Daten.Where(w => w.fStandort == aktStandort.Id).ToList();
           var listeAuswertung = new List<ArbeitszeitBediener>();
 
           foreach (var bedAusw in bedienerStandort)
@@ -270,7 +291,7 @@ namespace JgMaschineGlobalZeit
               AuswertungGesamt = new ArbeitszeitSummen(),
               ListeTage = new ObservableCollection<tabArbeitszeitTag>()
             };
-            ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen);
+            ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten);
             listeAuswertung.Add(ds);
           }
 
@@ -293,7 +314,7 @@ namespace JgMaschineGlobalZeit
         repName = formNeu.ReportName;
 
         string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-        _AktAuswertung = new tabAuswertung()
+        _AktuellerReport = new tabAuswertung()
         {
           Id = Guid.NewGuid(),
           FilterAuswertung = auswahl,
@@ -301,14 +322,13 @@ namespace JgMaschineGlobalZeit
           ErstelltDatum = DateTime.Now,
           ErstelltName = username,
           GeaendertDatum = DateTime.Now,
-          GeaendertName = username
+          GeaendertName = username,
         };
-        _ListeAuswertung.Add(_AktAuswertung);
 
         switch (auswahl)
         {
-          case EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.MoveCurrentTo(_AktAuswertung); break;
-          case EnumFilterAuswertung.Anmeldung: _VsAuswertungAuswertung.View.MoveCurrentTo(_AktAuswertung); break;
+          case EnumFilterAuswertung.Arbeitszeit: _ListeReporteArbeitszeiten.Add(_AktuellerReport); break;
+          case EnumFilterAuswertung.Anmeldung: _ListeReporteAuswertung.Add(_AktuellerReport); break;
         }
 
         _Report.Design();
@@ -325,7 +345,12 @@ namespace JgMaschineGlobalZeit
 
     private void btnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
     {
-      _ListeArbeitszeitAuswahl.DatenAktualisieren();
+      _ListeArbeitszeitenAuswahl.Parameter = new Dictionary<string, object>()
+      {
+        { "DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit },
+        { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
+      };
+      _ListeArbeitszeitenAuswahl.DatenNeuLaden();
     }
 
     private void btnOptionen_Click(object sender, RoutedEventArgs e)
@@ -355,7 +380,6 @@ namespace JgMaschineGlobalZeit
       if (bediener?.eArbeitszeitHelper != null)
       {
         bediener.eArbeitszeitHelper.StatusAnzeige = (EnumStatusArbeitszeitAuswertung)Convert.ToByte((sender as Button).Tag);
-        DbSichern.AbgleichEintragen(bediener.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         _Erstellung.Db.SaveChanges();
       }
     }
@@ -376,10 +400,10 @@ namespace JgMaschineGlobalZeit
 
       if (fo.ShowDialog() ?? false)
       {
-        var daten = _Erstellung.ListeBediener.Where(w => (w.eArbeitszeitHelper != null) && (w.eArbeitszeitHelper.Status == EnumStatusArbeitszeitAuswertung.Fertig)).ToList();
+        var daten = _Erstellung.ListeBediener.Daten.Where(w => (w.eArbeitszeitHelper != null) && (w.eArbeitszeitHelper.Status == EnumStatusArbeitszeitAuswertung.Fertig)).ToList();
 
 
-        var anzahlFeiertage =  _Erstellung.ListeFeiertageMonat.Count();
+        var anzahlFeiertage = _Erstellung.ListeFeiertageMonat.Count();
         var en = new CultureInfo("en-US", false);
 
         XDocument xDoc = new XDocument(
@@ -397,7 +421,7 @@ namespace JgMaschineGlobalZeit
             new XElement("Standort", z.eStandort.Bezeichnung),
             new XElement("Zahltag", z.AuszahlungGehalt),
             new XElement("Urlaubstage", z.Urlaubstage),
-            
+
             new XElement("SollStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden).TotalHours.ToString("N1", en)),
 
             new XElement("Normalstunden", (JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden)
@@ -408,6 +432,8 @@ namespace JgMaschineGlobalZeit
             new XElement("Urlaub", z.eArbeitszeitHelper.Urlaub * 8),
             new XElement("Krank", z.eArbeitszeitHelper.Krank * 8),
             new XElement("Feiertage", anzahlFeiertage * 8),
+
+            // Formatierung als Dezimalzahl mit einer Kommastelle mit Frau Glatter besprochen
 
             new XElement("NachtschichtZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.Nachtschichten).TotalHours.ToString("N1", en)),
             new XElement("NachtschichtZuschlagGerundet", z.eArbeitszeitHelper.NachtschichtGerundet.ToString("N1", en)),
@@ -438,10 +464,8 @@ namespace JgMaschineGlobalZeit
         }
 
         foreach (var bed in daten)
-        {
           bed.eArbeitszeitHelper.StatusAnzeige = EnumStatusArbeitszeitAuswertung.Erledigt;
-          DbSichern.AbgleichEintragen(bed.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-        }
+
         _Erstellung.Db.SaveChanges();
 
         MessageBox.Show("Datei gespeichert !", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -466,7 +490,7 @@ namespace JgMaschineGlobalZeit
     private void NeueArbeitszeit_Click(object sender, RoutedEventArgs e)
     {
       var standorte = _Erstellung.Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
-      var form = new JgMaschineSetup.Fenster.FormNeueArbeitszeit(standorte, _Erstellung.ListeBediener);
+      var form = new JgMaschineSetup.Fenster.FormNeueArbeitszeit(standorte, _Erstellung.ListeBediener.Daten);
       if (form.ShowDialog() ?? false)
       {
         var az = new tabArbeitszeit()
@@ -475,12 +499,11 @@ namespace JgMaschineGlobalZeit
           fStandort = form.Standort.Id,
           fBediener = form.Bediener.Id,
           Anmeldung = form.DatumVon,
-         ManuelleAnmeldung = true,
-         Abmeldung = form.DatumBis,
+          ManuelleAnmeldung = true,
+          Abmeldung = form.DatumBis,
           ManuelleAbmeldung = true,
         };
-        _ListeArbeitszeitAuswahl.Add(az);
-
+        _ListeArbeitszeitenAuswahl.Add(az);
       }
     }
   }

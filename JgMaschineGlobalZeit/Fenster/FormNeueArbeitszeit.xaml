@@ -7,7 +7,7 @@
         xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
         xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" x:Class="JgMaschineSetup.Fenster.FormNeueArbeitszeit"
         mc:Ignorable="d"
-        Title="FormNeueArbeitszeit" Height="268" Width="338.979">
+        Title="Neue Arbeitszeit erstellen" Height="268" Width="338.979" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico">
     <Window.Resources>
         <jgZeit:JgZeit x:Key="JgZeitVon" />
         <jgZeit:JgZeit x:Key="JgZeitBis" />
@@ -61,7 +61,7 @@
             <Button Click="btnOk_Click" Grid.Column="1" IsDefault="True">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
-                    <TextBlock Text=" Ok" VerticalAlignment="Center"/>
+                    <TextBlock Text=" Eintragen" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </Grid>

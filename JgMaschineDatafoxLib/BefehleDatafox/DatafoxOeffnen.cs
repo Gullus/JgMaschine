@@ -1,23 +1,15 @@
-﻿using System;
-using JgMaschineLib;
-
-namespace JgMaschineDatafoxLib
+﻿namespace JgMaschineDatafoxLib
 {
   public static partial class ProgDatafox
   {
     /// <summary>
-    /// Oeffnen der Datafoc Verbindung
+    /// Oeffnen der Datafox Verbindung
     /// </summary>
     /// <param name="Optionen">Übertragungsoptionen</param>
-    public static void DatafoxOeffnen(OptionenDatafox Optionen)
+    public static bool DatafoxOeffnen(OptionenDatafox Optionen)
     {
-      byte idVerbindung = 3; // <= Verbindung über TcpIp
-
-      if (DFComDLL.DFCComOpenIV(Optionen.Datafox.ChannelId, 0, idVerbindung, Optionen.Datafox.IpNummer, Optionen.Datafox.Portnummer, Optionen.Datafox.TimeOut) == 0)
-      {
-        var msg = string.Format("Schnittstelle oder Verbindung zum Gerät konnte nicht geöffnet werden. Überprüfen Sie die Einstellungen der Kommunikation und Erreichbarkeit des Terminals.");
-        throw new MyException(msg);
-      }
+      var offen = DFComDLL.DFCComOpenIV(Optionen.Terminal.ChannelId, 0, Optionen.Terminal.IdVerbindung, Optionen.Terminal.IpAdresse, Optionen.Terminal.Portnummer, Optionen.Terminal.TimeOut);
+      return offen != 0; // offen == 0 ist Fehler;
     }
   }
 }

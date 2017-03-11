@@ -5,6 +5,8 @@ using System.ServiceProcess;
 using System.Threading.Tasks;
 using JgMaschineLib;
 using JgMaschineLib.Scanner;
+using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineServiceScanner
 {
@@ -12,6 +14,9 @@ namespace JgMaschineServiceScanner
   {
     static void Main()
     {
+      Logger.SetLogWriter(new LogWriterFactory().Create());
+      ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+
       var pr = Properties.Settings.Default;
       var scOptionen = new ScannerOptionen()
       {
@@ -24,26 +29,9 @@ namespace JgMaschineServiceScanner
         EvgPfadProduktionsListe = pr.EvgPfadProduktionsListe,
         EvgDateiProduktionsAuftrag = pr.EvgDateiProduktionsAuftrag,
         ProgressPfadProduktionsListe = pr.ProgressPfadProduktionsListe,
-
-        Protokoll = new Proto(Proto.KategorieArt.ServiceScanner, new JgMaschineLib.Email.SendEmailOptionen()
-        {
-          AdresseAbsender = pr.EmailAbsender,
-          AdressenEmpfaenger = pr.EmailListeEmpfaenger,
-          Betreff = pr.EmailBetreff,
-
-          ServerAdresse = pr.EmailServerAdresse,
-          ServerPort = pr.EmailServerPortNummer,
-          ServerBenutzername = pr.EmailServerBenutzerName,
-          ServerPasswort = pr.EmailServerBenutzerKennwort
-        })
       };
 
 #if DEBUG
-
-      scOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.Console);
-      scOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.Console);
-      scOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.Console);
-      scOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.Console);
 
       var scanner = new ScannerProgramm(scOptionen);
       var task = new Task(() =>
@@ -73,18 +61,14 @@ namespace JgMaschineServiceScanner
     public JgMaschineServiceScanner(ScannerOptionen ScannOptionen)
     {
       _ScannProgramm = new ScannerProgramm(ScannOptionen);
-
-      ScannOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll, Proto.AnzeigeArt.Email);
-      ScannOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
-      ScannOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.WinProtokoll);
-      //ScannOptionen.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.WinProtokoll);
     }
 
     protected override void OnStart(string[] args)
     {
       base.OnStart(args);
 
-      _ScannProgramm.Optionen.Protokoll.Set("Scannerservice starten!", Proto.ProtoArt.Info);
+      var msg = "Scannerservice starten!";
+      Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Start);
 
       var task = new Task(() =>
       {
@@ -96,7 +80,8 @@ namespace JgMaschineServiceScanner
     protected override void OnShutdown()
     {
       base.OnShutdown();
-      _ScannProgramm.Optionen.Protokoll.Set("Scannerservice heruntergefahren!", Proto.ProtoArt.Info);
+      var msg = "Scannerservice herunterfahren!";
+      Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Information);
     }
   }
 

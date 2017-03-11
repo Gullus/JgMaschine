@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Net.NetworkInformation;
 using JgMaschineData;
 using JgMaschineLib;
 using JgMaschineServiceDatenabfrage.Maschinen;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineServiceDatenabfrage
 {
@@ -28,7 +28,7 @@ namespace JgMaschineServiceDatenabfrage
           if (standort == null)
           {
             msg = $"Standort {Properties.Settings.Default.Standort} nicht gefunden!";
-            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Fehler);
+            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Error);
             break;
           }
 
@@ -37,7 +37,7 @@ namespace JgMaschineServiceDatenabfrage
           if (lMaschinen.Count == 0)
           {
             msg = $"Für Standort {standort.Bezeichnung} sind keine Maschinen vorhanden!";
-            _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
             break;
           }
 
@@ -52,7 +52,7 @@ namespace JgMaschineServiceDatenabfrage
             pr.AuswertungStart = DateTime.Now;
             pr.AnzahlDurchlauf++;
 
-            if (!Helper.IstPingOk(maschine.MaschineAdresse, _Optionen.Protokoll))
+            if (!Helper.IstPingOk(maschine.MaschineAdresse, out msg))
             {
               maschine.eProtokoll.FehlerVerbindungMaschine++;
               continue;
@@ -62,17 +62,17 @@ namespace JgMaschineServiceDatenabfrage
             {
               case EnumMaschinenArt.Evg:
                 if (maEvg == null)
-                  maEvg = new MaschineEvg(db, _Optionen.Protokoll, _Optionen.PfadEvg);
+                  maEvg = new MaschineEvg(db, _Optionen.PfadEvg);
                 maStamm = maEvg;
                 break;
               case EnumMaschinenArt.Progress:
                 if (maProgress == null)
-                  maProgress = new MaschineProgress(db, _Optionen.Protokoll, _Optionen.PfadProgress);
+                  maProgress = new MaschineProgress(db, _Optionen.PfadProgress);
                 maStamm = maProgress;
                 break;
               case EnumMaschinenArt.Schnell:
                 if (maSchnell == null)
-                  maSchnell = new MaschineSchnell(db, _Optionen.Protokoll, _Optionen.PfadSchnell);
+                  maSchnell = new MaschineSchnell(db, _Optionen.PfadSchnell);
                 maStamm = maSchnell;
                 break;
             }
@@ -83,10 +83,10 @@ namespace JgMaschineServiceDatenabfrage
             }
             catch (Exception f)
             {
-              msg = $"Fehler import Daten in Maschine {maschine.MaschinenName}";
+              msg = $"Fehler import Daten in Maschine {maschine.MaschinenName}\nGrund: {f.Message}";
               maschine.eProtokoll.FehlerDatenImport++;
               maschine.ProtokollAdd = msg;
-              _Optionen.Protokoll.Set(msg, f);
+              Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
               continue;
             }
             finally
@@ -96,14 +96,13 @@ namespace JgMaschineServiceDatenabfrage
 
             try
             {
-              DbSichern.DsSichern<tabProtokoll>(db, maschine.eProtokoll, EnumStatusDatenabgleich.Geaendert);
               msg = $"Protokoll für Maschine {maschine.MaschinenName} gesichert.";
-              _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Kommentar);
+              Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Verbose);
             }
             catch (Exception f)
             {
-              msg = $"Fehler beim speichern des Maschinenprotokolls  {maschine.MaschinenName}";
-              _Optionen.Protokoll.Set(msg, f);
+              msg = $"Fehler beim speichern des Maschinenprotokolls: {maschine.MaschinenName}\nGrund: {f.Message}";
+              Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Error);
               break;
             }
           }

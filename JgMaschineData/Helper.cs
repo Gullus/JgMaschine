@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows;
 using JgZeitHelper;
 
 namespace JgMaschineData
@@ -90,7 +87,7 @@ namespace JgMaschineData
     {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
- 
+
     public string Name { get { return this.NachName + ", " + VorName; } }
 
     // in Optionen Anzeige DatenStart aus Vorjahr, sonst ArbeitszeitAuswertung Aktuell 
@@ -106,16 +103,6 @@ namespace JgMaschineData
           fArbeitszeitHelper = value;
           NotifyPropertyChanged();
         }
-      }
-    }
-
-    public byte AnzeigeUrlaubstage
-    {
-      get { return this.Urlaubstage; }
-      set
-      {
-        this.Urlaubstage = value;
-        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
@@ -138,7 +125,7 @@ namespace JgMaschineData
   [MetadataType(typeof(tabStandortMetaData))]
   public partial class tabStandort
   { }
-  
+
   public partial class tabAuswertungMetaData
   {
     [Required]
@@ -203,10 +190,7 @@ namespace JgMaschineData
         var sollStunden = JgZeit.StringInZeit(SollStunden);
         var zeit = JgZeit.StringInZeit(value, sollStunden);
         if (zeit != sollStunden)
-        {
           SollStunden = JgZeit.ZeitInString(zeit);
-          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-        }
       }
     }
   }
@@ -260,7 +244,7 @@ namespace JgMaschineData
     public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value : TimeSpan.Zero; } }
     public string DauerAnzeige { get { return (Dauer == TimeSpan.Zero) ? "-" : ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
 
-    public Nullable<DateTime> AnmeldungGerundetWert { get; set; } = null;  
+    public Nullable<DateTime> AnmeldungGerundetWert { get; set; } = null;
     public Nullable<DateTime> AnmeldungGerundet { get { return this.AnmeldungGerundetWert ?? this.Anmeldung; } }
     public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value : TimeSpan.Zero; } }
     public string DauerGerundetAnzeige { get { return (DauerGerundet == TimeSpan.Zero) ? "-" : ((int)DauerGerundet.TotalHours).ToString("D2") + ":" + DauerGerundet.Minutes.ToString("D2"); } }
@@ -382,7 +366,7 @@ namespace JgMaschineData
     }
 
 
-    public string IstStunden { get { return JgZeit.ZeitInString(JgZeit.ZeitStringAddieren(SollStunden, Ueberstunden)); } } 
+    public string IstStunden { get { return JgZeit.ZeitInString(JgZeit.ZeitStringAddieren(SollStunden, Ueberstunden)); } }
 
     public EnumStatusArbeitszeitAuswertung StatusAnzeige
     {
@@ -554,7 +538,6 @@ namespace JgMaschineData
       {
         this.Monat = (byte)value;
         NotifyPropertyChanged();
-        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
 
@@ -568,7 +551,6 @@ namespace JgMaschineData
         {
           this.ZeitVon = zeit;
           NotifyPropertyChanged();
-          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
@@ -583,22 +565,34 @@ namespace JgMaschineData
         {
           this.ZeitBis = zeit;
           NotifyPropertyChanged();
-          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
 
-    public string AnzeigeRundenAufZeit
+    public string AnzeigeRundenBeginn
     {
-      get { return JgZeit.ZeitInString(this.RundenAufZeit); }
+      get { return JgZeit.ZeitInString(this.RundenArbeitszeitBeginn); }
       set
       {
-        var zeit = JgZeit.StringInZeit(value, RundenAufZeit);
-        if (zeit != RundenAufZeit)
+        var zeit = JgZeit.StringInZeit(value, RundenArbeitszeitBeginn);
+        if (zeit != RundenArbeitszeitBeginn)
         {
-          this.RundenAufZeit = zeit;
+          this.RundenArbeitszeitBeginn = zeit;
           NotifyPropertyChanged();
-          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
+        }
+      }
+    }
+
+    public string AnzeigeRundenLaenge
+    {
+      get { return JgZeit.ZeitInString(this.RundenArbeitszeitLaenge.Value); }
+      set
+      {
+        var zeit = JgZeit.StringInZeit(value, RundenArbeitszeitLaenge);
+        if (zeit != RundenArbeitszeitLaenge)
+        {
+          this.RundenArbeitszeitLaenge = zeit;
+          NotifyPropertyChanged();
         }
       }
     }
@@ -610,7 +604,6 @@ namespace JgMaschineData
       {
         this.DatenAbgleich.Geloescht = value;
         NotifyPropertyChanged();
-        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
@@ -633,7 +626,6 @@ namespace JgMaschineData
         {
           this.ZeitVon = zeit;
           NotifyPropertyChanged();
-          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
@@ -648,7 +640,6 @@ namespace JgMaschineData
         {
           this.ZeitBis = zeit;
           NotifyPropertyChanged();
-          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
@@ -663,7 +654,6 @@ namespace JgMaschineData
         {
           this.Pausenzeit = zeit;
           NotifyPropertyChanged();
-          DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         }
       }
     }
@@ -675,100 +665,21 @@ namespace JgMaschineData
       {
         this.DatenAbgleich.Geloescht = value;
         NotifyPropertyChanged();
-        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       }
     }
   }
 
-  public partial class tabFeiertage
+  public partial class tabArbeitszeitTerminalMetaData
   {
-    public DateTime AnzeigeDatum
-    {
-      get { return this.Datum; }
-      set
-      {
-        this.Datum = value;
-        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-      }
-    }
+    [Required]
+    [MinLength(3, ErrorMessage = "Mindestanzahl der Zeichen für den Vornamen ist {1}")]
+    public object Bezeichnung;
 
-    public string AnzeigeBezeichnung
-    {
-      get { return this.Bezeichnung; }
-      set
-      {
-        this.Bezeichnung = value;
-        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-      }
-    }
-
-    public bool AnzeigeGeloescht
-    {
-      get { return this.DatenAbgleich.Geloescht; }
-      set
-      {
-        this.DatenAbgleich.Geloescht = value;
-        DbHelper.AbgleichEintragen(this.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-      }
-    }
+    [Required]
+    public object IpNummer;
   }
 
-  public class DbHelper
-  {
-    public static void AbgleichEintragen(JgMaschineData.DatenAbgleich DatenAbgl, JgMaschineData.EnumStatusDatenabgleich Status)
-    {
-      DatenAbgl.Status = Status;
-      DatenAbgl.Datum = DateTime.Now;
-      DatenAbgl.Bearbeiter = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-    }
-  }
-
-  #region bei Speicherung Valedierungsfehler anzeigen
-
-  public partial class JgModelContainer
-  {
-    private static string DbFehlerText(DbEntityValidationException ex)
-    {
-      // Retrieve the error messages as a list of strings.
-      var errorMessages = ex.EntityValidationErrors
-              .SelectMany(x => x.ValidationErrors)
-              .Select(x => x.ErrorMessage);
-
-      // Join the list to a single string.
-      var fullErrorMessage = string.Join("; ", errorMessages);
-
-      MessageBox.Show(fullErrorMessage);
-
-      // Combine the original exception message with the new one.
-      return string.Concat(ex.Message, " Fehler: ", fullErrorMessage);
-    }
-
-    public override int SaveChanges()
-    {
-      try
-      {
-        return base.SaveChanges();
-      }
-      catch (DbEntityValidationException ex)
-      {
-        // Throw a new DbEntityValidationException with the improved exception message.
-        throw new DbEntityValidationException(DbFehlerText(ex), ex.EntityValidationErrors);
-      }
-    }
-
-    public override Task<int> SaveChangesAsync()
-    {
-      try
-      {
-        return base.SaveChangesAsync();
-      }
-      catch (DbEntityValidationException ex)
-      {
-        // Throw a new DbEntityValidationException with the improved exception message.
-        throw new DbEntityValidationException(DbFehlerText(ex), ex.EntityValidationErrors);
-      }
-    }
-  }
-
-  #endregion
+  [MetadataType(typeof(tabArbeitszeitTerminalMetaData))]
+  public partial class tabArbeitszeitTerminal
+  { }
 }

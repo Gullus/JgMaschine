@@ -7,6 +7,8 @@ namespace JgMaschineLib
 {
   public class Helper
   {
+    public static string Benutzer = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+
     #region Net Version abfragen
 
     public static string GetNetversion()
@@ -122,8 +124,10 @@ namespace JgMaschineLib
       return new DateTime(Convert.ToInt32(AusString.Substring(0, 4)), Convert.ToInt32(AusString.Substring(4, 2)), Convert.ToInt32(AusString.Substring(6, 2)));
     }
 
-    public static bool IstPingOk(string IpAdresse, ref string Fehlertext)
+    public static bool IstPingOk(string IpAdresse, out string Fehlertext)
     {
+      Fehlertext = "Ping Ok";
+
       if (string.IsNullOrWhiteSpace(IpAdresse))
       {
         Fehlertext = "Ip Adresse ist leer!";

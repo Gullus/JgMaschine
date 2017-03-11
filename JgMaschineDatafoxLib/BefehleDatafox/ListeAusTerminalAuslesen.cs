@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using JgMaschineLib;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
@@ -8,18 +9,19 @@ namespace JgMaschineDatafoxLib
 {
   public static partial class ProgDatafox
   {
-    public static List<DatafoxDsExport> KonvertDatafoxExport(List<string> DatafoxStringListe, string SteuerString = "")
+    public static List<DatafoxDsImport> KonvertDatafoxImport(List<string> DatafoxStringListe, Guid IdAktuellerStandort, string SteuerString = "")
     {
-      var liste = new List<DatafoxDsExport>(DatafoxStringListe.Count);
+      var liste = new List<DatafoxDsImport>(DatafoxStringListe.Count);
       var leangeSteuerstring = SteuerString.Length;
 
       foreach (var dsString in DatafoxStringListe)
       {
         var erg = dsString.Split(new char[] { '\t' }, StringSplitOptions.None);
 
-        var ds = new DatafoxDsExport()
+        var ds = new DatafoxDsImport()
         {
-          Version = erg[1]
+          Version = erg[1],
+          IdStandort = IdAktuellerStandort          
         };
 
         try
@@ -27,10 +29,10 @@ namespace JgMaschineDatafoxLib
           var kennung = erg[2].ToUpper()[0];
           switch (kennung)
           {
-            case 'K': ds.Vorgang = DatafoxDsExport.EnumVorgang.Komme; break;
-            case 'G': ds.Vorgang = DatafoxDsExport.EnumVorgang.Gehen; break;
-            case 'P': ds.Vorgang = DatafoxDsExport.EnumVorgang.Pause; break;
-            default: ds.Vorgang = DatafoxDsExport.EnumVorgang.Fehler; break;
+            case 'K': ds.Vorgang = DatafoxDsImport.EnumVorgang.Komme; break;
+            case 'G': ds.Vorgang = DatafoxDsImport.EnumVorgang.Gehen; break;
+            case 'P': ds.Vorgang = DatafoxDsImport.EnumVorgang.Pause; break;
+            default: ds.Vorgang = DatafoxDsImport.EnumVorgang.Fehler; break;
           }
         }
         catch (Exception f)
@@ -95,10 +97,10 @@ namespace JgMaschineDatafoxLib
         {
           // Lesen der Datensatzbeschreibungen, diese stellen die Tabellendefinitionen dar.
           DFComDLL.TableDeclarations records = new DFComDLL.TableDeclarations(DFComDLL.TableDeclarations.TableType.Record, "Records.xml");
-          if (records.LoadFromDevice(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, "") == false)
+          if (records.LoadFromDevice(Optionen.Terminal.ChannelId, Optionen.Terminal.DeviceId, "") == false)
           {
             // Fehlertext ermitteln
-            DFComDLL.DFCGetErrorText(Optionen.Datafox.ChannelId, errorID, 0, errorString, errorString.Capacity);
+            DFComDLL.DFCGetErrorText(Optionen.Terminal.ChannelId, errorID, 0, errorString, errorString.Capacity);
             msg = string.Format("Lesen der Datensatzbeschreibung ist fehlgeschlagen.\nFehlerbeschreibung: {0}", errorString);
             throw new MyException(msg);
           }
@@ -113,7 +115,7 @@ namespace JgMaschineDatafoxLib
           {
             length = buf.Length;
             // Datensatz lesen
-            if ((result = DFComDLL.DFCReadRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buf, out length, out errorID)) < 0)
+            if ((result = DFComDLL.DFCReadRecord(Optionen.Terminal.ChannelId, Optionen.Terminal.DeviceId, buf, out length, out errorID)) < 0)
             {
               msg = string.Format("Datensatz konnte nicht aus Terminal gelesen werden. Fehlercode: {0}", errorID);
               throw new MyException(msg);
@@ -122,7 +124,7 @@ namespace JgMaschineDatafoxLib
             if (result == 0)
             {
               msg = "Es liegen keine Datensätze vor";
-              Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Verbose);
+              Logger.Write(msg, "Service", 0, 0, TraceEventType.Verbose);
               break;
             }
 
@@ -130,7 +132,7 @@ namespace JgMaschineDatafoxLib
             listeAntwort.Add(rs.TabbedString());
 
             // Datensatz quittieren
-            if (DFComDLL.DFCQuitRecord(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, out errorID) < 0)
+            if (DFComDLL.DFCQuitRecord(Optionen.Terminal.ChannelId, Optionen.Terminal.DeviceId, out errorID) < 0)
             {
               msg = string.Format("Datensatz konnte nicht im Terminal quittiert werden. Fehlercode: {0}", errorID);
               throw new MyException(msg);

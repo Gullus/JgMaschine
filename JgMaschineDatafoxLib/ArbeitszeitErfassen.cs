@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using JgMaschineData;
@@ -24,91 +25,186 @@ namespace JgMaschineDatafoxLib
     {
       _SteuerungsTimer = new Timer(OnTimedEvent, _OptDatafox, new TimeSpan(0, 0, 1), new TimeSpan(0, 0, _OptDatafox.TimerIntervall));
       var msg = "Timer gestartet";
-      Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Start);
+      Logger.Write(msg, "Service", 0, 0, TraceEventType.Start);
     }
 
     public void TimerStop()
     {
       _SteuerungsTimer.Change(Timeout.Infinite, Timeout.Infinite);
       var msg = "Timer gestopt";
-      Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Stop);
+      Logger.Write(msg, "Service", 0, 0, TraceEventType.Stop);
     }
 
     public void TimerContinue()
     {
       _SteuerungsTimer.Change(new TimeSpan(0, 0, 1), new TimeSpan(0, 0, _OptDatafox.TimerIntervall));
       var msg = "Timer Continue";
-      Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Resume);
+      Logger.Write(msg, "Service", 0, 0, TraceEventType.Resume);
     }
 
     public static void OnTimedEvent(object state)
     {
       var msg = "Starte Berechnungsdurchlauf";
-      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
+      Logger.Write(msg, "Service", 1, 0, TraceEventType.Information);
 
       var zo = (OptionenDatafox)state;
-      zo.ZaehlerDatumAktualisieren++;
 
       try
       {
         using (var Db = new JgModelContainer())
         {
-          if (zo.VerbindungsString != "")
-            Db.Database.Connection.ConnectionString = zo.VerbindungsString;
-
-          var standort = Db.tabStandortSet.FirstOrDefault(f => f.Bezeichnung == zo.Standort);
-          if (standort == null)
-            throw new Exception($"Es wurde kein oder ein falscher Standort bei der Arbeitszeit eingegeben!\nStandort: {zo.Standort}");
-          var idStandort = standort.Id;
-
-          List<string> dsVomTerminal = null;
-
           try
           {
-            ProgDatafox.DatafoxOeffnen(zo);
+            if (zo.VerbindungsString != "")
+              Db.Database.Connection.ConnectionString = zo.VerbindungsString;
 
-            // Zeit mit Termimal abgeleichem
-            if (zo.ZaehlerDatumAktualisieren > 20)
+            zo.ListeTerminals = Db.tabArbeitszeitTerminalSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
+            msg = $"{zo.ListeTerminals.Count} Terminals eingelesen";
+            Logger.Write(msg, "Service", 1, 0, TraceEventType.Verbose);
+
+            zo.ListeStandorte = Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
+            msg = $"{zo.ListeStandorte.Count} Standorte eingelesen";
+            Logger.Write(msg, "Service", 1, 0, TraceEventType.Verbose);
+
+            zo.ListeBediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt) && (!w.DatenAbgleich.Geloescht)).ToList();
+            msg = $"{zo.ListeBediener.Count} Bediener eingelesen";
+            Logger.Write(msg, "Service", 1, 0, TraceEventType.Verbose);
+
+            if (zo.ListeTerminals.Any(w => w.UpdateTerminal))
+            {
+              try
+              {
+                ProgDatafox.BedienerInDatafoxDatei(zo);
+                zo.UpdateBenutzerOk = true;
+              }
+              catch (Exception ex)
+              {
+                msg = $"Fehler beim erstellen der Benutzerdatei!\nGrund: {ex.Message}";
+                Logger.Write(msg, "Service", 1, 0, TraceEventType.Error);
+              }
+            }
+
+            zo.ZaehlerDatumAktualisieren++;
+            if (zo.ZaehlerDatumAktualisieren > 10)
             {
               zo.ZaehlerDatumAktualisieren = 0;
-              ProgDatafox.ZeitEinstellen(zo, DateTime.Now);
-
-              msg = "Zeit im Termal gestellt";
-              Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
+              zo.DatumAktualisieren = true;
             }
-
-            // Kontrolle, ob Benutzer im Termanl geändert werden müssen
-            if (standort.UpdateBedienerDatafox)
-            {
-              standort.UpdateBedienerDatafox = false;
-              DbSichern.AbgleichEintragen(standort.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-              Db.SaveChanges();
-
-              var bediener = Db.tabBedienerSet.Where(w => (w.Status != EnumStatusBediener.Stillgelegt)).ToList();
-              ProgDatafox.BedienerInDatafoxDatei(zo, bediener);
-              ProgDatafox.ListenInTerminalSchreiben(zo);
-            }
-
-            // Anmeldungen aus Terminal auslesen
-            dsVomTerminal = ProgDatafox.ListeAusTerminalAuslesen(zo);
           }
           catch (Exception f)
           {
-            msg = "Fehler bei Kommunikation mit Terminal";
+            msg = $"Fehler beim Initialisieren der DatafoxOPtionen.";
             throw new MyException(msg, f);
           }
-          finally
+
+          foreach (var terminal in zo.ListeTerminals)
           {
-            ProgDatafox.DatafoxSchliessen(zo);
+            try
+            {
+              msg = $"Start Terminal: {terminal.Bezeichnung} / {terminal.eStandort.Bezeichnung}\nIp: {terminal.IpNummer} Port: {terminal.PortNummer}";
+              Logger.Write(msg, "Service", 1, 0, TraceEventType.Information);
+
+              zo.Terminal.IpAdresse = terminal.IpNummer;
+              zo.Terminal.Portnummer = terminal.PortNummer;
+
+              if (!Helper.IstPingOk(zo.Terminal.IpAdresse, out msg))
+              {
+                msg = $"Fehler bei Pingabfrage.\nGrund: {msg}";
+                Logger.Write(msg, "Service", 1, 0, TraceEventType.Warning);
+                continue;
+              }
+
+              List<string> DatensaetzeVomTerminal = null;
+
+              try
+              {
+                var offen = ProgDatafox.DatafoxOeffnen(zo);
+                if (!offen)
+                {
+                  msg = $"Verbindung zum Terminal konnte nicht geöffnet werden.";
+                  Logger.Write(msg, "Service", 1, 0, TraceEventType.Warning);
+                  continue;
+                }
+
+                // Zeit mit Termimal abgeleichem
+                if (zo.DatumAktualisieren)
+                {
+                  if (ProgDatafox.ZeitEinstellen(zo, DateTime.Now))
+                    Logger.Write("Zeit Termal gestellt", "Service", 1, 0, TraceEventType.Information);
+                  else
+                    Logger.Write("Zeit konnte nicht gestellt werden", "Service", 1, 0, TraceEventType.Warning);
+                }
+
+                // Kontrolle, ob Benutzer im Terminal geändert werden müssen
+
+                if (zo.UpdateBenutzerOk && terminal.UpdateTerminal)
+                {
+                  terminal.UpdateTerminal = false;
+                  Db.SaveChanges();
+                  ProgDatafox.ListenInTerminalSchreiben(zo);
+                }
+
+                // Anmeldungen aus Terminal auslesen
+                DatensaetzeVomTerminal = ProgDatafox.ListeAusTerminalAuslesen(zo);
+                if (DatensaetzeVomTerminal.Count == 0)
+                {
+                  msg = "Keine Datensätze vorhanden.";
+                  Logger.Write(msg, "Service", 1, 0, TraceEventType.Verbose);
+                }
+                else
+                {
+                  msg = $"Es wurden {DatensaetzeVomTerminal.Count} Arbeitszeiten von Terminal übertragen.";
+                  Logger.Write(msg, "Service", 1, 0, TraceEventType.Information);
+                }
+              }
+              catch (Exception f)
+              {
+                msg = "Fehler bei Kommunikation mit Terminal";
+                throw new MyException(msg, f);
+              }
+              finally
+              {
+                msg = "Verbindung Terminal schliesen.";
+                Logger.Write(msg, "Service", 1, 0, TraceEventType.Information);
+                ProgDatafox.DatafoxSchliessen(zo);
+              }
+
+              if (DatensaetzeVomTerminal.Count > 0)
+              {
+                try
+                {
+                  var anmeldungen = ProgDatafox.KonvertDatafoxImport(DatensaetzeVomTerminal, terminal.fStandort, "MITA_");
+                  var dicAnmeldungen = anmeldungen.Select(s => new { Key = s.MatchCode, Value = $"{ s.GehGrund}; {s.Datum}; {s.Vorgang}" }).ToDictionary(d => d.Key, d => (object)d.Value);
+                  Logger.Write("Ausgelesene Anmeldungen", "Service", 1, 0, TraceEventType.Information, "", dicAnmeldungen);
+
+                  zo.ListeAnmeldungen.AddRange(anmeldungen);
+                }
+                catch (Exception f)
+                {
+                  msg = "Fehler beim Konvertieren der Daten.";
+                  throw new Exception(msg, f);
+                }
+              }
+            }
+            catch (Exception f)
+            {
+              ExceptionPolicy.HandleException(f, "Policy");
+            }
           }
 
-          if (dsVomTerminal?.Count > 0)
+          try
           {
-            msg = $"Es wurden {dsVomTerminal.Count} Arbeitszeiten von Terminal übertragen.";
-            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
-
-            ArbeitszeitInDatenbank(Db, dsVomTerminal, standort.Id);
+            ArbeitszeitenInDatenbankTabelle(zo);
+            zo.Db.SaveChanges();
           }
+          catch (Exception f)
+          {
+            msg = "Fehler beim speichern der Anmeldedaten in der Datenbank";
+            throw new MyException(msg, f);
+          }
+
+          msg = $"Fertig !\n{zo.ListeAnmeldungen.Count} Anmeldungen verarbeitet. Daten in DB gespeichert!";
+          Logger.Write(msg, "Service", 1, 0, TraceEventType.Information);
         }
       }
       catch (Exception f)
@@ -117,94 +213,76 @@ namespace JgMaschineDatafoxLib
       }
     }
 
-    public static void ArbeitszeitInDatenbank(JgModelContainer Db, List<string> ListeArbeitszeitvomTerminal, Guid IdStandort)
+    public static void ArbeitszeitenInDatenbankTabelle(OptionenDatafox Optionen)
     {
       var msg = "";
       try
       {
-        var anmeldTermial = ProgDatafox.KonvertDatafoxExport(ListeArbeitszeitvomTerminal, "MITA_");
+        var anmeldungen = from z in Optionen.ListeAnmeldungen
+                          group z by z.MatchCode into erg
+                          select new { Matchcode = erg.Key, Anmeldungen = erg.OrderBy(o => o.Datum) };
 
-        // Bediener zu MatchCodes laden
-        var matchCodes = "'" + string.Join("','", anmeldTermial.Select(s => s.MatchCode).Distinct().ToArray()) + "'";
-        var alleBediener = Db.tabBedienerSet.Where(w => matchCodes.Contains(w.MatchCode)).ToList();
-
-        foreach (var anmeld in anmeldTermial)
+        foreach (var matchcode in anmeldungen)
         {
-          var bedienerTextAusgabe = $"{anmeld.MatchCode} | {anmeld.Vorgang} | {anmeld.Datum}";
-          var bediener = alleBediener.FirstOrDefault(f => f.MatchCode == anmeld.MatchCode);
+          var bediener = Optionen.ListeBediener.FirstOrDefault(f => f.MatchCode == matchcode.Matchcode);
+          var dicAnmeldungen = matchcode.Anmeldungen.Select(s => new { Key = s.Vorgang.ToString(), Value = $"{Optionen.GetStandort(s.IdStandort)} - { s.GehGrund}; {s.Datum}; {s.Vorgang}" }).ToDictionary(d => d.Key, d => (object)d.Value);
+
           if (bediener == null)
           {
-            msg = $"Bediner {bedienerTextAusgabe} nicht bekannt!";
-            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+            msg = $"Bediener {matchcode.Matchcode} nicht bekannt";
+            Logger.Write(msg, "Service", 1, 0, TraceEventType.Warning, "", dicAnmeldungen);
             continue;
           }
-          else
-          {
-            msg = $"Bediener: {bediener.Name}, {bedienerTextAusgabe}";
-            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
-          }
 
-          if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Komme)
+          msg = $"Bediener: {bediener.Name} erfasst.";
+          Logger.Write(msg, "Service", 1, 0, TraceEventType.Information, "", dicAnmeldungen);
+
+          foreach (var anmeld in matchcode.Anmeldungen)
           {
-            var arbZeit = new tabArbeitszeit()
-            {
-              Id = Guid.NewGuid(),
-              fBediener = bediener.Id,
-              fStandort = IdStandort,
-              Anmeldung = anmeld.Datum,
-              ManuelleAnmeldung = false,
-              ManuelleAbmeldung = false,
-            };
-            DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-            Db.tabArbeitszeitSet.Add(arbZeit);
-            bediener.fAktivArbeitszeit = arbZeit.Id;
-            DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-          }
-          else if (anmeld.Vorgang == DatafoxDsExport.EnumVorgang.Gehen)
-          {
-            if (bediener.eAktivArbeitszeit != null)
-            {
-              bediener.eAktivArbeitszeit.Abmeldung = anmeld.Datum;
-              bediener.eAktivArbeitszeit.ManuelleAbmeldung = false;
-              DbSichern.AbgleichEintragen(bediener.eAktivArbeitszeit.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-              bediener.eAktivArbeitszeit = null;
-              DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-            }
-            else
+            if (anmeld.Vorgang == DatafoxDsImport.EnumVorgang.Komme)
             {
               var arbZeit = new tabArbeitszeit()
               {
                 Id = Guid.NewGuid(),
                 fBediener = bediener.Id,
-                fStandort = IdStandort,
-                Abmeldung = anmeld.Datum,
+                fStandort = anmeld.IdStandort,
+                Anmeldung = anmeld.Datum,
                 ManuelleAnmeldung = false,
                 ManuelleAbmeldung = false,
               };
-              DbSichern.AbgleichEintragen(arbZeit.DatenAbgleich, EnumStatusDatenabgleich.Neu);
-              Db.tabArbeitszeitSet.Add(arbZeit);
+              Optionen.Db.tabArbeitszeitSet.Add(arbZeit);
+              bediener.fAktivArbeitszeit = arbZeit.Id;
+            }
+            else if (anmeld.Vorgang == DatafoxDsImport.EnumVorgang.Gehen)
+            {
+              if (bediener.eAktivArbeitszeit != null)
+              {
+                bediener.eAktivArbeitszeit.Abmeldung = anmeld.Datum;
+                bediener.eAktivArbeitszeit.ManuelleAbmeldung = false;
+                bediener.eAktivArbeitszeit = null;
+              }
+              else
+              {
+                var arbZeit = new tabArbeitszeit()
+                {
+                  Id = Guid.NewGuid(),
+                  fBediener = bediener.Id,
+                  fStandort = anmeld.IdStandort,
+                  Abmeldung = anmeld.Datum,
+                  ManuelleAnmeldung = false,
+                  ManuelleAbmeldung = false,
+                };
+                Optionen.Db.tabArbeitszeitSet.Add(arbZeit);
+              }
             }
           }
         }
       }
       catch (Exception f)
       {
-        msg = "Fehler beim eintragen der Anmeldedaten in die Datenbank";
+        msg = "Fehler beim eintragen der Anmeldedaten in die Tabelle Arbeitszeit.";
         throw new MyException(msg, f);
       }
-
-      try
-      {
-        Db.SaveChanges();
-      }
-      catch (Exception f)
-      {
-        msg = "Fehler beim speichern der Anmeldedaten in der Datenbank";
-        throw new Exception(msg, f);
-      }
-
-      msg = $"{ListeArbeitszeitvomTerminal.Count} Arbeitszeiten in DB gespeichert!";
-      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Verbose);
     }
   }
 }

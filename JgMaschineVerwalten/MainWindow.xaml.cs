@@ -114,7 +114,6 @@ namespace JgMaschineVerwalten
           _AktAuswertung.Report = memStr.ToArray();
           _AktAuswertung.GeaendertDatum = DateTime.Now;
           _AktAuswertung.GeaendertName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          DbSichern.AbgleichEintragen(_AktAuswertung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
           _ListeAuswertung.Db.SaveChanges();
         }
         catch (Exception f)
@@ -428,7 +427,6 @@ namespace JgMaschineVerwalten
       {
         _JgReparatur.Add(form.Reparatur, false);
         _Maschine.fAktivReparatur = form.Reparatur.Id;
-        DbSichern.AbgleichEintragen(_Maschine.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
 
         foreach (var anmeldungMaschine in _Maschine.sAktiveAnmeldungen)
         {
@@ -442,7 +440,7 @@ namespace JgMaschineVerwalten
           _JgRepAnmeldung.Add(anmledRep, false);
         }
 
-        _JgReparatur.GeheZuDatensatz(form.Reparatur, true);
+        _JgReparatur.GeheZuDatensatz(form.Reparatur);
         TreeListMaschinRefresh();
       }
     }
@@ -466,13 +464,10 @@ namespace JgMaschineVerwalten
       {
         var repBedienerAustragen = reparatur.sAnmeldungen.Where(w => w.IstAktiv).ToList();
         foreach (var bediener in repBedienerAustragen)
-        {
           bediener.Abmeldung = ergZeitAbfrage;
-          DbSichern.AbgleichEintragen(bediener.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-        }
+
         reparatur.VorgangEnde = ergZeitAbfrage;
         reparatur.eMaschine.fAktivReparatur = null;
-        DbSichern.AbgleichEintragen(reparatur.eMaschine.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         _JgReparatur.DsSave();
         _JgReparatur.Remove();
 
@@ -530,7 +525,6 @@ namespace JgMaschineVerwalten
       {
         anmeldung.Anmeldung = zeitAnmeldung;
         anmeldung.Abmeldung = zeitAbmeldung;
-        DbSichern.AbgleichEintragen(anmeldung.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         _ListeReparaturAuswahl.Db.SaveChanges();
         colView.View.Refresh();
         colView.View.MoveCurrentTo(anmeldung);
@@ -594,10 +588,7 @@ namespace JgMaschineVerwalten
 
         tabAnmeldungReparatur rep = _JgReparatur.Daten.SelectMany(s => s.sAnmeldungen).Where(w => w.IstAktiv).FirstOrDefault(f => f.fBediener == anmeldung.fBediener);
         if (rep != null)
-        {
           rep.Abmeldung = zeitAbmeldung;
-          DbSichern.AbgleichEintragen(rep.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-        }
 
         _JgAnmeldung.DsSave(anmeldung);
 

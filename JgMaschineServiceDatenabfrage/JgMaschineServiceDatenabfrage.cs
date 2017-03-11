@@ -1,43 +1,30 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.ServiceProcess;
-using JgMaschineData;
-using JgMaschineLib;
 using JgMaschineServiceDatenabfrage.Maschinen;
+using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineServiceDatenabfrage
 {
   class Programm
   {
+
     static void Main(string[] args)
     {
+      Logger.SetLogWriter(new LogWriterFactory().Create());
+      ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+
       var prop = Properties.Settings.Default;
       var opt = new OptioneAbfrage()
       {
         PfadEvg = prop.PfadDatenEvG,
         PfadProgress = prop.PfadDatenProgress,
         PfadSchnell = prop.PfadDatenSchnell,
-        Protokoll = new Proto(Proto.KategorieArt.ServiceDatenabfrage, new JgMaschineLib.Email.SendEmailOptionen()
-        {
-          AdresseAbsender = prop.EmailAbsender,
-          AdressenEmpfaenger = prop.EmailListeEmpfaenger,
-          Betreff = prop.EmailBetreff,
-          ServerAdresse = prop.EmailServerAdresse,
-          ServerPort = prop.EmailServerPortNummer,
-          ServerBenutzername = prop.EmailServerBenutzerName,
-          ServerPasswort = prop.EmailServerBenutzerKennwort
-        }),
       };
 
 #if DEBUG
-
-      opt.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.Console);
-      opt.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.Console);
-      opt.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.Console);
-      opt.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.Console);
 
       var abfrage = new MaschineDatenabfrage(opt);
       abfrage.Start();
@@ -59,11 +46,6 @@ namespace JgMaschineServiceDatenabfrage
 
     public JgMaschineServiceDatenabfrage(OptioneAbfrage Optionen)
     {
-      Optionen.Protokoll.AddAuswahl(Proto.ProtoArt.Fehler, Proto.AnzeigeArt.WinProtokoll, Proto.AnzeigeArt.Email);
-      Optionen.Protokoll.AddAuswahl(Proto.ProtoArt.Warnung, Proto.AnzeigeArt.WinProtokoll);
-      Optionen.Protokoll.AddAuswahl(Proto.ProtoArt.Info, Proto.AnzeigeArt.WinProtokoll);
-      Optionen.Protokoll.AddAuswahl(Proto.ProtoArt.Kommentar, Proto.AnzeigeArt.WinProtokoll);
-
       _DatenAbfrage = new MaschineDatenabfrage(Optionen);
     }
 

@@ -8,7 +8,6 @@ namespace JgMaschineLib.Scanner
 {
   public class ScannerOptionen
   {
-    public Proto Protokoll = null;
     public string CradleIpAdresse = "";
     public string CradleTextAnmeldung = "";
     public int CradlePortNummer = 0;

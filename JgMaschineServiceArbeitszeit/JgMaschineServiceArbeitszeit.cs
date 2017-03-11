@@ -26,16 +26,10 @@ namespace JgMaschineServiceAbreitszeit
         PfadUpdateBediener = prop.PfadUpdateBediener,
         TimerIntervall = prop.AusleseIntervallInSekunden,
         VerbindungsString = prop.DatenbankVerbindungsString,
-
-        Datafox = new DatafoxOptionen()
-        {
-          IpNummer = prop.Terminal_IpNummer,
-          Portnummer = prop.Terminal_PortNummer,
-          TimeOut = prop.Terminal_TimeOut
-        },
       };
+      optDatafox.Terminal.TimeOut = prop.Terminal_TimeOut;
 
-      msg = $"Arbeitszeit startet!\nTerminal Adresse: {optDatafox.Datafox.IpNummer}  Port: {optDatafox.Datafox.Portnummer}.";
+      msg = $"Arbeitszeit startet!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
 #if DEBUG
@@ -66,6 +60,7 @@ namespace JgMaschineServiceAbreitszeit
     protected override void OnStart(string[] args)
     {
       base.OnStart(args);
+
       var msg = "ServiceTask startet!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 

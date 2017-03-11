@@ -20,22 +20,20 @@ namespace JgMaschineGlobalZeit
     private ComboBox _CmbJahr;
     private ComboBox _CmbMonat;
 
-    public ObservableCollection<tabBediener> ListeBediener;
+    public JgEntityTab<tabBediener> ListeBediener;
 
     // Wegen Optionen wird immer gleich das Ganze Jahr geladen
 
-    public ObservableCollection<tabPausenzeit> ListePausen;
-    public ObservableCollection<tabSollStunden> ListeSollstundenJahr;
-    public ObservableCollection<tabFeiertage> ListeFeiertageJahr;
-    public ObservableCollection<tabArbeitszeitRunden> ListeRundenJahr;
+    public JgEntityTab<tabPausenzeit> ListePausen;
+    public JgEntityTab<tabSollStunden> ListeSollstundenJahr;
+    public JgEntityTab<tabFeiertage> ListeFeiertageJahr;
+    public JgEntityTab<tabArbeitszeitRunden> ListeRundenJahr;
 
     public TimeSpan SollStundenMonat = TimeSpan.Zero;
     public List<tabFeiertage> ListeFeiertageMonat;
     public List<tabArbeitszeitRunden> ListeRundenMonat;
 
     public ArbeitszeitBediener AuswertungBediener = null;
-
-    private CollectionViewSource _VsBediener;
     private CollectionViewSource _VsAnzeigeTage = null;
 
     public short Jahr
@@ -58,13 +56,12 @@ namespace JgMaschineGlobalZeit
       }
     }
 
-    public tabBediener AktuellerBediener { get { return (tabBediener)_VsBediener?.View?.CurrentItem ?? null; } }
+    public tabBediener AktuellerBediener { get { return ListeBediener.Current; } }
 
     public AnmeldungAuswertung(JgModelContainer Db, ComboBox CmbJahr, ComboBox CmbMonat, CollectionViewSource VsBediener,
       ArbeitszeitSummen AzsKumulativ, ArbeitszeitSummen AzsGesamt, CollectionViewSource VsAnzeigeTage)
     {
       _Db = Db;
-      _VsBediener = VsBediener;
       _VsAnzeigeTage = VsAnzeigeTage;
 
       var heute = DateTime.Now.Date;
@@ -94,12 +91,13 @@ namespace JgMaschineGlobalZeit
           MonatGeandert();
       };
 
-      var bediener = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv)).OrderBy(o => o.NachName).ToList();
-
-      ListeBediener = new ObservableCollection<tabBediener>(bediener);
-      _VsBediener.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
-      _VsBediener.Source = ListeBediener;
-      _VsBediener.View.CurrentChanged += (sen, erg) =>
+      ListeBediener = new JgEntityTab<tabBediener>(_Db)
+      {
+        Daten = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv)).OrderBy(o => o.NachName).ToList(),
+        ViewSource = VsBediener
+      };
+      VsBediener.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
+      VsBediener.View.CurrentChanged += (sen, erg) =>
       {
         BenutzerGeaendert();
       };
@@ -116,22 +114,31 @@ namespace JgMaschineGlobalZeit
 
     public void JahrGeandert()
     {
-      var pausen = _Db.tabPausenzeitSet.Where(w => (!w.DatenAbgleich.Geloescht));
-      ListePausen = new ObservableCollection<tabPausenzeit>(pausen.ToList());
+      var pausen =
+      ListePausen = new JgEntityTab<tabPausenzeit>(_Db)
+      {
+        Daten = _Db.tabPausenzeitSet.Where(w => (!w.DatenAbgleich.Geloescht)).ToList()
+      };
 
       var jahr = Jahr;
 
-      var sollStunden = _Db.tabSollStundenSet.Where(f => (f.Jahr == jahr));
-      ListeSollstundenJahr = new ObservableCollection<tabSollStunden>(sollStunden.ToList());
+      ListeSollstundenJahr = new JgEntityTab<tabSollStunden>(_Db)
+      {
+        Daten = _Db.tabSollStundenSet.Where(f => (f.Jahr == jahr)).ToList()
+      };
 
       var ersterJahr = new DateTime(jahr, 1, 1);
       var letzterJahr = new DateTime(jahr, 12, 31, 23, 59, 59);
 
-      var feiertage = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= ersterJahr) && (w.Datum <= letzterJahr));
-      ListeFeiertageJahr = new ObservableCollection<tabFeiertage>(feiertage.ToList());
+      ListeFeiertageJahr = new JgEntityTab<tabFeiertage>(_Db)
+      {
+        Daten = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= ersterJahr) && (w.Datum <= letzterJahr)).ToList()
+      };
 
-      var runden = _Db.tabArbeitszeitRundenSet.Where(w => (w.Jahr == jahr));
-      ListeRundenJahr = new ObservableCollection<tabArbeitszeitRunden>(runden.ToList());
+      ListeRundenJahr = new JgEntityTab<tabArbeitszeitRunden>(_Db)
+      {
+        Daten = _Db.tabArbeitszeitRundenSet.Where(w => (w.Jahr == jahr)).ToList()
+      };
 
       MonatGeandert();
     }
@@ -140,16 +147,16 @@ namespace JgMaschineGlobalZeit
     {
       var monat = Monat;
 
-      var sollStunde = ListeSollstundenJahr.FirstOrDefault(f => (f.Monat == monat) && (!f.DatenAbgleich.Geloescht));
+      var sollStunde = ListeSollstundenJahr.Daten.FirstOrDefault(f => (f.Monat == monat) && (!f.DatenAbgleich.Geloescht));
       SollStundenMonat = (sollStunde == null) ? TimeSpan.Zero : JgZeit.StringInZeit(sollStunde.SollStunden);
 
-      ListeFeiertageMonat = ListeFeiertageJahr.Where(w => (w.Datum.Month == monat) && (!w.DatenAbgleich.Geloescht)).ToList();
+      ListeFeiertageMonat = ListeFeiertageJahr.Daten.Where(w => (w.Datum.Month == monat) && (!w.DatenAbgleich.Geloescht)).ToList();
       ListeRundenMonat = _Db.tabArbeitszeitRundenSet.Where(w => (w.Monat == monat) && (!w.DatenAbgleich.Geloescht)).ToList();
 
-      var idisBediener = ListeBediener.Select(s => s.Id).ToArray();
+      var idisBediener = ListeBediener.Daten.Select(s => s.Id).ToArray();
       var listAuswertungen = _Db.tabArbeitszeitAuswertungSet.Where(w => (idisBediener.Contains(w.fBediener) && (w.Jahr == Jahr) && (w.Monat == monat))).ToList();
 
-      foreach (var bediener in ListeBediener)
+      foreach (var bediener in ListeBediener.Daten)
         bediener.eArbeitszeitHelper = listAuswertungen.FirstOrDefault(f => f.eBediener == bediener);
 
       BenutzerGeaendert();
@@ -157,7 +164,7 @@ namespace JgMaschineGlobalZeit
 
     public void BenutzerGeaendert()
     {
-      AuswertungBediener.BedienerBerechnen(AktuellerBediener, Jahr, Monat, SollStundenMonat, ListeRundenMonat, ListeFeiertageMonat, ListePausen);
+      AuswertungBediener.BedienerBerechnen(AktuellerBediener, Jahr, Monat, SollStundenMonat, ListeRundenMonat, ListeFeiertageMonat, ListePausen.Daten);
     }
   }
 
@@ -277,7 +284,6 @@ namespace JgMaschineGlobalZeit
         SollStunden = JgZeit.ZeitInString(SollStundenMonat),
         Status = EnumStatusArbeitszeitAuswertung.InArbeit,
       };
-      DbSichern.AbgleichEintragen(az.DatenAbgleich, EnumStatusDatenabgleich.Neu);
       _Db.tabArbeitszeitAuswertungSet.Add(az);
       _Db.SaveChanges();
 
@@ -330,7 +336,6 @@ namespace JgMaschineGlobalZeit
             fArbeitszeitAuswertung = AuswertungBediener.Id,
             Tag = tag
           };
-          DbSichern.AbgleichEintragen(auswTag.DatenAbgleich, EnumStatusDatenabgleich.Neu);
           Db.tabArbeitszeitTagSet.Add(auswTag);
         }
 
@@ -365,7 +370,7 @@ namespace JgMaschineGlobalZeit
 
               var wg = ListeRundenMonat.FirstOrDefault(f => (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
               if (wg != null)
-                zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenAufZeit);
+                zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenArbeitszeitBeginn);
 
               if (zeit.Abmeldung != null)
               {
@@ -404,31 +409,16 @@ namespace JgMaschineGlobalZeit
         {
           if (!auswTag.IstManuellGeaendert)
           {
-            var geandert = false;
-
             if (auswTag.Pause != auswTag.PauseBerechnet)
-            {
               auswTag.Pause = auswTag.PauseBerechnet;
-              geandert = true;
-            }
 
             var z = (auswTag.IstFehlerZeit) ? TimeSpan.Zero : auswTag.ZeitBerechnet;
             if (z != auswTag.Zeit)
-            {
               auswTag.Zeit = z;
-              geandert = true;
-            }
 
             z = (auswTag.IstFehlerNachtschicht) ? TimeSpan.Zero : auswTag.NachtschichtBerechnet;
             if (z != auswTag.Nachtschicht)
-            {
               auswTag.Nachtschicht = z;
-              geandert = true;
-
-            }
-
-            if (geandert)
-              DbSichern.AbgleichEintragen(auswTag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
           }
         }
 
@@ -479,8 +469,6 @@ namespace JgMaschineGlobalZeit
 
       AuswertungTag.IstManuellGeaendert = true;
 
-      DbSichern.AbgleichEintragen(AuswertungTag.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
-      DbSichern.AbgleichEintragen(_Bediener.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
       _Db.SaveChanges();
     }
 
@@ -535,9 +523,8 @@ namespace JgMaschineGlobalZeit
       }
 
       var istStunden = new TimeSpan(8 * hinzuTage, 0, 0) + ZeitAufMinuteRunden(sumZeit);
-
-      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = JgZeit.ZeitInString(istStunden - JgZeit.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden));
-
+      var diff = istStunden - JgZeit.StringInZeit(_Bediener.eArbeitszeitHelper.SollStunden);
+      _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = JgZeit.ZeitInString(diff);
       BerechneUeberstundenGesamt();
     }
 
@@ -588,7 +575,6 @@ namespace JgMaschineGlobalZeit
         var zSollStunden = JgZeit.StringInZeit(sSollstunden);
         _Bediener.eArbeitszeitHelper.SollstundenAnzeige = sSollstunden;
         _Bediener.eArbeitszeitHelper.UeberstundenAnzeige = JgZeit.ZeitInString(zIstStunden - zSollStunden);
-        DbSichern.AbgleichEintragen(_Bediener.eArbeitszeitHelper.DatenAbgleich, EnumStatusDatenabgleich.Geaendert);
         _Db.SaveChanges();
 
         BerechneUeberstundenGesamt();

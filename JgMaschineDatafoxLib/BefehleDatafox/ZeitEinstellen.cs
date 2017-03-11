@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineDatafoxLib
@@ -11,7 +12,7 @@ namespace JgMaschineDatafoxLib
     /// <param name="Optionen">Übertragungsoptionen</param>
     /// <param name="MessageText">Text, welcher auf dem Display ausgeben werden soll</param>
     /// <param name="Tonfolge">Tonfolge: 0 - Kein Ton; 1-10 siehe Documentation</param>
-    public static void ZeitEinstellen(OptionenDatafox Optionen, DateTime DatumZeit)
+    public static bool ZeitEinstellen(OptionenDatafox Optionen, DateTime DatumZeit)
     {
       //Buffer[0] = 20;
       //Buffer[1] = 12;
@@ -33,13 +34,15 @@ namespace JgMaschineDatafoxLib
 
       try
       {
-        var res = DFComDLL.DFCComSetTime(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, buffer);
+        var res = DFComDLL.DFCComSetTime(Optionen.Terminal.ChannelId, Optionen.Terminal.DeviceId, buffer);
+        return res != 0;
       }
       catch
       {
         var msg = "Fehler beim Einstellen der Zeit im Terminal";
-        Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
+        Logger.Write(msg, "Service", 1, 0, TraceEventType.Warning);
       }
+      return false;
     }
   }
 }

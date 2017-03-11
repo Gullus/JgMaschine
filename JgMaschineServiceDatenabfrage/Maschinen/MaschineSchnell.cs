@@ -9,10 +9,9 @@ namespace JgMaschineServiceDatenabfrage.Maschinen
 {
   internal class MaschineSchnell : MaschinenStamm
   {
-    public MaschineSchnell(JgModelContainer Db, Proto Protokoll, string StartPfad)
+    public MaschineSchnell(JgModelContainer Db, string StartPfad)
     {
       _Db = Db;
-      _Protokoll = Protokoll;
       _StartPfad = StartPfad;
     }
 

@@ -11,7 +11,7 @@
     public static void Send(OptionenDatafox Optionen, string MessageText, byte Tonfolge = 7)
     {
       DatafoxOeffnen(Optionen);
-      DFComDLL.DFCComSendMessage(Optionen.Datafox.ChannelId, Optionen.Datafox.DeviceId, Optionen.Datafox.IdVerbindung, 0, Tonfolge, MessageText, MessageText.Length);
+      DFComDLL.DFCComSendMessage(Optionen.Terminal.ChannelId, Optionen.Terminal.DeviceId, Optionen.Terminal.IdVerbindung, 0, Tonfolge, MessageText, MessageText.Length);
       DatafoxSchliessen(Optionen);
     }
   }

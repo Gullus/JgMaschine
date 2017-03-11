@@ -49,6 +49,28 @@ namespace JgMaschineTest
       //  Title = "Der Titel",
       //};
       //Logger.Write(log);
+
+      //ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+      //try
+      //{
+      //  try
+      //  {
+      //    var i = 0;
+      //    var z = 50 / i;
+      //  }
+      //  catch (Exception f)
+      //  {
+      //    bool th = ExceptionPolicy.HandleException(f, "Policy");
+      //    throw new Exception("Meine neuer Fehler", f);
+      //  }
+      //}
+      //catch (Exception h)
+      //{
+      //  bool th = ExceptionPolicy.HandleException(h, "Policy");
+      //}
+
+      //ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+      //ConfigurationManager.AppSettings.Add("Mist", "Arsch");
     }
 
     private void XmlDateiEinlesen()

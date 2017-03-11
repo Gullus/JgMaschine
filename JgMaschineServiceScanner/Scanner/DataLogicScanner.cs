@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineLib.Scanner
 {
@@ -63,9 +64,10 @@ namespace JgMaschineLib.Scanner
 
     public void Start()
     {
+      string msg = "";
       while (true)
       {
-        if (!Helper.IstPingOk(_Optionen.CradleIpAdresse, _Optionen.Protokoll))
+        if (!Helper.IstPingOk(_Optionen.CradleIpAdresse, out msg))
           Thread.Sleep(30000);
         else
         {
@@ -75,14 +77,14 @@ namespace JgMaschineLib.Scanner
           }
           catch (Exception f)
           {
-            var msg1 = $"Fehler beim Verbinungsaufbau zum Cradle.\nGrund: {f.Message}";
-            _Optionen.Protokoll.Set(msg1, Proto.ProtoArt.Warnung);
+            msg = $"Fehler beim Verbinungsaufbau zum Cradle.\nGrund: {f.Message}";
+            Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Error);
             Thread.Sleep(30000);
             continue;
           }
 
-          var msg = "Verbindung mit Cradle hergestellt.";
-          _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Info);
+          msg = "Verbindung mit Cradle hergestellt.";
+          Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
           _NetStream = _Client.GetStream();
 
@@ -103,7 +105,7 @@ namespace JgMaschineLib.Scanner
                 if (ct.IsCancellationRequested)
                   break;
 
-                if (!Helper.IstPingOk(_Optionen.CradleIpAdresse, _Optionen.Protokoll))
+                if (!Helper.IstPingOk(_Optionen.CradleIpAdresse, out msg))
                   break;
 
                 if (ct.IsCancellationRequested)
@@ -126,8 +128,8 @@ namespace JgMaschineLib.Scanner
                 _NetStream.Dispose();
                 if (!ct.IsCancellationRequested)
                 {
-                  var msg1 = "Fehler beim Empfang der Daten von Sanner!";
-                  _Optionen.Protokoll.Set(msg1, f);
+                  msg = $"Fehler beim Empfang der Daten von Sanner!\nGrund: {f.Message}";
+                  Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
                   return _FehlerDatenEmpfang;
                 }
               }
@@ -147,7 +149,7 @@ namespace JgMaschineLib.Scanner
                 if (textEmpfangen == _FehlerDatenEmpfang)
                 {
                   msg = "Fehlertext wurde angesprochen.";
-                  _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+                  Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
                 }
                 else
                 {
@@ -156,7 +158,7 @@ namespace JgMaschineLib.Scanner
                     zeichen = " Text: " + textEmpfangen + " Byte: " + Convert.ToByte(textEmpfangen[0]);
 
                   msg = $"Unklarer Text empfangen. Anzahl der Zeichen: {textEmpfangen.Length}{zeichen}";
-                  _Optionen.Protokoll.Set(msg, Proto.ProtoArt.Warnung);
+                  Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
                 }
 
                 _Client.Close();

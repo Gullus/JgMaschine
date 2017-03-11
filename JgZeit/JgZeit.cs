@@ -133,20 +133,33 @@ namespace JgZeitHelper
     {
       if (!string.IsNullOrWhiteSpace(ZeitString))
       {
-        var werte = ZeitString.Split(new char[] { ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
-        if (werte.Length > 0)
+        try
         {
-          try
+          var einzelWerte = ZeitString.Split(new char[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+
+          if ((einzelWerte.Length > 0) && (einzelWerte[0].Length > 0))
           {
-            var minute = 0;
-            var stunde = Convert.ToInt32(werte[0]);
-            if (werte.Length > 1)
-              minute = stunde < 0 ? -1 * Convert.ToInt32(werte[1]) : Convert.ToInt32(werte[1]);
-            return new TimeSpan(stunde, minute, 0);
+            var werte = new int[] { 0, 0, 0 };
+            var zaehler = 0;
+
+            foreach (var sw in einzelWerte)
+            {
+              werte[zaehler] = Convert.ToInt32(sw);
+              if (werte[zaehler] < 0)
+                werte[zaehler] *= -1;
+              zaehler++;
+            }
+
+            if (einzelWerte[0].Contains("-"))
+              return new TimeSpan(-1 * werte[0], -1 * werte[1], -1 * werte[2]);
+            else
+              return new TimeSpan(werte[0], werte[1], werte[2]);
           }
-          catch { };
         }
+        catch
+        { }
       }
+
       if (ZeitAlt != null)
         return ZeitAlt.Value;
       else

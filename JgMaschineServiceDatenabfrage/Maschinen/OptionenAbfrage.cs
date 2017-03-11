@@ -11,7 +11,6 @@ namespace JgMaschineServiceDatenabfrage.Maschinen
     public string PfadProgress { get; set; } = "";
 
     public string DatenbankVerbindungsString { get; set; } = "";
-    public Proto Protokoll { get; set; }
     public tabMaschine AktuelleMaschine { get; set; }
   }
 }

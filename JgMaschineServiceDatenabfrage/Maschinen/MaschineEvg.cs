@@ -9,10 +9,9 @@ namespace JgMaschineServiceDatenabfrage.Maschinen
 {
   internal class MaschineEvg : MaschinenStamm
   {
-    public MaschineEvg(JgModelContainer Db, Proto Protokoll, string StartPfad)
+    public MaschineEvg(JgModelContainer Db, string StartPfad)
     {
       _Db = Db;
-      _Protokoll = Protokoll;
       _StartPfad = StartPfad;
     }
 

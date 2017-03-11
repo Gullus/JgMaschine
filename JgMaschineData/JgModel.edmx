@@ -22,6 +22,7 @@
     <EntitySet Name="tabSollStundenSet" EntityType="JgModel.Store.tabSollStundenSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabPausenzeitSet" EntityType="JgModel.Store.tabPausenzeitSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabArbeitszeitRundenSet" EntityType="JgModel.Store.tabArbeitszeitRundenSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="tabArbeitszeitTerminalSet" EntityType="JgModel.Store.tabArbeitszeitTerminalSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="tabBauteiltabBediener" EntityType="JgModel.Store.tabBauteiltabBediener" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="tabMaschinetabAnmeldung" Association="JgModel.Store.tabMaschinetabAnmeldung">
       <End Role="tabMaschine" EntitySet="tabMaschineSet" />
@@ -114,6 +115,10 @@
     <AssociationSet Name="tabStandorttabArbeitzzeitRunden" Association="JgModel.Store.tabStandorttabArbeitzzeitRunden">
       <End Role="tabStandort" EntitySet="tabStandortSet" />
       <End Role="tabArbeitzzeitRunden" EntitySet="tabArbeitszeitRundenSet" />
+    </AssociationSet>
+    <AssociationSet Name="tabStandorttabArbeitszeitTerminal" Association="JgModel.Store.tabStandorttabArbeitszeitTerminal">
+      <End Role="tabStandort" EntitySet="tabStandortSet" />
+      <End Role="tabArbeitszeitTerminal" EntitySet="tabArbeitszeitTerminalSet" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="tabMaschineSet">
@@ -254,12 +259,11 @@
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Bezeichnung" Type="nvarchar" Nullable="false" MaxLength="120" />
+    <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
-    <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="120" />
-    <Property Name="UpdateBedienerDatafox" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="tabAuswertungSet">
     <Key>
@@ -399,7 +403,23 @@
     <Property Name="Monat" Type="tinyint" Nullable="false" />
     <Property Name="ZeitVon" Type="time" Nullable="false" />
     <Property Name="ZeitBis" Type="time" Nullable="false" />
-    <Property Name="RundenAufZeit" Type="time" Nullable="false" />
+    <Property Name="RundenArbeitszeitBeginn" Type="time" Nullable="false" />
+    <Property Name="RundenArbeitszeitLaenge" Type="time" Nullable="true" />
+    <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
+    <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
+    <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
+    <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tabArbeitszeitTerminalSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Bezeichnung" Type="nvarchar" Nullable="false" MaxLength="120" />
+    <Property Name="IpNummer" Type="nvarchar" Nullable="false" MaxLength="30" />
+    <Property Name="PortNummer" Type="int" Nullable="false" />
+    <Property Name="UpdateTerminal" Type="bit" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -674,6 +694,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="tabStandorttabArbeitszeitTerminal">
+    <End Role="tabStandort" Type="JgModel.Store.tabStandortSet" Multiplicity="1" />
+    <End Role="tabArbeitszeitTerminal" Type="JgModel.Store.tabArbeitszeitTerminalSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tabStandort">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabArbeitszeitTerminal">
+        <PropertyRef Name="fStandort" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_tabBauteiltabBediener_tabBauteil">
     <End Role="tabBauteil" Type="JgModel.Store.tabBauteilSet" Multiplicity="1" />
     <End Role="tabBauteiltabBediener" Type="JgModel.Store.tabBauteiltabBediener" Multiplicity="*" />
@@ -811,6 +843,11 @@
           <AssociationSet Name="tabStandorttabArbeitzzeitRunden" Association="JgModel.tabStandorttabArbeitzzeitRunden">
             <End Role="tabStandort" EntitySet="tabStandortSet" />
             <End Role="tabArbeitzzeitRunden" EntitySet="tabArbeitszeitRundenSet" />
+          </AssociationSet>
+          <EntitySet Name="tabArbeitszeitTerminalSet" EntityType="JgModel.tabArbeitszeitTerminal" />
+          <AssociationSet Name="tabStandorttabArbeitszeitTerminal" Association="JgModel.tabStandorttabArbeitszeitTerminal">
+            <End Role="tabStandort" EntitySet="tabStandortSet" />
+            <End Role="tabArbeitszeitTerminal" EntitySet="tabArbeitszeitTerminalSet" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="tabMaschine">
@@ -1074,13 +1111,13 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Bezeichnung" Type="String" Nullable="false" MaxLength="120" Unicode="true" FixedLength="false" />
-          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="sMaschinen" Relationship="JgModel.tabStandorttabMaschine" FromRole="tabStandort" ToRole="tabMaschine" />
           <NavigationProperty Name="sArbeitszeiten" Relationship="JgModel.tabStandorttabArbeitszeit1" FromRole="tabStandort" ToRole="tabArbeitszeit" />
-          <Property Name="UpdateBedienerDatafox" Type="Boolean" Nullable="false" />
+          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <NavigationProperty Name="sBediener" Relationship="JgModel.tabStandorttabBediener" FromRole="tabStandort" ToRole="tabBediener" />
           <NavigationProperty Name="sArbeitzzeitRunden" Relationship="JgModel.tabStandorttabArbeitzzeitRunden" FromRole="tabStandort" ToRole="tabArbeitzzeitRunden" />
+          <NavigationProperty Name="sArbeitszeitTerminals" Relationship="JgModel.tabStandorttabArbeitszeitTerminal" FromRole="tabStandort" ToRole="tabArbeitszeitTerminal" />
         </EntityType>
         <Association Name="tabStandorttabMaschine">
           <End Type="JgModel.tabStandort" Role="tabStandort" Multiplicity="1" />
@@ -1413,7 +1450,8 @@
           <Property Name="Monat" Type="Byte" Nullable="false" />
           <Property Name="ZeitVon" Type="Time" Nullable="false" />
           <Property Name="ZeitBis" Type="Time" Nullable="false" />
-          <Property Name="RundenAufZeit" Type="Time" Nullable="false" />
+          <Property Name="RundenArbeitszeitBeginn" Type="Time" Nullable="false" />
+          <Property Name="RundenArbeitszeitLaenge" Type="Time" Nullable="true" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabArbeitzzeitRunden" FromRole="tabArbeitzzeitRunden" ToRole="tabStandort" />
@@ -1426,6 +1464,31 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="tabArbeitzzeitRunden">
+              <PropertyRef Name="fStandort" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tabArbeitszeitTerminal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Bezeichnung" Type="String" Nullable="false" MaxLength="120" />
+          <Property Name="IpNummer" Type="String" Nullable="false" MaxLength="30" />
+          <Property Name="PortNummer" Type="Int32" Nullable="false" />
+          <Property Name="UpdateTerminal" Type="Boolean" Nullable="false" />
+          <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
+          <Property Name="fStandort" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabArbeitszeitTerminal" FromRole="tabArbeitszeitTerminal" ToRole="tabStandort" />
+        </EntityType>
+        <Association Name="tabStandorttabArbeitszeitTerminal">
+          <End Type="JgModel.tabStandort" Role="tabStandort" Multiplicity="1" />
+          <End Type="JgModel.tabArbeitszeitTerminal" Role="tabArbeitszeitTerminal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tabStandort">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabArbeitszeitTerminal">
               <PropertyRef Name="fStandort" />
             </Dependent>
           </ReferentialConstraint>
@@ -1591,14 +1654,13 @@
         <MappingFragment StoreEntitySet="tabStandortSet">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Bezeichnung" ColumnName="Bezeichnung" />
+          <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
             <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
             <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
-          <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
-          <ScalarProperty Name="UpdateBedienerDatafox" ColumnName="UpdateBedienerDatafox" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1763,7 +1825,26 @@
           <ScalarProperty Name="Monat" ColumnName="Monat" />
           <ScalarProperty Name="ZeitVon" ColumnName="ZeitVon" />
           <ScalarProperty Name="ZeitBis" ColumnName="ZeitBis" />
-          <ScalarProperty Name="RundenAufZeit" ColumnName="RundenAufZeit" />
+          <ScalarProperty Name="RundenArbeitszeitBeginn" ColumnName="RundenArbeitszeitBeginn" />
+          <ScalarProperty Name="RundenArbeitszeitLaenge" ColumnName="RundenArbeitszeitLaenge" />
+          <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
+            <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
+            <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
+            <ScalarProperty Name="Bearbeiter" ColumnName="DatenAbgleich_Bearbeiter" />
+            <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
+          </ComplexProperty>
+          <ScalarProperty Name="fStandort" ColumnName="fStandort" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tabArbeitszeitTerminalSet">
+      <EntityTypeMapping TypeName="IsTypeOf(JgModel.tabArbeitszeitTerminal)">
+        <MappingFragment StoreEntitySet="tabArbeitszeitTerminalSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Bezeichnung" ColumnName="Bezeichnung" />
+          <ScalarProperty Name="IpNummer" ColumnName="IpNummer" />
+          <ScalarProperty Name="PortNummer" ColumnName="PortNummer" />
+          <ScalarProperty Name="UpdateTerminal" ColumnName="UpdateTerminal" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

@@ -8,6 +8,7 @@ using JgMaschineData;
 namespace JgMaschineLib
 {
   public delegate IEnumerable<E> JgEntityListDatenErstellenDeleget<E>(JgModelContainer Db);
+
   public class JgEntityView<K>
     where K : class
   {
@@ -79,7 +80,6 @@ namespace JgMaschineLib
     {
       var ds = _Db.Entry(DatenSatz);
       ds.Property("Id").CurrentValue = Guid.NewGuid();
-      DbSichern.AbgleichEintragen((DatenAbgleich)ds.Property("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Neu);
       _Db.Set<K>().Add(DatenSatz);
       _Db.SaveChanges();
 
@@ -111,7 +111,6 @@ namespace JgMaschineLib
       var entr = _Db.Entry(DatenSatz ?? Current);
       var abgl = (DatenAbgleich)entr.Property<DatenAbgleich>("DatenAbgleich").CurrentValue;
       abgl.Geloescht = true;
-      DbSichern.AbgleichEintragen(abgl, EnumStatusDatenabgleich.Geaendert);
       if (entr.State != System.Data.Entity.EntityState.Modified)
         entr.State = System.Data.Entity.EntityState.Modified;
       _Db.SaveChanges();
@@ -130,7 +129,6 @@ namespace JgMaschineLib
       var entr = _Db.Entry(DatenSatz ?? Current);
       if (entr.State != System.Data.Entity.EntityState.Modified)
         entr.State = System.Data.Entity.EntityState.Modified;
-      DbSichern.AbgleichEintragen(entr.Property<DatenAbgleich>("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Geaendert);
       _Db.SaveChanges();
     }
 

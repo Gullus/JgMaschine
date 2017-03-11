@@ -12,21 +12,19 @@ namespace JgMaschineData
     using System;
     using System.Collections.Generic;
     
-    public partial class tabArbeitszeitRunden
+    public partial class tabArbeitszeitTerminal
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tabArbeitszeitRunden()
+        public tabArbeitszeitTerminal()
         {
             this.DatenAbgleich = new DatenAbgleich();
         }
     
         public System.Guid Id { get; set; }
-        public short Jahr { get; set; }
-        public byte Monat { get; set; }
-        public System.TimeSpan ZeitVon { get; set; }
-        public System.TimeSpan ZeitBis { get; set; }
-        public System.TimeSpan RundenArbeitszeitBeginn { get; set; }
-        public Nullable<System.TimeSpan> RundenArbeitszeitLaenge { get; set; }
+        public string Bezeichnung { get; set; }
+        public string IpNummer { get; set; }
+        public int PortNummer { get; set; }
+        public bool UpdateTerminal { get; set; }
         public System.Guid fStandort { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }

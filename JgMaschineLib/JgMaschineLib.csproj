@@ -57,8 +57,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbSichern.cs" />
-    <Compile Include="Email\SendEamilOptionen.cs" />
+    <Compile Include="Email\SendEmailOptionen.cs" />
     <Compile Include="Imports\JgFastCube.cs" />
     <Compile Include="Listen\JgEntityAuto.cs" />
     <Compile Include="Listen\JgEntityList.cs" />

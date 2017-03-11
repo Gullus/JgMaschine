@@ -18,7 +18,7 @@ namespace JgMaschineAuswertung
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
     private string _FileSqlVerbindung = "JgMaschineSqlVerbindung.Xml";
-    private JgEntityView<tabAuswertung> _Auswertungen;
+    private JgEntityTab<tabAuswertung> _Auswertungen;
 
     public MainWindow()
     {
@@ -27,17 +27,18 @@ namespace JgMaschineAuswertung
 
     private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
     {
-      _Auswertungen = new JgEntityView<tabAuswertung>()
+      _Auswertungen = new JgEntityTab<tabAuswertung>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsAuswertung"),
         Tabellen = new DataGrid[] { dgAuswertung },
-        DatenErstellen = (db) =>
-          {
-            return db.tabAuswertungSet.Where(w => w.FilterAuswertung == EnumFilterAuswertung.Allgemein).OrderBy(o => o.ReportName).ToList();
-          }
+        OnDatenLaden = (d, p) =>
+        {
+          return d.tabAuswertungSet
+            .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Allgemein)
+            .OrderBy(o => o.ReportName).ToList();
+        }
       };
-
-      _Auswertungen.DatenAktualisieren();
+      _Auswertungen.DatenLaden();
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";
@@ -51,7 +52,7 @@ namespace JgMaschineAuswertung
           repEvent.Report.Save(memStr);
           ausw.Report = memStr.ToArray();
           ausw.GeaendertDatum = DateTime.Now;
-          ausw.GeaendertName = DbSichern.Benutzer;
+          ausw.GeaendertName = Helper.Benutzer;
           _Auswertungen.DsSave(ausw);
         }
         catch (Exception f)
@@ -74,7 +75,7 @@ namespace JgMaschineAuswertung
         Fenster.FormAuswertungBearbeiten form = new Fenster.FormAuswertungBearbeiten(null);
         if (form.ShowDialog() ?? false)
         {
-          string username = DbSichern.Benutzer;
+          string username = Helper.Benutzer;
           form.Auswertung.FilterAuswertung = JgMaschineData.EnumFilterAuswertung.Allgemein;
           form.Auswertung.ErstelltDatum = DateTime.Now;
           form.Auswertung.ErstelltName = username;
@@ -154,7 +155,7 @@ namespace JgMaschineAuswertung
 
     private void CanExecReportVorhandenAndNull(object sender, CanExecuteRoutedEventArgs e)
     {
-      e.CanExecute = (_Auswertungen.Current!= null) && (_Auswertungen.Current.Report != null);
+      e.CanExecute = (_Auswertungen.Current != null) && (_Auswertungen.Current.Report != null);
     }
 
     private void CanExecReportVorhanden(object sender, CanExecuteRoutedEventArgs e)
@@ -187,7 +188,7 @@ namespace JgMaschineAuswertung
 
     private void Click_TabelleAktuallisieren(object sender, RoutedEventArgs e)
     {
-      _Auswertungen.DatenAktualisieren();
+      _Auswertungen.DatenNeuLaden();
     }
   }
 }

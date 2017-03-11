@@ -10,8 +10,6 @@ using JgMaschineData;
 
 namespace JgMaschineLib
 {
-  //private ObjectContext _Context { get { return (_Db as IObjectContextAdapter).ObjectContext; } }
-
   public delegate void JgEntityAutoTimerAusgeloestDelegate();
 
   public class JgEntityAuto
@@ -89,7 +87,7 @@ namespace JgMaschineLib
 
       foreach (var tab in _Tabs.Values)
       {
-        if (!tab.DatenAnViewSource) 
+        if (!tab.DatenAnViewSource)
           tab.Refresh();
         else if (tab.RefreshAusloesen)
         {
@@ -109,10 +107,12 @@ namespace JgMaschineLib
   public abstract class JgEntityTab
   {
     protected JgModelContainer _Db;
+    public JgModelContainer Db { get { return _Db; } }
+
     protected int _ZeilenNummer = 0;
     protected CollectionViewSource _ViewSource = null;
 
-    public  bool RefreshAusloesen = false;
+    public bool RefreshAusloesen = false;
     public bool DatenAnViewSource = true;
     public static readonly string IstNull = "#IstNull#";
 
@@ -133,6 +133,32 @@ namespace JgMaschineLib
   {
     public Guid[] Idis { get; set; }
     private ObservableCollection<K> _Daten = new ObservableCollection<K>();
+
+    #region Laden von Daten über ein Delegaten
+
+    public Dictionary<string, object> Parameter = null;
+    public delegate IEnumerable<K> DatenLadenDelegate(JgModelContainer Db, Dictionary<string, object> Parameter);
+    public DatenLadenDelegate OnDatenLaden = null;
+
+    public void DatenLaden()
+    {
+      if (OnDatenLaden != null)
+        Daten = OnDatenLaden(_Db, Parameter);
+    }
+
+    public void DatenNeuLaden()
+    {
+      if (OnDatenLaden != null)
+      {
+        MerkeZeile();
+        var conString = _Db.Database.Connection.ConnectionString;
+        _Db = new JgModelContainer();
+        _Db.Database.Connection.ConnectionString = conString;
+        Daten = OnDatenLaden(_Db, Parameter);
+        GeheZuZeile();
+      }
+    }
+    #endregion
 
     public IEnumerable<K> Daten
     {
@@ -188,6 +214,22 @@ namespace JgMaschineLib
         Idis = null;
 
       return dbDaten;
+    }
+
+    public void ErgebnissFormular(bool? ErgebnissShowDialog, bool istNeu, K Datensatz)
+    {
+      if (ErgebnissShowDialog ?? false)
+      {
+        if (istNeu)
+          Add(Datensatz);
+      }
+      else if (!istNeu)
+      {
+        MerkeZeile();
+        Reload(Datensatz);
+        Refresh();
+        GeheZuZeile();
+      }
     }
 
     public override void DatenAktualisieren(SqlConnection SqlVerbindung)
@@ -257,10 +299,17 @@ namespace JgMaschineLib
     /// </summary>
     /// <param name="Db"></param>
     /// <param name="DatenAnViewSourceBinden">Bei Detailtabellen dürfen die Daten nicht an Viesource gebunden Werden</param>
-    public JgEntityTab(JgModelContainer Db, bool DatenAnViewSourceBinden = true)
+    public JgEntityTab(JgModelContainer NeuDb, bool DatenAnViewSourceBinden = true)
     {
-      _Db = Db;
+      _Db = NeuDb;
       DatenAnViewSource = DatenAnViewSourceBinden;
+    }
+
+    public JgEntityTab(string ConnectionString = null)
+    {
+      _Db = new JgModelContainer();
+      if (! string.IsNullOrWhiteSpace(ConnectionString))
+        _Db.Database.Connection.ConnectionString = ConnectionString;
     }
 
     public void MerkeZeile()
@@ -270,9 +319,9 @@ namespace JgMaschineLib
         _ZeilenNummer = _ViewSource.View.CurrentPosition;
     }
 
-    public void SetzeZeile()
+    public void GeheZuZeile()
     {
-      if ((ViewSource != null) && (_Daten.Count > 0) && (_ZeilenNummer > 0))
+      if ((ViewSource?.View != null) && (_Daten.Count > 0) && (_ZeilenNummer > 0))
       {
         if (_ZeilenNummer >= _Daten.Count)
           _ZeilenNummer = _Daten.Count - 1;
@@ -284,25 +333,20 @@ namespace JgMaschineLib
     {
       var entr = _Db.Entry(DatenSatz);
       entr.Property("Id").CurrentValue = Guid.NewGuid();
-      DbSichern.AbgleichEintragen((DatenAbgleich)entr.Property("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Neu);
       _Db.Set<K>().Add(DatenSatz);
       _Daten.Add(DatenSatz);
 
+      GeheZuDatensatz(DatenSatz);
+
       if (Sichern)
-      {
-        _Db.SaveChanges();
-        _ViewSource.View.MoveCurrentTo(DatenSatz);
-      }
+        DsSave(DatenSatz);
     }
 
-    public void GeheZuDatensatz(K DatenSatz, bool Sichern = false)
+    public void GeheZuDatensatz(K DatenSatz)
     {
-      if (Sichern)
-        _Db.SaveChanges();
-
       if (_ViewSource?.View != null)
       {
-        _ViewSource?.View?.MoveCurrentTo(DatenSatz);
+        _ViewSource.View.MoveCurrentTo(DatenSatz);
 
         if (Tabellen != null)
         {
@@ -336,7 +380,6 @@ namespace JgMaschineLib
       var entr = _Db.Entry(DatenSatz ?? Current);
       if (entr.State != System.Data.Entity.EntityState.Modified)
         entr.State = System.Data.Entity.EntityState.Modified;
-      DbSichern.AbgleichEintragen(entr.Property<DatenAbgleich>("DatenAbgleich").CurrentValue, EnumStatusDatenabgleich.Geaendert);
       _Db.SaveChanges();
     }
 

@@ -16,12 +16,12 @@
         <jgZeit:JgZeit x:Key="dzArbeitszeitBis" />
 
         <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
-        <CollectionViewSource x:Key="vsAuswertungArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+        <CollectionViewSource x:Key="vsReporteArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
         <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}" />
         <CollectionViewSource x:Key="vsArbeitszeitTage" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeitTag}, CreateList=True}"/>
 
-        <CollectionViewSource x:Key="vsAuswertungAuswertung" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
+        <CollectionViewSource x:Key="vsReporteAuswertung" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
         <local:ArbeitszeitSummen x:Key="AuswertungKumulativ"/>
         <local:ArbeitszeitSummen x:Key="AuswertungGesamt"/>
@@ -130,7 +130,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
-                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungArbeitszeit}}" DisplayMemberPath="AnzeigeReportname" Grid.Column="1"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource vsReporteArbeitszeit}}" DisplayMemberPath="AnzeigeReportname" Grid.Column="1"/>
                         <Button Click="btnDrucken_Click" Grid.Column="2" Tag="0" ToolTip="Reportname ändern">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgSettings.ico" Height="14"/>
@@ -660,7 +660,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" Height="28" VerticalAlignment="Bottom" />
-                        <ComboBox ItemsSource="{Binding Source={StaticResource vsAuswertungAuswertung}}" DisplayMemberPath="AnzeigeReportname" Grid.Column="1"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource vsReporteAuswertung}}" DisplayMemberPath="AnzeigeReportname" Grid.Column="1"/>
                         <Button Click="btnDrucken_Click" Grid.Column="2" Tag="0" ToolTip="Reportname ändern">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgSettings.ico" Height="14"/>
