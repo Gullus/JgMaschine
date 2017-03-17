@@ -1,0 +1,4 @@
+Bei der ‹bertrgagung von Daten via get Request, ist es notwendig nach dem Response die Verbindung vom Webserver zum Ger‰t zu schlieﬂen.
+Das "Close" muss vom Webserver aus erfolgen.
+
+Dieser Flag kann in dotNET im http-Listener mit dem Boolschen-Merker "HttpListenerResponse.KeepAlive" gesetzt werden.False

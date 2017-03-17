@@ -1,12 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Configuration.Install;
 using System.ServiceProcess;
 using System.Threading.Tasks;
-using JgMaschineDatafoxLib;
 using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
-namespace JgMaschineServiceAbreitszeit
+namespace JgMaschineServiceArbeitszeit
 {
   class Programm
   {
@@ -20,27 +20,26 @@ namespace JgMaschineServiceAbreitszeit
       var msg = "Programm startet. Initialisierung Datafox Optionen.";
       Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Start);
       
-      var optDatafox = new OptionenDatafox()
+      var optArbeitszeit = new OptionenArbeitszeit()
       {
-        Standort = prop.Standort,
         PfadUpdateBediener = prop.PfadUpdateBediener,
         TimerIntervall = prop.AusleseIntervallInSekunden,
         VerbindungsString = prop.DatenbankVerbindungsString,
+        Terminal_TimeOut = prop.Terminal_TimeOut
       };
-      optDatafox.Terminal.TimeOut = prop.Terminal_TimeOut;
 
       msg = $"Arbeitszeit startet!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
 #if DEBUG
 
-      var _ArbeitszeitErfassung = new ArbeitszeitErfassen(optDatafox);
-      
-      ArbeitszeitErfassen.OnTimedEvent(optDatafox);
+      var _ArbeitszeitErfassung = new ArbeitszeitErfassen(optArbeitszeit);      
+      ArbeitszeitErfassen.OnTimedEvent(optArbeitszeit);
+      Console.ReadKey();
 
 #else
 
-      var ServiceToRun = new ServiceBase[] { new JgMaschineServiceArbeitszeit(optDatafox) };
+      var ServiceToRun = new ServiceBase[] { new JgMaschineServiceArbeitszeit(optArbeitszeit) };
       ServiceBase.Run(ServiceToRun);
 
 #endif
@@ -52,7 +51,7 @@ namespace JgMaschineServiceAbreitszeit
   {
     private ArbeitszeitErfassen _ArbErfassung;
 
-    public JgMaschineServiceArbeitszeit(OptionenDatafox OptDatafox)
+    public JgMaschineServiceArbeitszeit(OptionenArbeitszeit OptDatafox)
     {
       _ArbErfassung = new ArbeitszeitErfassen(OptDatafox);
     }

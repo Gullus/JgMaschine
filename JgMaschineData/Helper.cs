@@ -681,5 +681,9 @@ namespace JgMaschineData
 
   [MetadataType(typeof(tabArbeitszeitTerminalMetaData))]
   public partial class tabArbeitszeitTerminal
-  { }
+  {
+    // Wenn die Daten im Terminal erfolgreich aktualisiert wurden, kommt hier ein True und der DAtensatz wird gespeichert.
+    public bool TerminaldatenWurdenAktualisiert = false;
+
+  }
 }

@@ -83,8 +83,16 @@
       <HintPath>..\packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.Logging, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.ExceptionHandling.Logging.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -132,10 +140,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JgMaschineDatafoxLib\JgMaschineDatafoxLib.csproj">
-      <Project>{306f2418-ad6b-449e-8ece-f35e385ef2e2}</Project>
-      <Name>JgMaschineDatafoxLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JgMaschineData\JgMaschineData.csproj">
       <Project>{6bc109e0-7e70-46eb-9137-5e60e8074ccc}</Project>
       <Name>JgMaschineData</Name>
@@ -143,6 +147,10 @@
     <ProjectReference Include="..\JgMaschineLib\JgMaschineLib.csproj">
       <Project>{69d6b7e0-6ddc-49a5-a44f-d6bfd607aed3}</Project>
       <Name>JgMaschineLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JgMaschineTraceListener\JgMaschineTraceListener.csproj">
+      <Project>{ae612b78-7e3c-409b-8fc3-0f6dd485c03f}</Project>
+      <Name>JgMaschineTraceListener</Name>
     </ProjectReference>
     <ProjectReference Include="..\JgZeit\JgZeitHelper.csproj">
       <Project>{251d8de4-e988-424e-9945-ace74d2005d6}</Project>

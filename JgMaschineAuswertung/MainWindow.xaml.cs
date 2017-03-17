@@ -18,7 +18,7 @@ namespace JgMaschineAuswertung
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
     private string _FileSqlVerbindung = "JgMaschineSqlVerbindung.Xml";
-    private JgEntityTab<tabAuswertung> _Auswertungen;
+    private JgEntityList<tabAuswertung> _Auswertungen;
 
     public MainWindow()
     {
@@ -27,7 +27,7 @@ namespace JgMaschineAuswertung
 
     private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
     {
-      _Auswertungen = new JgEntityTab<tabAuswertung>()
+      _Auswertungen = new JgEntityList<tabAuswertung>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsAuswertung"),
         Tabellen = new DataGrid[] { dgAuswertung },

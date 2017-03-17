@@ -1,0 +1,9 @@
+Kommunikationsmodul DFComDLL 04.02.03: Enthält die Bibliothek der Kommunikationsschnittstelle DFComDLL mit Beispielen und Dokumentation.
+
+Kommunikationsmodul http
+
+Inhalt.txt: Dieses Dokument.
+
+MasterIV SoftwareVersionen 04.02.XX...pdf: Auflistung aller Erweiterungen, Änderungen und Kompatibilitätshinweise zur Versionshistorie.
+
+MasterIV SoftwareVersionen 04.00 & 04.01.xx.pdf: Auflistung aller Erweiterungen, Änderungen und Kompatibilitätshinweise zur Versionshistorie.

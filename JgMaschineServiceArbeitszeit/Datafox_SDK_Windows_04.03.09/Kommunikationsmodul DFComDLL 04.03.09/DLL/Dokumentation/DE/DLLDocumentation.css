@@ -1,0 +1,279 @@
+/* StyleSheets fuer DLL Dokumentation. */
+body {
+	font-family:Arial;
+	font-size:12pt;
+	padding:10pt;
+}
+
+/* Ueberschriften */
+
+h1, h2, h3 {
+	text-decoration:underline;
+	font-size:16pt;
+}
+
+h4 {
+	text-decoration:underline;
+	font-size:14pt;
+}
+
+h5 {
+	font-size:12pt;
+	font-weight:bold;
+	background-color:#C0C0C0;
+}
+
+h5.warning {
+	font-size:12pt;
+	font-weight:bold;
+	color:#EE0000;
+	background-color:#FFEEEE;
+	margin-bottom:0;
+}
+
+h5.hint {
+	font-size:12pt;
+	font-weight:bold;
+	color:#FFFFCC;
+	background-color:#C0C0C0;
+	margin-bottom:0;
+}
+
+h5.subcall {
+	font-size:12pt;
+	font-weight:bold;
+	color:#333333;
+	background-color:#C0C0C0;
+	margin-bottom:0;
+}
+
+h5.firmwareversion {
+	font-size:12pt;
+	font-weight:bold;
+	color:#000000;
+	background-color:#C0C0C0;
+	margin-bottom:0;
+}
+
+h6 {
+	font-size:8pt;
+	font-weight:bold;
+	background-color:#C0C0C0;
+	margin-bottom:0;
+}
+
+/* Tabelle fuer Inhalt nach Ueberschriftordnung h3 -> level0 h4 -> level1 sonstig -> level2 */
+
+table.index {
+	width:100%;
+	border:0;
+}
+
+tr.level0 {
+	text-decoration:underline;
+	font-size:16pt;
+	background-color:#C0C0C0;
+}
+
+tr.level0 td.title {
+
+}
+
+tr.level1 {
+	text-decoration:underline;
+	font-size:14pt;
+	background-color:#F0F0CC;
+}
+
+tr.level1 td.title {
+	text-indent:1cm;
+}
+
+tr.level2 {
+	background-color:#FFFFCC;
+}
+
+tr.level2 td.title {
+	width:40%;
+	text-indent:2cm;
+}
+
+tr.level2 td.brief {
+	width:46%;
+	text-indent:2cm;
+}
+
+/* Tabelle fuer Versionsaenderungen */
+
+th.versionhead {
+	padding:5pt;
+	background-color:C0C0C0;
+}
+
+td.version {
+	padding:5pt;
+	background-color:#CCCCCC;
+}
+
+td.versiondescribe {
+	padding:5pt;
+	background-color:#FFFFCC;
+}
+
+/* Tabellen mit Wert -> Beschreibung */
+table.params {
+	width:100%;
+	border:0;
+	background-color:#EEEECC;
+}
+
+th.showhead {
+	padding:5pt;
+	background-color:#C0C0C0;
+}
+
+td.showhead {
+	padding:5pt;
+	background-color:#C0C0C0;
+}
+
+td.show {
+	text-align:center;
+	padding:5pt;
+	background-color:#CCCCCC;
+}
+
+td.showdescribe {
+	padding:5pt;
+	background-color:#FFFFCC;
+}
+
+/* Tabelle fuer Deklaration */
+
+table.decl {
+	font-family:Courier New;
+	font-size:12pt;
+	background-color:#C0C0FC;
+}
+
+pre {
+	padding:5pt;
+	font-family:Courier New;
+	font-size:12pt;
+}
+
+/* Tabelle fuer Exportangabe */
+
+td.exported {
+	font-family:Courier New;
+	font-size:12pt;
+	padding:5pt;
+	background-color:#CCCCCC;	
+}
+
+td.exportedname {
+	font-family:Courier New;
+	font-size:12pt;
+	padding:5pt;
+	background-color:#FFFFCC;
+}
+
+/* Tabelle fuer Parameterangaben */
+
+th.paramhead {
+	padding:2pt;
+	background-color:C0C0C0;
+	font-size:10pt;
+}
+
+td.param {
+	padding:5pt;
+	background-color:#CCCCCC;	
+}
+
+td.paramdescribe {
+	padding:5pt;
+	background-color:#FFFFCC;	
+}
+
+td.paramdescribe td.param {
+	padding:1pt;
+	text-align:center;
+}
+
+td.paramdescribe td.paramdescribe {
+	padding:1pt;
+}
+
+/* Tabelle fuer Rueckgabewertangaben */
+
+td.return {
+	padding:5pt;
+	background-color:#CCCCCC;
+	text-align:center;	
+}
+
+td.returndescribe {
+	padding:5pt;
+	background-color:#FFFFCC;	
+}
+
+/* Tabelle fuer Beschreibung zur Funktion */
+
+td.describe {
+	padding:5pt;
+	background-color:#FFFFCC;
+}
+
+/* Tabelle fuer Beispielangaben zur Funktionsverwendung */
+
+td.example {
+	padding:5pt;
+	background-color:#AAAACC;
+}
+
+/* Tabelle fuer Beschreibung zur Firmwareversion */
+
+td.firmwareversion {
+	padding:2pt;
+	font-weight:bold;
+	background-color:#FFFFCC;
+}
+
+/* Tabellespalte fuer Hinweistexte zur Verwendung */
+
+table.attention {
+	width:100%;
+	border:0;
+	padding:5pt;
+	font-size:10pt;	
+	background-color:#F18F85;
+}
+
+table.grafic {
+	border:0;
+	cellspacing:0;
+	callpadding:0;
+}
+
+table.hint {
+	width:100%;
+	border:0;
+	padding:5pt;
+	background-color:#F7E4A6;
+}
+
+/* Formatierung der Syntax */
+
+span.keyword {
+	color:#0000FF;
+}
+
+span.string {
+	color:#AA0000;
+}
+
+span.functionName {
+	font-weight:bold;
+	text-decoration:underline;
+}

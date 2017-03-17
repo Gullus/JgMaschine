@@ -1,0 +1,11 @@
+df4.php: 
+Enthält die Klasse für die Ver- und Entschlüsselung der Feldwerte. Wird von dfanalyser.php benötigt.
+
+dflog.php: 
+Logfunktionalitaet fuer Debugzwecke. Schreiben von Daten in Textdateien. Wird von getdata.php benötigt.
+
+dfanalyser.php: 
+Enthält die Klasse für die Auswertung der Anfrage und Erstellung der Antwort. Wird von getdata.php benötigt.
+
+getdata.php: 
+Enthält das Hauptscript, welches die Toolklassen zur Auswertung der Anfrage und versenden der Antwort verwendet.

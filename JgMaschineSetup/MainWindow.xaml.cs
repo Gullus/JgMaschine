@@ -13,9 +13,9 @@ namespace JgMaschineSetup
 {
   public partial class MainWindow : Window
   {
-    private JgEntityTab<tabMaschine> _ListeMaschinen;
-    private JgEntityTab<tabStandort> _ListeStandorte;
-    private JgEntityTab<tabBediener> _ListeBediener;
+    private JgEntityList<tabMaschine> _ListeMaschinen;
+    private JgEntityList<tabStandort> _ListeStandorte;
+    private JgEntityList<tabBediener> _ListeBediener;
 
     public MainWindow()
     {
@@ -24,7 +24,7 @@ namespace JgMaschineSetup
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      _ListeStandorte = new JgEntityTab<tabStandort>()
+      _ListeStandorte = new JgEntityList<tabStandort>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
         Tabellen = new DataGrid[] { dgStandort },
@@ -36,7 +36,7 @@ namespace JgMaschineSetup
       _ListeStandorte.DatenLaden();
       tbDatenbankverbinudng.Text = _ListeStandorte.Db.Database.Connection.ConnectionString;
 
-     _ListeMaschinen = new JgEntityTab<tabMaschine>()
+     _ListeMaschinen = new JgEntityList<tabMaschine>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsMaschinen"),
         Tabellen = new DataGrid[] { dgMaschine },
@@ -47,7 +47,7 @@ namespace JgMaschineSetup
       };
       _ListeMaschinen.DatenLaden();
 
-      _ListeBediener = new JgEntityTab<tabBediener>()
+      _ListeBediener = new JgEntityList<tabBediener>()
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsBediener"),
         Tabellen = new DataGrid[] { dgBediener },

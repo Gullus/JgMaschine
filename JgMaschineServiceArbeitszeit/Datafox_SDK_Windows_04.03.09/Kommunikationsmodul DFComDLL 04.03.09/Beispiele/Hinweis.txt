@@ -1,0 +1,2 @@
+Bitte beachten Sie, dass den Beispielverzeichnissen die DLL nicht beiliegt.
+Zur Ordnungsgemäßen Ausführung der Beispiele müssen Sie zuerst die DLL in das Systemverzeichnis oder Anwendungsverzeichnis (Ausführungsort des Beispiels) kopieren.

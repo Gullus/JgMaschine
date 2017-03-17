@@ -143,16 +143,13 @@ namespace JgMaschineLib
           if (result.Status == IPStatus.Success)
             return true;
           else
-          {
             Fehlertext = $"Bing {IpAdresse} mit Status {result.Status}  fehlgeschlagen!";
-          }
         }
         catch (Exception f)
         {
           Fehlertext = $"Fehler bei Pingabfrage zu Adresse {IpAdresse}!\nGrund: {f.Message}";
         }
       }
-
       return false;
     }
 

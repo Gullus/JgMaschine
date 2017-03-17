@@ -20,14 +20,14 @@ namespace JgMaschineGlobalZeit
     private ComboBox _CmbJahr;
     private ComboBox _CmbMonat;
 
-    public JgEntityTab<tabBediener> ListeBediener;
+    public JgEntityList<tabBediener> ListeBediener;
 
     // Wegen Optionen wird immer gleich das Ganze Jahr geladen
 
-    public JgEntityTab<tabPausenzeit> ListePausen;
-    public JgEntityTab<tabSollStunden> ListeSollstundenJahr;
-    public JgEntityTab<tabFeiertage> ListeFeiertageJahr;
-    public JgEntityTab<tabArbeitszeitRunden> ListeRundenJahr;
+    public JgEntityList<tabPausenzeit> ListePausen;
+    public JgEntityList<tabSollStunden> ListeSollstundenJahr;
+    public JgEntityList<tabFeiertage> ListeFeiertageJahr;
+    public JgEntityList<tabArbeitszeitRunden> ListeRundenJahr;
 
     public TimeSpan SollStundenMonat = TimeSpan.Zero;
     public List<tabFeiertage> ListeFeiertageMonat;
@@ -91,7 +91,7 @@ namespace JgMaschineGlobalZeit
           MonatGeandert();
       };
 
-      ListeBediener = new JgEntityTab<tabBediener>(_Db)
+      ListeBediener = new JgEntityList<tabBediener>(_Db)
       {
         Daten = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv)).OrderBy(o => o.NachName).ToList(),
         ViewSource = VsBediener
@@ -115,14 +115,14 @@ namespace JgMaschineGlobalZeit
     public void JahrGeandert()
     {
       var pausen =
-      ListePausen = new JgEntityTab<tabPausenzeit>(_Db)
+      ListePausen = new JgEntityList<tabPausenzeit>(_Db)
       {
         Daten = _Db.tabPausenzeitSet.Where(w => (!w.DatenAbgleich.Geloescht)).ToList()
       };
 
       var jahr = Jahr;
 
-      ListeSollstundenJahr = new JgEntityTab<tabSollStunden>(_Db)
+      ListeSollstundenJahr = new JgEntityList<tabSollStunden>(_Db)
       {
         Daten = _Db.tabSollStundenSet.Where(f => (f.Jahr == jahr)).ToList()
       };
@@ -130,12 +130,12 @@ namespace JgMaschineGlobalZeit
       var ersterJahr = new DateTime(jahr, 1, 1);
       var letzterJahr = new DateTime(jahr, 12, 31, 23, 59, 59);
 
-      ListeFeiertageJahr = new JgEntityTab<tabFeiertage>(_Db)
+      ListeFeiertageJahr = new JgEntityList<tabFeiertage>(_Db)
       {
         Daten = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= ersterJahr) && (w.Datum <= letzterJahr)).ToList()
       };
 
-      ListeRundenJahr = new JgEntityTab<tabArbeitszeitRunden>(_Db)
+      ListeRundenJahr = new JgEntityList<tabArbeitszeitRunden>(_Db)
       {
         Daten = _Db.tabArbeitszeitRundenSet.Where(w => (w.Jahr == jahr)).ToList()
       };

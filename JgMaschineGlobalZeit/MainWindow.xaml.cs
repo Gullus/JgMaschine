@@ -21,12 +21,12 @@ namespace JgMaschineGlobalZeit
 {
   public partial class MainWindow : Window
   {
-    private JgEntityTab<tabArbeitszeit> _ListeArbeitszeitenAuswahl;
+    private JgEntityList<tabArbeitszeit> _ListeArbeitszeitenAuswahl;
     private JgZeit _DzArbeitszeitVon { get { return (JgZeit)FindResource("dzArbeitszeitVon"); } }
     private JgZeit _DzArbeitszeitBis { get { return (JgZeit)FindResource("dzArbeitszeitBis"); } }
 
-    private JgEntityTab<tabAuswertung> _ListeReporteArbeitszeiten;
-    private JgEntityTab<tabAuswertung> _ListeReporteAuswertung;
+    private JgEntityList<tabAuswertung> _ListeReporteArbeitszeiten;
+    private JgEntityList<tabAuswertung> _ListeReporteAuswertung;
     private tabAuswertung _AktuellerReport = null;
     private FastReport.Report _Report;
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
@@ -62,7 +62,7 @@ namespace JgMaschineGlobalZeit
       _DzArbeitszeitVon.AnzeigeDatumZeit = heute;
       _DzArbeitszeitBis.AnzeigeDatumZeit = new DateTime(heute.Year, heute.Month, heute.Day, 23, 59, 59);
 
-      _ListeArbeitszeitenAuswahl = new JgEntityTab<tabArbeitszeit>()
+      _ListeArbeitszeitenAuswahl = new JgEntityList<tabArbeitszeit>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsArbeitszeitAuswahl"),
         Tabellen = new DataGrid[] { dgArbeitszeitAuswahl },
@@ -99,7 +99,7 @@ namespace JgMaschineGlobalZeit
 
       // Report initialisieren ********************************
 
-      _ListeReporteArbeitszeiten = new JgEntityTab<tabAuswertung>()
+      _ListeReporteArbeitszeiten = new JgEntityList<tabAuswertung>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsReporteArbeitszeit")
       };
@@ -110,7 +110,7 @@ namespace JgMaschineGlobalZeit
         .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit)
         .OrderBy(o => o.AnzeigeReportname).ToList();
 
-      _ListeReporteAuswertung = new JgEntityTab<tabAuswertung>(_ListeReporteArbeitszeiten.Db)
+      _ListeReporteAuswertung = new JgEntityList<tabAuswertung>(_ListeReporteArbeitszeiten.Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsReporteAuswertung")
       };

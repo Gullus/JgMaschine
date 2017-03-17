@@ -59,7 +59,6 @@
   <ItemGroup>
     <Compile Include="Email\SendEmailOptionen.cs" />
     <Compile Include="Imports\JgFastCube.cs" />
-    <Compile Include="Listen\JgEntityAuto.cs" />
     <Compile Include="Listen\JgEntityList.cs" />
     <Compile Include="MyExeption.cs" />
     <Compile Include="NetzwerkVerbindung.cs" />

@@ -12,7 +12,7 @@ namespace JgMaschineGlobalZeit.Fenster
   public partial class FormOptionen : Window
   {
     private AnmeldungAuswertung _Auswertung;
-    private JgEntityTab<tabArbeitszeitTerminal> _ListeTerminals;
+    private JgEntityList<tabArbeitszeitTerminal> _ListeTerminals;
 
     public FormOptionen(AnmeldungAuswertung Auswertung)
     {
@@ -59,7 +59,7 @@ namespace JgMaschineGlobalZeit.Fenster
         bediener.eArbeitszeitHelper = auswVorjahr;
       }
 
-      _ListeTerminals = new JgEntityTab<tabArbeitszeitTerminal>(_Auswertung.Db)
+      _ListeTerminals = new JgEntityList<tabArbeitszeitTerminal>(_Auswertung.Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsTerminals"),
         Tabellen = new DataGrid[] { gridTerminals }

@@ -30,13 +30,13 @@ namespace JgMaschineVerwalten
 
     #endregion
 
-    private JgEntityAuto _DatenPool;
-    private JgEntityTab<tabBediener> _JgBediener { get { return (JgEntityTab<tabBediener>)_DatenPool.Tabs[JgEntityAuto.TabArt.Bediener]; } }
-    private JgEntityTab<tabMaschine> _JgMaschine { get { return (JgEntityTab<tabMaschine>)_DatenPool.Tabs[JgEntityAuto.TabArt.Maschine]; } }
-    private JgEntityTab<tabArbeitszeit> _JgArbeitszeit { get { return (JgEntityTab<tabArbeitszeit>)_DatenPool.Tabs[JgEntityAuto.TabArt.Arbeitszeit]; } }
-    private JgEntityTab<tabAnmeldungMaschine> _JgAnmeldung { get { return (JgEntityTab<tabAnmeldungMaschine>)_DatenPool.Tabs[JgEntityAuto.TabArt.Anmeldung]; } }
-    private JgEntityTab<tabReparatur> _JgReparatur { get { return (JgEntityTab<tabReparatur>)_DatenPool.Tabs[JgEntityAuto.TabArt.Reparatur]; } }
-    private JgEntityTab<tabAnmeldungReparatur> _JgRepAnmeldung { get { return (JgEntityTab<tabAnmeldungReparatur>)_DatenPool.Tabs[JgEntityAuto.TabArt.RepAnmeldung]; } }
+    private JgEntityListAuto _DatenPool;
+    private JgEntityList<tabBediener> _JgBediener { get { return (JgEntityList<tabBediener>)_DatenPool.Tabs[JgEntityListAuto.TabArt.Bediener]; } }
+    private JgEntityList<tabMaschine> _JgMaschine { get { return (JgEntityList<tabMaschine>)_DatenPool.Tabs[JgEntityListAuto.TabArt.Maschine]; } }
+    private JgEntityList<tabArbeitszeit> _JgArbeitszeit { get { return (JgEntityList<tabArbeitszeit>)_DatenPool.Tabs[JgEntityListAuto.TabArt.Arbeitszeit]; } }
+    private JgEntityList<tabAnmeldungMaschine> _JgAnmeldung { get { return (JgEntityList<tabAnmeldungMaschine>)_DatenPool.Tabs[JgEntityListAuto.TabArt.Anmeldung]; } }
+    private JgEntityList<tabReparatur> _JgReparatur { get { return (JgEntityList<tabReparatur>)_DatenPool.Tabs[JgEntityListAuto.TabArt.Reparatur]; } }
+    private JgEntityList<tabAnmeldungReparatur> _JgRepAnmeldung { get { return (JgEntityList<tabAnmeldungReparatur>)_DatenPool.Tabs[JgEntityListAuto.TabArt.RepAnmeldung]; } }
     private tabMaschine _Maschine
     {
       get
@@ -50,36 +50,32 @@ namespace JgMaschineVerwalten
           return (treeViewMaschinen.SelectedItem as tabAnmeldungMaschine).eMaschine;
       }
     }
+    private Guid[] _IdisMaschinen { get { return _JgMaschine.Daten.Select(s => s.Id).ToArray(); } }
 
-    #region Report Ausertungen
-
-    private JgEntityView<tabAuswertung> _ListeAuswertung;
-    private CollectionViewSource _VsAuswertungArbeitszeit { get { return (CollectionViewSource)this.FindResource("vsAuswertungArbeitszeit"); } }
-    private CollectionViewSource _VsAuswertungAnmeldung { get { return (CollectionViewSource)this.FindResource("vsAuswertungAnmeldung"); } }
-    private CollectionViewSource _VsAuswertungBauteil { get { return (CollectionViewSource)this.FindResource("vsAuswertungBauteil"); } }
-    private CollectionViewSource _VsAuswertungReparatur { get { return (CollectionViewSource)this.FindResource("vsAuswertungReparatur"); } }
-
-    #endregion
-
-    private JgEntityView<tabArbeitszeit> _ListeArbeitszeitAuswahl;
+    private JgEntityList<tabArbeitszeit> _ListeArbeitszeitAuswahl;
     private JgZeit _DzArbeitszeitVon { get { return (JgZeit)FindResource("dzArbeitszeitVon"); } }
     private JgZeit _DzArbeitszeitBis { get { return (JgZeit)FindResource("dzArbeitszeitBis"); } }
 
-    private JgEntityView<tabAnmeldungMaschine> _ListeAnmeldungAuswahl;
+    private JgEntityList<tabAnmeldungMaschine> _ListeAnmeldungAuswahl;
     private JgZeit _DzAnmeldungVon { get { return (JgZeit)FindResource("dzAnmeldungVon"); } }
     private JgZeit _DzAnmeldungBis { get { return (JgZeit)FindResource("dzAnmeldungBis"); } }
 
-    private JgEntityView<tabBauteil> _ListeBauteilAuswahl;
+    private JgEntityList<tabBauteil> _ListeBauteilAuswahl;
     private JgZeit _DzBauteilVon { get { return (JgZeit)FindResource("dzBauteilVon"); } }
     private JgZeit _DzBauteilBis { get { return (JgZeit)FindResource("dzBauteilBis"); } }
 
-    private JgEntityView<tabReparatur> _ListeReparaturAuswahl;
+    private JgEntityList<tabReparatur> _ListeReparaturAuswahl;
     private JgZeit _DzReparaturVon { get { return (JgZeit)FindResource("dzReparaturVon"); } }
     private JgZeit _DzReparaturBis { get { return (JgZeit)FindResource("dzReparaturBis"); } }
 
     private FastReport.Report _Report;
     private tabAuswertung _AktAuswertung = null;
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
+
+    private JgEntityList<tabAuswertung> _ListeReporteArbeitszeit;
+    private JgEntityList<tabAuswertung> _ListeReporteAnmedlung;
+    private JgEntityList<tabAuswertung> _ListeReporteBauteil;
+    private JgEntityList<tabAuswertung> _ListeReporteReparatur;
 
     public MainWindow()
     {
@@ -110,11 +106,11 @@ namespace JgMaschineVerwalten
         try
         {
           repEvent.Report.Save(memStr);
-          _ListeAuswertung.Db.tabAuswertungSet.Attach(_AktAuswertung);
+          _ListeReporteArbeitszeit.Db.tabAuswertungSet.Attach(_AktAuswertung);
           _AktAuswertung.Report = memStr.ToArray();
           _AktAuswertung.GeaendertDatum = DateTime.Now;
           _AktAuswertung.GeaendertName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          _ListeAuswertung.Db.SaveChanges();
+          _ListeReporteArbeitszeit.Db.SaveChanges();
         }
         catch (Exception f)
         {
@@ -129,7 +125,7 @@ namespace JgMaschineVerwalten
 
     private async Task InitListen()
     {
-      _DatenPool = new JgEntityAuto(Properties.Settings.Default.VerbindungsString, 5)
+      _DatenPool = new JgEntityListAuto(Properties.Settings.Default.VerbindungsString, 5)
       {
         TimerAusgeloest = () =>
         {
@@ -144,12 +140,12 @@ namespace JgMaschineVerwalten
 
       try
       {
-        var eBediener = new JgEntityTab<tabBediener>(_DatenPool.Db)
+        var eBediener = new JgEntityList<tabBediener>(_DatenPool.Db)
         {
           AbfrageSqlString = () =>
           {
             if (_Standort == null)
-              return JgEntityTab.IstNull;
+              return JgEntityList.IstNull;
 
             return "Select Id, DatenAbgleich_Datum "
               + "From tabBedienerSet "
@@ -159,18 +155,18 @@ namespace JgMaschineVerwalten
         eBediener.SetIdis(con);
         if (eBediener.Idis != null)
           eBediener.Daten = await _DatenPool.Db.tabBedienerSet.Where(w => eBediener.Idis.Contains(w.Id)).ToListAsync();
-        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Bediener, eBediener);
+        _DatenPool.Tabs.Add(JgEntityListAuto.TabArt.Bediener, eBediener);
 
         (FindResource("vsBedienerArbeitszeit") as CollectionViewSource).Source = eBediener.Daten;
         (FindResource("vsBedienerAnmeldung") as CollectionViewSource).Source = eBediener.Daten;
 
-        var eMaschine = new JgEntityTab<tabMaschine>(_DatenPool.Db)
+        var eMaschine = new JgEntityList<tabMaschine>(_DatenPool.Db)
         {
           ViewSource = (CollectionViewSource)FindResource("vsMaschine"),
           AbfrageSqlString = () =>
           {
             if (_Standort == null)
-              return JgEntityTab.IstNull;
+              return JgEntityList.IstNull;
 
             return "SELECT Id, DatenAbgleich_Datum "
               + "FROM tabMaschineSet "
@@ -180,16 +176,16 @@ namespace JgMaschineVerwalten
         eMaschine.SetIdis(con);
         if (eMaschine.Idis != null)
           eMaschine.Daten = await _DatenPool.Db.tabMaschineSet.Where(w => eMaschine.Idis.Contains(w.Id)).ToListAsync();
-        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Maschine, eMaschine);
+        _DatenPool.Tabs.Add(JgEntityListAuto.TabArt.Maschine, eMaschine);
 
-        var eArbeitszeit = new JgEntityTab<tabArbeitszeit>(_DatenPool.Db)
+        var eArbeitszeit = new JgEntityList<tabArbeitszeit>(_DatenPool.Db)
         {
           ViewSource = (CollectionViewSource)FindResource("vsArbeitszeitAktuell"),
           Tabellen = new DataGrid[] { dgArbeitszeitAktuell },
           AbfrageSqlString = () =>
           {
             if (_Standort == null)
-              return JgEntityTab.IstNull;
+              return JgEntityList.IstNull;
 
             return "SELECT arbeitszeit.Id, arbeitszeit.DatenAbgleich_Datum "
               + "FROM tabBedienerSet AS bediener INNER JOIN "
@@ -200,28 +196,28 @@ namespace JgMaschineVerwalten
         eArbeitszeit.SetIdis(con);
         if (eArbeitszeit.Idis != null)
           eArbeitszeit.Daten = await _DatenPool.Db.tabArbeitszeitSet.Where(w => eArbeitszeit.Idis.Contains(w.Id)).ToListAsync();
-        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Arbeitszeit, eArbeitszeit);
+        _DatenPool.Tabs.Add(JgEntityListAuto.TabArt.Arbeitszeit, eArbeitszeit);
 
-        var eAnmeldung = new JgEntityTab<tabAnmeldungMaschine>(_DatenPool.Db)
+        var eAnmeldung = new JgEntityList<tabAnmeldungMaschine>(_DatenPool.Db)
         {
           ViewSource = (CollectionViewSource)FindResource("vsAnmeldungAktuell"),
           Tabellen = new DataGrid[] { dgAnmeldungAktuell },
           AbfrageSqlString = () =>
           {
             if (_JgMaschine.Idis == null)
-              return JgEntityTab.IstNull;
+              return JgEntityList.IstNull;
             else
               return "SELECT Id, DatenAbgleich_Datum "
                 + "FROM tabAnmeldungMaschineSet "
-                + "WHERE fAktivMaschine In (" + JgEntityTab.IdisInString(_JgMaschine.Idis) + ")";
+                + "WHERE fAktivMaschine In (" + JgEntityList.IdisInString(_JgMaschine.Idis) + ")";
           }
         };
         eAnmeldung.SetIdis(con);
         if (eAnmeldung.Idis != null)
           eAnmeldung.Daten = await _DatenPool.Db.tabAnmeldungMaschineSet.Where(w => eAnmeldung.Idis.Contains(w.Id)).ToListAsync();
-        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Anmeldung, eAnmeldung);
+        _DatenPool.Tabs.Add(JgEntityListAuto.TabArt.Anmeldung, eAnmeldung);
 
-        var eReparatur = new JgEntityTab<tabReparatur>(_DatenPool.Db)
+        var eReparatur = new JgEntityList<tabReparatur>(_DatenPool.Db)
         {
           ViewSource = (CollectionViewSource)FindResource("vsReparaturAktuell"),
           Tabellen = new DataGrid[] { dgReparaturAktuell },
@@ -233,17 +229,17 @@ namespace JgMaschineVerwalten
               if (ids.Length > 0)
                 return "SELECT Id, DatenAbgleich_Datum "
                   + "FROM tabReparaturSet "
-                  + "WHERE Id IN (" + JgEntityTab.IdisInString(ids) + ")";
+                  + "WHERE Id IN (" + JgEntityList.IdisInString(ids) + ")";
             }
-            return JgEntityTab.IstNull;
+            return JgEntityList.IstNull;
           }
         };
         eReparatur.SetIdis(con);
         if (eReparatur.Idis != null)
           eReparatur.Daten = _DatenPool.Db.tabReparaturSet.Where(w => eReparatur.Idis.Contains(w.Id)).ToList();
-        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.Reparatur, eReparatur);
+        _DatenPool.Tabs.Add(JgEntityListAuto.TabArt.Reparatur, eReparatur);
 
-        var eRepAnmeldung = new JgEntityTab<tabAnmeldungReparatur>(_DatenPool.Db, false)
+        var eRepAnmeldung = new JgEntityList<tabAnmeldungReparatur>(_DatenPool.Db, false)
         {
           ViewSource = (CollectionViewSource)FindResource("vsReparaturAktuellBediener"),
           AbfrageSqlString = () =>
@@ -251,15 +247,15 @@ namespace JgMaschineVerwalten
             if (_JgReparatur.Idis != null)
               return "SELECT Id, DatenAbgleich_Datum "
                 + "FROM tabAnmeldungReparaturSet "
-                + "WHERE fReparatur In (" + JgEntityTab.IdisInString(_JgReparatur.Idis) + ")";
+                + "WHERE fReparatur In (" + JgEntityList.IdisInString(_JgReparatur.Idis) + ")";
 
-            return JgEntityTab.IstNull;
+            return JgEntityList.IstNull;
           }
         };
         eRepAnmeldung.SetIdis(con);
         if (eRepAnmeldung.Idis != null)
           eRepAnmeldung.Daten = await _DatenPool.Db.tabAnmeldungReparaturSet.Where(w => eRepAnmeldung.Idis.Contains(w.Id)).ToListAsync();
-        _DatenPool.Tabs.Add(JgEntityAuto.TabArt.RepAnmeldung, eRepAnmeldung);
+        _DatenPool.Tabs.Add(JgEntityListAuto.TabArt.RepAnmeldung, eRepAnmeldung);
 
         // Bei Benutzer zusätzliche Viewsorce refreshen
 
@@ -277,33 +273,54 @@ namespace JgMaschineVerwalten
       var von = DateTime.Now.Date;
       var bis = new DateTime(von.Year, von.Month, von.Day, 23, 59, 59);
 
+      // Arbeitszeiten ********************************************************
+
       _DzArbeitszeitVon.AnzeigeDatumZeit = von;
       _DzArbeitszeitBis.AnzeigeDatumZeit = bis;
 
-      _ListeArbeitszeitAuswahl = new JgEntityView<tabArbeitszeit>()
+      _ListeArbeitszeitAuswahl = new JgEntityList<tabArbeitszeit>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsArbeitszeitAuswahl"),
         Tabellen = new DataGrid[] { dgArbeitszeitAuswahl },
-        DatenErstellen = (db) =>
+        OnDatenLaden = (d, p) =>
         {
-          return db.tabArbeitszeitSet.Where(w => (w.fStandort == _Standort.Id) && (w.Anmeldung >= _DzArbeitszeitVon.AnzeigeDatumZeit) && ((w.Anmeldung <= _DzArbeitszeitBis.AnzeigeDatumZeit)))
+          var idStandort = (Guid)p["Standort"];
+          var datVon = (DateTime)p["DatumVon"];
+          var datBis = (DateTime)p["DatumBis"];
+          return d.tabArbeitszeitSet.Where(w => (w.fStandort == idStandort) && (w.Anmeldung >= datVon) && ((w.Anmeldung <= datBis)))
             .OrderBy(o => o.Anmeldung).ToList();
         }
       };
+      _ListeArbeitszeitAuswahl.Parameter = new Dictionary<string, object>()
+      {
+        { "Standort", _Standort.Id },
+        { "DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit },
+        { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
+      };
+
+      // Anmeldungenan Maschinen ********************************************************
 
       _DzAnmeldungVon.AnzeigeDatumZeit = von;
       _DzAnmeldungBis.AnzeigeDatumZeit = bis;
 
-      _ListeAnmeldungAuswahl = new JgEntityView<tabAnmeldungMaschine>()
+      _ListeAnmeldungAuswahl = new JgEntityList<tabAnmeldungMaschine>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsAnmeldungAuswahl"),
         Tabellen = new DataGrid[] { dgAnmeldungAuswahl },
-        DatenErstellen = (db) =>
+        OnDatenLaden = (d, p) =>
         {
-          var idis = (_DatenPool.Tabs[JgEntityAuto.TabArt.Maschine] as JgEntityTab<tabMaschine>).Idis;
-          return db.tabAnmeldungMaschineSet.Where(w => idis.Contains(w.fMaschine) && (w.Anmeldung >= _DzAnmeldungVon.AnzeigeDatumZeit) && ((w.Anmeldung <= _DzAnmeldungBis.AnzeigeDatumZeit)))
+          var idisMaschinen = (Guid[])p["IdisMaschinen"];
+          var datVon = (DateTime)p["DatumVon"];
+          var datBis = (DateTime)p["DatumBis"];
+          return d.tabAnmeldungMaschineSet.Where(w => idisMaschinen.Contains(w.fMaschine) && (w.Anmeldung >= datVon) && ((w.Anmeldung <= datBis)))
             .OrderBy(o => o.Anmeldung).ToList();
         }
+      };
+      _ListeAnmeldungAuswahl.Parameter = new Dictionary<string, object>()
+      {
+        { "IdisMaschinen", _IdisMaschinen },
+        { "DatumVon", _DzAnmeldungVon.AnzeigeDatumZeit },
+        { "DatumBis", _DzAnmeldungBis.AnzeigeDatumZeit }
       };
 
       // Bauteile initialisieren ****************************
@@ -311,54 +328,89 @@ namespace JgMaschineVerwalten
       _DzBauteilVon.AnzeigeDatumZeit = von;
       _DzBauteilBis.AnzeigeDatumZeit = bis;
 
-      _ListeBauteilAuswahl = new JgEntityView<tabBauteil>()
+      _ListeBauteilAuswahl = new JgEntityList<tabBauteil>()
       {
         ViewSource = (CollectionViewSource)FindResource("vsBauteilAuswahl"),
         Tabellen = new DataGrid[] { dgBauteilAuswahl },
-        DatenErstellen = (db) =>
+        OnDatenLaden = (d, p) =>
         {
-          if (_Maschine == null)
+          var maschine = (tabMaschine)p["Maschine"];
+          var datVon = (DateTime)p["DatumVon"];
+          var datBis = (DateTime)p["DatumBis"];
+
+          if (maschine == null)
           {
             Helper.Protokoll("Bitte Maschine in linker Tabelle auswahlen !", Helper.ProtokollArt.Warnung);
             return null;
           }
           else
-            return db.tabBauteilSet.Where(w => (w.fMaschine == _Maschine.Id) && (w.DatumStart >= _DzBauteilVon.AnzeigeDatumZeit) && (w.DatumStart <= _DzBauteilBis.AnzeigeDatumZeit))
+            return d.tabBauteilSet.Where(w => (w.fMaschine == maschine.Id) && (w.DatumStart >= datVon) && (w.DatumStart <= datBis))
             .Include(i => i.sBediener)
             .OrderBy(o => o.DatumStart).ToList();
         }
       };
+      _ListeAnmeldungAuswahl.Parameter = new Dictionary<string, object>()
+      {
+        { "Maschine", _Maschine },
+        { "DatumVon", _DzBauteilVon.AnzeigeDatumZeit },
+        { "DatumBis", _DzBauteilBis.AnzeigeDatumZeit }
+      };
+
+      // Reparaturen initialisieren ********************************************************
 
       _DzReparaturVon.AnzeigeDatumZeit = von;
       _DzReparaturBis.AnzeigeDatumZeit = bis;
 
-      _ListeReparaturAuswahl = new JgEntityView<tabReparatur>()
+      _ListeReparaturAuswahl = new JgEntityList<tabReparatur>
       {
         ViewSource = (CollectionViewSource)FindResource("vsReparaturAuswahl"),
         Tabellen = new DataGrid[] { dgReparaturAuswahl },
-        DatenErstellen = (db) =>
+        OnDatenLaden = (d, p) =>
         {
-          var idis = (_DatenPool.Tabs[JgEntityAuto.TabArt.Maschine] as JgEntityTab<tabMaschine>).Idis;
-          return db.tabReparaturSet.Where(w => idis.Contains(w.fMaschine) && (w.VorgangBeginn >= _DzReparaturVon.AnzeigeDatumZeit) && (w.VorgangBeginn <= _DzReparaturBis.AnzeigeDatumZeit))
+          var idisMaschinen = (Guid[])p["IdisMaschinen"];
+          var datVon = (DateTime)p["DatumVon"];
+          var datBis = (DateTime)p["DatumBis"];
+          return d.tabReparaturSet.Where(w => idisMaschinen.Contains(w.fMaschine) && (w.VorgangBeginn >= datVon) && (w.VorgangBeginn <= datBis))
             .Include(i => i.sAnmeldungen).Include(i => i.sAnmeldungen.Select(s => s.eBediener))
             .OrderByDescending(o => o.VorgangBeginn);
         }
       };
+      _ListeReparaturAuswahl.Parameter = new Dictionary<string, object>()
+      {
+        { "IdisMaschinen", _IdisMaschinen },
+        { "DatumVon", _DzReparaturVon.AnzeigeDatumZeit },
+        { "DatumBis", _DzReparaturBis.AnzeigeDatumZeit }
+      };
+
 
       // Auswertung initialisieren ********************************
 
-      _ListeAuswertung = new JgEntityView<tabAuswertung>();
-      _ListeAuswertung.Daten = await _Db.tabAuswertungSet.Where(w => (w.FilterAuswertung != EnumFilterAuswertung.Allgemein) && (!w.DatenAbgleich.Geloescht))
-        .OrderBy(o => o.ReportName).ToListAsync();
+      var db = new JgModelContainer();
+      var reporte = db.tabAuswertungSet.Where(w => (w.FilterAuswertung != EnumFilterAuswertung.Allgemein) && (!w.DatenAbgleich.Geloescht)).ToList();
 
-      _VsAuswertungArbeitszeit.Source = _ListeAuswertung.Daten;
-      _VsAuswertungArbeitszeit.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Arbeitszeit;
-      _VsAuswertungAnmeldung.Source = _ListeAuswertung.Daten;
-      _VsAuswertungAnmeldung.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Anmeldung;
-      _VsAuswertungBauteil.Source = _ListeAuswertung.Daten;
-      _VsAuswertungBauteil.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Bauteil;
-      _VsAuswertungReparatur.Source = _ListeAuswertung.Daten;
-      _VsAuswertungReparatur.Filter += (sen, erg) => erg.Accepted = (erg.Item as tabAuswertung).FilterAuswertung == EnumFilterAuswertung.Reparatur;
+      _ListeReporteArbeitszeit = new JgEntityList<tabAuswertung>(db)
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsAuswertungArbeitszeit"),
+        Daten = reporte.Where(w => w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit).OrderBy(o => o.AnzeigeReportname).ToList()
+      };
+
+      _ListeReporteAnmedlung = new JgEntityList<tabAuswertung>(db)
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsAuswertungAnmeldung"),
+        Daten = reporte.Where(w => w.FilterAuswertung == EnumFilterAuswertung.Anmeldung).OrderBy(o => o.AnzeigeReportname).ToList()
+      };
+
+      _ListeReporteBauteil = new JgEntityList<tabAuswertung>(db)
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsAuswertungBauteil"),
+        Daten = reporte.Where(w => w.FilterAuswertung == EnumFilterAuswertung.Bauteil).OrderBy(o => o.AnzeigeReportname).ToList()
+      };
+
+      _ListeReporteReparatur = new JgEntityList<tabAuswertung>(db)
+      {
+        ViewSource = (CollectionViewSource)this.FindResource("vsAuswertungReparatur"),
+        Daten = reporte.Where(w => w.FilterAuswertung == EnumFilterAuswertung.Reparatur).OrderBy(o => o.AnzeigeReportname).ToList()
+      };
     }
 
     private void TreeListMaschinRefresh()
@@ -565,7 +617,7 @@ namespace JgMaschineVerwalten
             ManuelleAbmeldung = true,
             fAktivMaschine = _Maschine.Id
           };
-          var datAnmeldung = (JgEntityTab<tabAnmeldungMaschine>)_DatenPool.Tabs[JgEntityAuto.TabArt.Anmeldung];
+          var datAnmeldung = (JgEntityList<tabAnmeldungMaschine>)_DatenPool.Tabs[JgEntityListAuto.TabArt.Anmeldung];
           datAnmeldung.Add(anmeldung);
 
           TreeListMaschinRefresh();
@@ -723,10 +775,29 @@ namespace JgMaschineVerwalten
     {
       switch ((sender as Button).Tag.ToString())
       {
-        case "1": _ListeArbeitszeitAuswahl.DatenAktualisieren(); break;
-        case "2": _ListeAnmeldungAuswahl.DatenAktualisieren(); break;
-        case "3": _ListeBauteilAuswahl.DatenAktualisieren(); break;
-        case "4": _ListeReparaturAuswahl.DatenAktualisieren(); break;
+        case "1":
+          _ListeArbeitszeitAuswahl.Parameter["DatumVon"] = _DzArbeitszeitVon.AnzeigeDatumZeit;
+          _ListeArbeitszeitAuswahl.Parameter["DatumBis"] = _DzArbeitszeitBis.AnzeigeDatumZeit;
+          _ListeArbeitszeitAuswahl.DatenNeuLaden();
+          break;
+        case "2":
+          _ListeAnmeldungAuswahl.Parameter["IdisMaschinen"] = _IdisMaschinen;
+          _ListeAnmeldungAuswahl.Parameter["DatumVon"] = _DzAnmeldungVon.AnzeigeDatumZeit;
+          _ListeAnmeldungAuswahl.Parameter["DatumBis"] = _DzAnmeldungBis.AnzeigeDatumZeit;
+          _ListeAnmeldungAuswahl.DatenNeuLaden();
+          break;
+        case "3":
+          _ListeBauteilAuswahl.Parameter["Maschine"] = _Maschine;
+          _ListeBauteilAuswahl.Parameter["DatumVon"] = _DzBauteilVon.AnzeigeDatumZeit;
+          _ListeBauteilAuswahl.Parameter["DatumBis"] = _DzBauteilBis.AnzeigeDatumZeit;
+          _ListeBauteilAuswahl.DatenNeuLaden();
+          break;
+        case "4":
+          _ListeReparaturAuswahl.Parameter["IdisMaschinen"] = _IdisMaschinen;
+          _ListeReparaturAuswahl.Parameter["DatumVon"] = _DzReparaturVon.AnzeigeDatumZeit;
+          _ListeReparaturAuswahl.Parameter["DatumBis"] = _DzReparaturBis.AnzeigeDatumZeit;
+          _ListeReparaturAuswahl.DatenNeuLaden();
+          break;
       }
     }
 
@@ -738,10 +809,10 @@ namespace JgMaschineVerwalten
       {
         switch (_Auswahl)
         {
-          case EnumFilterAuswertung.Arbeitszeit: _AktAuswertung = (tabAuswertung)_VsAuswertungArbeitszeit.View.CurrentItem; break;
-          case EnumFilterAuswertung.Anmeldung: _AktAuswertung = (tabAuswertung)_VsAuswertungAnmeldung.View.CurrentItem; break;
-          case EnumFilterAuswertung.Bauteil: _AktAuswertung = (tabAuswertung)_VsAuswertungBauteil.View.CurrentItem; break;
-          case EnumFilterAuswertung.Reparatur: _AktAuswertung = (tabAuswertung)_VsAuswertungReparatur.View.CurrentItem; break;
+          case EnumFilterAuswertung.Arbeitszeit: _AktAuswertung = (tabAuswertung)_ListeReporteArbeitszeit.Current; break;
+          case EnumFilterAuswertung.Anmeldung: _AktAuswertung = (tabAuswertung)_ListeReporteAnmedlung.Current; break;
+          case EnumFilterAuswertung.Bauteil: _AktAuswertung = (tabAuswertung)_ListeReporteBauteil.Current; break;
+          case EnumFilterAuswertung.Reparatur: _AktAuswertung = (tabAuswertung)_ListeReporteReparatur.Current; break;
         }
 
         if (_AktAuswertung == null)
@@ -771,13 +842,12 @@ namespace JgMaschineVerwalten
             var mb = MessageBox.Show($"Report {_AktAuswertung.ReportName} löschen ?", "Löschabfrage", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None);
             if (mb == MessageBoxResult.Yes)
             {
-              _ListeAuswertung.AlsGeloeschtKennzeichnen(_AktAuswertung);
               switch (_Auswahl)
               {
-                case EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.Refresh(); break;
-                case EnumFilterAuswertung.Anmeldung: _VsAuswertungAnmeldung.View.Refresh(); break;
-                case EnumFilterAuswertung.Bauteil: _VsAuswertungBauteil.View.Refresh(); break;
-                case EnumFilterAuswertung.Reparatur: _VsAuswertungReparatur.View.Refresh(); break;
+                case EnumFilterAuswertung.Arbeitszeit: _ListeReporteArbeitszeit.Delete(_AktAuswertung); break;
+                case EnumFilterAuswertung.Anmeldung: _ListeReporteAnmedlung.Delete(_AktAuswertung); break;
+                case EnumFilterAuswertung.Bauteil: _ListeReporteBauteil.Delete(_AktAuswertung); break;
+                case EnumFilterAuswertung.Reparatur: _ListeReporteReparatur.Delete(_AktAuswertung); break;
               }
             }
             return;
@@ -864,14 +934,13 @@ namespace JgMaschineVerwalten
           GeaendertDatum = DateTime.Now,
           GeaendertName = username
         };
-        _ListeAuswertung.Add(_AktAuswertung);
 
         switch (_Auswahl)
         {
-          case EnumFilterAuswertung.Arbeitszeit: _VsAuswertungArbeitszeit.View.MoveCurrentTo(_AktAuswertung); break;
-          case EnumFilterAuswertung.Anmeldung: _VsAuswertungAnmeldung.View.MoveCurrentTo(_AktAuswertung); break;
-          case EnumFilterAuswertung.Bauteil: _VsAuswertungBauteil.View.MoveCurrentTo(_AktAuswertung); break;
-          case EnumFilterAuswertung.Reparatur: _VsAuswertungReparatur.View.MoveCurrentTo(_AktAuswertung); break;
+          case EnumFilterAuswertung.Arbeitszeit: _ListeReporteArbeitszeit.Add(_AktAuswertung); break;
+          case EnumFilterAuswertung.Anmeldung: _ListeReporteAnmedlung.Add(_AktAuswertung); break;
+          case EnumFilterAuswertung.Bauteil: _ListeReporteBauteil.Add(_AktAuswertung); break;
+          case EnumFilterAuswertung.Reparatur: _ListeReporteReparatur.Add(_AktAuswertung); break;
         }
 
         _Report.Design();
