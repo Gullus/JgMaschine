@@ -32,7 +32,7 @@ namespace JgZeitHelper
       set
       {
         Datum = value.Date;
-        Zeit = DatumInZeit(value);
+        Zeit = DatumInZeitMinute(value);
       }
     }
 
@@ -206,9 +206,14 @@ namespace JgZeitHelper
       return stunden;
     }
 
-    public static TimeSpan DatumInZeit(DateTime DatumZeit)
+    public static TimeSpan DatumInZeitSekunde(DateTime DatumZeit)
     {
       return new TimeSpan(DatumZeit.Hour, DatumZeit.Minute, DatumZeit.Second);
+    }
+
+    public static TimeSpan DatumInZeitMinute(DateTime DatumZeit)
+    {
+      return new TimeSpan(DatumZeit.Hour, DatumZeit.Minute, 0);
     }
 
     public static DateTime ErsterImMonat(DateTime Datum)

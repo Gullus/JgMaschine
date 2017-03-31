@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using JgMaschineLib;
+using JgMaschineLib.Arbeitszeit;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace JgMaschineServiceArbeitszeit
 {
   public static partial class ProgDatafox
   {
-    public static List<DatafoxDsImport> KonvertDatafoxImport(List<string> DatafoxStringListe, Guid IdAktuellerStandort, string SteuerString = "")
+    public static List<ArbeitszeitImportDaten> KonvertDatafoxImport(List<string> DatafoxStringListe, Guid IdAktuellerStandort, string SteuerString = "")
     {
-      var liste = new List<DatafoxDsImport>(DatafoxStringListe.Count);
+      var liste = new List<ArbeitszeitImportDaten>(DatafoxStringListe.Count);
       var leangeSteuerstring = SteuerString.Length;
 
       foreach (var dsString in DatafoxStringListe)
       {
         var erg = dsString.Split(new char[] { '\t' }, StringSplitOptions.None);
 
-        var ds = new DatafoxDsImport()
+        var ds = new ArbeitszeitImportDaten()
         {
           Version = erg[1],
           IdStandort = IdAktuellerStandort          
@@ -29,10 +30,10 @@ namespace JgMaschineServiceArbeitszeit
           var kennung = erg[2].ToUpper()[0];
           switch (kennung)
           {
-            case 'K': ds.Vorgang = DatafoxDsImport.EnumVorgang.Komme; break;
-            case 'G': ds.Vorgang = DatafoxDsImport.EnumVorgang.Gehen; break;
-            case 'P': ds.Vorgang = DatafoxDsImport.EnumVorgang.Pause; break;
-            default: ds.Vorgang = DatafoxDsImport.EnumVorgang.Fehler; break;
+            case 'K': ds.Vorgang = ArbeitszeitImportDaten.EnumVorgang.Komme; break;
+            case 'G': ds.Vorgang = ArbeitszeitImportDaten.EnumVorgang.Gehen; break;
+            case 'P': ds.Vorgang = ArbeitszeitImportDaten.EnumVorgang.Pause; break;
+            default: ds.Vorgang = ArbeitszeitImportDaten.EnumVorgang.Fehler; break;
           }
         }
         catch (Exception f)

@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using JgMaschineData;
+using JgMaschineLib;
+using JgMaschineLib.Arbeitszeit;
 using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 using Newtonsoft.Json;
@@ -23,6 +25,7 @@ namespace JgMaschineServiceHandyArbeitszeit
     private int _PortNummer;
 
     private TcpListener _Listener;
+    public TcpListener Listener { get { return _Listener; } }
 
     public class HandyOptionen
     {
@@ -40,9 +43,9 @@ namespace JgMaschineServiceHandyArbeitszeit
 
     public class HandyDaten
     {
-      public string IdMitarbeiter { get; set; }
-      public string Zeitpunkt { get; set; }
-      public string IstAnmeldung { get; set; }
+      public string userId { get; set; }
+      public DateTime timestamp { get; set; }
+      public bool isCheckIn { get; set; }
     }
 
     public ArbeitszeitVonHandy(string ConnectionStringDb, int PortNummerServer)
@@ -70,13 +73,12 @@ namespace JgMaschineServiceHandyArbeitszeit
         while (true)
         {
           var client = _Listener.AcceptTcpClient();
-
           var hOpt = new HandyOptionen(_ConnectionString, client);
 
           Task.Factory.StartNew(handyOpt =>
           {
+            var fehler = true;
             var ho = (HandyOptionen)handyOpt;
-
             NetworkStream nwStream = null;
 
             try
@@ -87,36 +89,38 @@ namespace JgMaschineServiceHandyArbeitszeit
               msg = $"Client verbunden:\nPort: {clientIp} Port: {clientPort}";
               Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
 
-              while (true)
+              var buffer = new byte[8192];
+              nwStream = client.GetStream();
+              var anzahlZeichen = nwStream.Read(buffer, 0, buffer.Length);
+
+              var empf = JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen);
+              List<HandyDaten> listeHandyDaten = null;
+
+              try
               {
-                var buffer = new byte[4096];
-                nwStream = client.GetStream();
-                var anzahlZeichen = nwStream.Read(buffer, 0, buffer.Length);
+                listeHandyDaten = JsonConvert.DeserializeObject<List<HandyDaten>>(empf);
 
-                var empf = JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen);
-                msg = $"{anzahlZeichen} Zeichnen vom Server Empfangen.\nText: {empf}";
+                var werte = listeHandyDaten.Select(s => $"  {s.timestamp} - {s.userId} / {s.isCheckIn}").ToList();
+                msg = $"{anzahlZeichen} Zeichnen vom Server Empfangen.\n {Helper.ListeInString(werte)}";
+                Console.WriteLine(msg);
+
                 Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-
-                try
-                {
-                  var listeHandyDaten = JsonConvert.DeserializeObject<List<HandyDaten>>(empf);
-                  DatenInDatenbankEintragen(listeHandyDaten);
-                }
-                catch (Exception ex)
-                {
-                  msg = $"Fehler beim konvertieren der JSon Werte.\nGrund: {ex.Message}\nEmpfangen: {empf}";
-                  Logger.Write(msg, _Lc, 0, 0, TraceEventType.Error);
-                }
-
-                var senden = JgMaschineLib.TcpIp.Helper.StringInBuffer($"{anzahlZeichen} Zeichen empfangen!");
-                nwStream.WriteAsync(senden, 0, senden.Length);
               }
+              catch (Exception ex)
+              {
+                msg = $"Fehler beim konvertieren der JSon Werte.\nGrund: {ex.Message}\nEmpfangen: {empf}";
+                Logger.Write(msg, _Lc, 0, 0, TraceEventType.Error);
+                throw;
+              }
+
+              DatenInDatenbankEintragen(listeHandyDaten);
+
+              fehler = false;
             }
             catch (ObjectDisposedException ex)
             {
               msg = $"DisposeException.\nGrund: {ex.Message}";
               Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-              return;
             }
             catch (SocketException ex)
             {
@@ -134,8 +138,18 @@ namespace JgMaschineServiceHandyArbeitszeit
             }
             finally
             {
-              ho.Client.Close();
-              nwStream?.Close();
+              try
+              {
+                if (ho.Client.Connected)
+                {
+                  var senden = JgMaschineLib.TcpIp.Helper.StringInBuffer(fehler ? "201" : "200"); // 200 - Daten erfolgreich eingetragen
+                  nwStream.Write(senden, 0, senden.Length);
+                }
+
+                ho.Client.Close();
+                nwStream?.Close();
+              }
+              catch { }
             }
           }, hOpt, TaskCreationOptions.LongRunning);
         }
@@ -147,15 +161,49 @@ namespace JgMaschineServiceHandyArbeitszeit
       finally
       {
         _Listener.Stop();
-        Thread.Sleep(1000);
+        Thread.Sleep(10000);
       }
+
+      Environment.Exit(10);
     }
 
     public void DatenInDatenbankEintragen(List<HandyDaten> ListeDaten)
     {
+      var listeAuswertung = ListeDaten.Select(s => new ArbeitszeitImportDaten()
+      {
+        Datum = s.timestamp,
+        MatchCode = s.userId,
+        Vorgang = s.isCheckIn ? ArbeitszeitImportDaten.EnumVorgang.Komme : ArbeitszeitImportDaten.EnumVorgang.Gehen
+      }).ToList();
 
+      var msg = "";
+      try
+      {
+        using (var Db = new JgModelContainer())
+        {
+          if (!string.IsNullOrWhiteSpace(_ConnectionString))
+            Db.Database.Connection.ConnectionString = _ConnectionString;
 
-    } 
+          var azImport = new ArbeitszeitImport();
+          azImport.ImportStarten(Db, listeAuswertung);
+
+          Db.SaveChanges();
+          msg = $"{azImport.AnzahlAnmeldungen} Handy Anmeldungen in Datenbank gespeichert.\n{azImport.ProtokollOk}";
+          Logger.Write(msg, "Service", 0, 0, TraceEventType.Verbose);
+
+          if (azImport.ProtokollFehler != null)
+          {
+            msg = $"Anmeldungen ohne Benutzerzuordnung.\n{azImport.ProtokollFehler}";
+            Logger.Write(msg, "Service", 0, 0, TraceEventType.Warning);
+          }
+        }
+      }
+      catch (Exception f)
+      {
+        msg = "Fehler beim eintragen der Anmeldedaten in die Datenbank.";
+        throw new MyException(msg, f);
+      }
+    }
   }
 }
 

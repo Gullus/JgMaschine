@@ -15,7 +15,7 @@ namespace JgGlobalZeit.Fenster
       InitializeComponent();
       cmbStandort.ItemsSource = ListeStandorte;
       IstNeu = NeuTerminal == null;
-      gridTerminal.DataContext = NeuTerminal ?? new tabArbeitszeitTerminal() { Id = Guid.NewGuid() };
+      gridTerminal.DataContext = NeuTerminal ?? new tabArbeitszeitTerminal();
     }
 
     private void btnOk_Click(object sender, RoutedEventArgs e)

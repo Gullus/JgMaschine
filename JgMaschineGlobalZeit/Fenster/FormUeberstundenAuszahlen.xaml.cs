@@ -1,10 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace JgGlobalZeit.Fenster
 {
   public partial class FormUeberstundenAuszahlen : Window
   { 
-    public string UerbstundenAuszahlem { get { return tbUeberstunden.Text; } }
+    public TimeSpan UerbstundenAuszahlem { get { return JgZeitHelper.JgZeit.StringInZeit(tbUeberstunden.Text, TimeSpan.Zero); } }
 
     public FormUeberstundenAuszahlen(string AltSollStunden)
     {

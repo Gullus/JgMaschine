@@ -34,7 +34,7 @@ namespace JgMaschineServiceHandyArbeitszeit.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8010")]
+        [global::System.Configuration.DefaultSettingValueAttribute("9400")]
         public int PortNummerServer {
             get {
                 return ((int)(this["PortNummerServer"]));

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/08/2017 15:06:16
+-- Date Created: 03/30/2017 16:34:32
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -204,23 +204,11 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [DatumEnde] datetime  NULL,
     [ScannZeit] datetime  NULL,
     [IstVorfertigung] bit  NOT NULL,
-    [IdStahlPosition] int  NOT NULL,
-    [BtAnzahl] int  NOT NULL,
-    [BtLaenge] int  NOT NULL,
-    [BtGewicht] decimal(10,3)  NOT NULL,
-    [BtDurchmesser] int  NOT NULL,
-    [BtAnzahlBiegungen] tinyint  NOT NULL,
-    [BvbsCode] nvarchar(max)  NULL,
-    [GeometrieFilter] nvarchar(120)  NULL,
     [AnzahlBediener] tinyint  NOT NULL,
     [IstHandeingabe] bit  NOT NULL,
-    [IstAbgleichInJgData] bit  NOT NULL,
+    [BvbsCode] nvarchar(max)  NULL,
     [IdStahlBauteil] int  NOT NULL,
-    [Kunde] nvarchar(120)  NULL,
-    [Auftrag] nvarchar(120)  NULL,
-    [NummerBauteil] nvarchar(10)  NULL,
-    [NummerPosition] nvarchar(10)  NULL,
-    [Buegelname] nvarchar(120)  NULL,
+    [BtGewicht] decimal(18,0)  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
@@ -450,6 +438,7 @@ CREATE TABLE [dbo].[tabArbeitszeitTerminalSet] (
     [IpNummer] nvarchar(30)  NOT NULL,
     [PortNummer] int  NOT NULL,
     [UpdateTerminal] bit  NOT NULL,
+    [AnzahlFehler] smallint  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,

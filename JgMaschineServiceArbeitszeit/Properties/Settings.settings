@@ -6,7 +6,7 @@
       <Value Profile="(Default)">Heidenau</Value>
     </Setting>
     <Setting Name="PfadUpdateBediener" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\jg\Desktop\Test</Value>
+      <Value Profile="(Default)">C:\Users\jg\Desktop\Terminal</Value>
     </Setting>
     <Setting Name="DatenbankVerbindungsString" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
@@ -16,6 +16,9 @@
     </Setting>
     <Setting Name="Terminal_TimeOut" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="AnzahlBisFehlerAusloesen" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -105,6 +105,8 @@
     </Compile>
     <Compile Include="JgModelInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stahl\BvbsDatenaustausch.cs" />
+    <Compile Include="Stahl\StahlGewichte.cs" />
     <Compile Include="tabAnmeldungMaschine.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>

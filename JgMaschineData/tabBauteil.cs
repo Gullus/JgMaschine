@@ -18,11 +18,6 @@ namespace JgMaschineData
         public tabBauteil()
         {
             this.IstVorfertigung = false;
-            this.IdStahlPosition = -1;
-            this.BtAnzahl = -1;
-            this.BtLaenge = -1;
-            this.BtDurchmesser = -1;
-            this.IstAbgleichInJgData = false;
             this.IdStahlBauteil = -1;
             this.eAktivMaschine = new HashSet<tabMaschine>();
             this.sBediener = new HashSet<tabBediener>();
@@ -34,23 +29,11 @@ namespace JgMaschineData
         public Nullable<System.DateTime> DatumEnde { get; set; }
         public Nullable<System.DateTime> ScannZeit { get; set; }
         public bool IstVorfertigung { get; set; }
-        public int IdStahlPosition { get; set; }
-        public int BtAnzahl { get; set; }
-        public int BtLaenge { get; set; }
-        public decimal BtGewicht { get; set; }
-        public int BtDurchmesser { get; set; }
-        public byte BtAnzahlBiegungen { get; set; }
-        public string BvbsCode { get; set; }
-        public string GeometrieFilter { get; set; }
         public byte AnzahlBediener { get; set; }
         public bool IstHandeingabe { get; set; }
-        public bool IstAbgleichInJgData { get; set; }
+        public string BvbsCode { get; set; }
         public int IdStahlBauteil { get; set; }
-        public string Kunde { get; set; }
-        public string Auftrag { get; set; }
-        public string NummerBauteil { get; set; }
-        public string NummerPosition { get; set; }
-        public string Buegelname { get; set; }
+        public decimal BtGewicht { get; set; }
         public System.Guid fMaschine { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }

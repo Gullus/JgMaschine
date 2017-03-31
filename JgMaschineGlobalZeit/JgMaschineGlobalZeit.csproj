@@ -134,13 +134,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AnmeldungAuswertung.cs" />
+    <Compile Include="Klassen\AnmeldungAuswertung.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Klassen\ArbeitszeitBediener.cs" />
     <Compile Include="Commands\Commands.cs" />
-    <Compile Include="ExtenionsMethods.cs" />
+    <Compile Include="Klassen\ExtenionsMethods.cs" />
     <Compile Include="Fenster\FormArbeitszeitRunden.xaml.cs">
       <DependentUpon>FormArbeitszeitRunden.xaml</DependentUpon>
     </Compile>

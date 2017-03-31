@@ -16,6 +16,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using System.ServiceModel;
+using System.Messaging;
+using System.Threading;
 
 namespace JgMaschineTest
 {
@@ -23,17 +26,146 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
-      Logger.SetLogWriter(new LogWriterFactory().Create());
-      ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+      var t1 = new c2();
+      Console.WriteLine(t1.Test1);
 
-      Logger.Write("Start Programm");
+      var t2 = new c3();
+      Console.WriteLine(t2.Test1);
 
-      var dh = new JgMaschineDatenHandy("", 8010);
-      dh.Start();
 
+
+      //Logger.SetLogWriter(new LogWriterFactory().Create());
+      //ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+
+      var cts = new CancellationTokenSource();
+      var ct = cts.Token;
+
+      // Wenn dieser Task eher als Scanner beendet wird, liegt ein Verbindungsfehler vor;
+
+      var taskKontrolle = Task.Factory.StartNew((Adresse) =>
+      {
+        try
+        {
+
+          while (true)
+          {
+            Console.WriteLine("Hallo");
+            Thread.Sleep(1000);
+
+            ct.ThrowIfCancellationRequested();
+          }
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Fehler Task: {ex.Message}");
+        }
+
+        Console.WriteLine("Verlasse Task");
+      }, "Hallo", ct);
+
+      Console.WriteLine("Vor Sleep");
+
+      Thread.Sleep(10000);
+
+      Console.WriteLine("Nach Sleep");
+
+      cts.Cancel();
+
+      Console.WriteLine("Fertsch");
       Console.ReadKey();
     }
   }
+
+  [ServiceContract]
+  public interface IMsmqDaten
+  {
+    [OperationContract(IsOneWay = true)]
+    void SendRequest(string first_name, string last_name);
+
+    [OperationContract(IsOneWay = true)]
+    void GetReponse(string first_name, string last_name);
+  }
+
+  public class MsmqIn : IMsmqDaten
+  {
+    public void SendRequest(string first_Name, string last_Name)
+    {
+      var binding = new NetMsmqBinding(NetMsmqSecurityMode.None);
+      var address = new EndpointAddress("net.msmq://localhost/private/OutSchlange");
+
+      var proxy = ChannelFactory<IMsmqDaten>.CreateChannel(binding, address);
+      proxy.GetReponse(first_Name, last_Name);
+
+      Console.WriteLine($"Request Namen {first_Name} {last_Name}");
+    }
+
+    public void GetReponse(string first_name, string last_name)
+    {
+      Console.WriteLine($"Request Namen {first_name} {last_name}");
+    }
+
+  
+  }
+
+
+  public class c1
+  {
+    private string _Test1 = "Hallo";
+    public string Test1
+    {
+      get
+      {
+        return _Test1;
+      }
+
+      set
+      {
+        _Test1 = value;
+      }
+    }
+  }
+
+  public class c2 : c1
+  {
+
+  }
+
+  public class c3 : c1
+  {
+    private string _Test2 = "Ballo";
+    public new string Test1
+    {
+      get
+      {
+        return _Test2;
+      }
+
+      set
+      {
+        _Test2 = value;
+      }
+    }
+  }
+
+  //public class MsmqOut : IMsmqDaten
+  //{
+  //  public void SendRequest(string first_Name, string last_Name)
+  //  {
+  //    var binding = new NetMsmqBinding(NetMsmqSecurityMode.None);
+  //    var address = new EndpointAddress("net.msmq://localhost/private/InSchlange");
+
+  //    var proxy = ChannelFactory<IMsmqDaten>.CreateChannel(binding, address);
+  //    proxy.GetReponse(first_Name, last_Name);
+
+  //    Console.WriteLine($"Request Namen {first_Name} {last_Name}");
+  //  }
+
+  //  public void GetReponse(string first_name, string last_name)
+  //  {
+  //    Console.WriteLine($"Request Namen {first_name} {last_name}");
+  //  }
+  //}
+
 
   public class JgMaschineDatenHandy
   {
@@ -65,8 +197,6 @@ namespace JgMaschineTest
       public string Zeitpunkt { get; set; }
       public string IstAnmeldung { get; set; }
     }
-
-    private HandyOptionen _Opt;
 
     public JgMaschineDatenHandy(string ConnectionStringDb, int PortNummerServer)
     {

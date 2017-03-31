@@ -58,7 +58,6 @@ namespace JgMaschineData
       }
       catch (DbEntityValidationException ex)
       {
-        // Throw a new DbEntityValidationException with the improved exception message.
         throw new DbEntityValidationException(DbFehlerText(ex), ex.EntityValidationErrors);
       }
     }
@@ -71,7 +70,6 @@ namespace JgMaschineData
       }
       catch (DbEntityValidationException ex)
       {
-        // Throw a new DbEntityValidationException with the improved exception message.
         throw new DbEntityValidationException(DbFehlerText(ex), ex.EntityValidationErrors);
       }
     }

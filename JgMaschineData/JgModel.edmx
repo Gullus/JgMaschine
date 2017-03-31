@@ -174,23 +174,11 @@
     <Property Name="DatumEnde" Type="datetime" Nullable="true" />
     <Property Name="ScannZeit" Type="datetime" Nullable="true" />
     <Property Name="IstVorfertigung" Type="bit" Nullable="false" DefaultValue="false" />
-    <Property Name="IdStahlPosition" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="BtAnzahl" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="BtLaenge" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="BtGewicht" Type="decimal" Nullable="false" Precision="10" Scale="3" />
-    <Property Name="BtDurchmesser" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="BtAnzahlBiegungen" Type="tinyint" Nullable="false" />
-    <Property Name="BvbsCode" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="GeometrieFilter" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="AnzahlBediener" Type="tinyint" Nullable="false" />
     <Property Name="IstHandeingabe" Type="bit" Nullable="false" />
-    <Property Name="IstAbgleichInJgData" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="BvbsCode" Type="nvarchar(max)" Nullable="true" />
     <Property Name="IdStahlBauteil" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="Kunde" Type="nvarchar" Nullable="true" MaxLength="120" />
-    <Property Name="Auftrag" Type="nvarchar" Nullable="true" MaxLength="120" />
-    <Property Name="NummerBauteil" Type="nvarchar" Nullable="true" MaxLength="10" />
-    <Property Name="NummerPosition" Type="nvarchar" Nullable="true" MaxLength="10" />
-    <Property Name="Buegelname" Type="nvarchar" Nullable="true" MaxLength="120" />
+    <Property Name="BtGewicht" Type="decimal" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -420,6 +408,7 @@
     <Property Name="IpNummer" Type="nvarchar" Nullable="false" MaxLength="30" />
     <Property Name="PortNummer" Type="int" Nullable="false" />
     <Property Name="UpdateTerminal" Type="bit" Nullable="false" />
+    <Property Name="AnzahlFehler" Type="smallint" Nullable="false" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -922,23 +911,11 @@
           <Property Name="DatumEnde" Type="DateTime" Nullable="true" />
           <Property Name="ScannZeit" Type="DateTime" Nullable="true" />
           <Property Name="IstVorfertigung" Type="Boolean" Nullable="false" DefaultValue="False" />
-          <Property Name="IdStahlPosition" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="BtAnzahl" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="BtLaenge" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="BtGewicht" Type="Decimal" Nullable="false" Scale="3" Precision="10" />
-          <Property Name="BtDurchmesser" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="BtAnzahlBiegungen" Type="Byte" Nullable="false" />
-          <Property Name="BvbsCode" Type="String" Nullable="true" />
-          <Property Name="GeometrieFilter" Type="String" Nullable="true" MaxLength="120" />
           <Property Name="AnzahlBediener" Type="Byte" Nullable="false" />
           <Property Name="IstHandeingabe" Type="Boolean" Nullable="false" />
-          <Property Name="IstAbgleichInJgData" Type="Boolean" Nullable="false" DefaultValue="False" />
+          <Property Name="BvbsCode" Type="String" Nullable="true" />
           <Property Name="IdStahlBauteil" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="Kunde" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
-          <Property Name="Auftrag" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
-          <Property Name="NummerBauteil" Type="String" Nullable="true" MaxLength="10" Unicode="true" FixedLength="false" />
-          <Property Name="NummerPosition" Type="String" Nullable="true" MaxLength="10" Unicode="true" FixedLength="false" />
-          <Property Name="Buegelname" Type="String" Nullable="true" MaxLength="120" Unicode="true" FixedLength="false" />
+          <Property Name="BtGewicht" Type="Decimal" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eAktivMaschine" Relationship="JgModel.tabBauteiltabMaschine" FromRole="tabBauteil" ToRole="tabMaschine" />
@@ -1477,6 +1454,7 @@
           <Property Name="IpNummer" Type="String" Nullable="false" MaxLength="30" />
           <Property Name="PortNummer" Type="Int32" Nullable="false" />
           <Property Name="UpdateTerminal" Type="Boolean" Nullable="false" />
+          <Property Name="AnzahlFehler" Type="Int16" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabArbeitszeitTerminal" FromRole="tabArbeitszeitTerminal" ToRole="tabStandort" />
@@ -1557,23 +1535,11 @@
           <ScalarProperty Name="DatumEnde" ColumnName="DatumEnde" />
           <ScalarProperty Name="ScannZeit" ColumnName="ScannZeit" />
           <ScalarProperty Name="IstVorfertigung" ColumnName="IstVorfertigung" />
-          <ScalarProperty Name="IdStahlPosition" ColumnName="IdStahlPosition" />
-          <ScalarProperty Name="BtAnzahl" ColumnName="BtAnzahl" />
-          <ScalarProperty Name="BtLaenge" ColumnName="BtLaenge" />
-          <ScalarProperty Name="BtGewicht" ColumnName="BtGewicht" />
-          <ScalarProperty Name="BtDurchmesser" ColumnName="BtDurchmesser" />
-          <ScalarProperty Name="BtAnzahlBiegungen" ColumnName="BtAnzahlBiegungen" />
-          <ScalarProperty Name="BvbsCode" ColumnName="BvbsCode" />
-          <ScalarProperty Name="GeometrieFilter" ColumnName="GeometrieFilter" />
           <ScalarProperty Name="AnzahlBediener" ColumnName="AnzahlBediener" />
           <ScalarProperty Name="IstHandeingabe" ColumnName="IstHandeingabe" />
-          <ScalarProperty Name="IstAbgleichInJgData" ColumnName="IstAbgleichInJgData" />
+          <ScalarProperty Name="BvbsCode" ColumnName="BvbsCode" />
           <ScalarProperty Name="IdStahlBauteil" ColumnName="IdStahlBauteil" />
-          <ScalarProperty Name="Kunde" ColumnName="Kunde" />
-          <ScalarProperty Name="Auftrag" ColumnName="Auftrag" />
-          <ScalarProperty Name="NummerBauteil" ColumnName="NummerBauteil" />
-          <ScalarProperty Name="NummerPosition" ColumnName="NummerPosition" />
-          <ScalarProperty Name="Buegelname" ColumnName="Buegelname" />
+          <ScalarProperty Name="BtGewicht" ColumnName="BtGewicht" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />
@@ -1845,6 +1811,7 @@
           <ScalarProperty Name="IpNummer" ColumnName="IpNummer" />
           <ScalarProperty Name="PortNummer" ColumnName="PortNummer" />
           <ScalarProperty Name="UpdateTerminal" ColumnName="UpdateTerminal" />
+          <ScalarProperty Name="AnzahlFehler" ColumnName="AnzahlFehler" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

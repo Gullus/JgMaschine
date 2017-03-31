@@ -15,26 +15,35 @@ namespace JgMaschineServiceArbeitszeit
       Logger.SetLogWriter(new LogWriterFactory().Create());
       ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
 
-      var prop = Properties.Settings.Default;
+      var prop = JgMaschineServiceAbreitszeit.Properties.Settings.Default;
 
       var msg = "Programm startet. Initialisierung Datafox Optionen.";
       Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Start);
-      
+
       var optArbeitszeit = new OptionenArbeitszeit()
       {
         PfadUpdateBediener = prop.PfadUpdateBediener,
-        TimerIntervall = prop.AusleseIntervallInSekunden,
+        AuslesIntervallTerminal = prop.AusleseIntervallInSekunden,
         VerbindungsString = prop.DatenbankVerbindungsString,
+        AnzahlBisFehlerAusloesen = prop.AnzahlBisFehlerAusloesen,
         Terminal_TimeOut = prop.Terminal_TimeOut
       };
+
+#if DEBUG
+
+      var _ArbeitszeitErfassung = new ArbeitszeitErfassen(optArbeitszeit);
 
       msg = $"Arbeitszeit startet!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
-#if DEBUG
+      var task = new Task((azerf) =>
+      {
+        var az = (ArbeitszeitErfassen)azerf;
+        az.Start();
+      }, _ArbeitszeitErfassung);
+      task.Start();
 
-      var _ArbeitszeitErfassung = new ArbeitszeitErfassen(optArbeitszeit);      
-      ArbeitszeitErfassen.OnTimedEvent(optArbeitszeit);
+      Console.WriteLine("Service läuft. Beendigung mit einer Taste...");
       Console.ReadKey();
 
 #else

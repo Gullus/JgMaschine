@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -151,6 +153,14 @@ namespace JgMaschineLib
         }
       }
       return false;
+    }
+
+    public static string ListeInString(IEnumerable<string> StringListe)
+    {
+      var sb = new StringBuilder();
+      foreach (var s in StringListe)
+        sb.AppendLine(s);
+      return sb.ToString();
     }
 
     public static void FensterEinstellung(System.Windows.Window Fenster, System.Configuration.ApplicationSettingsBase Setting)

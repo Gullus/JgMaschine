@@ -1,34 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using JgMaschineData;
-using System.Linq;
+using JgMaschineLib.Arbeitszeit;
 
 namespace JgMaschineServiceArbeitszeit
 {
-
   public class OptionenArbeitszeit
   {
     internal List<tabBediener> ListeBediener;
-    internal List<tabStandort> ListeStandorte;
     internal List<tabArbeitszeitTerminal> ListeTerminals;
-    internal List<DatafoxDsImport> ListeAnmeldungen = new List<DatafoxDsImport>(); 
+    internal List<ArbeitszeitImportDaten> ListeAnmeldungen = new List<ArbeitszeitImportDaten>(); 
 
     public string VerbindungsString = "";
     public string PfadUpdateBediener = "";
-    public int TimerIntervall = 10000;
-
     public int Terminal_TimeOut = 3000;
+    public int AuslesIntervallTerminal = 10000;
 
-    internal bool UpdateBenutzerOk = false;
-    internal bool DatumZeitAktualisieren = false;
-    internal int ZaehlerDatumAktualisieren = 100; // Damit wird zeit beim Start aktualisiert
+
+    internal bool UpdateBenutzerAusfuehren = false;
+
+    internal Int16 AnzahlBisFehlerAusloesen = 5;
+    internal bool ErsterDurchlauf = true;          // Fehler bei Neustart zurücksetzen
 
     public OptionenArbeitszeit()
     { }
 
-    public string GetStandort(Guid IdStandort)
+    // Damit Zeit nicht bei jedem Durchlauf aktualisiert wird
+
+    internal int ZaehlerDatum = 9;
+    internal bool DatumZeitAktualisieren { get { return ZaehlerDatum == 10; } }
+
+    public void ZaehlerZeitErhoehen()
     {
-      return ListeStandorte.First(f => f.Id == IdStandort).Bezeichnung;
+      if (ZaehlerDatum > 10)
+        ZaehlerDatum = 0;
+      else
+        ++ZaehlerDatum;
     }
   }
 }

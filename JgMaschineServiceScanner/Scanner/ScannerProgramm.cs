@@ -264,11 +264,11 @@ namespace JgMaschineLib.Scanner
     private void Bf2dEintragen(JgModelContainer Db, tabMaschine Maschine, DataLogicScannerText e)
     {
       string msg = "";
-      Stahl.BvbsDatenaustausch btNeu = null;
+      BvbsDatenaustausch btNeu = null;
 
       try
       {
-        btNeu = new Stahl.BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper);
+        btNeu = new BvbsDatenaustausch(e.ScannerVorgangScan + e.ScannerKoerper, false);
       }
       catch (Exception f)
       {
@@ -308,29 +308,25 @@ namespace JgMaschineLib.Scanner
       else
       {
         e.SendeText(" ", "  - Bauteil O K -");
+
+        var bvbs = new BvbsDatenaustausch(btNeu.BvbsString, false);
+
         var btNeuErstellt = new tabBauteil()
         {
           Id = Guid.NewGuid(),
+          DatumStart = DateTime.Now,
+          
           eMaschine = Maschine,
-          BtAnzahl = Convert.ToInt32(btNeu.Anzahl),
-          BtDurchmesser = Convert.ToInt32(btNeu.Durchmesser),
 
-          //Falsches Gewicht in Bvbs Code ->  BtGewicht = btNeu.Gewicht; //InKg,
-          BtGewicht = Stahl.StahlGewichte.GetGewichtKg((int)btNeu.Durchmesser, (int)btNeu.Laenge) * (int)btNeu.Anzahl,
-          BtLaenge = Convert.ToInt32(btNeu.Laenge),
-          BtAnzahlBiegungen = (byte)btNeu.ListeGeometrie.Count,
           BvbsCode = btNeu.BvbsString,
-          NummerBauteil = btNeu.ProjektNummer,
+          BvbsDaten = bvbs,
+
+          BtGewicht = StahlGewichte.GetGewichtKg((int)btNeu.Durchmesser, (int)btNeu.Laenge) * (int)btNeu.Anzahl,
 
           IstHandeingabe = false,
           IstVorfertigung = Maschine.IstStangenschneider && ((byte)btNeu.ListeGeometrie.Count == 0),
 
-          IdStahlPosition = 1,
-          IdStahlBauteil = 1,
-
           AnzahlBediener = (byte)Maschine.sAktiveAnmeldungen.Count(),
-
-          DatumStart = DateTime.Now
         };
 
         foreach (var bed in Maschine.sAktiveAnmeldungen)
@@ -519,7 +515,7 @@ namespace JgMaschineLib.Scanner
 
       Logger.Write(e.TextEmpfangen, "Service", 1, 0, System.Diagnostics.TraceEventType.Verbose);
 
-      string msg = ""; 
+      string msg = "";
 
       if (e.TextEmpfangen.ToUpper().Contains(_Optionen.CradleTextAnmeldung.ToUpper()))
       {

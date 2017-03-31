@@ -25,6 +25,7 @@ namespace JgMaschineData
         public string IpNummer { get; set; }
         public int PortNummer { get; set; }
         public bool UpdateTerminal { get; set; }
+        public short AnzahlFehler { get; set; }
         public System.Guid fStandort { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }

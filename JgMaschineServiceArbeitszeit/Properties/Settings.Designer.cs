@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JgMaschineServiceArbeitszeit.Properties {
+namespace JgMaschineServiceAbreitszeit.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -34,7 +34,7 @@ namespace JgMaschineServiceArbeitszeit.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\jg\\Desktop\\Test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\jg\\Desktop\\Terminal")]
         public string PfadUpdateBediener {
             get {
                 return ((string)(this["PfadUpdateBediener"]));
@@ -65,6 +65,18 @@ namespace JgMaschineServiceArbeitszeit.Properties {
         public int Terminal_TimeOut {
             get {
                 return ((int)(this["Terminal_TimeOut"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public short AnzahlBisFehlerAusloesen {
+            get {
+                return ((short)(this["AnzahlBisFehlerAusloesen"]));
+            }
+            set {
+                this["AnzahlBisFehlerAusloesen"] = value;
             }
         }
     }

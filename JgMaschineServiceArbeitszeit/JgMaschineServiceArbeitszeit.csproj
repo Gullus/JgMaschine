@@ -85,7 +85,6 @@
     <Compile Include="BefehleDatafox\ZeitEinstellen.cs" />
     <Compile Include="DatafoxDll.cs" />
     <Compile Include="JgMaschineServiceArbeitszeit.cs" />
-    <Compile Include="Klassen\DatafoxDsImport.cs" />
     <Compile Include="Klassen\OptionenArbeitszeit.cs" />
     <Compile Include="Klassen\OptionenTerminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

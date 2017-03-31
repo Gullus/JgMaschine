@@ -66,8 +66,6 @@ namespace JgMaschineData
 
   public partial class tabBedienerMetaData
   {
-    [Required]
-    [MinLength(3, ErrorMessage = "Mindestanzahl der Zeichen für den Vornamen ist {1}")]
     public object VorName;
 
     [Required]
@@ -154,6 +152,8 @@ namespace JgMaschineData
 
   public partial class tabBauteil
   {
+    public BvbsDatenaustausch BvbsDaten { get; set; } = null;
+
     public double ZeitInSekunden
     {
       get
@@ -174,6 +174,11 @@ namespace JgMaschineData
         else
           return string.Join("; ", sBediener.Select(s => s.NachName + ", " + s.VorName).ToArray());
       }
+    }
+
+    public void LoadBvbsDaten(bool GeometriedatenErstellen)
+    {
+      BvbsDaten = new BvbsDatenaustausch(this.BvbsCode, GeometriedatenErstellen);
     }
   }
 
@@ -241,13 +246,15 @@ namespace JgMaschineData
     public bool AnmeldungIstLeer { get { return this.Anmeldung == null; } }
     public bool AbmeldungIstLeer { get { return this.Abmeldung == null; } }
 
-    public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value : TimeSpan.Zero; } }
-    public string DauerAnzeige { get { return (Dauer == TimeSpan.Zero) ? "-" : ((int)Dauer.TotalHours).ToString("D2") + ":" + Dauer.Minutes.ToString("D2"); } }
+    public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value - this.Pause : TimeSpan.Zero; } }
+    public string DauerAnzeige { get { return (Dauer == TimeSpan.Zero) ? "-" : JgZeit.ZeitInString(Dauer); } }
 
     public Nullable<DateTime> AnmeldungGerundetWert { get; set; } = null;
     public Nullable<DateTime> AnmeldungGerundet { get { return this.AnmeldungGerundetWert ?? this.Anmeldung; } }
-    public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value : TimeSpan.Zero; } }
-    public string DauerGerundetAnzeige { get { return (DauerGerundet == TimeSpan.Zero) ? "-" : ((int)DauerGerundet.TotalHours).ToString("D2") + ":" + DauerGerundet.Minutes.ToString("D2"); } }
+    public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value - this.Pause : TimeSpan.Zero; } }
+    public string DauerGerundetAnzeige { get { return (DauerGerundet == TimeSpan.Zero) ? "-" : JgZeit.ZeitInString(DauerGerundet); } }
+
+    public TimeSpan Pause { get; set; } = TimeSpan.Zero;
 
     public bool AnzeigeGeloescht
     {
@@ -271,102 +278,9 @@ namespace JgMaschineData
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public string SollstundenAnzeige
-    {
-      get { return SollStunden; }
-      set
-      {
-        var stunden = JgZeit.StringInStringZeit(value, SollStunden);
-        if (value != SollStunden)
-        {
-          SollStunden = stunden;
-          NotifyPropertyChanged();
-        }
-      }
-    }
+    public decimal NachtschichtGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(Nachtschichten)); } }
 
-    public string NachtschichtenAnzeige
-    {
-      get { return this.Nachtschichten; }
-      set
-      {
-        var zeit = JgZeit.StringInStringZeit(value, Nachtschichten);
-        if (zeit != Nachtschichten)
-        {
-          this.Nachtschichten = zeit;
-          NotifyPropertyChanged();
-        }
-      }
-    }
-
-    public decimal NachtschichtGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(NachtschichtenAnzeige)); } }
-
-    public string FeiertageAnzeige
-    {
-      get { return this.Feiertage; }
-      set
-      {
-        var zeit = JgZeit.StringInStringZeit(value, Feiertage);
-        if (zeit != Feiertage)
-        {
-          this.Feiertage = zeit;
-          NotifyPropertyChanged();
-        }
-      }
-    }
-    public decimal FeiertageGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(FeiertageAnzeige)); } }
-
-    public string AuszahlungUeberstundenAnzeige
-    {
-      get { return this.AuszahlungUeberstunden; }
-      set
-      {
-        var zeit = JgZeit.StringInStringZeit(value, AuszahlungUeberstunden);
-        if (zeit != AuszahlungUeberstunden)
-        {
-          this.AuszahlungUeberstunden = zeit;
-          NotifyPropertyChanged();
-        }
-      }
-    }
-
-    public short UrlaubAnzeige
-    {
-      get { return this.Urlaub; }
-      set
-      {
-        this.Urlaub = value;
-        NotifyPropertyChanged();
-      }
-    }
-
-    public short KrankAnzeige
-    {
-      get { return this.Krank; }
-      set
-      {
-        this.Krank = value;
-        NotifyPropertyChanged();
-      }
-    }
-
-    public string UeberstundenAnzeige
-    {
-      get { return this.Ueberstunden; }
-      set
-      {
-        var zeit = JgZeit.StringInStringZeit(value, Ueberstunden);
-        if (zeit != Ueberstunden)
-        {
-          this.Ueberstunden = zeit;
-          NotifyPropertyChanged();
-          NotifyPropertyChanged("IstStunden");
-        }
-      }
-    }
-
-
-    public string IstStunden { get { return JgZeit.ZeitInString(JgZeit.ZeitStringAddieren(SollStunden, Ueberstunden)); } }
+    public decimal FeiertageGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(Feiertage)); } }
 
     public EnumStatusArbeitszeitAuswertung StatusAnzeige
     {
@@ -391,7 +305,8 @@ namespace JgMaschineData
     }
 
     public delegate void DelegateArbeitszeitTagGeaendert(tabArbeitszeitTag Sender, string PropertyName);
-    public DelegateArbeitszeitTagGeaendert ArbeitszeitTagGeaendert { get; set; } = null;
+
+    public DelegateArbeitszeitTagGeaendert ArbeitszeitTagGeaendert = null;
 
     private void ArbeitszeitTagGeaendertAusloesen(string PropertyName)
     {
@@ -406,8 +321,15 @@ namespace JgMaschineData
     public bool IstFehlerZeit { get; set; } = false;
     public bool IstFehlerNachtschicht { get; set; } = false;
 
-    public bool IstZeitUngleich { get { return this.ZeitBerechnet != this.Zeit; } }
-    public bool IstNachtschichtUngleich { get { return this.NachtschichtBerechnet != this.Nachtschicht; } }
+    public bool IstZeitUngleich
+    {
+      get { return this.ZeitBerechnet != this.Zeit; }
+    }
+
+    public bool IstNachtschichtUngleich
+    {
+      get { return this.NachtschichtBerechnet != this.Nachtschicht; }
+    }
 
     public string PauseAnzeige
     {
@@ -453,7 +375,11 @@ namespace JgMaschineData
 
     public TimeSpan ZeitBerechnet { get; set; } = TimeSpan.Zero;
 
-    public string ZeitBerechnetAnzeige { get { return JgZeit.ZeitInString(ZeitBerechnet); } }
+    public string ZeitBerechnetAnzeige
+    {
+      get { return JgZeit.ZeitInString(ZeitBerechnet); }
+    }
+
 
     public string NachtschichtAnzeige
     {
@@ -473,7 +399,10 @@ namespace JgMaschineData
 
     public TimeSpan NachtschichtBerechnet { get; set; } = TimeSpan.Zero;
 
-    public string NachtschichtBerechnetAnzeige { get { return JgZeit.ZeitInString(NachtschichtBerechnet); } }
+    public string NachtschichtBerechnetAnzeige
+    {
+      get { return JgZeit.ZeitInString(NachtschichtBerechnet); }
+    }
 
     public string FeiertagAnzeige
     {
@@ -520,7 +449,10 @@ namespace JgMaschineData
       get { return Zeit != TimeSpan.Zero ? JgZeit.ZeitInString(Zeit + new TimeSpan(-8, 0, 0)) : "00:00"; }
     }
 
-    public IEnumerable<tabArbeitszeit> sArbeitszeitenNichtGeloescht { get { return this.sArbeitszeiten.Where(w => !w.DatenAbgleich.Geloescht); } }
+    public IEnumerable<tabArbeitszeit> sArbeitszeitenNichtGeloescht
+    {
+      get { return this.sArbeitszeiten.Where(w => !w.DatenAbgleich.Geloescht); }
+    }
   }
 
   public partial class tabArbeitszeitRunden : INotifyPropertyChanged
@@ -682,8 +614,10 @@ namespace JgMaschineData
   [MetadataType(typeof(tabArbeitszeitTerminalMetaData))]
   public partial class tabArbeitszeitTerminal
   {
-    // Wenn die Daten im Terminal erfolgreich aktualisiert wurden, kommt hier ein True und der DAtensatz wird gespeichert.
+    // Wenn die Daten im Terminal erfolgreich aktualisiert wurden, kommt hier ein True und der Datensatz wird gespeichert.
     public bool TerminaldatenWurdenAktualisiert = false;
 
+    // Muss so sein, da Fehlerzähler bei Addierung Status nicht als Modifiesd gekennzeichnet wird;
+    public bool FehlerTerminalAusgeloest = false;
   }
 }

@@ -25,7 +25,6 @@ namespace JgMaschineServiceHandyArbeitszeit
       var prop = Properties.Settings.Default;
       var az = new ArbeitszeitVonHandy(prop.ConnectionString, prop.PortNummerServer);
       az.Start();
-      Console.ReadKey();
 
 #else
 
@@ -63,7 +62,9 @@ namespace JgMaschineServiceHandyArbeitszeit
 
     protected override void OnShutdown()
     {
+      _ArbeitszeitHandy.Listener.Stop();
       base.OnShutdown();
+
       var msg = "Service wurde heruntergefahren!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
     }

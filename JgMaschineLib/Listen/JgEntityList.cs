@@ -381,8 +381,6 @@ namespace JgMaschineLib
     public void DsSave(K DatenSatz = null)
     {
       var entr = _Db.Entry(DatenSatz ?? Current);
-      if (entr.State != System.Data.Entity.EntityState.Modified)
-        entr.State = System.Data.Entity.EntityState.Modified;
       _Db.SaveChanges();
     }
 

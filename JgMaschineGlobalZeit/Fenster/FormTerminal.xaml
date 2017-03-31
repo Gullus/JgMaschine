@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JgGlobalZeit.Fenster"
         xmlns:daten="clr-namespace:JgMaschineData;assembly=JgMaschineData"
         mc:Ignorable="d"
         Title="Neues Terminal registrieren" Height="212.467" Width="352.52" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico">
@@ -25,7 +24,7 @@
         <TextBox Text="{Binding Bezeichnung}" Grid.Column="1" Grid.ColumnSpan="2" />
 
         <Label Content="Standort" Grid.Row="1" />
-        <ComboBox x:Name="cmbStandort" SelectedItem="{Binding eStandort}" DisplayMemberPath="Bezeichnung" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" />
+        <ComboBox x:Name="cmbStandort" SelectedValue="{Binding fStandort, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="Bezeichnung" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" />
 
         <Label Content="Ip Adresse" Grid.Row="2" />
         <TextBox Text="{Binding IpNummer}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"/>
