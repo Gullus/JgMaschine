@@ -8,21 +8,16 @@ namespace JgMaschineSetup.Fenster
 
   public partial class FormBediener : Window
   {
-    public tabBediener Bediener { get; set; }
+    public tabBediener Bediener { get { return (tabBediener)gridBediener.DataContext; } }
 
     public FormBediener(tabBediener Bediener, IEnumerable<tabStandort> Standorte)
     {
       InitializeComponent();
-      this.Bediener = Bediener;
       cmbStandort.ItemsSource = Standorte;
-    }
-
-    private void Window_Loaded(object sender, RoutedEventArgs e)
-    {
       cmbStatus.ItemsSource = Enum.GetValues(typeof(EnumStatusBediener));
 
       if (Bediener == null)
-        Bediener = new tabBediener() { Id = Guid.NewGuid(), Status = EnumStatusBediener.Aktiv, fStandort = (cmbStandort.Items[0] as tabStandort).Id };
+        Bediener = new tabBediener() { Status = EnumStatusBediener.Aktiv, fStandort = (cmbStandort.Items[0] as tabStandort).Id };
       gridBediener.DataContext = Bediener;
     }
 

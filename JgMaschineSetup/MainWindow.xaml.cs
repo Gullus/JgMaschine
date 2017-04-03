@@ -30,18 +30,19 @@ namespace JgMaschineSetup
       if (Properties.Settings.Default.Verbindungsstring != "")
         _Db.Database.Connection.ConnectionString = Properties.Settings.Default.Verbindungsstring;
 
+      tbDatenbankverbinudng.Text = _Db.Database.Connection.ConnectionString;
+
       _ListeStandorte = new JgEntityList<tabStandort>(_Db)
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
         Tabellen = new DataGrid[] { dgStandort },
         OnDatenLaden = (d, p) =>
         {
-          return d.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht)
-          .OrderBy(o => o.Bezeichnung).ToList();
+          return d.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();          
         }
       };
       _ListeStandorte.DatenLaden();
-      tbDatenbankverbinudng.Text = _ListeStandorte.Db.Database.Connection.ConnectionString;
+      _ListeStandorte.Daten = _ListeStandorte.Daten.OrderBy(o => o.Bezeichnung).ToList();
 
       _ListeMaschinen = new JgEntityList<tabMaschine>(_Db)
       {
@@ -49,11 +50,11 @@ namespace JgMaschineSetup
         Tabellen = new DataGrid[] { dgMaschine },
         OnDatenLaden = (d, p) =>
         {
-          return d.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll)
-            .OrderBy(o => o.MaschinenName).ToList();
+          return d.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll).ToList();
         }
       };
       _ListeMaschinen.DatenLaden();
+      _ListeMaschinen.Daten = _ListeMaschinen.Daten.OrderBy(o => o.MaschinenName).ToList();
 
       _ListeBediener = new JgEntityList<tabBediener>(_Db)
       {
@@ -61,11 +62,11 @@ namespace JgMaschineSetup
         Tabellen = new DataGrid[] { dgBediener },
         OnDatenLaden = (d, p) =>
         {
-          return d.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht)
-            .OrderBy(o => o.NachName).ToList();
+          return d.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();            
         }
       };
       _ListeBediener.DatenLaden();
+      _ListeBediener.Daten = _ListeBediener.Daten.OrderBy(o => o.NachName).ToList();
 
       cbStatusBediener.ItemsSource = Enum.GetValues(typeof(JgMaschineData.EnumStatusBediener));
       InitCommands();
@@ -78,10 +79,7 @@ namespace JgMaschineSetup
       CommandBindings.Add(new CommandBinding(MyCommands.MaschineBearbeiten, (sen, erg) =>
       {
         var form = new Fenster.FormMaschinenOptionen(_ListeMaschinen.Current, _ListeStandorte.Daten);
-        if (form.ShowDialog() ?? false)
-          _ListeMaschinen.DsSave();
-        else
-          _ListeMaschinen.Reload();
+        _ListeMaschinen.ErgebnissFormular(form.ShowDialog(), false, form.Maschine);
       },
       (sen, erg) =>
       {

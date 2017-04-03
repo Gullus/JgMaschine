@@ -252,6 +252,11 @@ namespace JgZeitHelper
         return false;
     }
 
+    public static DateTime RundeDatumAufMinute(DateTime Datum)
+    {
+      return new DateTime(Datum.Year, Datum.Month, Datum.Day, Datum.Hour, Datum.Minute, 0);
+    }
+   
     public static bool AbfrageZeit(string AnzeigeText, string Caption, ref DateTime DatumVon, ref DateTime DatumBis)
     {
       var fo = new Fenster.FormDatumZeitVonBis(Caption, AnzeigeText, DatumVon, DatumBis);

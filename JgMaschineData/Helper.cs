@@ -90,6 +90,20 @@ namespace JgMaschineData
 
     // in Optionen Anzeige DatenStart aus Vorjahr, sonst ArbeitszeitAuswertung Aktuell 
 
+    public EnumStatusBediener StatusAnzeige
+    {
+      get { return this.Status; }
+      set
+      {
+        if (value != this.Status)
+        {
+          this.Status = value;
+          NotifyPropertyChanged();
+        }
+          }
+    }
+
+
     private tabArbeitszeitAuswertung fArbeitszeitHelper = null;
     public tabArbeitszeitAuswertung eArbeitszeitHelper
     {

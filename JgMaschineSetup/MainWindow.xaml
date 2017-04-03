@@ -189,7 +189,7 @@
               <DataGridTextColumn Binding="{Binding VorName}" Header="Vorname" Width="*"/>
               <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung}" Header="Standort" Width="100"/>
               <DataGridTextColumn Binding="{Binding MatchCode}" Header="MC" Width="50"/>
-              <DataGridTextColumn Binding="{Binding Status}" Header="Status" Width="50"/>
+              <DataGridTextColumn Binding="{Binding StatusAnzeige}" Header="Status" Width="60"/>
             </DataGrid.Columns>
           </DataGrid>
 

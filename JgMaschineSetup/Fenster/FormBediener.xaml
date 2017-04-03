@@ -6,7 +6,7 @@
     xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:vRules="clr-namespace:JgMaschineLib.ValidationRules;assembly=JgMaschineLib" 
     mc:Ignorable="d" x:Class="JgMaschineSetup.Fenster.FormBediener"
-    Title="Bediener" Height="337" Width="428" Loaded="Window_Loaded" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" 
+    Title="Bediener" Height="337" Width="428" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" 
       Topmost="True" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=tbVorname}" Icon="/JgMaschineSetup;component/JgMaschineSetup.ico">
     <Window.Resources>
 
@@ -63,7 +63,7 @@
         <TextBox x:Name="tabAuszahlungGehalt" Grid.Column="1" Grid.Row="4" Text="{Binding AuszahlungGehalt}"/>
 
         <Label Content="_Status" Target="{Binding ElementName=cmbStatus}" Grid.Row="5"/>
-        <ComboBox x:Name="cmbStatus" SelectedItem="{Binding Status}" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3" />
+        <ComboBox x:Name="cmbStatus" SelectedItem="{Binding StatusAnzeige}" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3" />
 
         <Label Content="_Bemerkung" Target="{Binding ElementName=tbBemerkung}" Grid.Row="6" />
         <TextBox x:Name="tbBemerkung" Text="{Binding Bemerkung}" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="3"/>

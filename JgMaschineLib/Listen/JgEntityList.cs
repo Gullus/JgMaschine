@@ -26,20 +26,12 @@ namespace JgMaschineLib
     public abstract CollectionViewSource ViewSource { get; set; }
 
     public abstract void Refresh();
-
-    public static string IdisInString(Guid[] Idis)
-    {
-      return "'" + string.Join("','", Idis) + "'";
-    }
   }
 
   public class JgEntityList<K> : JgEntityList
     where K : class
   {
-    public Guid[] Idis { get; set; }
     private ObservableCollection<K> _Daten = new ObservableCollection<K>();
-
-    #region Laden von Daten über ein Delegaten
 
     public Dictionary<string, object> Parameter = null;
 
@@ -56,37 +48,51 @@ namespace JgMaschineLib
     {
       if (OnDatenLaden != null)
       {
-        if (_Daten.Count == 0)
+        MerkeZeile();
+
+        var propId = typeof(K).GetProperty("Id");
+        var propDateAbleich = typeof(K).GetProperty("DatenAbgleich");
+
+        var lNeu = OnDatenLaden(_Db, Parameter);
+
+        var dicAlt = new SortedDictionary<Guid, K>();
+        var dicNeu = new SortedDictionary<Guid, K>();
+
+        foreach (var ds in _Daten)
+          dicAlt.Add((Guid)propId.GetValue(ds), ds);
+
+        foreach (var ds in lNeu)
+          dicNeu.Add((Guid)propId.GetValue(ds), ds);
+
+        // Nicht mehr relevante Datensätze entfernen
+        foreach (var dsAlt in dicAlt)
         {
-          Daten = OnDatenLaden(_Db, Parameter);
+          if (!dicNeu.ContainsKey(dsAlt.Key))
+            _Daten.Remove(dsAlt.Value);
         }
-        else
+
+        // Neue Datensätze hinzufügen
+        foreach (var dsNeu in dicNeu)
         {
-          var propId = typeof(K).GetProperty("Id");
-          var propDateAbleich = typeof(K).GetProperty("DatenAbgleich");
+          if (!dicAlt.ContainsKey(dsNeu.Key))
+            _Daten.Add(dsNeu.Value);
+        }
 
-          var idisVorhanden = new SortedSet<Guid>();
-          foreach (var ds in _Daten)
-            idisVorhanden.Add((Guid)propId.GetValue(ds));
-
-          Daten = OnDatenLaden(_Db, Parameter);
-
+        // geänderte Datensätze aktualisieren
+        if (dicNeu.Count != 0)
+        {
           var sbAbfrageText = new StringBuilder();
-          foreach (var ds in Daten)
-          {
-            var id = (Guid)propId.GetValue(ds);
-            if (idisVorhanden.Contains(id))
-              sbAbfrageText.AppendLine($"  ('{id.ToString()}','{(propDateAbleich.GetValue(ds) as DatenAbgleich).Datum.ToString("dd.MM.yyyy HH:mm:ss")}'),");
-          }
+          foreach (var ds in dicNeu)
+            sbAbfrageText.AppendLine($"  ('{ds.Key.ToString()}','{(propDateAbleich.GetValue(ds.Value) as DatenAbgleich).Datum.ToString("dd.MM.yyyy HH:mm:ss")}'),");
 
           var sqlText = "IF OBJECT_ID(N'tempdb..#TempDs', N'U') IS NOT NULL DROP TABLE #TempDs \n"
                       + "CREATE TABLE #TempDs (Id uniqueidentifier NOT NULL, Datum char(19) NOT NULL) \n"
                       + "INSERT INTO #TempDs VALUES \n"
                       + sbAbfrageText.ToString().Substring(0, sbAbfrageText.ToString().Length - 3) + "\n"
                       + "SELECT Id FROM #TempDs as t \n"
-                      + "  WHERE EXISTS(SELECT * FROM " + typeof(K).Name +  "Set WHERE (Id = t.Id) AND (FORMAT(DatenAbgleich_Datum , 'dd/MM/yyyy HH:mm:ss') <> t.Datum))";
+                      + "  WHERE EXISTS(SELECT * FROM " + typeof(K).Name + "Set WHERE (Id = t.Id) AND (FORMAT(DatenAbgleich_Datum , 'dd/MM/yyyy HH:mm:ss') <> t.Datum))";
 
-          var idisAendern = new SortedSet<Guid>();
+          var idisAendern = new List<Guid>();
           var sc = _Db.Database.Connection.ConnectionString;
           using (var con = new SqlConnection(sc))
           {
@@ -99,19 +105,14 @@ namespace JgMaschineLib
             }
           }
 
-          if (idisAendern.Count > 0)
-          {
-            foreach (var ds in Daten)
-            {
-              var id = (Guid)propId.GetValue(ds);
-              if (idisAendern.Contains(id))
-                _Db.Entry<K>(ds).Reload();
-            }
-          }
+          foreach (var ds in idisAendern)
+            _Db.Entry<K>(dicNeu[ds]).Reload();
+
+          Refresh();
+          GeheZuZeile();
         }
       }
     }
-    #endregion
 
     public IEnumerable<K> Daten
     {
@@ -124,31 +125,14 @@ namespace JgMaschineLib
       }
     }
 
-    private Dictionary<Guid, DateTime> ListeAusDatenbankLaden(SqlConnection SqlVerbindung, string QueryString)
-    {
-      var dbDaten = new Dictionary<Guid, DateTime>();
-      var com = new SqlCommand(QueryString, SqlVerbindung);
-      using (
-      var reader = com.ExecuteReader())
-      {
-        while (reader.Read())
-          dbDaten.Add((Guid)reader[0], (DateTime)reader[1]);
-      }
-
-      if (dbDaten.Count > 0)
-        Idis = dbDaten.Keys.ToArray();
-      else
-        Idis = null;
-
-      return dbDaten;
-    }
-
     public void ErgebnissFormular(bool? ErgebnissShowDialog, bool istNeu, K Datensatz)
     {
       if (ErgebnissShowDialog ?? false)
       {
         if (istNeu)
           Add(Datensatz);
+        else
+          _Db.SaveChanges();
       }
       else if (!istNeu)
       {
@@ -188,9 +172,7 @@ namespace JgMaschineLib
 
     public void MerkeZeile()
     {
-      _ZeilenNummer = 0;
-      if (ViewSource?.View != null)
-        _ZeilenNummer = _ViewSource.View.CurrentPosition;
+      _ZeilenNummer = _ViewSource?.View?.CurrentPosition ?? 0;
     }
 
     public void GeheZuZeile()

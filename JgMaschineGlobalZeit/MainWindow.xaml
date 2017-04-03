@@ -15,11 +15,7 @@
         <jgZeit:JgZeit x:Key="dzArbeitszeitVon" />
         <jgZeit:JgZeit x:Key="dzArbeitszeitBis" />
 
-        <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}" IsLiveSortingRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <ComponentModel:SortDescription Direction="Ascending" PropertyName="AnzeigeAnmeldung"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
+        <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}" IsLiveSortingRequested="True" />
         <CollectionViewSource x:Key="vsReporteArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
         <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}" />
@@ -94,13 +90,14 @@
                                 <TextBlock Text=" Arbeitszeit löschen" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
+                        <Button x:Name="button" Content="Button" Grid.Column="12" HorizontalAlignment="Left" Margin="47,11,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
                     </Grid>
 
                     <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" EnableRowVirtualization="True" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="160"/>
                             <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung}" Header="Standort" Width="120"/>
-                            <DataGridTextColumn Binding="{Binding AnzeigeAnmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn x:Name="ColAnmeldung" Binding="{Binding AnzeigeAnmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH:mm, TargetNullValue=-}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 

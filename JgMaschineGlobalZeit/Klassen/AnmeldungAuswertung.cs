@@ -90,7 +90,7 @@ namespace JgMaschineGlobalZeit
 
       ListeBediener = new JgEntityList<tabBediener>(_Db)
       {
-        Daten = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv)).OrderBy(o => o.NachName).ToList(),
+        Daten = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv) && !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToList(),
         ViewSource = VsBediener
       };
       VsBediener.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));

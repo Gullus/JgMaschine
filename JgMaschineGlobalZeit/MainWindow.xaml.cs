@@ -80,8 +80,7 @@ namespace JgMaschineGlobalZeit
           var datBis = (DateTime)p["DatumBis"];
 
           var lZeiten = d.tabArbeitszeitSet.Where(w => (((w.Anmeldung >= datVom) && (w.Anmeldung <= datBis))
-            || ((w.Anmeldung == null) && (w.Abmeldung >= datVom) && (w.Abmeldung <= datBis))))
-            .OrderBy(o => o.Anmeldung).ToList();
+            || ((w.Anmeldung == null) && (w.Abmeldung >= datVom) && (w.Abmeldung <= datBis)))).ToList();
 
           var listeGerundet = d.tabArbeitszeitRundenSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
           foreach (var zeit in lZeiten.ToList())
@@ -104,18 +103,20 @@ namespace JgMaschineGlobalZeit
         { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
       };
       _ListeArbeitszeitenAuswahl.DatenLaden();
+      _ListeArbeitszeitenAuswahl.Daten = _ListeArbeitszeitenAuswahl.Daten.OrderBy(o => o.Anmeldung).ToList();
+
 
       // Report initialisieren ********************************
+
+      var auswAlle = _Db.tabAuswertungSet
+        .Where(w => ((w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) || (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)) && (!w.DatenAbgleich.Geloescht))
+        .ToList();
 
       _ListeReporteArbeitszeiten = new JgEntityList<tabAuswertung>(_Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsReporteArbeitszeit")
       };
-      var ausw = _ListeReporteArbeitszeiten.Db.tabAuswertungSet
-        .Where(w => ((w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) || (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)) && (!w.DatenAbgleich.Geloescht))
-        .ToList();
-
-      _ListeReporteArbeitszeiten.Daten = ausw
+      _ListeReporteArbeitszeiten.Daten = auswAlle
         .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit)
         .OrderBy(o => o.AnzeigeReportname).ToList();
 
@@ -123,7 +124,7 @@ namespace JgMaschineGlobalZeit
       {
         ViewSource = (CollectionViewSource)FindResource("vsReporteAuswertung")
       };
-      _ListeReporteAuswertung.Daten = ausw
+      _ListeReporteAuswertung.Daten = auswAlle
         .Where(w => w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)
         .OrderBy(o => o.AnzeigeReportname).ToList();
 
@@ -169,11 +170,12 @@ namespace JgMaschineGlobalZeit
       var az = _ListeArbeitszeitenAuswahl.Current;
       var msg = $"Korrektur der Arbeitszeit für den Mitarbeiter {az.eBediener.Name}.";
       var anm = az.Anmeldung ?? DateTime.Now;
-      var abm = az.Abmeldung ?? DateTime.Now;
+      var abm = az.Abmeldung ?? new DateTime(anm.Year, anm.Month, anm.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
 
       if (JgZeit.AbfrageZeit(msg, " Zeitabfrage !", ref anm, ref abm))
       {
-        if (anm != az.Anmeldung)
+        var sichern = false;
+        if (anm != JgZeit.RundeDatumAufMinute(az.Anmeldung.Value))
         {
           az.AnmeldungGerundetWert = null;
           if (anm != null)
@@ -188,13 +190,17 @@ namespace JgMaschineGlobalZeit
           }
 
           az.AnzeigeAnmeldung = anm;
-          _ListeArbeitszeitenAuswahl.DsSave();
+          sichern = true;
         }
-        if (abm != az.Abmeldung)
+
+        if (abm != JgZeit.RundeDatumAufMinute(az.Abmeldung.Value))
         {
           az.AnzeigeAbmeldung = abm;
-          _ListeArbeitszeitenAuswahl.DsSave();
+          sichern = true;
         }
+
+        if (sichern)
+          _ListeArbeitszeitenAuswahl.DsSave();
       }
     }
 
@@ -477,12 +483,12 @@ namespace JgMaschineGlobalZeit
             new XElement("Zahltag", z.AuszahlungGehalt),
             new XElement("Urlaubstage", z.Urlaubstage),
 
-            new XElement("SollStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden).TotalHours.ToString("N1", en)),
+            new XElement("SollStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden).TotalHours.ToString("N2", en)),
 
             new XElement("Normalstunden", (JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden)
-              - (new TimeSpan(8 * (z.eArbeitszeitHelper.Urlaub + z.eArbeitszeitHelper.Krank + anzahlFeiertage), 0, 0))).TotalHours.ToString("N1", en)),
+              - (new TimeSpan(8 * (z.eArbeitszeitHelper.Urlaub + z.eArbeitszeitHelper.Krank + anzahlFeiertage), 0, 0))).TotalHours.ToString("N2", en)),
 
-            new XElement("UeberstundenAusgezahlt", JgZeit.StringInZeit(z.eArbeitszeitHelper.AuszahlungUeberstunden).TotalHours.ToString("N1", en)),
+            new XElement("UeberstundenAusgezahlt", JgZeit.StringInZeit(z.eArbeitszeitHelper.AuszahlungUeberstunden).TotalHours.ToString("N2", en)),
 
             new XElement("Urlaub", z.eArbeitszeitHelper.Urlaub * 8),
             new XElement("Krank", z.eArbeitszeitHelper.Krank * 8),
@@ -490,13 +496,13 @@ namespace JgMaschineGlobalZeit
 
             // Formatierung als Dezimalzahl mit einer Kommastelle mit Frau Glatter besprochen
 
-            new XElement("NachtschichtZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.Nachtschichten).TotalHours.ToString("N1", en)),
-            new XElement("NachtschichtZuschlagGerundet", z.eArbeitszeitHelper.NachtschichtGerundet.ToString("N1", en)),
-            new XElement("FeiertagsZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.Feiertage).TotalHours.ToString("N1", en)),
-            new XElement("FeiertagsZuschlagGerundet", z.eArbeitszeitHelper.FeiertageGerundet.ToString("N1", en)),
+            new XElement("NachtschichtZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.Nachtschichten).TotalHours.ToString("N2", en)),
+            new XElement("NachtschichtZuschlagGerundet", z.eArbeitszeitHelper.NachtschichtGerundet.ToString("N2", en)),
+            new XElement("FeiertagsZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.Feiertage).TotalHours.ToString("N2", en)),
+            new XElement("FeiertagsZuschlagGerundet", z.eArbeitszeitHelper.FeiertageGerundet.ToString("N2", en)),
 
-            new XElement("IstStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden + z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString("N1", en)),
-            new XElement("UeberStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString("N1", en))
+            new XElement("IstStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden + z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString("N2", en)),
+            new XElement("UeberStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString("N2", en))
             )
           )
         );
@@ -557,6 +563,13 @@ namespace JgMaschineGlobalZeit
         };
         _ListeArbeitszeitenAuswahl.Add(az);
       }
+    }
+
+    private void button_Click(object sender, RoutedEventArgs e)
+    {
+      var dd = dgArbeitszeit.Items.SortDescriptions[0];
+
+
     }
   }
 }
