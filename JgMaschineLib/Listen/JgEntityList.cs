@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
@@ -10,100 +11,6 @@ using JgMaschineData;
 
 namespace JgMaschineLib
 {
-  public delegate void JgEntityAutoTimerAusgeloestDelegate();
-
-  public class JgEntityListAuto
-  {
-    public enum TabArt
-    {
-      Standort,
-      Bediener,
-      Maschine,
-      Arbeitszeit,
-      Anmeldung,
-      Bauteil,
-      Reparatur,
-      RepAnmeldung
-    }
-
-    private JgModelContainer _Db;
-    private DispatcherTimer _Timer;
-    private Dictionary<TabArt, JgEntityList> _Tabs = new Dictionary<TabArt, JgEntityList>();
-
-    public JgEntityAutoTimerAusgeloestDelegate TimerAusgeloest { get; set; }
-
-    public JgModelContainer Db { get { return _Db; } }
-    public DispatcherTimer JgTimer { get { return _Timer; } }
-    public Dictionary<TabArt, JgEntityList> Tabs { get { return _Tabs; } }
-
-    public JgEntityListAuto(String ConnectionString, int AktualisierungsIntervall = 30)
-    {
-      _Db = new JgModelContainer();
-      _Db.Database.Connection.ConnectionString = ConnectionString;
-
-      _Timer = new DispatcherTimer(new TimeSpan(0, 0, AktualisierungsIntervall), DispatcherPriority.SystemIdle, (sen, erg) =>
-      {
-        (sen as DispatcherTimer).Stop();
-
-        DatenAktualisieren();
-        TimerAusgeloest?.Invoke();
-
-        (sen as DispatcherTimer).Start();
-      }, Dispatcher.CurrentDispatcher);
-    }
-
-    public SqlConnection DbVerbindung()
-    {
-      var verbindung = new SqlConnection(_Db.Database.Connection.ConnectionString);
-      try
-      {
-        verbindung.Open();
-      }
-      catch (Exception f)
-      {
-        Helper.Protokoll($"Fehler beim öffnen der Datenbank !\nGrund: {f.Message}\nZeichenfolge: {verbindung}", Helper.ProtokollArt.Fehler);
-        return null;
-      }
-
-      return verbindung;
-    }
-
-    public void DatenAktualisieren()
-    {
-      var verbindung = DbVerbindung();
-      try
-      {
-        foreach (var tab in _Tabs.Values)
-          tab.DatenAktualisieren(verbindung);
-      }
-      catch (Exception f)
-      {
-        Helper.Protokoll($"Fehler bei der Datenaktualisierung!\nGrund: {f.Message}");
-      }
-      finally
-      {
-        verbindung.Close();
-      }
-
-      foreach (var tab in _Tabs.Values)
-      {
-        if (!tab.DatenAnViewSource)
-          tab.Refresh();
-        else if (tab.RefreshAusloesen)
-        {
-          tab.Refresh();
-          if (tab.ViewSorceAuchAktualisieren.Count > 0)
-          {
-            foreach (var vs in tab.ViewSorceAuchAktualisieren)
-              vs?.View?.Refresh();
-          }
-        }
-      }
-    }
-  }
-
-  public delegate string AbfrageSqlStringDelegate();
-
   public abstract class JgEntityList
   {
     protected JgModelContainer _Db;
@@ -114,14 +21,12 @@ namespace JgMaschineLib
 
     public bool RefreshAusloesen = false;
     public bool DatenAnViewSource = true;
-    public static readonly string IstNull = "#IstNull#";
 
     public DataGrid[] Tabellen { get; set; }
     public abstract CollectionViewSource ViewSource { get; set; }
-    public abstract void DatenAktualisieren(SqlConnection SqlVerbindung);
+
     public abstract void Refresh();
 
-    public List<CollectionViewSource> ViewSorceAuchAktualisieren = new List<CollectionViewSource>();
     public static string IdisInString(Guid[] Idis)
     {
       return "'" + string.Join("','", Idis) + "'";
@@ -137,6 +42,7 @@ namespace JgMaschineLib
     #region Laden von Daten über ein Delegaten
 
     public Dictionary<string, object> Parameter = null;
+
     public delegate IEnumerable<K> DatenLadenDelegate(JgModelContainer Db, Dictionary<string, object> Parameter);
     public DatenLadenDelegate OnDatenLaden = null;
 
@@ -146,16 +52,63 @@ namespace JgMaschineLib
         Daten = OnDatenLaden(_Db, Parameter);
     }
 
-    public void DatenNeuLaden()
+    public void DatenAktualisieren()
     {
       if (OnDatenLaden != null)
       {
-        MerkeZeile();
-        var conString = _Db.Database.Connection.ConnectionString;
-        _Db = new JgModelContainer();
-        _Db.Database.Connection.ConnectionString = conString;
-        Daten = OnDatenLaden(_Db, Parameter);
-        GeheZuZeile();
+        if (_Daten.Count == 0)
+        {
+          Daten = OnDatenLaden(_Db, Parameter);
+        }
+        else
+        {
+          var propId = typeof(K).GetProperty("Id");
+          var propDateAbleich = typeof(K).GetProperty("DatenAbgleich");
+
+          var idisVorhanden = new SortedSet<Guid>();
+          foreach (var ds in _Daten)
+            idisVorhanden.Add((Guid)propId.GetValue(ds));
+
+          Daten = OnDatenLaden(_Db, Parameter);
+
+          var sbAbfrageText = new StringBuilder();
+          foreach (var ds in Daten)
+          {
+            var id = (Guid)propId.GetValue(ds);
+            if (idisVorhanden.Contains(id))
+              sbAbfrageText.AppendLine($"  ('{id.ToString()}','{(propDateAbleich.GetValue(ds) as DatenAbgleich).Datum.ToString("dd.MM.yyyy HH:mm:ss")}'),");
+          }
+
+          var sqlText = "IF OBJECT_ID(N'tempdb..#TempDs', N'U') IS NOT NULL DROP TABLE #TempDs \n"
+                      + "CREATE TABLE #TempDs (Id uniqueidentifier NOT NULL, Datum char(19) NOT NULL) \n"
+                      + "INSERT INTO #TempDs VALUES \n"
+                      + sbAbfrageText.ToString().Substring(0, sbAbfrageText.ToString().Length - 3) + "\n"
+                      + "SELECT Id FROM #TempDs as t \n"
+                      + "  WHERE EXISTS(SELECT * FROM " + typeof(K).Name +  "Set WHERE (Id = t.Id) AND (FORMAT(DatenAbgleich_Datum , 'dd/MM/yyyy HH:mm:ss') <> t.Datum))";
+
+          var idisAendern = new SortedSet<Guid>();
+          var sc = _Db.Database.Connection.ConnectionString;
+          using (var con = new SqlConnection(sc))
+          {
+            con.Open();
+            var cl = new SqlCommand(sqlText, con);
+            using (var reader = cl.ExecuteReader())
+            {
+              while (reader.Read())
+                idisAendern.Add((Guid)reader[0]);
+            }
+          }
+
+          if (idisAendern.Count > 0)
+          {
+            foreach (var ds in Daten)
+            {
+              var id = (Guid)propId.GetValue(ds);
+              if (idisAendern.Contains(id))
+                _Db.Entry<K>(ds).Reload();
+            }
+          }
+        }
       }
     }
     #endregion
@@ -169,32 +122,6 @@ namespace JgMaschineLib
         if (DatenAnViewSource && (_ViewSource != null))
           _ViewSource.Source = _Daten;
       }
-    }
-
-    public AbfrageSqlStringDelegate AbfrageSqlString { get; set; }
-
-    public void SetIdis(SqlConnection SqlVerbindung)
-    {
-      string queryString = AbfrageSqlString();
-
-      if (queryString != IstNull)
-      {
-        var guids = new List<Guid>();
-        var com = new SqlCommand(queryString, SqlVerbindung);
-        using (var reader = com.ExecuteReader())
-        {
-          while (reader.Read())
-            guids.Add((Guid)reader[0]);
-        };
-
-        if (guids.Count > 0)
-        {
-          Idis = guids.ToArray();
-          return;
-        }
-      }
-
-      Idis = null;
     }
 
     private Dictionary<Guid, DateTime> ListeAusDatenbankLaden(SqlConnection SqlVerbindung, string QueryString)
@@ -232,52 +159,6 @@ namespace JgMaschineLib
       }
     }
 
-    public override void DatenAktualisieren(SqlConnection SqlVerbindung)
-    {
-      RefreshAusloesen = false;
-      var queryString = AbfrageSqlString();
-
-      if (queryString == IstNull)
-        _Daten.Clear();
-      else
-      {
-        var listeDb = ListeAusDatenbankLaden(SqlVerbindung, queryString);
-
-        var listeLoeschen = new List<K>();
-        var idisVorhanden = new SortedSet<Guid>();
-        foreach (var ds in _Daten)
-        {
-          var dsEntity = _Db.Entry<K>(ds);
-          var id = (Guid)dsEntity.Property("Id").CurrentValue;
-
-          if (listeDb.ContainsKey(id))
-          {
-            idisVorhanden.Add(id);
-            if (dsEntity.Property<DatenAbgleich>("DatenAbgleich").CurrentValue.Datum != listeDb[id])
-            {
-              _Db.Entry(ds).Reload();
-              RefreshAusloesen = true;
-            }
-          }
-          else
-            listeLoeschen.Add(ds);
-        }
-
-        foreach (var ds in listeLoeschen)
-        {
-          _Daten.Remove(ds);
-          _Db.Entry(ds).Reload();
-        }
-
-        if (Idis != null)
-        {
-          var idisNeu = Idis.Where(w => !idisVorhanden.Contains(w)).ToArray();
-          foreach (var id in idisNeu)
-            _Daten.Add(_Db.Set<K>().Find(id));
-        }
-      }
-    }
-
     public K Current
     {
       get { return (K)_ViewSource?.View?.CurrentItem; }
@@ -303,13 +184,6 @@ namespace JgMaschineLib
     {
       _Db = NeuDb;
       DatenAnViewSource = DatenAnViewSourceBinden;
-    }
-
-    public JgEntityList(string ConnectionString = null)
-    {
-      _Db = new JgModelContainer();
-      if (! string.IsNullOrWhiteSpace(ConnectionString))
-        _Db.Database.Connection.ConnectionString = ConnectionString;
     }
 
     public void MerkeZeile()

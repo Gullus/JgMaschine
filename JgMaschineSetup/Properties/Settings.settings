@@ -8,5 +8,9 @@
     <Setting Name="Adresse" Type="System.String" Scope="User">
       <Value Profile="(Default)">192.168.1.59</Value>
     </Setting>
+    <Setting Name="Verbindungsstring" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)" />
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

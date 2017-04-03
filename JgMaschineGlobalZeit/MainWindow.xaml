@@ -7,6 +7,7 @@
     xmlns:commands="clr-namespace:JgGlobalZeit.Commands"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
+    xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     x:Class="JgMaschineGlobalZeit.MainWindow" mc:Ignorable="d" Title="Arbeitszeitverwaltung" 
     Loaded="Window_Loaded" Closed="Window_Closed" Icon="JgGlobalZeit.ico" WindowStartupLocation="CenterOwner" Width="1368.25" >
 
@@ -14,7 +15,11 @@
         <jgZeit:JgZeit x:Key="dzArbeitszeitVon" />
         <jgZeit:JgZeit x:Key="dzArbeitszeitBis" />
 
-        <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}"/>
+        <CollectionViewSource x:Key="vsArbeitszeitAuswahl" d:DesignSource="{d:DesignInstance {x:Type data:tabArbeitszeit}, CreateList=True}" IsLiveSortingRequested="True">
+            <CollectionViewSource.SortDescriptions>
+                <ComponentModel:SortDescription Direction="Ascending" PropertyName="AnzeigeAnmeldung"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
         <CollectionViewSource x:Key="vsReporteArbeitszeit" d:DesignSource="{d:DesignInstance {x:Type data:tabAuswertung}, CreateList=True}" IsLiveSortingRequested="True"/>
 
         <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type data:tabBediener}, CreateList=True}" />
@@ -96,7 +101,7 @@
                             <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="160"/>
                             <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung}" Header="Standort" Width="120"/>
                             <DataGridTextColumn Binding="{Binding AnzeigeAnmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH\:mm, TargetNullValue=-}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH:mm, TargetNullValue=-}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
                             <DataGridTextColumn Binding="{Binding AnzeigeAbmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
@@ -189,7 +194,7 @@
 
                     <DataGrid Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding}" Grid.Row="2" Grid.RowSpan="2" SelectionMode="Single">
                         <DataGrid.CellStyle>
-                            <Style TargetType="DataGridCell">
+                            <Style TargetType="{x:Type DataGridCell}">
                                 <Setter Property="Foreground" Value="Black" />
                                 <Style.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
@@ -204,9 +209,7 @@
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <TextBlock Background="Blue" Foreground="White" TextAlignment="Center" Height="20">
-                                            <Run Text="{Binding Path=Name, Mode=OneWay}"/>
-                                        </TextBlock>
+                                        <TextBlock Background="Blue" Foreground="White" TextAlignment="Center" Height="20"><Run Text="{Binding Name, Mode=OneWay}"/></TextBlock>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
@@ -239,7 +242,7 @@
                               ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
                               AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None" MouseDoubleClick="Datagrid_DoppelClick">
                         <DataGrid.CellStyle>
-                            <Style TargetType="DataGridCell">
+                            <Style TargetType="{x:Type DataGridCell}">
                                 <Setter Property="TextBlock.TextAlignment" Value="Center" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IstSonnabend}" Value="True">
@@ -261,16 +264,16 @@
                                     <Grid>
                                         <DataGrid Margin="30,3,0,3" HorizontalAlignment="Left" Width="400" BorderThickness="0" HeadersVisibility="None"  AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding sArbeitszeitenNichtGeloescht}" RowDetailsVisibilityMode="VisibleWhenSelected" AlternatingRowBackground="White">
                                             <DataGrid.CellStyle>
-                                                <Style TargetType="DataGridCell">
+                                                <Style TargetType="{x:Type DataGridCell}">
                                                     <Setter Property="TextBlock.TextAlignment" Value="Center" />
                                                 </Style>
                                             </DataGrid.CellStyle>
 
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung, Mode=OneWay}"  Width="90" />
-                                                <DataGridTextColumn Binding="{Binding Anmeldung, StringFormat=HH\\:mm, Mode=OneWay}" Header="Anmeldung" Width="61">
+                                                <DataGridTextColumn Binding="{Binding Anmeldung, Mode=OneWay, StringFormat=HH\\:mm}" Header="Anmeldung" Width="61">
                                                     <DataGridTextColumn.CellStyle>
-                                                        <Style TargetType="DataGridCell">
+                                                        <Style TargetType="{x:Type DataGridCell}">
                                                             <Setter Property="TextBlock.TextAlignment" Value="Center" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding ManuelleAnmeldung}" Value="True">
@@ -283,10 +286,10 @@
                                                         </Style>
                                                     </DataGridTextColumn.CellStyle>
                                                 </DataGridTextColumn>
-                                                <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH\\:mm, Mode=OneWay}" Header="Anmeldung" Width="59" />
-                                                <DataGridTextColumn Binding="{Binding Abmeldung, StringFormat=HH\\:mm, TargetNullValue=-, Mode=OneWay}" Header="Abmeldung" Width="61">
+                                                <DataGridTextColumn Binding="{Binding AnmeldungGerundet, Mode=OneWay, StringFormat=HH\\:mm}" Header="Anmeldung" Width="59" />
+                                                <DataGridTextColumn Binding="{Binding Abmeldung, Mode=OneWay, StringFormat=HH\\:mm, TargetNullValue=-}" Header="Abmeldung" Width="61">
                                                     <DataGridTextColumn.CellStyle>
-                                                        <Style TargetType="DataGridCell">
+                                                        <Style TargetType="{x:Type DataGridCell}">
                                                             <Setter Property="TextBlock.TextAlignment" Value="Center" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding ManuelleAbmeldung}" Value="True">
@@ -309,9 +312,9 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Tag, Mode=OneWay}" Header="Tag"  Width="30"/>
                             <DataGridTextColumn Binding="{Binding Wochentag, Mode=OneWay}" Header="..." IsReadOnly="True" Width="30"/>
-                            <DataGridTextColumn x:Name="clPauseBerechnet" Binding="{Binding PauseBerechnet, StringFormat=hh\\:mm, Mode=OneWay}" Header="Pause" Width="60">
+                            <DataGridTextColumn x:Name="clPauseBerechnet" Binding="{Binding PauseBerechnet, Mode=OneWay, StringFormat=hh\\:mm}" Header="Pause" Width="60">
                                 <DataGridTextColumn.CellStyle>
-                                    <Style TargetType="DataGridCell">
+                                    <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="TextBlock.TextAlignment" Value="Center" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IstSonnabend}" Value="True">
@@ -336,7 +339,7 @@
                                                 <Style>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IstPauseUngleich}" Value="True">
-                                                            <Setter Property="TextBox.Background" Value="Yellow"/>
+                                                            <Setter Property="Control.Background" Value="Yellow"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -347,7 +350,7 @@
                             </DataGridTemplateColumn>
                             <DataGridTextColumn x:Name="clZeitBerechnet" Binding="{Binding ZeitBerechnetAnzeige, Mode=OneWay}" Header="Zeit" Width="60">
                                 <DataGridTextColumn.CellStyle>
-                                    <Style TargetType="DataGridCell">
+                                    <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="TextBlock.TextAlignment" Value="Center" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IstSonnabend}" Value="True">
@@ -374,7 +377,7 @@
                                                 <Style>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IstZeitUngleich}" Value="True">
-                                                            <Setter Property="TextBox.Background" Value="Yellow"/>
+                                                            <Setter Property="Control.Background" Value="Yellow"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -386,7 +389,7 @@
                             <DataGridTextColumn Binding="{Binding Ueberstunden, Mode=OneWay}" Header="Überst." Width="60"/>
                             <DataGridTextColumn x:Name="clNachtschichtBerechnet" Binding="{Binding NachtschichtBerechnetAnzeige, Mode=OneWay}" Header="Nacht." Width="60">
                                 <DataGridTextColumn.CellStyle>
-                                    <Style TargetType="DataGridCell">
+                                    <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="TextBlock.TextAlignment" Value="Center" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IstSonnabend}" Value="True">
@@ -413,7 +416,7 @@
                                                 <Style>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IstNachtschichtUngleich}" Value="True">
-                                                            <Setter Property="TextBox.Background" Value="Yellow"/>
+                                                            <Setter Property="Control.Background" Value="Yellow"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -450,6 +453,18 @@
                     </DataGrid>
 
                     <Grid Grid.Column="8" Grid.Row="3">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type Border}" >
+                                <Setter Property="Margin" Value="3" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Setter Property="BorderBrush" Value="Silver" />
+                            </Style>
+
+                            <Style TargetType="{x:Type TextBlock}" >
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                            </Style>
+                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="60"/>
@@ -481,22 +496,6 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Grid.Resources>
-                            <Style TargetType="{x:Type Border}" >
-                                <Style.Setters>
-                                    <Setter Property="Margin" Value="3" />
-                                    <Setter Property="BorderThickness" Value="1" />
-                                    <Setter Property="BorderBrush" Value="Silver" />
-                                </Style.Setters>
-                            </Style>
-
-                            <Style TargetType="{x:Type TextBlock}" >
-                                <Style.Setters>
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style.Setters>
-                            </Style>
-                        </Grid.Resources>
                         <TextBlock Text="Überstunden" Grid.Column="8" Grid.ColumnSpan="2" FontWeight="Bold"/>
                         <Label Content="Vorjahr" Grid.Column="8" Grid.Row="1"/>
                         <Label Content="Kumulat." Grid.Column="8" Grid.Row="2" />

@@ -37,8 +37,8 @@
             </StackPanel>
         </Button>
 
-        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="5" Margin="5">
-            <TextBlock x:Name="tbAnzeige" Text="Zur Abfrage Start betätigen" Margin="5"/>
+        <ScrollViewer x:Name="sbView" Grid.Row="1" Grid.ColumnSpan="5" Margin="5" HorizontalScrollBarVisibility="Visible">
+            <TextBox x:Name="txtFeld" Text="Zur Abfrage Start betätigen" Margin="5" IsReadOnly="True"/>
         </ScrollViewer>
     </Grid>
 </Window>

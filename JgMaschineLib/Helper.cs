@@ -79,7 +79,7 @@ namespace JgMaschineLib
       Fehler
     }
 
-    public static void Protokoll(string ProtokollText, ProtokollArt ProtokollArt = ProtokollArt.Fehler)
+    public static void InfoBox(string ProtokollText, ProtokollArt ProtokollArt = ProtokollArt.Fehler)
     {
       string caption = "Fehler!";
       MessageBoxIcon icon = MessageBoxIcon.Error;
@@ -98,7 +98,7 @@ namespace JgMaschineLib
       MessageBox.Show(ProtokollText, caption, MessageBoxButtons.OK, icon);
     }
 
-    public static void Protokoll(string FehlerText, Exception Fehler)
+    public static void InfoBox(string FehlerText, Exception Fehler, ProtokollArt ProtokollArt = ProtokollArt.Fehler)
     {
       var msg = $"{FehlerText}\nGrund: {Fehler.Message}";
       var inExcep = Fehler.InnerException;
@@ -110,7 +110,7 @@ namespace JgMaschineLib
         inExcep = inExcep.InnerException;
       }
 
-      Protokoll(msg);
+      InfoBox(msg, ProtokollArt);
     }
 
     #endregion

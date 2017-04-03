@@ -26,12 +26,30 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
-      var t1 = new c2();
-      Console.WriteLine(t1.Test1);
 
-      var t2 = new c3();
-      Console.WriteLine(t2.Test1);
+      var db = new JgModelContainer();
+      db.Database.Connection.ConnectionString = Properties.Settings.Default.Verbindungszeichen;
+      var ds1 = db.tabBauteilSet.ToList();
 
+      var erg = TestId<tabBauteil>(ds1);
+
+
+      var pinfo = typeof(tabBauteil).GetProperty("Id");
+      var pdat = typeof(tabBauteil).GetProperty("DatenAbgleich");
+
+
+      var ptest = typeof(tabBauteil).GetProperties();
+
+      Dictionary<Guid, DateTime> ll = new Dictionary<Guid, DateTime>();
+
+      foreach (var ds in ds1)
+      {
+        var dabgl = (DatenAbgleich)pdat.GetValue(ds);
+        ll.Add((Guid)pinfo.GetValue(ds), dabgl.Datum);
+      }
+
+
+      Console.WriteLine("Fertsch");
 
 
       //Logger.SetLogWriter(new LogWriterFactory().Create());
@@ -74,6 +92,22 @@ namespace JgMaschineTest
       Console.WriteLine("Fertsch");
       Console.ReadKey();
     }
+
+    public static Dictionary<Guid, DateTime> TestId<T>(List<T> Liste)
+    {
+      var pId = typeof(T).GetProperty("Id");
+      var pAbgl = typeof(T).GetProperty("DatenAbgleich");
+
+      Dictionary<Guid, DateTime> ll = new Dictionary<Guid, DateTime>();
+
+      foreach (var ds in Liste)
+      {
+        var dabgl = (DatenAbgleich)pAbgl.GetValue(ds);
+        ll.Add((Guid)pId.GetValue(ds), dabgl.Datum);
+      }
+
+      return ll;
+    }
   }
 
   [ServiceContract]
@@ -104,7 +138,7 @@ namespace JgMaschineTest
       Console.WriteLine($"Request Namen {first_name} {last_name}");
     }
 
-  
+
   }
 
 

@@ -8,9 +8,7 @@ namespace JgMessageQueuing
 {
   public partial class MainWindow : Window
   {
-    private StringBuilder _Text = new StringBuilder();
     private MessageQueue msgQ = null;
-
 
     public MainWindow()
     {
@@ -19,13 +17,13 @@ namespace JgMessageQueuing
 
     public void TextEintragen(string MeinText)
     {
-      _Text.Insert(0, MeinText + "\n");
-      tbAnzeige.Text = _Text.ToString();
+      txtFeld.AppendText("\n" + MeinText);
+      sbView.ScrollToEnd();
     }
 
     private async void ButtonStart_Click(object sender, RoutedEventArgs e)
     {
-      TextEintragen(" ---- Starte Abfrage ---- ");
+      txtFeld.Text = " ---- Starte Abfrage ---- ";
 
       var pathQ = Properties.Settings.Default.PfadZuMessageQueung;
       msgQ = new MessageQueue(pathQ);
@@ -53,13 +51,13 @@ namespace JgMessageQueuing
 
     private void ButtonPause_Click(object sender, RoutedEventArgs e)
     {
-      msgQ.Close();
+      msgQ?.Close();
       TextEintragen("---- Pause ----");
     }
 
     private void Window_Closed(object sender, EventArgs e)
     {
-      msgQ.Close();
+      msgQ?.Close();
       Properties.Settings.Default.Save();
     }
   }

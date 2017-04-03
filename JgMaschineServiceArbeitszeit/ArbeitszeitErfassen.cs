@@ -100,7 +100,7 @@ namespace JgMaschineServiceArbeitszeit
       {
         try
         {
-          msg = $"Start Terminal: {datTerminal.Bezeichnung} / {datTerminal.eStandort.Bezeichnung}\n  Ip: {datTerminal.IpNummer} Port: {datTerminal.PortNummer}";
+          msg = $"Start Terminal: {datTerminal.Bezeichnung} / {datTerminal.eStandort.Bezeichnung}\n  IP: {datTerminal.IpNummer} Port: {datTerminal.PortNummer}\n-------------------------------------------------";
           Logger.Write(msg, "Service", 0, 0, TraceEventType.Information);
 
           var termAktuell = new OptionenTerminal(datTerminal.IpNummer, datTerminal.PortNummer, Optionen.Terminal_TimeOut);

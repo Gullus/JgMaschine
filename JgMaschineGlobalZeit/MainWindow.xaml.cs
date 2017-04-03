@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -21,6 +19,8 @@ namespace JgMaschineGlobalZeit
 {
   public partial class MainWindow : Window
   {
+    private JgModelContainer _Db;
+
     private JgEntityList<tabArbeitszeit> _ListeArbeitszeitenAuswahl;
     private JgZeit _DzArbeitszeitVon { get { return (JgZeit)FindResource("dzArbeitszeitVon"); } }
     private JgZeit _DzArbeitszeitBis { get { return (JgZeit)FindResource("dzArbeitszeitBis"); } }
@@ -37,8 +37,12 @@ namespace JgMaschineGlobalZeit
     {
       InitializeComponent();
 
-      Helper.FensterEinstellung(this, JgGlobalZeit.Properties.Settings.Default);
+      Helper.FensterEinstellung(this, Properties.Settings.Default);
+      InitCommands();
+    }
 
+    private void InitCommands()
+    {
       CommandBindings.Add(new CommandBinding(MyCommands.ArbeitszeitLoeschen, (sen, erg) =>
       {
         var az = _ListeArbeitszeitenAuswahl.Current;
@@ -58,11 +62,15 @@ namespace JgMaschineGlobalZeit
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+      _Db = new JgModelContainer();
+      if (Properties.Settings.Default.VerbindungsString != "")
+        _Db.Database.Connection.ConnectionString = Properties.Settings.Default.VerbindungsString;
+
       var heute = DateTime.Now.Date;
       _DzArbeitszeitVon.AnzeigeDatumZeit = heute;
       _DzArbeitszeitBis.AnzeigeDatumZeit = new DateTime(heute.Year, heute.Month, heute.Day, 23, 59, 59);
 
-      _ListeArbeitszeitenAuswahl = new JgEntityList<tabArbeitszeit>()
+      _ListeArbeitszeitenAuswahl = new JgEntityList<tabArbeitszeit>(_Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsArbeitszeitAuswahl"),
         Tabellen = new DataGrid[] { dgArbeitszeitAuswahl },
@@ -71,23 +79,23 @@ namespace JgMaschineGlobalZeit
           var datVom = (DateTime)p["DatumVon"];
           var datBis = (DateTime)p["DatumBis"];
 
-          var tabZeiten = d.tabArbeitszeitSet.Where(w => (((w.Anmeldung >= datVom) && (w.Anmeldung <= datBis))
+          var lZeiten = d.tabArbeitszeitSet.Where(w => (((w.Anmeldung >= datVom) && (w.Anmeldung <= datBis))
             || ((w.Anmeldung == null) && (w.Abmeldung >= datVom) && (w.Abmeldung <= datBis))))
             .OrderBy(o => o.Anmeldung).ToList();
 
           var listeGerundet = d.tabArbeitszeitRundenSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
-          foreach (var zeit in tabZeiten)
+          foreach (var zeit in lZeiten.ToList())
           {
             if (zeit.Anmeldung != null)
             {
-              var zeitAnmeldung = new TimeSpan(zeit.Anmeldung.Value.Hour, zeit.Anmeldung.Value.Minute, 0);
+              var zeitAnmeldung = JgZeit.DatumInZeitMinute(zeit.Anmeldung.Value);
               var wg = listeGerundet.FirstOrDefault(f => (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
               if (wg != null)
                 zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenArbeitszeitBeginn);
             }
           }
 
-          return tabZeiten;
+          return lZeiten;
         }
       };
       _ListeArbeitszeitenAuswahl.Parameter = new Dictionary<string, object>()
@@ -99,7 +107,7 @@ namespace JgMaschineGlobalZeit
 
       // Report initialisieren ********************************
 
-      _ListeReporteArbeitszeiten = new JgEntityList<tabAuswertung>()
+      _ListeReporteArbeitszeiten = new JgEntityList<tabAuswertung>(_Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsReporteArbeitszeit")
       };
@@ -121,7 +129,7 @@ namespace JgMaschineGlobalZeit
 
       // Klasse Auswertung intitialisieren
 
-      _Erstellung = new AnmeldungAuswertung(new JgModelContainer(), cbJahr, cbMonat,
+      _Erstellung = new AnmeldungAuswertung(_Db, cbJahr, cbMonat,
         (CollectionViewSource)FindResource("vsBediener"),
         (ArbeitszeitBediener)FindResource("ArbeitszeitBediener"),
         (CollectionViewSource)FindResource("vsArbeitszeitTage"));
@@ -192,7 +200,7 @@ namespace JgMaschineGlobalZeit
 
     private void Window_Closed(object sender, EventArgs e)
     {
-      JgGlobalZeit.Properties.Settings.Default.Save();
+      Properties.Settings.Default.Save();
     }
 
     private void btnDrucken_Click(object sender, RoutedEventArgs e)
@@ -285,7 +293,7 @@ namespace JgMaschineGlobalZeit
           foreach (var bedAusw in bediener)
           {
             var ds = new ArbeitszeitBediener(_Erstellung.Db);
-            ds.BedienerBerechnen(bedAusw, (short)dat.Year, (byte)dat.Month, sollStunden , lRunden, lFeiertage, lPausen, false);
+            ds.BedienerBerechnen(bedAusw, (short)dat.Year, (byte)dat.Month, sollStunden, lRunden, lFeiertage, lPausen, false);
             listeAuswertungen.Add(ds);
           }
           _Report.RegisterData(listeAuswertungen, "Auswertungen");
@@ -310,17 +318,14 @@ namespace JgMaschineGlobalZeit
           var bedienerImStandort = _Erstellung.ListeBediener.Daten.Where(w => w.fStandort == aktStandort.Id).ToList();
           var listeAuswertung = new List<ArbeitszeitBediener>();
 
-          var listeTage = new List<tabArbeitszeitTag>();
-
           foreach (var bedAusw in bedienerImStandort)
           {
             var ds = new ArbeitszeitBediener(_Erstellung.Db);
             ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten, false);
+            ds.ListeFuerJedenTagErstellen(bedAusw.eArbeitszeitHelper, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten);
             listeAuswertung.Add(ds);
-            listeTage.AddRange(ds.ListeTage);
           }
 
-          _Report.RegisterData(listeTage, "ListeTage");
           _Report.RegisterData(bedienerImStandort.Select(s => new { s.Id, s.Name }).ToList(), "Bediener");
           _Report.RegisterData(listeAuswertung, "ListeAuswertung");
           _Report.SetParameterValue("Auswertung.Monat", (JgZeitHelper.JgZeit.Monate)_Erstellung.Monat);
@@ -363,12 +368,30 @@ namespace JgMaschineGlobalZeit
       else
         switch (vorgang)
         {
-          case 1: _Report.Show(); break;
-          case 2: _Report.Print(); break;
+          case 1:
+            try
+            {
+              _Report.Show();
+            }
+            catch (Exception ex)
+            {
+              Helper.InfoBox("Fehler beim Aufruf der Auswertung", ex);
+            }
+            break;
+          case 2:
+            try
+            {
+              _Report.Print();
+            }
+            catch (Exception ex)
+            {
+              Helper.InfoBox("Fehler beim Drucken der Auswertung", ex);
+            }
+            break;
           case 3:
             try
             {
-              _Report.Design(); 
+              _Report.Design();
             }
             catch { }
             break;
@@ -382,7 +405,7 @@ namespace JgMaschineGlobalZeit
         { "DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit },
         { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
       };
-      _ListeArbeitszeitenAuswahl.DatenNeuLaden();
+      _ListeArbeitszeitenAuswahl.DatenAktualisieren();
     }
 
     private void btnOptionen_Click(object sender, RoutedEventArgs e)
@@ -418,7 +441,7 @@ namespace JgMaschineGlobalZeit
 
     private void btnExporteren_Click(object sender, RoutedEventArgs e)
     {
-      var datName = JgGlobalZeit.Properties.Settings.Default.NameXmlDatei;
+      var datName = Properties.Settings.Default.NameXmlDatei;
       if (string.IsNullOrWhiteSpace(datName))
         datName = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\JgArbeitszeit.xml";
 
@@ -489,11 +512,8 @@ namespace JgMaschineGlobalZeit
           return;
         }
 
-        if (JgGlobalZeit.Properties.Settings.Default.NameXmlDatei != fo.FileName)
-        {
-          JgGlobalZeit.Properties.Settings.Default.NameXmlDatei = fo.FileName;
-          JgGlobalZeit.Properties.Settings.Default.Save();
-        }
+        if (Properties.Settings.Default.NameXmlDatei != fo.FileName)
+          Properties.Settings.Default.NameXmlDatei = fo.FileName;
 
         foreach (var bed in daten)
           bed.eArbeitszeitHelper.StatusAnzeige = EnumStatusArbeitszeitAuswertung.Erledigt;

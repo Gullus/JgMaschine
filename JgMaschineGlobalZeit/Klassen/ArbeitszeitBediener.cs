@@ -11,7 +11,7 @@ namespace JgMaschineGlobalZeit
 {
   public class ArbeitszeitBediener
   {
-    public JgModelContainer Db;
+    private JgModelContainer _Db;
 
     public tabBediener Bediener { get; set; }   // Für Auswahl in Reporten
     public Guid IdBediener { get { return Bediener.Id; } }
@@ -26,9 +26,14 @@ namespace JgMaschineGlobalZeit
     public ArbeitszeitBediener()
     { }
 
-    public ArbeitszeitBediener(JgModelContainer NeuDb)
+    public ArbeitszeitBediener(JgModelContainer Db)
     {
-      Db = NeuDb;
+      _Db = Db;
+    }
+
+    public void SetDb(JgModelContainer Db)
+    {
+      _Db = Db;
     }
 
     public void BedienerBerechnen(tabBediener Bediener, short Jahr, byte Monat, TimeSpan SollStundenMonat,
@@ -39,7 +44,7 @@ namespace JgMaschineGlobalZeit
     {
       this.Bediener = Bediener;
 
-      var alleAuswertungenBediener = Db.tabArbeitszeitAuswertungSet.Where(w => (w.fBediener == Bediener.Id) && (w.Jahr == Jahr) && (w.Monat <= Monat)).ToList();
+      var alleAuswertungenBediener = _Db.tabArbeitszeitAuswertungSet.Where(w => (w.fBediener == Bediener.Id) && (w.Jahr == Jahr) && (w.Monat <= Monat)).ToList();
 
       var auswErster = alleAuswertungenBediener.FirstOrDefault(w => w.Monat == 0);
       if (auswErster == null)
@@ -50,7 +55,6 @@ namespace JgMaschineGlobalZeit
       if (auswMonat == null)
         auswMonat = ArbeitszeitAuswertungErstellen(Bediener, Jahr, Monat, SollStundenMonat);
       AuswertungMonat.AzAuswertung = auswMonat;
-
 
       var auswKumulativ = alleAuswertungenBediener.Where(w => (w.Monat > 0) && (w.Monat < Monat)).ToList();
 
@@ -63,9 +67,11 @@ namespace JgMaschineGlobalZeit
       AuswertungKumulativ.KrankAnzeige = (Int16)auswKumulativ.Sum(s => s.Krank);
       AuswertungKumulativ.UrlaubAnzeige = (Int16)auswKumulativ.Sum(s => s.Urlaub);
 
-      ListeFuerJedenTagErstellen(Db, Bediener.eArbeitszeitHelper, ListeRundenMonat, ListeFeiertageMonat, ListePausen);
       if (WerteAusTagenNeuBerechnen)
       {
+        Bediener.eArbeitszeitHelper = auswMonat;
+
+        ListeFuerJedenTagErstellen(Bediener.eArbeitszeitHelper, ListeRundenMonat, ListeFeiertageMonat, ListePausen);
         BerechneUeberstundenAusTagen(ListeTage);
         BerechneNachtschicht(ListeTage);
         BerechneFeiertag(ListeTage);
@@ -82,7 +88,7 @@ namespace JgMaschineGlobalZeit
       var az = new tabArbeitszeitAuswertung()
       {
         Id = Guid.NewGuid(),
-        eBediener = Bediener,
+        fBediener = Bediener.Id,
         Jahr = Jahr,
         Monat = Monat,
         Urlaub = 0,
@@ -90,8 +96,8 @@ namespace JgMaschineGlobalZeit
         SollStunden = JgZeit.ZeitInString(SollStundenMonat),
         Status = EnumStatusArbeitszeitAuswertung.InArbeit,
       };
-      Db.tabArbeitszeitAuswertungSet.Add(az);
-      Db.SaveChanges();
+      _Db.tabArbeitszeitAuswertungSet.Add(az);
+      _Db.SaveChanges();
 
       return az;
     }
@@ -107,14 +113,16 @@ namespace JgMaschineGlobalZeit
       return (Zeit >= TimeSpan.Zero) && (Zeit < new TimeSpan(24, 0, 0));
     }
 
-    public void ListeFuerJedenTagErstellen(JgModelContainer Db, tabArbeitszeitAuswertung AuswertungBediener,
+    public void ListeFuerJedenTagErstellen(tabArbeitszeitAuswertung AuswertungBediener,
       IEnumerable<tabArbeitszeitRunden> ListeRundenMonat,
       IEnumerable<tabFeiertage> ListeFeiertageMonat,
-      IEnumerable<tabPausenzeit> ListePausen,
-      bool ListeTageErstellen = true)
+      IEnumerable<tabPausenzeit> ListePausen)
     {
+      if (AuswertungBediener == null)
+        return;
+
       // Werte für Tage berechnen
-      var auswTage = Db.tabArbeitszeitTagSet.Where(w => w.fArbeitszeitAuswertung == AuswertungBediener.Id).ToList();
+      var auswTage = _Db.tabArbeitszeitTagSet.Where(w => w.fArbeitszeitAuswertung == AuswertungBediener.Id).ToList();
 
       var anzTageMonat = DateTime.DaysInMonth(AuswertungBediener.Jahr, AuswertungBediener.Monat);
       ListeTage.Clear();
@@ -122,7 +130,7 @@ namespace JgMaschineGlobalZeit
       var monatErster = JgZeit.ErsterImMonat(AuswertungBediener.Jahr, AuswertungBediener.Monat);
       var monatLetzter = JgZeit.LetzerImMonat(AuswertungBediener.Jahr, AuswertungBediener.Monat);
 
-      var alleZeiten = Db.tabArbeitszeitSet.Where(w => (w.fBediener == AuswertungBediener.fBediener) && (!w.DatenAbgleich.Geloescht)
+      var alleZeiten = _Db.tabArbeitszeitSet.Where(w => (w.fBediener == AuswertungBediener.fBediener) && (!w.DatenAbgleich.Geloescht)
         && (
           ((w.Anmeldung != null) && (w.Anmeldung >= monatErster) && (w.Anmeldung <= monatLetzter))
           ||
@@ -141,7 +149,7 @@ namespace JgMaschineGlobalZeit
             fArbeitszeitAuswertung = AuswertungBediener.Id,
             Tag = tag
           };
-          Db.tabArbeitszeitTagSet.Add(auswTag);
+          _Db.tabArbeitszeitTagSet.Add(auswTag);
         }
 
         var aktDatum = new DateTime(AuswertungBediener.Jahr, AuswertungBediener.Monat, tag);
@@ -227,7 +235,7 @@ namespace JgMaschineGlobalZeit
           }
         }
 
-        Db.SaveChanges();
+        _Db.SaveChanges();
       }
     }
 
@@ -269,7 +277,7 @@ namespace JgMaschineGlobalZeit
 
       AuswertungTag.IstManuellGeaendert = true;
 
-      Db.SaveChanges();
+      _Db.SaveChanges();
     }
 
     private void BerechneNachtschicht(IEnumerable<tabArbeitszeitTag> listeTage)
@@ -377,7 +385,7 @@ namespace JgMaschineGlobalZeit
         AuswertungMonat.UeberstundenAnzeige = JgZeit.ZeitInString(istStunden - Sollstunden);
         BerechneUeberstundenGesamt();
         AuswertungMonat.NotifyPropertyChanged("IstStundenAnzeige");
-        Db.SaveChanges();
+        _Db.SaveChanges();
       }
     }
 
@@ -389,7 +397,7 @@ namespace JgMaschineGlobalZeit
         AuswertungGesamt.UeberstundenBezahltAnzeige = JgZeit.ZeitInString(AuswertungKumulativ.fUeberstundenBezahlt + UeberstundenAuszahlung);
         BerechneUeberstundenGesamt();
 
-        Db.SaveChanges();
+        _Db.SaveChanges();
       }
     }
   }

@@ -22,5 +22,14 @@ namespace JgMaschineAuswertung.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        public string VerbindungsString {
+            get {
+                return ((string)(this["VerbindungsString"]));
+            }
+        }
     }
 }

@@ -14,6 +14,8 @@ namespace JgMaschineAuswertung
 {
   public partial class MainWindow : RibbonWindow
   {
+    private JgModelContainer _Db;
+
     private FastReport.Report _Report;
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
@@ -27,15 +29,23 @@ namespace JgMaschineAuswertung
 
     private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
     {
-      _Auswertungen = new JgEntityList<tabAuswertung>()
+      _Db = new JgModelContainer();
+      if (Properties.Settings.Default.VerbindungsString != "")
+        _Db.Database.Connection.ConnectionString = Properties.Settings.Default.VerbindungsString;
+
+      _Auswertungen = new JgEntityList<tabAuswertung>(_Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsAuswertung"),
         Tabellen = new DataGrid[] { dgAuswertung },
-        OnDatenLaden = (d, p) =>
+        OnDatenLaden = (d, p, istLaden) =>
         {
-          return d.tabAuswertungSet
-            .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Allgemein)
-            .OrderBy(o => o.ReportName).ToList();
+          var lAusw = d.tabAuswertungSet
+            .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Allgemein);
+
+          if (istLaden)
+            lAusw = lAusw.OrderBy(o => o.ReportName);
+
+          return lAusw.ToList();
         }
       };
       _Auswertungen.DatenLaden();
@@ -188,7 +198,7 @@ namespace JgMaschineAuswertung
 
     private void Click_TabelleAktuallisieren(object sender, RoutedEventArgs e)
     {
-      _Auswertungen.DatenNeuLaden();
+      _Auswertungen.DatenAktualisieren();
     }
   }
 }

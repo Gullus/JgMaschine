@@ -105,6 +105,7 @@ namespace JgMaschineServiceArbeitszeit
             msg = string.Format("Lesen der Datensatzbeschreibung ist fehlgeschlagen.\nFehlerbeschreibung: {0}", errorString);
             throw new MyException(msg);
           }
+
           if (records.Tables == null)
           {
             // Es liegen keine Datensatzbeschreibungen vor.
@@ -124,7 +125,7 @@ namespace JgMaschineServiceArbeitszeit
 
             if (result == 0)
             {
-              msg = "Es liegen keine Datensätze vor";
+              msg = "Es sind keine Anmeldungen im Terminal regiestriert.";
               Logger.Write(msg, "Service", 0, 0, TraceEventType.Verbose);
               break;
             }
@@ -140,11 +141,10 @@ namespace JgMaschineServiceArbeitszeit
             }
           } while (true);
         } while (false);
-
       }
       catch (Exception f)
       { 
-        msg = "Fehler beim einlesen der Zeiten aus dem Terminal";
+        msg = "Fehler beim einlesen der Anmeldedaten aus dem Terminal";
         throw new Exception(msg, f);
       }
 

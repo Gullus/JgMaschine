@@ -46,5 +46,14 @@ namespace JgMaschineSetup.Properties {
                 this["Adresse"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        public string Verbindungsstring {
+            get {
+                return ((string)(this["Verbindungsstring"]));
+            }
+        }
     }
 }

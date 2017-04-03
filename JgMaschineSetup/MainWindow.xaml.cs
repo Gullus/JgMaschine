@@ -13,6 +13,8 @@ namespace JgMaschineSetup
 {
   public partial class MainWindow : Window
   {
+    private JgMaschineData.JgModelContainer _Db;
+
     private JgEntityList<tabMaschine> _ListeMaschinen;
     private JgEntityList<tabStandort> _ListeStandorte;
     private JgEntityList<tabBediener> _ListeBediener;
@@ -24,36 +26,43 @@ namespace JgMaschineSetup
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      _ListeStandorte = new JgEntityList<tabStandort>()
+      _Db = new JgModelContainer();
+      if (Properties.Settings.Default.Verbindungsstring != "")
+        _Db.Database.Connection.ConnectionString = Properties.Settings.Default.Verbindungsstring;
+
+      _ListeStandorte = new JgEntityList<tabStandort>(_Db)
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsStandort"),
         Tabellen = new DataGrid[] { dgStandort },
         OnDatenLaden = (d, p) =>
         {
-          return d.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
+          return d.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht)
+          .OrderBy(o => o.Bezeichnung).ToList();
         }
       };
       _ListeStandorte.DatenLaden();
       tbDatenbankverbinudng.Text = _ListeStandorte.Db.Database.Connection.ConnectionString;
 
-     _ListeMaschinen = new JgEntityList<tabMaschine>()
+      _ListeMaschinen = new JgEntityList<tabMaschine>(_Db)
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsMaschinen"),
         Tabellen = new DataGrid[] { dgMaschine },
         OnDatenLaden = (d, p) =>
         {
-          return d.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll).OrderBy(o => o.MaschinenName).ToList();
+          return d.tabMaschineSet.Where(w => !w.DatenAbgleich.Geloescht).Include(i => i.eProtokoll)
+            .OrderBy(o => o.MaschinenName).ToList();
         }
       };
       _ListeMaschinen.DatenLaden();
 
-      _ListeBediener = new JgEntityList<tabBediener>()
+      _ListeBediener = new JgEntityList<tabBediener>(_Db)
       {
         ViewSource = (CollectionViewSource)this.FindResource("vsBediener"),
         Tabellen = new DataGrid[] { dgBediener },
         OnDatenLaden = (d, p) =>
         {
-          return d.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToList();
+          return d.tabBedienerSet.Where(w => !w.DatenAbgleich.Geloescht)
+            .OrderBy(o => o.NachName).ToList();
         }
       };
       _ListeBediener.DatenLaden();
@@ -171,9 +180,9 @@ namespace JgMaschineSetup
     {
       switch ((sender as Button).Tag.ToString())
       {
-        case "Maschine": _ListeMaschinen.DatenNeuLaden(); break;
-        case "Standort": _ListeStandorte.DatenNeuLaden(); break;
-        case "Bediener": _ListeBediener.DatenNeuLaden(); break;
+        case "Maschine": _ListeMaschinen.DatenAktualisieren(); break;
+        case "Standort": _ListeStandorte.DatenAktualisieren(); break;
+        case "Bediener": _ListeBediener.DatenAktualisieren(); break;
       }
     }
 
