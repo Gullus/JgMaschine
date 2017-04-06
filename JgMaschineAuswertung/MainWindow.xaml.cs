@@ -37,18 +37,13 @@ namespace JgMaschineAuswertung
       {
         ViewSource = (CollectionViewSource)FindResource("vsAuswertung"),
         Tabellen = new DataGrid[] { dgAuswertung },
-        OnDatenLaden = (d, p, istLaden) =>
+        OnDatenLaden = (d, p) =>
         {
-          var lAusw = d.tabAuswertungSet
-            .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Allgemein);
-
-          if (istLaden)
-            lAusw = lAusw.OrderBy(o => o.ReportName);
-
-          return lAusw.ToList();
+          return d.tabAuswertungSet.Where(w => w.FilterAuswertung == EnumFilterAuswertung.Allgemein).ToList();
         }
       };
       _Auswertungen.DatenLaden();
+      _Auswertungen.Daten = _Auswertungen.Daten.OrderBy(o => o.ReportName).ToList();
 
       _Report = new FastReport.Report();
       _Report.FileName = "Datenbank";

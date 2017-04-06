@@ -310,10 +310,11 @@
     <Property Name="Tag" Type="tinyint" Nullable="false" />
     <Property Name="Pause" Type="time" Nullable="false" Precision="0" />
     <Property Name="Zeit" Type="time" Nullable="false" Precision="0" />
-    <Property Name="Nachtschicht" Type="time" Nullable="false" Precision="0" />
-    <Property Name="Feiertag" Type="time" Nullable="false" Precision="0" />
+    <Property Name="NachtschichtZuschlag" Type="time" Nullable="false" Precision="0" />
+    <Property Name="FeiertagZuschlag" Type="time" Nullable="false" Precision="0" />
     <Property Name="Urlaub" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="Krank" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="Feiertag" Type="bit" Nullable="false" />
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
@@ -343,10 +344,11 @@
     <Property Name="Monat" Type="tinyint" Nullable="false" />
     <Property Name="SollStunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Ueberstunden" Type="nvarchar" Nullable="true" MaxLength="7" />
-    <Property Name="Nachtschichten" Type="nvarchar" Nullable="true" MaxLength="7" />
-    <Property Name="Feiertage" Type="nvarchar" Nullable="true" MaxLength="7" />
+    <Property Name="NachtschichtZuschlaege" Type="nvarchar" Nullable="true" MaxLength="7" />
+    <Property Name="FeiertagZuschlaege" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Urlaub" Type="smallint" Nullable="false" DefaultValue="0" />
     <Property Name="Krank" Type="smallint" Nullable="false" DefaultValue="0" />
+    <Property Name="Feiertage" Type="smallint" Nullable="false" />
     <Property Name="AuszahlungUeberstunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
@@ -1310,10 +1312,11 @@
           <Property Name="Tag" Type="Byte" Nullable="false" />
           <Property Name="Pause" Type="Time" Nullable="false" Precision="0" />
           <Property Name="Zeit" Type="Time" Nullable="false" Precision="0" />
-          <Property Name="Nachtschicht" Type="Time" Nullable="false" Precision="0" />
-          <Property Name="Feiertag" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="NachtschichtZuschlag" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="FeiertagZuschlag" Type="Time" Nullable="false" Precision="0" />
           <Property Name="Urlaub" Type="Boolean" Nullable="false" DefaultValue="False" />
           <Property Name="Krank" Type="Boolean" Nullable="false" DefaultValue="False" />
+          <Property Name="Feiertag" Type="Boolean" Nullable="false" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="255" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fArbeitszeitAuswertung" Type="Guid" Nullable="false" />
@@ -1355,10 +1358,11 @@
           </Property>
           <Property Name="SollStunden" Type="String" Nullable="true" MaxLength="7" />
           <Property Name="Ueberstunden" Type="String" Nullable="true" MaxLength="7" />
-          <Property Name="Nachtschichten" Type="String" Nullable="true" MaxLength="7" />
-          <Property Name="Feiertage" Type="String" Nullable="true" MaxLength="7" />
-          <Property Name="Urlaub" Type="Int16" Nullable="false" DefaultValue="0" />
-          <Property Name="Krank" Type="Int16" Nullable="false" DefaultValue="0" />
+          <Property Name="NachtschichtZuschlaege" Type="String" Nullable="true" MaxLength="7" />
+          <Property Name="FeiertagZuschlaege" Type="String" Nullable="true" MaxLength="7" />
+          <Property Name="Urlaub" Type="Byte" Nullable="false" />
+          <Property Name="Krank" Type="Byte" Nullable="false" />
+          <Property Name="Feiertage" Type="Byte" Nullable="false" />
           <Property Name="AuszahlungUeberstunden" Type="String" Nullable="true" MaxLength="7" />
           <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="255" />
           <Property Name="Status" Type="JgModel.EnumStatusArbeitszeitAuswertung" Nullable="false" />
@@ -1695,10 +1699,11 @@
           <ScalarProperty Name="Tag" ColumnName="Tag" />
           <ScalarProperty Name="Pause" ColumnName="Pause" />
           <ScalarProperty Name="Zeit" ColumnName="Zeit" />
-          <ScalarProperty Name="Nachtschicht" ColumnName="Nachtschicht" />
-          <ScalarProperty Name="Feiertag" ColumnName="Feiertag" />
+          <ScalarProperty Name="NachtschichtZuschlag" ColumnName="NachtschichtZuschlag" />
+          <ScalarProperty Name="FeiertagZuschlag" ColumnName="FeiertagZuschlag" />
           <ScalarProperty Name="Urlaub" ColumnName="Urlaub" />
           <ScalarProperty Name="Krank" ColumnName="Krank" />
+          <ScalarProperty Name="Feiertag" ColumnName="Feiertag" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
@@ -1734,10 +1739,11 @@
           <ScalarProperty Name="Monat" ColumnName="Monat" />
           <ScalarProperty Name="SollStunden" ColumnName="SollStunden" />
           <ScalarProperty Name="Ueberstunden" ColumnName="Ueberstunden" />
-          <ScalarProperty Name="Nachtschichten" ColumnName="Nachtschichten" />
-          <ScalarProperty Name="Feiertage" ColumnName="Feiertage" />
+          <ScalarProperty Name="NachtschichtZuschlaege" ColumnName="NachtschichtZuschlaege" />
+          <ScalarProperty Name="FeiertagZuschlaege" ColumnName="FeiertagZuschlaege" />
           <ScalarProperty Name="Urlaub" ColumnName="Urlaub" />
           <ScalarProperty Name="Krank" ColumnName="Krank" />
+          <ScalarProperty Name="Feiertage" ColumnName="Feiertage" />
           <ScalarProperty Name="AuszahlungUeberstunden" ColumnName="AuszahlungUeberstunden" />
           <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ScalarProperty Name="Status" ColumnName="Status" />

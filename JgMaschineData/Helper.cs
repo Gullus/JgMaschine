@@ -292,9 +292,9 @@ namespace JgMaschineData
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public decimal NachtschichtGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(Nachtschichten)); } }
+    public decimal NachtschichtZuschlaegeGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(NachtschichtZuschlaege)); } }
 
-    public decimal FeiertageGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(Feiertage)); } }
+    public decimal FeiertagZuschlaegeGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(FeiertagZuschlaege)); } }
 
     public EnumStatusArbeitszeitAuswertung StatusAnzeige
     {
@@ -313,7 +313,7 @@ namespace JgMaschineData
   public partial class tabArbeitszeitTag : INotifyPropertyChanged
   {
     public event PropertyChangedEventHandler PropertyChanged;
-    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
     {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
@@ -342,7 +342,7 @@ namespace JgMaschineData
 
     public bool IstNachtschichtUngleich
     {
-      get { return this.NachtschichtBerechnet != this.Nachtschicht; }
+      get { return this.NachtschichtBerechnet != this.NachtschichtZuschlag; }
     }
 
     public string PauseAnzeige
@@ -381,7 +381,6 @@ namespace JgMaschineData
           this.Zeit = zeit;
           ArbeitszeitTagGeaendertAusloesen("Zeit");
           NotifyPropertyChanged();
-          NotifyPropertyChanged("Ueberstunden");
           NotifyPropertyChanged("IstZeitUngleich");
         }
       }
@@ -394,18 +393,17 @@ namespace JgMaschineData
       get { return JgZeit.ZeitInString(ZeitBerechnet); }
     }
 
-
-    public string NachtschichtAnzeige
+    public string NachtschichtZuschlagAnzeige
     {
-      get { return JgZeit.ZeitInString(this.Nachtschicht); }
+      get { return JgZeit.ZeitInString(this.NachtschichtZuschlag); }
       set
       {
-        var zeit = JgZeit.StringInZeit24(value, Nachtschicht);
-        if (zeit != Nachtschicht)
+        var zeit = JgZeit.StringInZeit24(value, NachtschichtZuschlag);
+        if (zeit != NachtschichtZuschlag)
         {
-          this.Nachtschicht = zeit;
+          this.NachtschichtZuschlag = zeit;
           NotifyPropertyChanged();
-          ArbeitszeitTagGeaendertAusloesen("Nachtschicht");
+          ArbeitszeitTagGeaendertAusloesen("NachtschichtZuschlag");
           NotifyPropertyChanged("IstNachtschichtUngleich");
         }
       }
@@ -418,16 +416,16 @@ namespace JgMaschineData
       get { return JgZeit.ZeitInString(NachtschichtBerechnet); }
     }
 
-    public string FeiertagAnzeige
+    public string FeiertagZuschlagAnzeige
     {
-      get { return JgZeit.ZeitInString(this.Feiertag); }
+      get { return JgZeit.ZeitInString(this.FeiertagZuschlag); }
       set
       {
-        var zeit = JgZeit.StringInZeit24(value, Feiertag);
-        if (zeit != Feiertag)
+        var zeit = JgZeit.StringInZeit24(value, FeiertagZuschlag);
+        if (zeit != FeiertagZuschlag)
         {
-          this.Feiertag = zeit;
-          ArbeitszeitTagGeaendertAusloesen("Feiertag");
+          this.FeiertagZuschlag = zeit;
+          ArbeitszeitTagGeaendertAusloesen("FeiertagZuschlag");
         }
       }
     }
@@ -454,6 +452,19 @@ namespace JgMaschineData
         {
           this.Krank = value;
           ArbeitszeitTagGeaendertAusloesen("Krank");
+        }
+      }
+    }
+
+    public bool FeiertagAnzeige
+    {
+      get { return this.Feiertag; }
+      set
+      {
+        if (value != this.Feiertag)
+        {
+          Feiertag = value;
+          ArbeitszeitTagGeaendertAusloesen("Feiertag");
         }
       }
     }

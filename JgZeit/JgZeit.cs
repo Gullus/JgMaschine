@@ -269,5 +269,12 @@ namespace JgZeitHelper
       else
         return false;
     }
+
+    public static TimeSpan KontrolleZeitDb(TimeSpan WertZurKontrolle)
+    {
+      if ((WertZurKontrolle < TimeSpan.Zero) || (WertZurKontrolle >= new TimeSpan(24, 0, 0)))
+          return TimeSpan.Zero;
+      return WertZurKontrolle;
+    }
   }
 }

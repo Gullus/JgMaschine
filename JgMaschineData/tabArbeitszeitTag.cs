@@ -28,10 +28,11 @@ namespace JgMaschineData
         public byte Tag { get; set; }
         public System.TimeSpan Pause { get; set; }
         public System.TimeSpan Zeit { get; set; }
-        public System.TimeSpan Nachtschicht { get; set; }
-        public System.TimeSpan Feiertag { get; set; }
+        public System.TimeSpan NachtschichtZuschlag { get; set; }
+        public System.TimeSpan FeiertagZuschlag { get; set; }
         public bool Urlaub { get; set; }
         public bool Krank { get; set; }
+        public bool Feiertag { get; set; }
         public string Bemerkung { get; set; }
         public System.Guid fArbeitszeitAuswertung { get; set; }
         public bool IstManuellGeaendert { get; set; }

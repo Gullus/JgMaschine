@@ -299,7 +299,7 @@ namespace JgMaschineGlobalZeit
           foreach (var bedAusw in bediener)
           {
             var ds = new ArbeitszeitBediener(_Erstellung.Db);
-            ds.BedienerBerechnen(bedAusw, (short)dat.Year, (byte)dat.Month, sollStunden, lRunden, lFeiertage, lPausen, false);
+            ds.BedienerBerechnen(bedAusw, (short)dat.Year, (byte)dat.Month, sollStunden, lRunden, lFeiertage, lPausen);
             listeAuswertungen.Add(ds);
           }
           _Report.RegisterData(listeAuswertungen, "Auswertungen");
@@ -327,8 +327,7 @@ namespace JgMaschineGlobalZeit
           foreach (var bedAusw in bedienerImStandort)
           {
             var ds = new ArbeitszeitBediener(_Erstellung.Db);
-            ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten, false);
-            ds.ListeFuerJedenTagErstellen(bedAusw.eArbeitszeitHelper, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten);
+            ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten);
             listeAuswertung.Add(ds);
           }
 
@@ -496,12 +495,12 @@ namespace JgMaschineGlobalZeit
 
             // Formatierung als Dezimalzahl mit einer Kommastelle mit Frau Glatter besprochen
 
-            new XElement("NachtschichtZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.Nachtschichten).TotalHours.ToString("N2", en)),
-            new XElement("NachtschichtZuschlagGerundet", z.eArbeitszeitHelper.NachtschichtGerundet.ToString("N2", en)),
-            new XElement("FeiertagsZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.Feiertage).TotalHours.ToString("N2", en)),
-            new XElement("FeiertagsZuschlagGerundet", z.eArbeitszeitHelper.FeiertageGerundet.ToString("N2", en)),
+            new XElement("NachtschichtZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.NachtschichtZuschlaege).TotalHours.ToString("N2", en)),
+            new XElement("NachtschichtZuschlagGerundet", z.eArbeitszeitHelper.NachtschichtZuschlaegeGerundet.ToString("N2", en)),
+            new XElement("FeiertagsZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.FeiertagZuschlaege).TotalHours.ToString("N2", en)),
+            new XElement("FeiertagsZuschlagGerundet", z.eArbeitszeitHelper.FeiertagZuschlaegeGerundet.ToString("N2", en)),
 
-            new XElement("IstStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden + z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString("N2", en)),
+            new XElement("IstStunden", JgZeit.ZeitStringAddieren(z.eArbeitszeitHelper.SollStunden, z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString("N2", en)),
             new XElement("UeberStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString("N2", en))
             )
           )
@@ -541,7 +540,7 @@ namespace JgMaschineGlobalZeit
         else if (dgArbeitszeit.CurrentColumn == clZeitBerechnet)
           aktDs.ZeitAnzeige = JgZeit.ZeitInString(aktDs.ZeitBerechnet);
         else if (dgArbeitszeit.CurrentColumn == clNachtschichtBerechnet)
-          aktDs.NachtschichtAnzeige = JgZeit.ZeitInString(aktDs.NachtschichtBerechnet);
+          aktDs.NachtschichtZuschlagAnzeige = JgZeit.ZeitInString(aktDs.NachtschichtBerechnet);
       }
     }
 
@@ -563,13 +562,6 @@ namespace JgMaschineGlobalZeit
         };
         _ListeArbeitszeitenAuswahl.Add(az);
       }
-    }
-
-    private void button_Click(object sender, RoutedEventArgs e)
-    {
-      var dd = dgArbeitszeit.Items.SortDescriptions[0];
-
-
     }
   }
 }

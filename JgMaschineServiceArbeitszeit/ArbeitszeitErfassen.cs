@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Data.Entity;
 using JgMaschineData;
@@ -173,10 +172,9 @@ namespace JgMaschineServiceArbeitszeit
             try
             {
               var anmeldungen = ProgDatafox.KonvertDatafoxImport(DatensaetzeVomTerminal, datTerminal.fStandort, "MITA_");
-              var sb = new StringBuilder();
-              foreach (var anm in anmeldungen)
-                sb.AppendLine($"  {anm.MatchCode}   {anm.GehGrund} - {anm.Datum} /  {anm.Vorgang}");
-              Logger.Write($"Ausgelesene Anmeldungen\n{sb.ToString()}", "Service", 0, 0, TraceEventType.Information);
+
+              var lsAnmeldung = anmeldungen.Select(s => $"  {s.MatchCode}   {s.GehGrund} - {s.Datum} /  {s.Vorgang}").ToArray();
+              Logger.Write($"Ausgelesene Anmeldungen\n{Helper.ListeInString(lsAnmeldung)}", "Service", 0, 0, TraceEventType.Information);
 
               Optionen.ListeAnmeldungen.AddRange(anmeldungen);
             }
@@ -289,16 +287,14 @@ namespace JgMaschineServiceArbeitszeit
           var listeTerminals = Optionen.ListeTerminals.Where(w => w.TerminaldatenWurdenAktualisiert).ToList();
           if (listeTerminals.Count > 0)
           {
-            var sbTerminals = new StringBuilder();
-
-            foreach (var tu in listeTerminals)
+            foreach (var terminalUbdate in listeTerminals)
             {
-              sbTerminals.AppendLine("  " + tu.Bezeichnung);
-              Db.tabArbeitszeitTerminalSet.Attach(tu);
-              tu.UpdateTerminal = false;
+              Db.tabArbeitszeitTerminalSet.Attach(terminalUbdate);
+              Db.Entry(terminalUbdate).State = EntityState.Modified;
+              terminalUbdate.UpdateTerminal = false;
             }
 
-            msg = $"{listeTerminals.Count} Terminal(s) in Datenbank gespeichert\n{sbTerminals.ToString()}";
+            msg = $"Listen in {listeTerminals.Count} Terminal(s) in Datenbank gespeichert\n{Helper.ListeInString(listeTerminals.Select(s => (" -> " + s.Bezeichnung)).ToArray())}";
             Logger.Write(msg, "Service", 0, 0, TraceEventType.Information);
           }
 
@@ -310,6 +306,8 @@ namespace JgMaschineServiceArbeitszeit
             foreach(var terminalFehler in termMitFehlern)
             {
               Db.tabArbeitszeitTerminalSet.Attach(terminalFehler);
+              Db.Entry(terminalFehler).State = EntityState.Modified;
+
               terminalFehler.AnzahlFehler = (short)(terminalFehler.AnzahlFehler + 1);
               if (terminalFehler.AnzahlFehler >= Optionen.AnzahlBisFehlerAusloesen)
               {

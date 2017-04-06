@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
+using System.Windows;
 
 namespace JgMaschineData
 {
@@ -10,36 +12,22 @@ namespace JgMaschineData
   {
     public static string _Bediener = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 
-    private static string DbFehlerText(DbEntityValidationException ex)
-    {
-      // Retrieve the error messages as a list of strings.
-      var errorMessages = ex.EntityValidationErrors
-              .SelectMany(x => x.ValidationErrors)
-              .Select(x => x.ErrorMessage);
-
-      // Join the list to a single string.
-      var fullErrorMessage = string.Join("; ", errorMessages);
-
-      System.Windows.MessageBox.Show(fullErrorMessage);
-
-      // Combine the original exception message with the new one.
-      return string.Concat(ex.Message, " Fehler: ", fullErrorMessage);
-    }
-
     public override int SaveChanges()
     {
+      IEnumerable<System.Data.Entity.Infrastructure.DbEntityEntry> listeSpeichern = null; 
+
       try
       {
         ChangeTracker.DetectChanges();
 
-        var modified = ChangeTracker
+        listeSpeichern = ChangeTracker
           .Entries()
           .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
         DatenAbgleich dag = null;
         var datum = DateTime.Now;
 
-        foreach (var item in modified)
+        foreach (var item in listeSpeichern)
         {
           dag = (DatenAbgleich)item.ComplexProperty("DatenAbgleich").CurrentValue;
           if (dag != null)
@@ -58,19 +46,42 @@ namespace JgMaschineData
       }
       catch (DbEntityValidationException ex)
       {
-        throw new DbEntityValidationException(DbFehlerText(ex), ex.EntityValidationErrors);
+        var sb = new StringBuilder();
+        foreach (var f in ex.EntityValidationErrors)
+        {
+          sb.AppendLine($"  {f.Entry.GetType()}");
+          foreach (var fi in f.ValidationErrors)
+            sb.AppendLine($"    {fi.PropertyName} - {fi.ErrorMessage}");
+        }
+
+        throw new Exception($"Valitationsfehler beim speichern der Daten.\nGrund: {FehlerText(ex)}\nDaten:\n{sb.ToString()}");
+      }
+      catch (Exception ex)
+      {
+        var sb = new StringBuilder();
+        if (listeSpeichern != null)
+        {
+          foreach (System.Data.Entity.Infrastructure.DbEntityEntry ds in listeSpeichern)
+            sb.AppendLine($"  {ds.Entity.GetType()}");
+        }
+
+        throw new Exception($"Fehler beim speichern der Daten.\nGrund: {FehlerText(ex)}\nDaten:\n{sb.ToString()}");
       }
     }
 
-    public override Task<int> SaveChangesAsync()
+    public static string FehlerText(Exception Fehler)
     {
-      try
+      var ex = Fehler;
+      var sb = new StringBuilder();
+      var einzug = "  ";
+      while (true)
       {
-        return base.SaveChangesAsync();
-      }
-      catch (DbEntityValidationException ex)
-      {
-        throw new DbEntityValidationException(DbFehlerText(ex), ex.EntityValidationErrors);
+        sb.AppendLine(einzug + Fehler.Message);
+        if (ex.InnerException == null)
+          return sb.ToString();
+
+        ex = ex.InnerException;
+        einzug += "  ";
       }
     }
   }

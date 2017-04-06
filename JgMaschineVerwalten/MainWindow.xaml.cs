@@ -737,5 +737,10 @@ namespace JgMaschineVerwalten
       var prop = Properties.Settings.Default;
       JgMaschineLib.Imports.JgFastCube.JgFastCubeStart(prop.JgCubeVerbindungsString, prop.JgCubeSqlText, dat);
     }
+
+    private void TabelleAktualisieren_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
   }
 }
