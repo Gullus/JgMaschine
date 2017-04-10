@@ -21,6 +21,8 @@ namespace JgMaschineGlobalZeit
     public ArbeitszeitHelperMonat AuswertungMonat { get; set; } = new ArbeitszeitHelperMonat();
     public ArbeitszeitHelperAktuell AuswertungGesamt { get; set; } = new ArbeitszeitHelperAktuell();
 
+    public bool IstReadOnly { get { return Bediener?.eArbeitszeitHelper?.Status == EnumStatusArbeitszeitAuswertung.InArbeit; } }
+
     public ObservableCollection<tabArbeitszeitTag> ListeTage { get; set; } = new ObservableCollection<tabArbeitszeitTag>();
 
     public ArbeitszeitBediener()
@@ -121,11 +123,12 @@ namespace JgMaschineGlobalZeit
       if (AuswertungBediener == null)
         return;
 
+      ListeTage.Clear();
+
       // Werte für Tage berechnen
       var auswTage = _Db.tabArbeitszeitTagSet.Where(w => w.fArbeitszeitAuswertung == AuswertungBediener.Id).ToList();
 
       var anzTageMonat = DateTime.DaysInMonth(AuswertungBediener.Jahr, AuswertungBediener.Monat);
-      ListeTage.Clear();
 
       var monatErster = JgZeit.ErsterImMonat(AuswertungBediener.Jahr, AuswertungBediener.Monat);
       var monatLetzter = JgZeit.LetzerImMonat(AuswertungBediener.Jahr, AuswertungBediener.Monat);
@@ -252,7 +255,7 @@ namespace JgMaschineGlobalZeit
     {
       var dsAz = AuswertungMonat.AzAuswertung;
 
-      dsAz.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden); 
+      dsAz.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden);
 
       dsAz.NachtschichtZuschlaege = JgZeit.ZeitInString(AuswertungMonat.fNachtschichtZuschlaege);
       dsAz.FeiertagZuschlaege = JgZeit.ZeitInString(AuswertungMonat.fFeiertagZuschlaege);
@@ -356,7 +359,7 @@ namespace JgMaschineGlobalZeit
     private void BerechneUrlaub()
     {
       var urlaub = Convert.ToByte(ListeTage.Count(c => c.Urlaub));
-      AuswertungMonat.UrlaubAnzeige = urlaub; 
+      AuswertungMonat.UrlaubAnzeige = urlaub;
       AuswertungGesamt.UrlaubAnzeige = (byte)(AuswertungMonat.fUrlaub + AuswertungKumulativ.fUrlaub);
       AuswertungMonat.UrlaubOffenAnzeige = (short)(AuswertungMonat.UrlaubImJahr + AuswertungVorjahr.fUrlaub - AuswertungMonat.fUrlaub - AuswertungKumulativ.fUrlaub);
     }

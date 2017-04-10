@@ -46,6 +46,7 @@ namespace JgMaschineServiceHandyArbeitszeit
       public string userId { get; set; }
       public DateTime timestamp { get; set; }
       public bool isCheckIn { get; set; }
+      public string construction { get; set; }
     }
 
     public ArbeitszeitVonHandy(string ConnectionStringDb, int PortNummerServer)
@@ -102,8 +103,6 @@ namespace JgMaschineServiceHandyArbeitszeit
 
                 var werte = listeHandyDaten.Select(s => $"  {s.timestamp} - {s.userId} / {s.isCheckIn}").ToList();
                 msg = $"{anzahlZeichen} Zeichnen vom Server Empfangen.\n {Helper.ListeInString(werte)}";
-                Console.WriteLine(msg);
-
                 Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
               }
               catch (Exception ex)

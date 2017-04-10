@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Configuration.Install;
 using System.ServiceProcess;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.Practices.EnterpriseLibrary.ExceptionHandling;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
@@ -19,12 +20,20 @@ namespace JgMaschineServiceHandyArbeitszeit
       var msg = "Service Arbeitszeit von Handy startet.";
       Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Start);
 
-
 #if DEBUG
 
-      var prop = Properties.Settings.Default;
-      var az = new ArbeitszeitVonHandy(prop.ConnectionString, prop.PortNummerServer);
-      az.Start();
+        var prop = Properties.Settings.Default;
+      var arbeitszeitHandy = new ArbeitszeitVonHandy(prop.ConnectionString, prop.PortNummerServer);
+
+      var t = new Task((azHandy) =>
+      {
+        var az = (ArbeitszeitVonHandy)azHandy;
+        az.Start();
+      }, arbeitszeitHandy);
+      t.Start();
+
+      Console.WriteLine("Dienst Arbeitszeit Handy läuft....");
+      Console.ReadKey();
 
 #else
 
@@ -53,11 +62,12 @@ namespace JgMaschineServiceHandyArbeitszeit
       var msg = "ServiceTask startet!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
-      var task = new Task(() =>
+      var t = new Task((azHandy) =>
       {
-        _ArbeitszeitHandy.Start();
-      });
-      task.Start();
+        var az = (ArbeitszeitVonHandy)azHandy;
+        az.Start();
+      }, _ArbeitszeitHandy);
+      t.Start();
     }
 
     protected override void OnShutdown()

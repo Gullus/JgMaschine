@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using JgMaschineData;
 using JgZeitHelper;
 
-namespace JgMaschineSetup.Fenster
+namespace JgMaschineGlobalZeit.Fenster
 {
   public partial class FormNeueArbeitszeit : Window
   {

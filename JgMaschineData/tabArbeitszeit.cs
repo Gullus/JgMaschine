@@ -28,6 +28,8 @@ namespace JgMaschineData
         public Nullable<System.DateTime> Abmeldung { get; set; }
         public bool ManuelleAnmeldung { get; set; }
         public bool ManuelleAbmeldung { get; set; }
+        public string Baustelle { get; set; }
+        public string Bemerkung { get; set; }
         public System.Guid fBediener { get; set; }
         public System.Guid fStandort { get; set; }
         public Nullable<System.Guid> fArbeitszeitAuswertung { get; set; }

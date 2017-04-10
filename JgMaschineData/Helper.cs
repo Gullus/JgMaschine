@@ -75,6 +75,7 @@ namespace JgMaschineData
     [Required]
     [MinLength(2, ErrorMessage = "Mindestanzahl der Zeichen für den Nachnamen ist {1}")]
     public object MatchCode;
+
   }
 
   [MetadataType(typeof(tabBedienerMetaData))]
@@ -100,10 +101,10 @@ namespace JgMaschineData
           this.Status = value;
           NotifyPropertyChanged();
         }
-          }
+      }
     }
 
-
+   
     private tabArbeitszeitAuswertung fArbeitszeitHelper = null;
     public tabArbeitszeitAuswertung eArbeitszeitHelper
     {
@@ -292,9 +293,9 @@ namespace JgMaschineData
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public decimal NachtschichtZuschlaegeGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(NachtschichtZuschlaege)); } }
+    public TimeSpan NachtschichtZuschlaegeGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(NachtschichtZuschlaege)); } }
 
-    public decimal FeiertagZuschlaegeGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(FeiertagZuschlaege)); } }
+    public TimeSpan FeiertagZuschlaegeGerundet { get { return JgZeit.AufHalbeStundeRunden(JgZeit.StringInZeit(FeiertagZuschlaege)); } }
 
     public EnumStatusArbeitszeitAuswertung StatusAnzeige
     {

@@ -160,6 +160,7 @@ namespace JgMaschineGlobalZeit
     {
       AzBediener.BedienerBerechnen(AktuellerBediener, Jahr, Monat, SollStundenMonat, ListeRundenMonat, ListeFeiertageMonat, ListePausen.Daten);
     }
+
   }
 }
 

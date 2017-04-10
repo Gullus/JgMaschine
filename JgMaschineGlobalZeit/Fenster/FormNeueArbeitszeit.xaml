@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JgMaschineSetup.Fenster"
+        xmlns:local="clr-namespace:JgMaschineGlobalZeit.Fenster"
         xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
-        xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" x:Class="JgMaschineSetup.Fenster.FormNeueArbeitszeit"
+        xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" x:Class="JgMaschineGlobalZeit.Fenster.FormNeueArbeitszeit"
         mc:Ignorable="d"
         Title="Neue Arbeitszeit erstellen" Height="268" Width="338.979" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico">
     <Window.Resources>

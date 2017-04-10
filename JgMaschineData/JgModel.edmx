@@ -280,6 +280,8 @@
     <Property Name="Abmeldung" Type="datetime" Nullable="true" />
     <Property Name="ManuelleAnmeldung" Type="bit" Nullable="false" DefaultValue="true" />
     <Property Name="ManuelleAbmeldung" Type="bit" Nullable="false" DefaultValue="true" />
+    <Property Name="Baustelle" Type="nvarchar" Nullable="true" MaxLength="60" />
+    <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="120" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -346,9 +348,9 @@
     <Property Name="Ueberstunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="NachtschichtZuschlaege" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="FeiertagZuschlaege" Type="nvarchar" Nullable="true" MaxLength="7" />
-    <Property Name="Urlaub" Type="smallint" Nullable="false" DefaultValue="0" />
-    <Property Name="Krank" Type="smallint" Nullable="false" DefaultValue="0" />
-    <Property Name="Feiertage" Type="smallint" Nullable="false" />
+    <Property Name="Urlaub" Type="tinyint" Nullable="false" />
+    <Property Name="Krank" Type="tinyint" Nullable="false" />
+    <Property Name="Feiertage" Type="tinyint" Nullable="false" />
     <Property Name="AuszahlungUeberstunden" Type="nvarchar" Nullable="true" MaxLength="7" />
     <Property Name="Bemerkung" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
@@ -1139,6 +1141,8 @@
           <Property Name="Abmeldung" Type="DateTime" Nullable="true" />
           <Property Name="ManuelleAnmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />
           <Property Name="ManuelleAbmeldung" Type="Boolean" Nullable="false" DefaultValue="True" />
+          <Property Name="Baustelle" Type="String" Nullable="true" MaxLength="60" />
+          <Property Name="Bemerkung" Type="String" Nullable="true" MaxLength="120" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fBediener" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eBediener" Relationship="JgModel.tabBedienertabArbeitszeit" FromRole="tabArbeitszeit" ToRole="tabBediener" />
@@ -1663,6 +1667,8 @@
           <ScalarProperty Name="Abmeldung" ColumnName="Abmeldung" />
           <ScalarProperty Name="ManuelleAnmeldung" ColumnName="ManuelleAnmeldung" />
           <ScalarProperty Name="ManuelleAbmeldung" ColumnName="ManuelleAbmeldung" />
+          <ScalarProperty Name="Baustelle" ColumnName="Baustelle" />
+          <ScalarProperty Name="Bemerkung" ColumnName="Bemerkung" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

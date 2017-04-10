@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace JgGlobalZeit.Fenster
+namespace JgMaschineGlobalZeit.Fenster
 {
   public partial class FormUeberstundenAuszahlen : Window
   { 

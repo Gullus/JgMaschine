@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JgMaschineServiceAbreitszeit.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Standort" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Heidenau</Value>
-    </Setting>
     <Setting Name="PfadUpdateBediener" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Users\jg\Desktop\Terminal</Value>
     </Setting>

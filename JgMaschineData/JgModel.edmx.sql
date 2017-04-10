@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/04/2017 17:12:06
+-- Date Created: 04/10/2017 10:34:27
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -310,6 +310,8 @@ CREATE TABLE [dbo].[tabArbeitszeitSet] (
     [Abmeldung] datetime  NULL,
     [ManuelleAnmeldung] bit  NOT NULL,
     [ManuelleAbmeldung] bit  NOT NULL,
+    [Baustelle] nvarchar(60)  NULL,
+    [Bemerkung] nvarchar(120)  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
@@ -376,9 +378,9 @@ CREATE TABLE [dbo].[tabArbeitszeitAuswertungSet] (
     [Ueberstunden] nvarchar(7)  NULL,
     [NachtschichtZuschlaege] nvarchar(7)  NULL,
     [FeiertagZuschlaege] nvarchar(7)  NULL,
-    [Urlaub] smallint  NOT NULL,
-    [Krank] smallint  NOT NULL,
-    [Feiertage] smallint  NOT NULL,
+    [Urlaub] tinyint  NOT NULL,
+    [Krank] tinyint  NOT NULL,
+    [Feiertage] tinyint  NOT NULL,
     [AuszahlungUeberstunden] nvarchar(7)  NULL,
     [Bemerkung] nvarchar(255)  NULL,
     [Status] tinyint  NOT NULL,

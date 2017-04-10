@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:JgMaschineGlobalZeit"
     xmlns:data="clr-namespace:JgMaschineData;assembly=JgMaschineData"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:commands="clr-namespace:JgGlobalZeit.Commands"
+    xmlns:commands="clr-namespace:JgMaschineGlobalZeit.Commands"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
     x:Class="JgMaschineGlobalZeit.MainWindow" mc:Ignorable="d" Title="Arbeitszeitverwaltung" 
@@ -91,19 +91,21 @@
                         </Button>
                     </Grid>
 
-                    <DataGrid x:Name="dgArbeitszeitAuswahl" IsReadOnly="True" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" EnableRowVirtualization="True" AutoGenerateColumns="False">
+                    <DataGrid x:Name="dgArbeitszeitAuswahl" ItemsSource="{Binding Source={StaticResource vsArbeitszeitAuswahl}}" Grid.Row="2" EnableRowVirtualization="True" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding eBediener.Name}" Header="Bediener" Width="160"/>
-                            <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung}" Header="Standort" Width="120"/>
-                            <DataGridTextColumn x:Name="ColAnmeldung" Binding="{Binding AnzeigeAnmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH:mm, TargetNullValue=-}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding eBediener.Name, Mode=OneWay}" Header="Bediener" Width="160"/>
+                            <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung, Mode=OneWay}" Header="Standort" Width="120"/>
+                            <DataGridTextColumn x:Name="ColAnmeldung" Binding="{Binding AnzeigeAnmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-, Mode=OneWay}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH:mm, TargetNullValue=-, Mode=OneWay}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
-                            <DataGridTextColumn Binding="{Binding AnzeigeAbmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeAbmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-, Mode=OneWay}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAbmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridTextColumn Binding="{Binding DauerGerundetAnzeige, Mode=OneWay}" Header="Arbeitszeit" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding Baustelle}" Header="Baustelle" Width="120"/>
+                            <DataGridTextColumn Binding="{Binding Bemerkung}" Header="Bemerkung" Width="*"/>
                             <DataGridCheckBoxColumn Binding="{Binding AnzeigeGeloescht, Mode=OneWay}" Header="Geloescht" Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
-
+                            
                             <DataGridTemplateColumn Header="Bearbeiten" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -235,7 +237,8 @@
 
                     <DataGrid x:Name="dgArbeitszeit" AutoGenerateColumns="False" Grid.Column="3" EnableRowVirtualization="True" 
                               ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
-                              AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None" MouseDoubleClick="Datagrid_DoppelClick">
+                              AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None" MouseDoubleClick="Datagrid_DoppelClick"
+                              IsReadOnly="{Binding eHelper}">
                         <DataGrid.CellStyle>
                             <Style TargetType="{x:Type DataGridCell}">
                                 <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -252,7 +255,7 @@
                                 </Style.Triggers>
                             </Style>
                         </DataGrid.CellStyle>
-
+                       
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
                                 <Border BorderThickness="0,0,0,1" Margin="0,0,0,5" BorderBrush="Gray">
@@ -304,32 +307,15 @@
                                 </Border>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
+                        
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Tag, Mode=OneWay}" Header="Tag"  Width="30"/>
                             <DataGridTextColumn Binding="{Binding Wochentag, Mode=OneWay}" Header="..." IsReadOnly="True" Width="30"/>
-                            <DataGridTextColumn x:Name="clPauseBerechnet" Binding="{Binding PauseBerechnet, Mode=OneWay, StringFormat=hh\\:mm}" Header="Pause" Width="60">
-                                <DataGridTextColumn.CellStyle>
-                                    <Style TargetType="{x:Type DataGridCell}">
-                                        <Setter Property="TextBlock.TextAlignment" Value="Center" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IstSonnabend}" Value="True">
-                                                <Setter Property="Background" Value="LightGray"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstSonntag}" Value="True">
-                                                <Setter Property="Background" Value="#FFA4A4A4"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstFeiertag}" Value="True">
-                                                <Setter Property="Background" Value="#FFFF00E8"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </DataGridTextColumn.CellStyle>
-                            </DataGridTextColumn>
-
+                            <DataGridTextColumn x:Name="clPauseBerechnet" Binding="{Binding PauseBerechnet, Mode=OneWay, StringFormat=hh\\:mm}" Header="Pause" Width="60" />
                             <DataGridTemplateColumn Header="Korrektur" Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding PauseAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" >
+                                        <TextBox Text="{Binding PauseAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" IsEnabled="{Binding IstReadOnly, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}">
                                             <TextBox.Style>
                                                 <Style>
                                                     <Style.Triggers>
@@ -343,31 +329,11 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn x:Name="clZeitBerechnet" Binding="{Binding ZeitBerechnetAnzeige, Mode=OneWay}" Header="Arbeits-&#x0a;Zeit" Width="60">
-                                <DataGridTextColumn.CellStyle>
-                                    <Style TargetType="{x:Type DataGridCell}">
-                                        <Setter Property="TextBlock.TextAlignment" Value="Center" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IstSonnabend}" Value="True">
-                                                <Setter Property="Background" Value="LightGray"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstSonntag}" Value="True">
-                                                <Setter Property="Background" Value="#FFA4A4A4"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstFeiertag}" Value="True">
-                                                <Setter Property="Background" Value="#FFFF00E8"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstFehlerZeit}" Value="True">
-                                                <Setter Property="Background" Value="Red"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </DataGridTextColumn.CellStyle>
-                            </DataGridTextColumn>
+                            <DataGridTextColumn x:Name="clZeitBerechnet" Binding="{Binding ZeitBerechnetAnzeige, Mode=OneWay}" Header="Arbeits-&#x0a;Zeit" Width="60" />
                             <DataGridTemplateColumn Header="Korrektur" Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding ZeitAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" >
+                                        <TextBox Text="{Binding ZeitAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" IsEnabled="{Binding IstReadOnly, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}">
                                             <TextBox.Style>
                                                 <Style>
                                                     <Style.Triggers>
@@ -382,31 +348,11 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Binding="{Binding Ueberstunden, Mode=OneWay}" Header="Überst." Width="60"/>
-                            <DataGridTextColumn x:Name="clNachtschichtBerechnet" Binding="{Binding NachtschichtBerechnetAnzeige, Mode=OneWay}" Header="Zuschlag&#x0a;Nacht." Width="60">
-                                <DataGridTextColumn.CellStyle>
-                                    <Style TargetType="{x:Type DataGridCell}">
-                                        <Setter Property="TextBlock.TextAlignment" Value="Center" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IstSonnabend}" Value="True">
-                                                <Setter Property="Background" Value="LightGray"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstSonntag}" Value="True">
-                                                <Setter Property="Background" Value="#FFA4A4A4"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstFeiertag}" Value="True">
-                                                <Setter Property="Background" Value="#FFFF00E8"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IstFehlerNachtschicht}" Value="True">
-                                                <Setter Property="Background" Value="Red"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </DataGridTextColumn.CellStyle>
-                            </DataGridTextColumn>
+                            <DataGridTextColumn x:Name="clNachtschichtBerechnet" Binding="{Binding NachtschichtBerechnetAnzeige, Mode=OneWay}" Header="Zuschlag&#x0a;Nacht." Width="60" />
                             <DataGridTemplateColumn Header="Korrektur" Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding NachtschichtZuschlagAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" >
+                                        <TextBox Text="{Binding NachtschichtZuschlagAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" IsEnabled="{Binding IstReadOnly, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}">
                                             <TextBox.Style>
                                                 <Style>
                                                     <Style.Triggers>
@@ -420,10 +366,10 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Zuschlag&#x0a;Feiertag" Width="60">
+                            <DataGridTemplateColumn Header="Zuschlag&#x0a;Feiertag" Width="60" >
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding FeiertagZuschlagAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" />
+                                        <TextBox Text="{Binding FeiertagZuschlagAnzeige, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0" TextAlignment="Center" IsEnabled="{Binding IstReadOnly, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -431,7 +377,7 @@
                             <DataGridTemplateColumn Header="Urlaub" Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding UrlaubAnzeige, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0, 1, 0, 0" HorizontalAlignment="Center"/>
+                                        <CheckBox IsChecked="{Binding UrlaubAnzeige, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0, 1, 0, 0" HorizontalAlignment="Center" IsEnabled="{Binding IstReadOnly, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -439,7 +385,7 @@
                             <DataGridTemplateColumn Header="Krank" Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding KrankAnzeige, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0, 1, 0, 0" HorizontalAlignment="Center"/>
+                                        <CheckBox IsChecked="{Binding KrankAnzeige, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0, 1, 0, 0" HorizontalAlignment="Center" IsEnabled="{Binding IstReadOnly, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -447,7 +393,7 @@
                             <DataGridTemplateColumn Header="Feiert." Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding FeiertagAnzeige, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0, 1, 0, 0" HorizontalAlignment="Center"/>
+                                        <CheckBox IsChecked="{Binding FeiertagAnzeige, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0, 1, 0, 0" HorizontalAlignment="Center" IsEnabled="{Binding IstReadOnly, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -469,7 +415,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Grid Grid.Column="8" Grid.Row="3">
+                    <Grid Grid.Column="8" Grid.Row="3" DataContext="{Binding Source={StaticResource ArbeitszeitBediener}}" >
                         <Grid.Resources>
                             <Style TargetType="{x:Type Border}" >
                                 <Setter Property="Margin" Value="3" />
@@ -520,13 +466,13 @@
                         <Label Content="Kumulat." Grid.Column="8" Grid.Row="2" />
                         <Label Content="Gesamt" Grid.Column="8" Grid.Row="3"/>
                         <Border Grid.Column="9" Grid.Row="1" >
-                            <TextBlock Text="{Binding AuswertungVorjahr.UeberstundenAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Überstunden aus dem Vorjahr"/>
+                            <TextBlock Text="{Binding AuswertungVorjahr.UeberstundenAnzeige, Mode=OneWay}" ToolTip="Überstunden aus dem Vorjahr"/>
                         </Border>
                         <Border Grid.Column="9" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungKumulativ.UeberstundenAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Kummulative Überstunden aus den vorhergehnednen Monaten"/>
+                            <TextBlock Text="{Binding AuswertungKumulativ.UeberstundenAnzeige, Mode=OneWay}" ToolTip="Kummulative Überstunden aus den vorhergehnednen Monaten"/>
                         </Border>
                         <Border Grid.Column="9" Grid.Row="3" BorderBrush="Blue" >
-                            <TextBlock Text="{Binding AuswertungGesamt.UeberstundenAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Gesamte Überstunden des Mitarbeiters (Überst. Monat + Auszahlungen + Vorjahr + Kummulativ)"/>
+                            <TextBlock Text="{Binding AuswertungGesamt.UeberstundenAnzeige, Mode=OneWay}" ToolTip="Gesamte Überstunden des Mitarbeiters (Überst. Monat + Auszahlungen + Vorjahr + Kummulativ)"/>
                         </Border>
 
                         <TextBlock Text="Auszahlg. Überstunden" Grid.Column="4" Grid.ColumnSpan="3" FontWeight="Bold"/>
@@ -534,38 +480,38 @@
                         <Label Content="Auszahlg." Grid.Column="4" Grid.Row="2" Height="26" VerticalAlignment="Bottom" />
                         <Label Content="Gesamt" Grid.Column="4" Grid.Row="3" />
                         <Border Grid.Column="5" Grid.Row="1" >
-                            <TextBlock Text="{Binding AuswertungKumulativ.UeberstundenBezahltAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Summe der kummulativen Aufrechnung der ausgezahlten Überstunden"/>
+                            <TextBlock Text="{Binding AuswertungKumulativ.UeberstundenBezahltAnzeige, Mode=OneWay}" ToolTip="Summe der kummulativen Aufrechnung der ausgezahlten Überstunden"/>
                         </Border>
                         <Border Grid.Column="5" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungMonat.UeberstundenBezahltAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Anzahl der ausgezahlten Überstunden im aktuellen Monat"/>
+                            <TextBlock Text="{Binding AuswertungMonat.UeberstundenBezahltAnzeige, Mode=OneWay}" ToolTip="Anzahl der ausgezahlten Überstunden im aktuellen Monat"/>
                         </Border>
                         <Border Grid.Column="5" Grid.Row="3" >
-                            <TextBlock Text="{Binding AuswertungGesamt.UeberstundenBezahltAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Gesamte Anzahl der ausgezahlten Überstunden im Jahr"/>
+                            <TextBlock Text="{Binding AuswertungGesamt.UeberstundenBezahltAnzeige, Mode=OneWay}" ToolTip="Gesamte Anzahl der ausgezahlten Überstunden im Jahr"/>
                         </Border>
-                        <Button Content="..." Grid.Column="6" Grid.Row="2"  Click="btnUeberstundenAuszahlen_Click" ToolTip="Sollstunde enstellen"/>
+                        <Button Content="..." Grid.Column="6" Grid.Row="2"  Command="{x:Static commands:MyCommands.UberstundenBezahltAendern}" ToolTip="Sollstunde enstellen"/>
 
                         <Label Content="Kumulat." Grid.Column="13" Grid.Row="1"/>
                         <Label Content="Monat" Grid.Column="13" Grid.Row="2" />
                         <Label Content="Gesamt" Grid.Column="13" Grid.Row="3"/>
                         <Border Grid.Column="14" Grid.Row="1" >
-                            <TextBlock Text="{Binding AuswertungKumulativ.UrlaubAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Beanspruchte Urlaubstage aus den Vormonaten des aktuellen Jahr"/>
+                            <TextBlock Text="{Binding AuswertungKumulativ.UrlaubAnzeige, Mode=OneWay}" ToolTip="Beanspruchte Urlaubstage aus den Vormonaten des aktuellen Jahr"/>
                         </Border>
                         <Border Grid.Column="14" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungMonat.UrlaubAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="In aktuellen Monat gewährter Urlaub" />
+                            <TextBlock Text="{Binding AuswertungMonat.UrlaubAnzeige, Mode=OneWay}" ToolTip="In aktuellen Monat gewährter Urlaub" />
                         </Border>
                         <Border Grid.Column="14" Grid.Row="3" BorderBrush="Blue">
-                            <TextBlock Text="{Binding AuswertungGesamt.UrlaubAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Gesamter Urlaub des aktuellen Jahr"/>
+                            <TextBlock Text="{Binding AuswertungGesamt.UrlaubAnzeige, Mode=OneWay}" ToolTip="Gesamter Urlaub des aktuellen Jahr"/>
                         </Border>
 
                         <TextBlock Text="Krank" Grid.Column="16" FontWeight="Bold"/>
                         <Border Grid.Column="16" Grid.Row="1" >
-                            <TextBlock Text="{Binding AuswertungKumulativ.KrankAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Kummulative Aufrechnung der Krankheitstage des aktuellen Jahres"/>
+                            <TextBlock Text="{Binding AuswertungKumulativ.KrankAnzeige, Mode=OneWay}" ToolTip="Kummulative Aufrechnung der Krankheitstage des aktuellen Jahres"/>
                         </Border>
                         <Border Grid.Column="16" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungMonat.KrankAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Krankheitstage im aktuellen Monat"/>
+                            <TextBlock Text="{Binding AuswertungMonat.KrankAnzeige, Mode=OneWay}" ToolTip="Krankheitstage im aktuellen Monat"/>
                         </Border>
                         <Border Grid.Column="16" Grid.Row="3" BorderBrush="Blue">
-                            <TextBlock Text="{Binding AuswertungGesamt.KrankAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Gesamte Anzahl aller Krankheitstage im aktuellen Jahr"/>
+                            <TextBlock Text="{Binding AuswertungGesamt.KrankAnzeige, Mode=OneWay}" ToolTip="Gesamte Anzahl aller Krankheitstage im aktuellen Jahr"/>
                         </Border>
 
                         <TextBlock Text="Urlaubstage" Grid.Column="11" Grid.ColumnSpan="4" FontWeight="Bold"/>
@@ -573,13 +519,13 @@
                         <Label Content="Vorjahr" Grid.Column="11" Grid.Row="2"/>
                         <Label Content="Offen" Grid.Column="11" Grid.Row="3"/>
                         <Border Grid.Column="12" Grid.Row="1" >
-                            <TextBlock Text="{Binding AuswertungMonat.UrlaubImJahr, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Vertraglich vereinbarter Jahresulaubs"/>
+                            <TextBlock Text="{Binding AuswertungMonat.UrlaubImJahr, Mode=OneWay}" ToolTip="Vertraglich vereinbarter Jahresulaubs"/>
                         </Border>
                         <Border Grid.Column="12" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungVorjahr.UrlaubAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Resturlaub aus dem Vorjahr"/>
+                            <TextBlock Text="{Binding AuswertungVorjahr.UrlaubAnzeige, Mode=OneWay}" ToolTip="Resturlaub aus dem Vorjahr"/>
                         </Border>
                         <Border Grid.Column="12" Grid.Row="3" >
-                            <TextBlock Text="{Binding AuswertungMonat.UrlaubOffenAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Noch vorhandener offener Urlaub für aktuelles Jahr" />
+                            <TextBlock Text="{Binding AuswertungMonat.UrlaubOffenAnzeige, Mode=OneWay}" ToolTip="Noch vorhandener offener Urlaub für aktuelles Jahr" />
                         </Border>
 
                         <TextBlock Text="Stunden im Monat" Grid.ColumnSpan="3" FontWeight="Bold"/>
@@ -587,15 +533,15 @@
                         <Label Content="Ist" Grid.Row="2"/>
                         <Label Content="ÜberSt." Grid.Row="3"/>
                         <Border Grid.Column="1" Grid.Row="1" >
-                            <TextBlock Text="{Binding AuswertungMonat.SollStundenAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Sollstunden für den aktuellen Monat."/>
+                            <TextBlock Text="{Binding AuswertungMonat.SollStundenAnzeige, Mode=OneWay}" ToolTip="Sollstunden für den aktuellen Monat."/>
                         </Border>
                         <Border Grid.Column="1" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungMonat.IstStundenAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Summe aus Arbeitszeit der Arbeitszeitkorrektur"/>
+                            <TextBlock Text="{Binding AuswertungMonat.IstStundenAnzeige, Mode=OneWay}" ToolTip="Summe aus Arbeitszeit der Arbeitszeitkorrektur"/>
                         </Border>
                         <Border Grid.Column="1" Grid.Row="3" BorderBrush="Blue">
-                            <TextBlock Text="{Binding AuswertungMonat.UeberstundenAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Überstunden = Differenz aus Soll und Ist Stunden"/>
+                            <TextBlock Text="{Binding AuswertungMonat.UeberstundenAnzeige, Mode=OneWay}" ToolTip="Überstunden = Differenz aus Soll und Ist Stunden"/>
                         </Border>
-                        <Button Content="..." Grid.Column="2" Grid.Row="1" Click="btnSollStundenEinstellen_Click" ToolTip="Sollstunde enstellen"/>
+                        <Button Content="..." Grid.Column="2" Grid.Row="1" Command="{x:Static commands:MyCommands.SollStundenAendern}" ToolTip="Sollstunde enstellen"/>
 
                         <Separator Grid.Column="3" Grid.RowSpan="4" >
                             <Separator.LayoutTransform>
@@ -647,18 +593,18 @@
 
                         <Label Content="Feiert." Grid.Column="18"/>
                         <Border Grid.Column="18" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungMonat.FeiertageAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Anzahl der als Arbeitstag anerkannten Feiertage im aktuellen Monat"/>
+                            <TextBlock Text="{Binding AuswertungMonat.FeiertageAnzeige, Mode=OneWay}" ToolTip="Anzahl der als Arbeitstag anerkannten Feiertage im aktuellen Monat"/>
                         </Border>
 
                         <TextBlock Text="Zuschläge" Grid.Column="20" Grid.ColumnSpan="2" FontWeight="Bold"/>
                         <Label Content="Nachtschicht" Grid.Column="20" Grid.Row="1"/>
                         <Border Grid.Column="21" Grid.Row="1" >
-                            <TextBlock Text="{Binding AuswertungMonat.NachtschichtZuschlaegeAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Summe der Korrektur der Nachtschichtzuschläge"/>
+                            <TextBlock Text="{Binding AuswertungMonat.NachtschichtZuschlaegeAnzeige, Mode=OneWay}" ToolTip="Summe der Korrektur der Nachtschichtzuschläge"/>
                         </Border>
 
                         <Label Content="Feiertage" Grid.Column="20" Grid.Row="2"/>
                         <Border Grid.Column="21" Grid.Row="2" >
-                            <TextBlock Text="{Binding AuswertungMonat.FeiertagZuschlaegeAnzeige, Mode=OneWay, Source={StaticResource ArbeitszeitBediener}}" ToolTip="Summe der gewährten Feiertagszuschläge"/>
+                            <TextBlock Text="{Binding AuswertungMonat.FeiertagZuschlaegeAnzeige, Mode=OneWay}" ToolTip="Summe der gewährten Feiertagszuschläge"/>
                         </Border>
 
                         <Button Grid.Column="23" Grid.Row="1" Click="btnOptionen_Click" >

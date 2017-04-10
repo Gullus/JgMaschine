@@ -196,14 +196,14 @@ namespace JgZeitHelper
       return erg;
     }
 
-    public static decimal AufHalbeStundeRunden(TimeSpan Zeitwert)
+    public static TimeSpan AufHalbeStundeRunden(TimeSpan Zeitwert)
     {
       var stunden = (int)Zeitwert.TotalHours;
       if ((Zeitwert.Minutes >= 15) && (Zeitwert.Minutes < 45))
-        return Convert.ToDecimal(stunden + 0.5);
+        return TimeSpan.FromHours(stunden + 0.5);
       else if ((Zeitwert.Minutes >= 45) && (Zeitwert.Minutes <= 59))
-        return stunden + 1;
-      return stunden;
+        return TimeSpan.FromHours(stunden + 1.0);
+      return new TimeSpan(stunden, 0, 0);
     }
 
     public static TimeSpan DatumInZeitSekunde(DateTime DatumZeit)
