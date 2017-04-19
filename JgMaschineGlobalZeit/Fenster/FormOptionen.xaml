@@ -7,7 +7,7 @@
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" mc:Ignorable="d"
     x:Class="JgMaschineGlobalZeit.Fenster.FormOptionen"
     Title="Optionen" Height="452" Width="510" ResizeMode="NoResize" ShowInTaskbar="False"
-    WindowStartupLocation="CenterOwner" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico"     
+    WindowStartupLocation="CenterOwner" Icon="/JgMaschineGlobalZeit;component/JgGlobalZeit.ico"     
     Loaded="Window_Loaded">
     <Window.Resources>
         <CollectionViewSource x:Key="vsFeiertage" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabFeiertage}, CreateList=True}" IsLiveSortingRequested="True">

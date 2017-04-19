@@ -6,54 +6,89 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Threading;
 using JgMaschineData;
 
 namespace JgMaschineLib
 {
-  public abstract class JgEntityList
+  public class JgEntityListEventArgs : EventArgs
+  {
+    public Dictionary<string, object> Params;
+    public bool ErsterDurchlauf;
+    public bool IstSortiert;
+
+    public JgEntityListEventArgs(Dictionary<string, object> NeuParams, bool NeuErsterDurchlauf, bool NeuIstSortierung)
+    {
+      Params = NeuParams;
+      ErsterDurchlauf = NeuErsterDurchlauf;
+      IstSortiert = NeuIstSortierung;
+    }
+  }
+
+  public class JgEntityList<K>
+    where K : class
   {
     protected JgModelContainer _Db;
     public JgModelContainer Db { get { return _Db; } }
 
-    protected int _ZeilenNummer = 0;
-    protected CollectionViewSource _ViewSource = null;
+    public delegate IEnumerable<K> DatenLadenDelegate(JgModelContainer Db, JgEntityListEventArgs EventArg);
+    public DatenLadenDelegate OnDatenLaden = null;
 
-    public bool RefreshAusloesen = false;
-    public bool DatenAnViewSource = true;
+    protected CollectionViewSource _ViewSource = null;
+    public CollectionViewSource ViewSource
+    {
+      get { return _ViewSource; }
+      set
+      {
+        _ViewSource = value;
+        _ViewSource.Source = _Daten;
+      }
+    }
 
     public DataGrid[] Tabellen { get; set; }
-    public abstract CollectionViewSource ViewSource { get; set; }
 
-    public abstract void Refresh();
-  }
+    public Dictionary<string, object> Parameter = new Dictionary<string, object>();
 
-  public class JgEntityList<K> : JgEntityList
-    where K : class
-  {
+    private int _ZeilenNummer = 0;
+    public bool ErsterDurchlauf = true;
+    public bool IstSortierung
+    {
+      get
+      {
+        if (Tabellen?.Length > 0)
+          return Tabellen[0].Columns.Any(a => a.SortDirection != null);
+
+        return false;
+      }
+    }
+
     private ObservableCollection<K> _Daten = new ObservableCollection<K>();
-
-    public Dictionary<string, object> Parameter = null;
-
-    public delegate IEnumerable<K> DatenLadenDelegate(JgModelContainer Db, Dictionary<string, object> Parameter);
-    public DatenLadenDelegate OnDatenLaden = null;
 
     public void DatenLaden()
     {
+      Mouse.OverrideCursor = Cursors.Wait;
+
       if (OnDatenLaden != null)
-        Daten = OnDatenLaden(_Db, Parameter);
+        Daten = OnDatenLaden(_Db, new JgEntityListEventArgs(Parameter, ErsterDurchlauf, IstSortierung));
+
+      ErsterDurchlauf = false;
+
+      Mouse.OverrideCursor = null;
     }
 
     public void DatenAktualisieren()
     {
       if (OnDatenLaden != null)
       {
+        Mouse.OverrideCursor = Cursors.Wait;
+
         MerkeZeile();
 
         var propId = typeof(K).GetProperty("Id");
         var propDateAbleich = typeof(K).GetProperty("DatenAbgleich");
 
-        var lNeu = OnDatenLaden(_Db, Parameter);
+        var lNeu = OnDatenLaden(_Db, new JgEntityListEventArgs(Parameter, ErsterDurchlauf, IstSortierung));
 
         var dicAlt = new SortedDictionary<Guid, K>();
         var dicNeu = new SortedDictionary<Guid, K>();
@@ -78,8 +113,8 @@ namespace JgMaschineLib
             _Daten.Add(dsNeu.Value);
         }
 
-        // geänderte Datensätze aktualisieren
-        if (dicNeu.Count != 0)
+        // geänderte Datensätze aktualisieren, Wenn mehr als 500 Datensätze dann keine Aktualisierung
+        if ((dicNeu.Count != 0) && (dicNeu.Count < 500))
         {
           var sbAbfrageText = new StringBuilder();
           foreach (var ds in dicNeu)
@@ -110,7 +145,10 @@ namespace JgMaschineLib
 
           Refresh();
           GeheZuZeile();
+
         }
+
+        Mouse.OverrideCursor = null;
       }
     }
 
@@ -120,12 +158,12 @@ namespace JgMaschineLib
       set
       {
         _Daten = new ObservableCollection<K>(value);
-        if (DatenAnViewSource && (_ViewSource != null))
+        if (_ViewSource != null)
           _ViewSource.Source = _Daten;
       }
     }
 
-    public void ErgebnissFormular(bool? ErgebnissShowDialog, bool istNeu, K Datensatz)
+    public bool ErgebnissFormular(bool? ErgebnissShowDialog, bool istNeu, K Datensatz)
     {
       if (ErgebnissShowDialog ?? false)
       {
@@ -133,6 +171,8 @@ namespace JgMaschineLib
           Add(Datensatz);
         else
           _Db.SaveChanges();
+
+        return true;
       }
       else if (!istNeu)
       {
@@ -141,6 +181,8 @@ namespace JgMaschineLib
         Refresh();
         GeheZuZeile();
       }
+
+      return false;
     }
 
     public K Current
@@ -148,26 +190,14 @@ namespace JgMaschineLib
       get { return (K)_ViewSource?.View?.CurrentItem; }
     }
 
-    public override CollectionViewSource ViewSource
-    {
-      get { return _ViewSource; }
-      set
-      {
-        _ViewSource = value;
-        if (DatenAnViewSource && (_ViewSource != null))
-          _ViewSource.Source = _Daten;
-      }
-    }
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="Db"></param>
     /// <param name="DatenAnViewSourceBinden">Bei Detailtabellen dürfen die Daten nicht an Viesource gebunden Werden</param>
-    public JgEntityList(JgModelContainer NeuDb, bool DatenAnViewSourceBinden = true)
+    public JgEntityList(JgModelContainer NeuDb)
     {
       _Db = NeuDb;
-      DatenAnViewSource = DatenAnViewSourceBinden;
     }
 
     public void MerkeZeile()
@@ -231,7 +261,10 @@ namespace JgMaschineLib
 
     public void Reload(K DatenSatz = null)
     {
-      _Db.Entry(DatenSatz ?? Current).Reload();
+      var ds = _Db.Entry(DatenSatz ?? Current);
+      
+      if (ds.State == System.Data.Entity.EntityState.Modified)
+        ds.Reload();
     }
 
     public void DsSave(K DatenSatz = null)
@@ -240,7 +273,7 @@ namespace JgMaschineLib
       _Db.SaveChanges();
     }
 
-    public override void Refresh()
+    public void Refresh()
     {
       _ViewSource?.View?.Refresh();
     }

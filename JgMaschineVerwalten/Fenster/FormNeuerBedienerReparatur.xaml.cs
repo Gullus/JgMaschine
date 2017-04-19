@@ -8,7 +8,7 @@ namespace JgMaschineVerwalten.Fenster
 {
   public partial class FormNeuerBedienerReparatur : Window
   {
-    public tabAnmeldungReparatur Anmeldung { get { return (tabAnmeldungReparatur)gridAnmeldungReparatur.DataContext; } }
+    public tabAnmeldungReparatur Anmeldung { get => (tabAnmeldungReparatur)gridAnmeldungReparatur.DataContext; }
 
     public FormNeuerBedienerReparatur(IEnumerable<tabBediener> Bediener)
     {
@@ -17,12 +17,13 @@ namespace JgMaschineVerwalten.Fenster
 
       var anmeldung = new tabAnmeldungReparatur()
       {
+        Id = Guid.NewGuid(),
         Anmeldung = DateTime.Now
       };
 
       var dz = (JgZeit)this.FindResource("dzReparaturVon");
       dz.AnzeigeDatumZeit = anmeldung.Anmeldung;
-      dz.OnNeuerWert = (datum, zeit) => anmeldung.Anmeldung = datum + zeit;
+      dz.OnNeuerWert = (datum, zeit) => anmeldung.AnzeigeAnmeldung = datum + zeit;
 
       gridAnmeldungReparatur.DataContext = anmeldung;
     }

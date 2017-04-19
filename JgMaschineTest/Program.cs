@@ -27,86 +27,22 @@ namespace JgMaschineTest
     static void Main(string[] args)
     {
 
-      var db = new JgModelContainer();
-      db.Database.Connection.ConnectionString = Properties.Settings.Default.Verbindungszeichen;
-      var ds1 = db.tabBauteilSet.ToList();
+      Logger.SetLogWriter(new LogWriterFactory().Create());
+      ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
 
-      var erg = TestId<tabBauteil>(ds1);
-
-
-      var pinfo = typeof(tabBauteil).GetProperty("Id");
-      var pdat = typeof(tabBauteil).GetProperty("DatenAbgleich");
+      Logger.Write("Hallo Ballo");
 
 
-      var ptest = typeof(tabBauteil).GetProperties();
+      var i = 0;
 
-      Dictionary<Guid, DateTime> ll = new Dictionary<Guid, DateTime>();
-
-      foreach (var ds in ds1)
+      try
       {
-        var dabgl = (DatenAbgleich)pdat.GetValue(ds);
-        ll.Add((Guid)pinfo.GetValue(ds), dabgl.Datum);
+        Console.WriteLine(10 / i);
       }
-
-
-      Console.WriteLine("Fertsch");
-
-
-      //Logger.SetLogWriter(new LogWriterFactory().Create());
-      //ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
-
-      var cts = new CancellationTokenSource();
-      var ct = cts.Token;
-
-      // Wenn dieser Task eher als Scanner beendet wird, liegt ein Verbindungsfehler vor;
-
-      var taskKontrolle = Task.Factory.StartNew((Adresse) =>
+      catch (Exception f)
       {
-        try
-        {
-
-          while (true)
-          {
-            Console.WriteLine("Hallo");
-            Thread.Sleep(1000);
-
-            ct.ThrowIfCancellationRequested();
-          }
-        }
-        catch (Exception ex)
-        {
-          Console.WriteLine($"Fehler Task: {ex.Message}");
-        }
-
-        Console.WriteLine("Verlasse Task");
-      }, "Hallo", ct);
-
-      Console.WriteLine("Vor Sleep");
-
-      Thread.Sleep(10000);
-
-      Console.WriteLine("Nach Sleep");
-
-      cts.Cancel();
-
-      Console.WriteLine("Fertsch");
-      Console.ReadKey();
-    }
-
-    public static Dictionary<Guid, DateTime> TestId<T>(List<T> Liste)
-    {
-      var pId = typeof(T).GetProperty("Id");
-      var pAbgl = typeof(T).GetProperty("DatenAbgleich");
-
-      Dictionary<Guid, DateTime> ll = new Dictionary<Guid, DateTime>();
-
-      foreach (var ds in Liste)
-      {
-        var dabgl = (DatenAbgleich)pAbgl.GetValue(ds);
-        ll.Add((Guid)pId.GetValue(ds), dabgl.Datum);
+        ExceptionPolicy.HandleException(f, "Policy");
       }
-
-      return ll;
     }
   }
 

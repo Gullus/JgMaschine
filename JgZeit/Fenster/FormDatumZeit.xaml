@@ -23,7 +23,7 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="tbInformation" TextWrapping="Wrap" Text="Text" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock x:Name="tbInformation" TextWrapping="Wrap" Text="Text" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="15"/>
 
         <Label Content="_Datum" Grid.Row="1" Target="{Binding ElementName=dtpDatum}" Margin="3, 0, 3, 3"/>
         <DatePicker x:Name="dtpDatum" Grid.Column="1" Grid.Row="1" SelectedDate="{Binding Source={StaticResource dzZeit}, Path=AnzeigeDatum}" Margin="2" SelectedDateFormat="Long"/>

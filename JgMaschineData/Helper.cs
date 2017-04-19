@@ -17,37 +17,53 @@ namespace JgMaschineData
   [MetadataType(typeof(tabMaschineMetaData))]
   public partial class tabMaschine
   {
-    public bool Abbruch { get; set; }
-    public string ProtokollAdd
-    {
-      get { return (this.eProtokoll == null) ? "" : this.eProtokoll.ProtokollText; }
-      set
-      {
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-          var lines = value.Split(new string[] { "\n" }, StringSplitOptions.None);
-          var erg = DateTime.Now.ToString("dd:MM HH:mm:ss ") + lines[0] + "\n";
-          for (int i = 1; i < lines.Length; i++)
-            erg += "--             " + lines[i] + "\n";
-
-          this.eProtokoll.ProtokollText += erg;
-        }
-      }
-    }
     public bool IstReparatur
     {
       get { return this.fAktivReparatur != null; }
       set { }
     }
-
   }
 
-  public partial class tabAnmeldungMaschine
+  public partial class tabAnmeldungMaschine : INotifyPropertyChanged
   {
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     public TimeSpan ZeitAngemeldet
     {
       get { return DateTime.Now - this.Anmeldung; }
     }
+
+    public DateTime AnzeigeAnmeldung
+    {
+      get => Anmeldung;
+      set
+      {
+        if (value != Anmeldung)
+        {
+          Anmeldung = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public DateTime? AnzeigeAbmeldung
+    {
+      get => Abmeldung;
+      set
+      {
+        if (value != Abmeldung)
+        {
+          Abmeldung = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
   }
 
   public partial class tabProtokoll
@@ -104,7 +120,6 @@ namespace JgMaschineData
       }
     }
 
-   
     private tabArbeitszeitAuswertung fArbeitszeitHelper = null;
     public tabArbeitszeitAuswertung eArbeitszeitHelper
     {
@@ -120,12 +135,130 @@ namespace JgMaschineData
     }
   }
 
-  public partial class tabReparatur
-  { }
-
-  public partial class tabAnmeldungReparatur
+  public partial class tabReparatur : INotifyPropertyChanged
   {
+    public event PropertyChangedEventHandler PropertyChanged;
+    public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public DateTime AnzeigeVorgangBeginn
+    {
+      get => this.VorgangBeginn;
+      set
+      {
+        if (value != this.VorgangBeginn)
+        {
+          this.VorgangBeginn = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public DateTime? AnzeigeVorgangEnde
+    {
+      get => this.VorgangEnde;
+      set
+      {
+        if (value != this.VorgangEnde)
+        {
+          this.VorgangEnde = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public byte? AnzeigeCoilwechselAnzahl
+    {
+      get => this.CoilwechselAnzahl;
+      set
+      {
+        if (value != this.CoilwechselAnzahl)
+        {
+          this.CoilwechselAnzahl = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public tabBediener AnzeigeVerursacher
+    {
+      get => this.eVerursacher;
+      set
+      {
+        if (value != this.eVerursacher)
+        {
+          this.eVerursacher = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public tabBediener AnzeigeProtokollant
+    {
+      get => this.eProtokollant;
+      set
+      {
+        if (value != this.eProtokollant)
+        {
+          this.eProtokollant = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public string AnzeigeProtokollText
+    {
+      get => this.ProtokollText;
+      set
+      {
+        if (value != this.ProtokollText)
+        {
+          this.ProtokollText = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+
+  }
+
+  public partial class tabAnmeldungReparatur : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler PropertyChanged;
+    public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     public bool IstAktiv { get { return this.Abmeldung == null; } }
+
+    public DateTime AnzeigeAnmeldung
+    {
+      get => Anmeldung;
+      set
+      {
+        if (value != Anmeldung)
+        {
+          Anmeldung = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    public DateTime? AnzeigeAbmeldung
+    {
+      get => Abmeldung;
+      set
+      {
+        if (value != Abmeldung)
+        {
+          Abmeldung = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
   }
 
   public partial class tabStandortMetaData

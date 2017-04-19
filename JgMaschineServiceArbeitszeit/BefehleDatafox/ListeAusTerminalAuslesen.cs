@@ -102,7 +102,7 @@ namespace JgMaschineServiceArbeitszeit
           {
             // Fehlertext ermitteln
             DFComDLL.DFCGetErrorText(Optionen.ChannelId, errorID, 0, errorString, errorString.Capacity);
-            msg = string.Format("Lesen der Datensatzbeschreibung ist fehlgeschlagen.\nFehlerbeschreibung: {0}", errorString);
+            msg = $"Lesen der Datensatzbeschreibung ist fehlgeschlagen.\nFehlerbeschreibung: {errorString}";
             throw new MyException(msg);
           }
 

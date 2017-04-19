@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
     x:Class="JgMaschineGlobalZeit.MainWindow" mc:Ignorable="d" Title="Arbeitszeitverwaltung" 
-    Loaded="Window_Loaded" Closed="Window_Closed" Icon="JgGlobalZeit.ico" WindowStartupLocation="CenterOwner" Width="1368.25" >
+    Loaded="Window_Loaded" Closed="Window_Closed" Icon="JgGlobalZeit.ico" WindowStartupLocation="CenterOwner" Width="1195.25" >
 
     <Window.Resources>
         <jgZeit:JgZeit x:Key="dzArbeitszeitVon" />

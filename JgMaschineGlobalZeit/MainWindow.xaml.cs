@@ -39,7 +39,6 @@ namespace JgMaschineGlobalZeit
 
       Helper.FensterEinstellung(this, Properties.Settings.Default);
       InitCommands();
-
     }
 
     private void InitCommands()
@@ -96,11 +95,14 @@ namespace JgMaschineGlobalZeit
         Tabellen = new DataGrid[] { dgArbeitszeitAuswahl },
         OnDatenLaden = (d, p) =>
         {
-          var datVom = (DateTime)p["DatumVon"];
-          var datBis = (DateTime)p["DatumBis"];
+          var datVom = (DateTime)p.Params["DatumVon"];
+          var datBis = (DateTime)p.Params["DatumBis"];
 
           var lZeiten = d.tabArbeitszeitSet.Where(w => (((w.Anmeldung >= datVom) && (w.Anmeldung <= datBis))
-            || ((w.Anmeldung == null) && (w.Abmeldung >= datVom) && (w.Abmeldung <= datBis)))).ToList();
+            || ((w.Anmeldung == null) && (w.Abmeldung >= datVom) && (w.Abmeldung <= datBis))));
+
+          if (!p.IstSortiert)
+            lZeiten = lZeiten.OrderBy(o => o.Anmeldung);
 
           var listeGerundet = d.tabArbeitszeitRundenSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
           foreach (var zeit in lZeiten.ToList())
@@ -123,30 +125,30 @@ namespace JgMaschineGlobalZeit
         { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
       };
       _ListeArbeitszeitenAuswahl.DatenLaden();
-      _ListeArbeitszeitenAuswahl.Daten = _ListeArbeitszeitenAuswahl.Daten.OrderBy(o => o.Anmeldung).ToList();
-
 
       // Report initialisieren ********************************
 
-      var auswAlle = _Db.tabAuswertungSet
-        .Where(w => ((w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) || (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)) && (!w.DatenAbgleich.Geloescht))
-        .ToList();
-
       _ListeReporteArbeitszeiten = new JgEntityList<tabAuswertung>(_Db)
       {
-        ViewSource = (CollectionViewSource)FindResource("vsReporteArbeitszeit")
+        ViewSource = (CollectionViewSource)FindResource("vsReporteArbeitszeit"),
+        OnDatenLaden = (d, p) =>
+        {
+          return _Db.tabAuswertungSet.Where(w => (w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit) && (!w.DatenAbgleich.Geloescht))
+            .OrderBy(o => o.ReportName).ToList();
+        }
       };
-      _ListeReporteArbeitszeiten.Daten = auswAlle
-        .Where(w => w.FilterAuswertung == EnumFilterAuswertung.Arbeitszeit)
-        .OrderBy(o => o.AnzeigeReportname).ToList();
+      _ListeReporteArbeitszeiten.DatenLaden(); 
 
       _ListeReporteAuswertung = new JgEntityList<tabAuswertung>(_ListeReporteArbeitszeiten.Db)
       {
-        ViewSource = (CollectionViewSource)FindResource("vsReporteAuswertung")
+        ViewSource = (CollectionViewSource)FindResource("vsReporteAuswertung"),
+        OnDatenLaden = (d, p) =>
+        {
+          return  _Db.tabAuswertungSet.Where(w => (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung) && (!w.DatenAbgleich.Geloescht))
+        .OrderBy(o => o.ReportName).ToList();
+        }
       };
-      _ListeReporteAuswertung.Daten = auswAlle
-        .Where(w => w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung)
-        .OrderBy(o => o.AnzeigeReportname).ToList();
+      _ListeReporteAuswertung.DatenLaden();
 
       // Klasse Auswertung intitialisieren
 

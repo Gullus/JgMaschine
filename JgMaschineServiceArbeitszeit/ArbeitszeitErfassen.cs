@@ -282,39 +282,41 @@ namespace JgMaschineServiceArbeitszeit
             }
           }
 
-          // Terminals die erfolgreich geUpdatet wurden eintragen
-
-          var listeTerminals = Optionen.ListeTerminals.Where(w => w.TerminaldatenWurdenAktualisiert).ToList();
-          if (listeTerminals.Count > 0)
+          foreach (var term in Optionen.ListeTerminals)
           {
-            foreach (var terminalUbdate in listeTerminals)
+
+            if ((term.TerminaldatenWurdenAktualisiert)
+              || (term.FehlerTerminalAusgeloest)
+              || ((!term.FehlerTerminalAusgeloest) && (term.AnzahlFehler != 0)))
             {
-              Db.tabArbeitszeitTerminalSet.Attach(terminalUbdate);
-              Db.Entry(terminalUbdate).State = EntityState.Modified;
-              terminalUbdate.UpdateTerminal = false;
-            }
 
-            msg = $"Listen in {listeTerminals.Count} Terminal(s) in Datenbank gespeichert\n{Helper.ListeInString(listeTerminals.Select(s => (" -> " + s.Bezeichnung)).ToArray())}";
-            Logger.Write(msg, "Service", 0, 0, TraceEventType.Information);
-          }
+              Db.tabArbeitszeitTerminalSet.Attach(term);
+              Db.Entry(term).State = EntityState.Modified;
 
-          // Wenn Fehleranzahl erreicht wurde, Fehler anzeigen und FehlerAnzahl auf 0 setzen
+              // Terminals die erfolgreich geUpdatet wurden eintragen
+              if (term.TerminaldatenWurdenAktualisiert)
+                term.UpdateTerminal = false;
 
-          var termMitFehlern = Optionen.ListeTerminals.Where(w => w.FehlerTerminalAusgeloest).ToList();
-          if (termMitFehlern.Count > 0)
-          {
-            foreach(var terminalFehler in termMitFehlern)
-            {
-              Db.tabArbeitszeitTerminalSet.Attach(terminalFehler);
-              Db.Entry(terminalFehler).State = EntityState.Modified;
-
-              terminalFehler.AnzahlFehler = (short)(terminalFehler.AnzahlFehler + 1);
-              if (terminalFehler.AnzahlFehler >= Optionen.AnzahlBisFehlerAusloesen)
+              // Wenn Fehleranzahl erreicht wurde, Fehler anzeigen und FehlerAnzahl auf 0 setzen
+              if (term.FehlerTerminalAusgeloest)
               {
-                terminalFehler.AnzahlFehler = 0;
-                msg = $"Fehler Verbindungsaufbau Terminal {terminalFehler.Bezeichnung} / {terminalFehler.eStandort.Bezeichnung} größer {Optionen.AnzahlBisFehlerAusloesen}.";
-                Logger.Write(msg, "Service", 0, 0, TraceEventType.Error);
+                term.AnzahlFehler = (short)(term.AnzahlFehler + 1);
+
+                if (term.AnzahlFehler >= Optionen.AnzahlBisFehlerAusloesen)
+                {
+                  term.AnzahlFehler = 0;
+                  msg = $"Fehleranzahl Verbindungsaufbau Terminal {term.Bezeichnung} / {term.eStandort.Bezeichnung} größer {Optionen.AnzahlBisFehlerAusloesen}.";
+                  Logger.Write(msg, "Service", 0, 0, TraceEventType.Error);
+                }
               }
+              else
+              {
+                if (term.AnzahlFehler != 0)
+                  term.AnzahlFehler = 0;
+              }
+
+              msg = $"Terminal {term.Bezeichnung} / {term.eStandort.Bezeichnung} aktualisiert.";
+              Logger.Write(msg, "Service", 0, 0, TraceEventType.Verbose);
             }
           }
 

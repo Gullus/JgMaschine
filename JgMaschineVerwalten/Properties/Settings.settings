@@ -58,5 +58,8 @@ Group By maschine.MaschinenName, maschine.Id, (bediener.NachName + ', ' + bedien
 SELECT *, (AnmeldungZeit - ReparaturZeit) as AktivZeit, (SumGewicht /  IIF((AnmeldungZeit - ReparaturZeit) = 0, 1, AnmeldungZeit - ReparaturZeit)) as GewichtStunde 
 FROM #temp</Value>
     </Setting>
+    <Setting Name="FensterEinstellung" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
