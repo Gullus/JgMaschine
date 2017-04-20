@@ -14,6 +14,8 @@ namespace JgMaschineLib.Arbeitszeit
 
     public string MatchCode { get; set; }
     public DateTime Datum { get; set; }
+    public string Baustelle = null;
+
     public Guid? IdStandort { get; set; } = null;
     public EnumVorgang Vorgang = EnumVorgang.Fehler;
     public string Version { get; set; }   // Optional

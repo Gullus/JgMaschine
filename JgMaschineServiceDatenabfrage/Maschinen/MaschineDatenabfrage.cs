@@ -85,7 +85,6 @@ namespace JgMaschineServiceDatenabfrage
             {
               msg = $"Fehler import Daten in Maschine {maschine.MaschinenName}\nGrund: {f.Message}";
               maschine.eProtokoll.FehlerDatenImport++;
-              maschine.ProtokollAdd = msg;
               Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
               continue;
             }

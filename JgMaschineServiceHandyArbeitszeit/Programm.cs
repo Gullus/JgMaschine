@@ -60,7 +60,7 @@ namespace JgMaschineServiceHandyArbeitszeit
       base.OnStart(args);
 
       var msg = "ServiceTask startet!";
-      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
+      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Start);
 
       var t = new Task((azHandy) =>
       {
@@ -76,7 +76,7 @@ namespace JgMaschineServiceHandyArbeitszeit
       base.OnShutdown();
 
       var msg = "Service wurde heruntergefahren!";
-      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
+      Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Stop);
     }
   }
 

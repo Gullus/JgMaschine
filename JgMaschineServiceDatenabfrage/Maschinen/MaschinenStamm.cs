@@ -23,7 +23,6 @@ namespace JgMaschineServiceDatenabfrage.Maschinen
         var msg = $"Directory {Pfad} nicht vorhanden !";
         Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Warning);
         Maschine.eProtokoll.FehlerPfadZurMaschine++;
-        Maschine.ProtokollAdd = msg;
         return false;
       }
       return true;
@@ -64,7 +63,6 @@ namespace JgMaschineServiceDatenabfrage.Maschinen
       {
         var anzErfolg = _Db.Database.ExecuteSqlCommand(sb.ToString(), null);
         var msg = $"Datensätze aktualisiert: {anzErfolg} von {Ergebnisse.Count}";
-        Maschine.ProtokollAdd = msg;
         if (anzErfolg == Ergebnisse.Count)
           Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Verbose);
         else

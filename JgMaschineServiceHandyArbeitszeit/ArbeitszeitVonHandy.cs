@@ -172,7 +172,8 @@ namespace JgMaschineServiceHandyArbeitszeit
       {
         Datum = s.timestamp,
         MatchCode = s.userId,
-        Vorgang = s.isCheckIn ? ArbeitszeitImportDaten.EnumVorgang.Komme : ArbeitszeitImportDaten.EnumVorgang.Gehen
+        Vorgang = s.isCheckIn ? ArbeitszeitImportDaten.EnumVorgang.Komme : ArbeitszeitImportDaten.EnumVorgang.Gehen,
+        Baustelle = s.construction        
       }).ToList();
 
       var msg = "";

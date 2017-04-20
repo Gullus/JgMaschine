@@ -26,12 +26,11 @@ namespace JgMaschineLib.Arbeitszeit
                           group z by z.MatchCode into erg
                           select new { MatchCode = erg.Key, Anmeldungen = erg.OrderBy(o => o.Datum) };
 
-      var sMatchCodes = string.Join(",", lArbeitzeiten.Select(s => s.MatchCode));
-      var listeBediener = Db.tabBedienerSet.Where(w => sMatchCodes.Contains(w.MatchCode))
+      var listeMatchCodes = lArbeitzeiten.Select(s => s.MatchCode).ToArray();
+      var listeBediener = Db.tabBedienerSet.Where(w => listeMatchCodes.Contains(w.MatchCode))
         .Include(i => i.eAktivArbeitszeit)
         .ToDictionary(t => t.MatchCode, t => t);
       var listeStandorte = Db.tabStandortSet.ToDictionary(t => t.Id, t => t);
-
 
       foreach (var mc in lArbeitzeiten)
       {
@@ -59,7 +58,7 @@ namespace JgMaschineLib.Arbeitszeit
 
           if (anm.Vorgang == ArbeitszeitImportDaten.EnumVorgang.Komme)
           {
-            var arbZeit = ArbeitszeitErstellen(bediener.Id, standort.Id, anm.Datum);
+            var arbZeit = ArbeitszeitErstellen(bediener.Id, standort.Id, anm.Datum, anm.Baustelle);
             Db.tabArbeitszeitSet.Add(arbZeit);
             bediener.eAktivArbeitszeit = arbZeit;
           }
@@ -73,7 +72,7 @@ namespace JgMaschineLib.Arbeitszeit
             }
             else
             {
-              var arbZeit = ArbeitszeitErstellen(bediener.Id, standort.Id, anm.Datum);
+              var arbZeit = ArbeitszeitErstellen(bediener.Id, standort.Id, anm.Datum, anm.Baustelle);
               Db.tabArbeitszeitSet.Add(arbZeit);
             }
           }
@@ -81,7 +80,7 @@ namespace JgMaschineLib.Arbeitszeit
       }
     }
 
-    private tabArbeitszeit ArbeitszeitErstellen(Guid IdBediener, Guid IdStandort, DateTime DatumAnmeldung)
+    private tabArbeitszeit ArbeitszeitErstellen(Guid IdBediener, Guid IdStandort, DateTime DatumAnmeldung, string VonBaustelle)
     {
       return new tabArbeitszeit()
       {
@@ -91,6 +90,7 @@ namespace JgMaschineLib.Arbeitszeit
         Anmeldung = DatumAnmeldung,
         ManuelleAnmeldung = false,
         ManuelleAbmeldung = false,
+        Baustelle = VonBaustelle
       };
     }
   }
