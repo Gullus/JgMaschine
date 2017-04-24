@@ -4,7 +4,7 @@
     xmlns:ec="http://schemas.microsoft.com/expression/2010/controls" 
     xmlns:local="clr-namespace:JgZeitHelper"   
     x:Class="JgZeitHelper.Fenster.FormDatumZeit"
-    Title="Terminabfrage" Height="200" Width="416.18" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
+    Title="Terminabfrage" Height="200" Width="385.765" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
 
     <Window.Resources>
         <local:JgZeit x:Key="dzZeit" />
@@ -15,6 +15,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="60"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -28,8 +29,9 @@
         <Label Content="_Datum" Grid.Row="1" Target="{Binding ElementName=dtpDatum}" Margin="3, 0, 3, 3"/>
         <DatePicker x:Name="dtpDatum" Grid.Column="1" Grid.Row="1" SelectedDate="{Binding Source={StaticResource dzZeit}, Path=AnzeigeDatum}" Margin="2" SelectedDateFormat="Long"/>
 
-        <Label Content="_Zeit" Target="{Binding ElementName=tbZeit}" Grid.Column="2" Grid.Row="1" Margin="3, 0, 3, 3"/>
+        <Label Content=":" Grid.Column="2" Grid.Row="1" Margin="3, 0, 3, 3"/>
         <TextBox x:Name="tbZeit" Grid.Column="3" Grid.Row="1" Margin="2, 2, 6, 2" Text="{Binding Source={StaticResource dzZeit}, Path=AnzeigeZeit24}" Padding="5,2,0,0" />
+        <CheckBox x:Name="cbDatumLeer" Content="Leer" Margin="6" Grid.Column="4" Grid.Row="1" />
 
         <Grid Grid.ColumnSpan="6" Grid.Row="2">
             <Grid.ColumnDefinitions>

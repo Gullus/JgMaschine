@@ -34,10 +34,10 @@ namespace JgMaschineServiceScanner
 #if DEBUG
 
       var scanner = new ScannerProgramm(scOptionen);
-      var task = new Task(() =>
+      var task = new Task((scTask) =>
       {
-        scanner.Start(); ;
-      });
+        (scTask as ScannerProgramm).Start(); ;
+      }, scanner, TaskCreationOptions.LongRunning);
       task.Start();
 
       Console.WriteLine("Scanner Gestartet");
@@ -70,10 +70,10 @@ namespace JgMaschineServiceScanner
       var msg = "Scannerservice starten!";
       Logger.Write(msg, "Service", 0, 0, System.Diagnostics.TraceEventType.Start);
 
-      var task = new Task(() =>
+      var task = new Task((scTask) =>
       {
-        _ScannProgramm.Start(); ;
-      });
+        (scTask as ScannerProgramm).Start();
+      }, _ScannProgramm, TaskCreationOptions.LongRunning);
       task.Start();
     }
 

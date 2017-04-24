@@ -4,7 +4,7 @@
     xmlns:ec="http://schemas.microsoft.com/expression/2010/controls" 
     xmlns:local="clr-namespace:JgZeitHelper"   
     x:Class="JgZeitHelper.Fenster.FormDatumZeitVonBis"
-    Title="Terminabfrage" Height="252" Width="416.18" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
+    Title="Terminabfrage" Height="252" Width="443.18" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
 
     <Window.Resources>
         <local:JgZeit x:Key="dzZeitVon" />
@@ -16,6 +16,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="60"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -30,15 +31,16 @@
         <Label Content="_Datum vom" Grid.Row="1" Target="{Binding ElementName=dtpDatumVon}" Margin="3, 0, 3, 3"/>
         <DatePicker x:Name="dtpDatumVon" Grid.Column="1" Grid.Row="1" SelectedDate="{Binding Source={StaticResource dzZeitVon}, Path=AnzeigeDatum}" Margin="2" SelectedDateFormat="Long"/>
 
-        <Label Content="_Zeit" Target="{Binding ElementName=tbZeitVon}" Grid.Column="2" Grid.Row="1" Margin="3, 0, 3, 3"/>
+        <Label Content=":" Grid.Column="2" Grid.Row="1" Margin="3, 0, 3, 3"/>
         <TextBox x:Name="tbZeitVon" Grid.Column="3" Grid.Row="1" Margin="2, 2, 6, 2" Text="{Binding Source={StaticResource dzZeitVon}, Path=AnzeigeZeit24}" Padding="5,2,0,0" />
-
+        <CheckBox x:Name="cbDatumVonLeer" Grid.Column="4" Grid.Row="1" Margin="6" Content="Leer"/>
 
         <Label Content="D_atum bis" Grid.Row="2" Target="{Binding ElementName=dtpDatumBis}" Margin="3, 0, 3, 3"/>
         <DatePicker x:Name="dtpDatumBis" Grid.Column="1" Grid.Row="2" SelectedDate="{Binding Source={StaticResource dzZeitBis}, Path=AnzeigeDatum}" Margin="2" SelectedDateFormat="Long"/>
 
-        <Label Content="Z_eit" Target="{Binding ElementName=tbZeitBis}" Grid.Column="2" Grid.Row="2" Margin="3, 0, 3, 3"/>
+        <Label Content=":" Grid.Column="2" Grid.Row="2" Margin="3, 0, 3, 3"/>
         <TextBox x:Name="tbZeitBis" Grid.Column="3" Grid.Row="2" Margin="2, 2, 6, 2" Text="{Binding Source={StaticResource dzZeitBis}, Path=AnzeigeZeit24}" Padding="5,2,0,0" />
+        <CheckBox x:Name="cbDatumBisLeer" Grid.Column="4" Grid.Row="2" Margin="6" Content="Leer"/>
 
         <Grid Grid.ColumnSpan="6" Grid.Row="3">
             <Grid.ColumnDefinitions>

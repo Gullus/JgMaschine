@@ -18,7 +18,7 @@ namespace JgGlobalZeit.Fenster
       gridTerminal.DataContext = NeuTerminal ?? new tabArbeitszeitTerminal();
     }
 
-    private void btnOk_Click(object sender, RoutedEventArgs e)
+    private void BtnOk_Click(object sender, RoutedEventArgs e)
     {
       DialogResult = true;
     }

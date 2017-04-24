@@ -29,7 +29,7 @@ namespace JgMaschineLib
       pgConnectionString.SelectedObject = csb;
     }
 
-    private void btnTesten_Click(object sender, EventArgs e)
+    private void BtnTesten_Click(object sender, EventArgs e)
     {
       SqlConnection cl = new SqlConnection(ConnectionString);
       try
@@ -46,7 +46,7 @@ namespace JgMaschineLib
       MessageBox.Show("Verbindungsaufbau erfolgreich !", "Erfolg !", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
-    private void btnEintragen_Click(object sender, EventArgs e)
+    private void BtnEintragen_Click(object sender, EventArgs e)
     {
       DialogResult = System.Windows.Forms.DialogResult.OK;
     }

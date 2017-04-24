@@ -192,32 +192,32 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
                         <ComboBox ItemsSource="{Binding Source={StaticResource vsReporteAnmeldung}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
+                        <Button Click="BtnDrucken_Click" Grid.Column="2" Tag="1">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
+                        <Button Click="BtnDrucken_Click" Grid.Column="3" Tag="2">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
+                        <Button Click="BtnDrucken_Click" Grid.Column="4" Tag="3">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
+                        <Button Click="BtnDrucken_Click" Grid.Column="5" Tag="4">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Content="Export" Click="btnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
-                        <Button Content="Löschen" Click="btnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
+                        <Button Content="Export" Click="BtnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
+                        <Button Content="Löschen" Click="BtnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
                     </Grid>
 
                 </Grid>
@@ -302,32 +302,32 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
                         <ComboBox ItemsSource="{Binding Source={StaticResource vsReporteBauteil}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
+                        <Button Click="BtnDrucken_Click" Grid.Column="2" Tag="1">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
                                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
+                        <Button Click="BtnDrucken_Click" Grid.Column="3" Tag="2">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
+                        <Button Click="BtnDrucken_Click" Grid.Column="4" Tag="3">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
+                        <Button Click="BtnDrucken_Click" Grid.Column="5" Tag="4">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Content="Export" Click="btnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
-                        <Button Content="Löschen" Click="btnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
+                        <Button Content="Export" Click="BtnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
+                        <Button Content="Löschen" Click="BtnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
                     </Grid>
                     <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="15" ItemsSource="{Binding Source={StaticResource vsBedienerBauteil}}" Grid.Row="3">
                         <DataGrid.Columns>
@@ -548,32 +548,32 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Auswertung" />
                         <ComboBox ItemsSource="{Binding Source={StaticResource vsReporteReparatur}}" DisplayMemberPath="ReportName" Grid.Column="1"/>
-                        <Button Click="btnDrucken_Click" Grid.Column="2" Tag="1">
+                        <Button Click="BtnDrucken_Click" Grid.Column="2" Tag="1">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgTextDocument.ico" Height="14"/>
                                 <TextBlock Text=" Anzeigen" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="3" Tag="2">
+                        <Button Click="BtnDrucken_Click" Grid.Column="3" Tag="2">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgPrint.ico" Height="14"/>
                                 <TextBlock Text=" Drucken" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="4" Tag="3">
+                        <Button Click="BtnDrucken_Click" Grid.Column="4" Tag="3">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgEdit.ico" Height="14"/>
                                 <TextBlock Text=" Bearbeiten" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="btnDrucken_Click" Grid.Column="5" Tag="4">
+                        <Button Click="BtnDrucken_Click" Grid.Column="5" Tag="4">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgNew.ico" Height="14"/>
                                 <TextBlock Text=" Neuer Rep." VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Content="Export" Click="btnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
-                        <Button Content="Löschen" Click="btnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
+                        <Button Content="Export" Click="BtnDrucken_Click" Grid.Column="6" Tag="5" ToolTip="Report eeportieren" />
+                        <Button Content="Löschen" Click="BtnDrucken_Click" Grid.Column="7" Tag="6" ToolTip="Report löschen" />
                     </Grid>
 
                 </Grid>

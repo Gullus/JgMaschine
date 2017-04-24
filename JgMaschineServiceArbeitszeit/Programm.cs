@@ -36,11 +36,10 @@ namespace JgMaschineServiceArbeitszeit
       msg = $"Arbeitszeit startet!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
-      var task = new Task((azerf) =>
+      var task = new Task((azTask) =>
       {
-        var az = (ArbeitszeitErfassen)azerf;
-        az.Start();
-      }, _ArbeitszeitErfassung);
+        (azTask as ArbeitszeitErfassen).Start();
+      }, _ArbeitszeitErfassung, TaskCreationOptions.LongRunning);
       task.Start();
 
       Console.WriteLine("Service läuft. Beendigung mit einer Taste...");
@@ -72,10 +71,10 @@ namespace JgMaschineServiceArbeitszeit
       var msg = "ServiceTask startet!";
       Logger.Write(msg, "Service", 1, 0, System.Diagnostics.TraceEventType.Information);
 
-      var task = new Task(() =>
+      var task = new Task((azTask) =>
       {
-        _ArbErfassung.Start();
-      });
+        (azTask as ArbeitszeitErfassen).Start();
+      }, _ArbErfassung, TaskCreationOptions.LongRunning);
       task.Start();
     }
 

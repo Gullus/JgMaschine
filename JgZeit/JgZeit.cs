@@ -240,12 +240,12 @@ namespace JgZeitHelper
       return ZeitInString(zeit);
     }
 
-    public static bool AbfrageZeit(string AnzeigeText, string Caption, ref DateTime Datum)
+    public static bool AbfrageZeit(string AnzeigeText, string Caption, ref DateTime? DatumZeit, bool DatumNullZulassen)
     {
-      var fo = new Fenster.FormDatumZeit(Caption, AnzeigeText, Datum);
+      var fo = new Fenster.FormDatumZeit(Caption, AnzeigeText, DatumZeit, DatumNullZulassen);
       if (fo.ShowDialog() ?? false)
       {
-        Datum = fo.DatumZeit;
+        DatumZeit = fo.DatumZeit;
         return true;
       }
       else
@@ -257,13 +257,13 @@ namespace JgZeitHelper
       return new DateTime(Datum.Year, Datum.Month, Datum.Day, Datum.Hour, Datum.Minute, 0);
     }
    
-    public static bool AbfrageZeit(string AnzeigeText, string Caption, ref DateTime DatumVon, ref DateTime DatumBis)
+    public static bool AbfrageZeit(string AnzeigeText, string Caption, ref DateTime? DatumZeitVon, bool DatumVonNullZulassen, ref DateTime? DatumZeitBis, bool DatumBisNullZulassen)
     {
-      var fo = new Fenster.FormDatumZeitVonBis(Caption, AnzeigeText, DatumVon, DatumBis);
+      var fo = new Fenster.FormDatumZeitVonBis(Caption, AnzeigeText, DatumZeitVon, DatumVonNullZulassen, DatumZeitBis, DatumBisNullZulassen);
       if (fo.ShowDialog() ?? false)
       {
-        DatumVon = fo.DatumZeitVon;
-        DatumBis = fo.DatumZeitBis;
+        DatumZeitVon = fo.DatumZeitVon;
+        DatumZeitBis = fo.DatumZeitBis;
         return true;
       }
       else

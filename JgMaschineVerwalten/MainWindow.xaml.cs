@@ -375,9 +375,9 @@ namespace JgMaschineVerwalten
     {
       var reparatur = _ListeReparaturen.Current;
       var anzeigeText = $"Maschine {reparatur.eMaschine.MaschinenName} mit Vorgang {reparatur.Vorgang} abmelden?";
-      var ergZeitAbfrage = DateTime.Now;
+      var ergZeitAbfrage = (DateTime?)DateTime.Now;
 
-      if (JgZeit.AbfrageZeit(anzeigeText, "Abmeldung", ref ergZeitAbfrage))
+      if (JgZeit.AbfrageZeit(anzeigeText, "Abmeldung", ref ergZeitAbfrage, false))
       {
         var repBedienerAustragen = reparatur.sAnmeldungen.Where(w => w.IstAktiv).ToList();
         foreach (var bediener in repBedienerAustragen)
@@ -404,9 +404,9 @@ namespace JgMaschineVerwalten
       var dsRepBenutzer = (tabAnmeldungReparatur)cvsRepBenutzer.View.CurrentItem;
 
       string anzeigeText = $"Möchten Sie den Bediener {dsRepBenutzer.eBediener.Name} von der Reparatur an Maschine {dsRepBenutzer.eReparatur.eMaschine.MaschinenName} abmelden ?";
-      var zeitAbmeldung = dsRepBenutzer.Abmeldung ?? DateTime.Now;
+      var zeitAbmeldung = (DateTime?)(dsRepBenutzer.Abmeldung ?? DateTime.Now);
 
-      if (JgZeit.AbfrageZeit(anzeigeText, "Abmeldung", ref zeitAbmeldung))
+      if (JgZeit.AbfrageZeit(anzeigeText, "Abmeldung", ref zeitAbmeldung, false))
       {
         dsRepBenutzer.Abmeldung = zeitAbmeldung;
         _Db.SaveChanges();
@@ -419,16 +419,28 @@ namespace JgMaschineVerwalten
       var anmeldung = (tabAnmeldungReparatur)colView.View.CurrentItem;
       string anzeigeText = $"Reparaturzeiten für den Bediener {anmeldung.eBediener.Name} an Maschin {anmeldung.eReparatur.eMaschine.MaschinenName} bearbeiten.";
 
-      var zeitAnmeldung = anmeldung.Anmeldung;
-      var zeitAbmeldung = anmeldung.Abmeldung ?? DateTime.Now;
+      var zeitAnmeldung = (DateTime?)anmeldung.Anmeldung;
+      var zeitAbmeldung = anmeldung.Abmeldung;
 
-      if (JgZeit.AbfrageZeit(anzeigeText, "Anmeldung Maschine bearbeiten", ref zeitAnmeldung, ref zeitAbmeldung))
+      if (JgZeit.AbfrageZeit(anzeigeText, "Anmeldung Maschine bearbeiten", ref zeitAnmeldung, false, ref zeitAbmeldung, true))
       {
-        anmeldung.Anmeldung = zeitAnmeldung;
-        anmeldung.Abmeldung = zeitAbmeldung;
-        _ListeReparaturAuswahl.Db.SaveChanges();
-        colView.View.Refresh();
-        colView.View.MoveCurrentTo(anmeldung);
+        var safe = false;
+        if (anmeldung.Anmeldung != zeitAnmeldung)
+        {
+          anmeldung.Anmeldung = zeitAnmeldung.Value;
+          safe = true;
+        }
+        if (anmeldung.Abmeldung != zeitAbmeldung)
+        {
+          anmeldung.Abmeldung = zeitAbmeldung;
+          safe = true;
+        }
+        if (safe)
+        {
+          _Db.SaveChanges();
+          colView.View.Refresh();
+          colView.View.MoveCurrentTo(anmeldung);
+        }
       }
     }
 
@@ -450,11 +462,11 @@ namespace JgMaschineVerwalten
     {
       var anmeldung = _ListeAnmeldungen.Current;
       var msg = $"Möchten Sie den Bediener {anmeldung.eBediener.Name} von der Maschine {anmeldung.eMaschine.MaschinenName} abmelden ?";
-      var zeitAbmeldung = anmeldung.Abmeldung ?? DateTime.Now;
+      var zeitAbmeldung = (DateTime?)(anmeldung.Abmeldung ?? DateTime.Now);
 
-      if (JgZeit.AbfrageZeit(msg, "Abmeldung", ref zeitAbmeldung))
+      if (JgZeit.AbfrageZeit(msg, "Abmeldung", ref zeitAbmeldung, false))
       {
-        anmeldung.Abmeldung = zeitAbmeldung;
+        anmeldung.AnzeigeAbmeldung = zeitAbmeldung;
         anmeldung.ManuelleAbmeldung = true;
         anmeldung.eAktivMaschine = null;
         _ListeAnmeldungen.Remove(anmeldung);
@@ -466,7 +478,7 @@ namespace JgMaschineVerwalten
 
         _ListeAnmeldungen.DsSave(anmeldung);
 
-        GeheZu(_Maschine?.Id );
+        GeheZu(_Maschine?.Id);
         _ListeMaschinen.Refresh();
       }
     }
@@ -475,22 +487,26 @@ namespace JgMaschineVerwalten
     {
       var anmeldung = _ListeAnmeldungAuswahl.Current;
       var msg = $"Korrektur der Arbeitszeit für den Mitarbeiter {anmeldung.eBediener.Name}.";
-      var zeitAnmeldung = anmeldung.Anmeldung;
-      var zeitAbmeldung = anmeldung.Abmeldung ?? DateTime.Now;
+      var zeitAnmeldung = (DateTime?)anmeldung.Anmeldung;
+      var zeitAbmeldung = anmeldung.Abmeldung;
 
-      if (JgZeit.AbfrageZeit(msg, "Berichtigung Arbeitszeit", ref zeitAnmeldung, ref zeitAbmeldung))
+      if (JgZeit.AbfrageZeit(msg, "Berichtigung Arbeitszeit", ref zeitAnmeldung, false, ref zeitAbmeldung, true))
       {
+        bool safe = false;
         if (zeitAnmeldung != anmeldung.Anmeldung)
         {
-          anmeldung.AnzeigeAnmeldung = zeitAnmeldung;
+          anmeldung.AnzeigeAnmeldung = zeitAnmeldung.Value;
           anmeldung.ManuelleAnmeldung = true;
+          safe = true;
         }
         if (zeitAbmeldung != anmeldung.Abmeldung)
         {
           anmeldung.AnzeigeAbmeldung = zeitAbmeldung;
           anmeldung.ManuelleAbmeldung = true;
+          safe = true;
         }
-        _ListeAnmeldungAuswahl.DsSave();
+        if (safe)
+          _ListeAnmeldungAuswahl.DsSave();
       } 
     }
 
@@ -551,7 +567,7 @@ namespace JgMaschineVerwalten
       }
     }
 
-    private void btnDrucken_Click(object sender, RoutedEventArgs e)
+    private void BtnDrucken_Click(object sender, RoutedEventArgs e)
     {
       var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report, 5 - Report Exportieren, 6 - Löschen
 

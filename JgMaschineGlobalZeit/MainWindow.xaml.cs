@@ -137,15 +137,15 @@ namespace JgMaschineGlobalZeit
             .OrderBy(o => o.ReportName).ToList();
         }
       };
-      _ListeReporteArbeitszeiten.DatenLaden(); 
+      _ListeReporteArbeitszeiten.DatenLaden();
 
       _ListeReporteAuswertung = new JgEntityList<tabAuswertung>(_ListeReporteArbeitszeiten.Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsReporteAuswertung"),
         OnDatenLaden = (d, p) =>
         {
-          return  _Db.tabAuswertungSet.Where(w => (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung) && (!w.DatenAbgleich.Geloescht))
-        .OrderBy(o => o.ReportName).ToList();
+          return _Db.tabAuswertungSet.Where(w => (w.FilterAuswertung == EnumFilterAuswertung.ArbeitszeitAuswertung) && (!w.DatenAbgleich.Geloescht))
+            .OrderBy(o => o.ReportName).ToList();
         }
       };
       _ListeReporteAuswertung.DatenLaden();
@@ -159,8 +159,10 @@ namespace JgMaschineGlobalZeit
 
       // Report für Auswertung erstellen
 
-      _Report = new FastReport.Report();
-      _Report.FileName = "Datenbank";
+      _Report = new FastReport.Report()
+      {
+        FileName = "Datenbank"
+      };
       _ReportSettings.CustomSaveReport += (obj, repEvent) =>
       {
         MemoryStream memStr = new MemoryStream();
@@ -191,18 +193,20 @@ namespace JgMaschineGlobalZeit
     {
       var az = _ListeArbeitszeitenAuswahl.Current;
       var msg = $"Korrektur der Arbeitszeit für den Mitarbeiter {az.eBediener.Name}.";
-      var anm = az.Anmeldung ?? DateTime.Now;
-      var abm = az.Abmeldung ?? new DateTime(anm.Year, anm.Month, anm.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
+      var anmeldung = (DateTime?)(az.Anmeldung ?? DateTime.Now);
+      var abmeldung = az.Abmeldung;
 
-      if (JgZeit.AbfrageZeit(msg, " Zeitabfrage !", ref anm, ref abm))
+      if (JgZeit.AbfrageZeit(msg, " Zeitabfrage !", ref anmeldung, false, ref abmeldung, true))
       {
         var sichern = false;
-        if (anm != JgZeit.RundeDatumAufMinute(az.Anmeldung.Value))
+        if (anmeldung != az.Anmeldung)
         {
+          az.AnzeigeAnmeldung = anmeldung;
           az.AnmeldungGerundetWert = null;
-          if (anm != null)
+          if (anmeldung != null)
           {
-            var zeit = JgZeit.DatumInZeitMinute(anm);
+            var zeit = JgZeit.DatumInZeitMinute(anmeldung.Value);
+            var anm = anmeldung.Value;
             var azBegin = _Erstellung.Db.tabArbeitszeitRundenSet.FirstOrDefault(w =>
               (w.fStandort == az.fStandort)
               && (zeit >= w.ZeitVon) && (zeit <= w.ZeitBis)
@@ -210,14 +214,12 @@ namespace JgMaschineGlobalZeit
             if (azBegin != null)
               az.AnmeldungGerundetWert = anm.Date + azBegin.RundenArbeitszeitBeginn;
           }
-
-          az.AnzeigeAnmeldung = anm;
           sichern = true;
         }
 
-        if (abm != JgZeit.RundeDatumAufMinute(az.Abmeldung.Value))
+        if (abmeldung != az.Abmeldung)
         {
-          az.AnzeigeAbmeldung = abm;
+          az.AnzeigeAbmeldung = abmeldung;
           sichern = true;
         }
 
@@ -231,7 +233,7 @@ namespace JgMaschineGlobalZeit
       Properties.Settings.Default.Save();
     }
 
-    private void btnDrucken_Click(object sender, RoutedEventArgs e)
+    private void BtnDrucken_Click(object sender, RoutedEventArgs e)
     {
       _Report.Clear();
       var vorgang = Convert.ToInt32((sender as Button).Tag);  // 1 - Anzeigen, 2 - Drucken, 3 - Design, 4 - Neuer Report, 5 - Report Exportieren, 6 - Löschen
@@ -265,10 +267,12 @@ namespace JgMaschineGlobalZeit
             }
             return;
           case 5: // Exportieren
-            SaveFileDialog dia = new SaveFileDialog();
-            dia.FileName = _AktuellerReport.ReportName;
-            dia.Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*";
-            dia.FilterIndex = 1;
+            SaveFileDialog dia = new SaveFileDialog()
+            {
+              FileName = _AktuellerReport.ReportName,
+              Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*",
+              FilterIndex = 1
+            };
             if (dia.ShowDialog() ?? false)
             {
               _Report.Save(dia.FileName);
@@ -425,7 +429,7 @@ namespace JgMaschineGlobalZeit
         }
     }
 
-    private void btnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
+    private void BtnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
     {
       _ListeArbeitszeitenAuswahl.Parameter = new Dictionary<string, object>()
       {
@@ -435,21 +439,21 @@ namespace JgMaschineGlobalZeit
       _ListeArbeitszeitenAuswahl.DatenAktualisieren();
     }
 
-    private void btnOptionen_Click(object sender, RoutedEventArgs e)
+    private void BtnOptionen_Click(object sender, RoutedEventArgs e)
     {
       var formOptionen = new Fenster.FormOptionen(_Erstellung);
       formOptionen.ShowDialog();
       _Erstellung.Db.SaveChanges();
     }
 
-    private void btnSollStundenEinstellen_Click(object sender, RoutedEventArgs e)
+    private void BtnSollStundenEinstellen_Click(object sender, RoutedEventArgs e)
     {
       var form = new FormSollstundenEinstellen(_Erstellung.AktuellerBediener.eArbeitszeitHelper.SollStunden);
       if (form.ShowDialog() ?? false)
         _Erstellung.AzBediener.SetSollstunden(form.Sollstunden);
     }
 
-    private void btnAuswertungErledigt_Click(object sender, RoutedEventArgs e)
+    private void BtnAuswertungErledigt_Click(object sender, RoutedEventArgs e)
     {
       var bediener = _Erstellung.AktuellerBediener;
       if (bediener?.eArbeitszeitHelper != null)
@@ -474,7 +478,7 @@ namespace JgMaschineGlobalZeit
         var min = (Zeit.Minutes < 0 ? -1 * Zeit.Minutes : Zeit.Minutes).ToString("D2");
         var sec = (Zeit.Seconds < 0 ? -1 * Zeit.Seconds : Zeit.Seconds).ToString("D2");
 
-        return string.Format(AusgabeFormat, hours, min, sec); 
+        return string.Format(AusgabeFormat, hours, min, sec);
       }
       catch (Exception f)
       {
@@ -483,7 +487,7 @@ namespace JgMaschineGlobalZeit
       return "";
     }
 
-    private void btnExporteren_Click(object sender, RoutedEventArgs e)
+    private void BtnExporteren_Click(object sender, RoutedEventArgs e)
     {
       var datName = Properties.Settings.Default.NameXmlDatei;
       if (string.IsNullOrWhiteSpace(datName))

@@ -22,14 +22,13 @@ namespace JgMaschineServiceHandyArbeitszeit
 
 #if DEBUG
 
-        var prop = Properties.Settings.Default;
+      var prop = Properties.Settings.Default;
       var arbeitszeitHandy = new ArbeitszeitVonHandy(prop.ConnectionString, prop.PortNummerServer);
 
       var t = new Task((azHandy) =>
       {
-        var az = (ArbeitszeitVonHandy)azHandy;
-        az.Start();
-      }, arbeitszeitHandy);
+        (azHandy as ArbeitszeitVonHandy).Start();
+      }, arbeitszeitHandy, TaskCreationOptions.LongRunning);
       t.Start();
 
       Console.WriteLine("Dienst Arbeitszeit Handy läuft....");
@@ -64,9 +63,8 @@ namespace JgMaschineServiceHandyArbeitszeit
 
       var t = new Task((azHandy) =>
       {
-        var az = (ArbeitszeitVonHandy)azHandy;
-        az.Start();
-      }, _ArbeitszeitHandy);
+        (azHandy as ArbeitszeitVonHandy).Start();
+      }, _ArbeitszeitHandy, TaskCreationOptions.LongRunning);
       t.Start();
     }
 

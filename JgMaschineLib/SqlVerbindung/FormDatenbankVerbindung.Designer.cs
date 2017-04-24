@@ -84,7 +84,7 @@
       this.btnTesten.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.btnTesten.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.btnTesten.UseVisualStyleBackColor = true;
-      this.btnTesten.Click += new System.EventHandler(this.btnTesten_Click);
+      this.btnTesten.Click += new System.EventHandler(this.BtnTesten_Click);
       // 
       // btnEintragen
       // 
@@ -100,7 +100,7 @@
       this.btnEintragen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.btnEintragen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.btnEintragen.UseVisualStyleBackColor = true;
-      this.btnEintragen.Click += new System.EventHandler(this.btnEintragen_Click);
+      this.btnEintragen.Click += new System.EventHandler(this.BtnEintragen_Click);
       // 
       // btnAbbrechen
       // 
