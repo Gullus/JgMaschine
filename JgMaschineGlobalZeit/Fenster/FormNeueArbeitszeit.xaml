@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JgMaschineGlobalZeit.Fenster"
-        xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
-        xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" x:Class="JgMaschineGlobalZeit.Fenster.FormNeueArbeitszeit"
+    xmlns:jgZeit="clr-namespace:JgZeitHelper;assembly=JgZeit"
+    x:Class="JgMaschineGlobalZeit.Fenster.FormNeueArbeitszeit"
         mc:Ignorable="d"
-        Title="Neue Arbeitszeit erstellen" Height="268" Width="338.979" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/JgGlobalZeit;component/JgGlobalZeit.ico">
+        Title="Neue Arbeitszeit erstellen" Height="268" Width="374.979" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/JgMaschineGlobalZeit;component/JgGlobalZeit.ico">
     <Window.Resources>
         <jgZeit:JgZeit x:Key="JgZeitVon" />
         <jgZeit:JgZeit x:Key="JgZeitBis" />
@@ -15,10 +14,9 @@
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="60"/>
-            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -37,7 +35,7 @@
         <ComboBox x:Name="cmbMitarbeiter" DisplayMemberPath="Name" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" SelectedIndex="0"/>
 
         <Label Content="Zeit von" Grid.Row="3"/>
-        <DatePicker Grid.Column="1" Grid.Row="3" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource JgZeitVon}}" />
+        <DatePicker Grid.Column="1" Grid.Row="3" SelectedDate="{Binding AnzeigeDatum, Source={StaticResource JgZeitVon}}" SelectedDateFormat="Long" />
         <TextBlock Text=":" Grid.Column="2" Grid.Row="3" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
         <TextBox Grid.Column="3" Grid.Row="3" Text="{Binding AnzeigeZeit24, Source={StaticResource JgZeitVon}}"  TextAlignment="Center" />
 
@@ -47,7 +45,7 @@
         <TextBox Grid.Column="3" Grid.Row="4" Text="{Binding AnzeigeZeit24, Source={StaticResource JgZeitBis}}" TextAlignment="Center"/>
 
 
-        <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,5,5,5" Height="50">
+        <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,5,0,5" Height="50">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

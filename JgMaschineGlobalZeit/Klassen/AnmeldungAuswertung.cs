@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using JgMaschineData;
 using JgMaschineLib;
 using JgZeitHelper;
@@ -158,9 +159,21 @@ namespace JgMaschineGlobalZeit
 
     public void BenutzerGeaendert()
     {
+      Mouse.OverrideCursor = Cursors.Wait;
       AzBediener.BedienerBerechnen(AktuellerBediener, Jahr, Monat, SollStundenMonat, ListeRundenMonat, ListeFeiertageMonat, ListePausen.Daten);
+      Mouse.OverrideCursor = null;
     }
 
+    public void DatensatzAutomatischBerechnenGeaendert()
+    {
+      var dsAuswahlTag = (tabArbeitszeitTag)_VsAnzeigeTage.View.CurrentItem;
+      dsAuswahlTag.IstManuellGeaendert = !dsAuswahlTag.IstManuellGeaendert;
+      dsAuswahlTag.NotifyPropertyChanged("IstManuellGeaendert");
+      _Db.SaveChanges();
+
+      if (!dsAuswahlTag.IstManuellGeaendert)
+        BenutzerGeaendert();
+    }
   }
 }
 

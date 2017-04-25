@@ -97,7 +97,7 @@
                                     </StackPanel>
                                 </Button>
 
-                                <Button Click="btnAktuellAktualisieren_Click" Tag="1" Grid.Column="1">
+                                <Button Click="BtnAktuellAktualisieren_Click" Tag="1" Grid.Column="1">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" Margin="1"/>
                                         <TextBlock Text=" Tabelle aktualisieren " VerticalAlignment="Center"/>
@@ -151,7 +151,7 @@
                                 <Label Content=":" Grid.Column="6"/>
                                 <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzAnmeldungBis}}" Padding="2"/>
 
-                                <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click" Tag="0" >
+                                <Button Grid.Column="9" Click="BtnAuswahlAktualisieren_Click" Tag="0" >
                                     <StackPanel Orientation="Horizontal" >
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" Margin="1"/>
                                         <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -263,7 +263,7 @@
                     <Label Content=":" Grid.Column="6"/>
                     <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzBauteilBis}}" Padding="2"/>
 
-                    <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click" Tag="1">
+                    <Button Grid.Column="9" Click="BtnAuswahlAktualisieren_Click" Tag="1">
                         <StackPanel Orientation="Horizontal" >
                             <Image Source="Bilder\JgRefresh.ico" Height="16" Margin="1" />
                             <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -335,7 +335,7 @@
                             <DataGridTextColumn Binding="{Binding NachName}" Header="Nachname" Width="160"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button x:Name="btnFastCube" Content="FastCube" Grid.Column="10" Width="75" HorizontalAlignment="Left" Click="btnFastCube_Click"/>
+                    <Button x:Name="btnFastCube" Content="FastCube" Grid.Column="10" Width="75" HorizontalAlignment="Left" Click="BtnFastCube_Click"/>
                 </Grid>
             </TabItem>
 
@@ -382,7 +382,7 @@
                                 </Button>
 
 
-                                <Button Click="btnAktuellAktualisieren_Click" Tag="2" Grid.Column="1">
+                                <Button Click="BtnAktuellAktualisieren_Click" Tag="2" Grid.Column="1">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" Margin="1"/>
                                         <TextBlock Text=" Tabelle aktualisieren " VerticalAlignment="Center"/>
@@ -485,7 +485,7 @@
                                 <Label Content=":" Grid.Column="6"/>
                                 <TextBox Grid.Column="7" Text="{Binding AnzeigeZeit, Source={StaticResource dzReparaturBis}}" Padding="2" />
 
-                                <Button Grid.Column="9" Click="btnAuswahlAktualisieren_Click" Tag="2">
+                                <Button Grid.Column="9" Click="BtnAuswahlAktualisieren_Click" Tag="2">
                                     <StackPanel Orientation="Horizontal" >
                                         <Image Source="Bilder\JgRefresh.ico" Height="16" Margin="1"/>
                                         <TextBlock Text=" aktualisieren" VerticalAlignment="Center" />
@@ -645,7 +645,7 @@
             </TreeView.Resources>
         </TreeView>
 
-        <Button Grid.Row="2" Margin="6" Click="btnAktuellAktualisieren_Click" Tag="0">
+        <Button Grid.Row="2" Margin="6" Click="BtnAktuellAktualisieren_Click" Tag="0">
             <StackPanel Orientation="Horizontal">
                 <Image Source="Bilder\JgSynchronize.ico" Height="14"/>
                 <TextBlock Text=" Tabelle synchronisieren" VerticalAlignment="Center"/>

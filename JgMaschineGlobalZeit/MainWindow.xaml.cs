@@ -224,7 +224,11 @@ namespace JgMaschineGlobalZeit
         }
 
         if (sichern)
+        {
           _ListeArbeitszeitenAuswahl.DsSave();
+          if (az.eBediener == _Erstellung.AktuellerBediener)
+            _Erstellung.BenutzerGeaendert();
+        }
       }
     }
 
@@ -620,6 +624,16 @@ namespace JgMaschineGlobalZeit
         };
         _ListeArbeitszeitenAuswahl.Add(az);
       }
+    }
+
+    private void BtnAutomatischeDsBerechnung_Click(object sender, RoutedEventArgs e)
+    {
+      _Erstellung.DatensatzAutomatischBerechnenGeaendert();
+    }
+
+    private void BtnNeuBerechnen_Click(object sender, RoutedEventArgs e)
+    {
+      _Erstellung.BenutzerGeaendert();
     }
   }
 }

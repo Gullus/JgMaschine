@@ -100,8 +100,10 @@ namespace JgMaschineVerwalten
         erg.CanExecute = _ListeReparaturen?.Current != null;
       }));
 
-      _Report = new FastReport.Report();
-      _Report.FileName = "Datenbank";
+      _Report = new FastReport.Report()
+      {
+        FileName = "Datenbank"
+      };
       _ReportSettings.CustomSaveReport += (obj, repEvent) =>
       {
         MemoryStream memStr = new MemoryStream();
@@ -529,7 +531,7 @@ namespace JgMaschineVerwalten
       Properties.Settings.Default.Save();
     }
 
-    private void btnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
+    private void BtnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
     {
       switch ((sender as Button).Tag.ToString())
       {
@@ -589,9 +591,11 @@ namespace JgMaschineVerwalten
         switch (vorgang)
         {
           case 5: // Exportieren
-            SaveFileDialog dia = new SaveFileDialog();
-            dia.Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*";
-            dia.FilterIndex = 1;
+            SaveFileDialog dia = new SaveFileDialog()
+            {
+              Filter = "Fastreport (*.frx)|*.frx|Alle Dateien (*.*)|*.*",
+              FilterIndex = 1
+            };
             if (dia.ShowDialog() ?? false)
             {
               _Report.Save(dia.FileName);
@@ -707,12 +711,7 @@ namespace JgMaschineVerwalten
         }
     }
 
-    private void button_Click(object sender, RoutedEventArgs e)
-    {
-      _ListeReparaturen.ViewSource.View.Refresh();
-    }
-
-    private void btnFastCube_Click(object sender, RoutedEventArgs e)
+    private void BtnFastCube_Click(object sender, RoutedEventArgs e)
     {
       var dat = Helper.StartVerzeichnis() + @"\jgFastCube";
       if (!Directory.Exists(dat))
@@ -727,7 +726,7 @@ namespace JgMaschineVerwalten
       get { return _ListeMaschinen.Daten.Where(w => w.eAktivReparatur != null).Select(s => (Guid)s.fAktivReparatur).ToArray(); }
     }
 
-    private void btnAktuellAktualisieren_Click(object sender, RoutedEventArgs e)
+    private void BtnAktuellAktualisieren_Click(object sender, RoutedEventArgs e)
     {
       switch ((sender as Button).Tag.ToString())
       {

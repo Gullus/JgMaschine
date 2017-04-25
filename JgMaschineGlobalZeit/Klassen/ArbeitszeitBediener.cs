@@ -38,7 +38,8 @@ namespace JgMaschineGlobalZeit
       _Db = Db;
     }
 
-    public void BedienerBerechnen(tabBediener Bediener, short Jahr, byte Monat, TimeSpan SollStundenMonat,
+    public void BedienerBerechnen(tabBediener Bediener, short Jahr, byte Monat, 
+      TimeSpan SollStundenMonat,
       IEnumerable<tabArbeitszeitRunden> ListeRundenMonat,
       IEnumerable<tabFeiertage> ListeFeiertageMonat,
       IEnumerable<tabPausenzeit> ListePausen)
@@ -79,6 +80,7 @@ namespace JgMaschineGlobalZeit
       BerechneNachtschichtZuschlag();
       BerechneUeberstundenBezahlt();
 
+      BerechneUeberstundenAusTagen();
       BerechneUeberstundenGesamt();
 
       if (berechneteWerteInDb)
@@ -285,26 +287,33 @@ namespace JgMaschineGlobalZeit
         AuswertungTag.NachtschichtBerechnet = ZeitAufMinuteRunden(AuswertungTag.NachtschichtBerechnet);
 
         BerechneUeberstundenAusTagen();
+        AuswertungMonat.AzAuswertung.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden);
       }
       else if (PropertyName == "Zeit")
+      {
         BerechneUeberstundenAusTagen();
+        AuswertungMonat.AzAuswertung.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden);
+      }
       else if (PropertyName == "Urlaub")
       {
         BerechneUrlaub();
         AuswertungMonat.AzAuswertung.Urlaub = (byte)AuswertungMonat.fUrlaub;
         BerechneUeberstundenAusTagen();
+        AuswertungMonat.AzAuswertung.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden);
       }
       else if (PropertyName == "Krank")
       {
         BerechneKrank();
         AuswertungMonat.AzAuswertung.Krank = (byte)AuswertungMonat.fKrank;
         BerechneUeberstundenAusTagen();
+        AuswertungMonat.AzAuswertung.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden);
       }
       else if (PropertyName == "Feiertag")
       {
         BerechneFeiertage();
         AuswertungMonat.AzAuswertung.Feiertage = (byte)AuswertungMonat.fFeiertage;
         BerechneUeberstundenAusTagen();
+        AuswertungMonat.AzAuswertung.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden);
       }
       else if (PropertyName == "FeiertagZuschlag")
       {
@@ -370,7 +379,6 @@ namespace JgMaschineGlobalZeit
       var fTage = new TimeSpan(8 * (AuswertungMonat.fUrlaub + AuswertungMonat.fKrank + AuswertungMonat.fFeiertage), 0, 0);
 
       AuswertungMonat.UeberstundenAnzeige = JgZeit.ZeitInString(istZeit + fTage - AuswertungMonat.fSollStunden);
-      AuswertungMonat.AzAuswertung.Ueberstunden = JgZeit.ZeitInString(AuswertungMonat.fUeberstunden);
 
       BerechneUeberstundenGesamt();
       AuswertungMonat.NotifyPropertyChanged("IstStundenAnzeige");
@@ -418,12 +426,14 @@ namespace JgMaschineGlobalZeit
     {
       if (Sollstunden != AuswertungMonat.fSollStunden)
       {
-        var istStunden = JgZeit.StringInZeit(AuswertungMonat.IstStundenAnzeige);
-        AuswertungMonat.SollStundenAnzeige = JgZeit.ZeitInString(Sollstunden);
-        AuswertungMonat.UeberstundenAnzeige = JgZeit.ZeitInString(istStunden - Sollstunden);
+        var sollStunden = JgZeit.ZeitInString(Sollstunden);
+        AuswertungMonat.AzAuswertung.SollStunden = sollStunden;
+        _Db.SaveChanges();
+
+        AuswertungMonat.SollStundenAnzeige = sollStunden;
+        BerechneUeberstundenAusTagen();
         BerechneUeberstundenGesamt();
         AuswertungMonat.NotifyPropertyChanged("IstStundenAnzeige");
-        _Db.SaveChanges();
       }
     }
 

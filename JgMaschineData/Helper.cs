@@ -220,8 +220,6 @@ namespace JgMaschineData
         }
       }
     }
-
-
   }
 
   public partial class tabAnmeldungReparatur : INotifyPropertyChanged
