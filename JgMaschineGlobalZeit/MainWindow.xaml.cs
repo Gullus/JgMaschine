@@ -110,7 +110,7 @@ namespace JgMaschineGlobalZeit
             if (zeit.Anmeldung != null)
             {
               var zeitAnmeldung = JgZeit.DatumInZeitMinute(zeit.Anmeldung.Value);
-              var wg = listeGerundet.FirstOrDefault(f => (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
+              var wg = listeGerundet.FirstOrDefault(f => (f.fStandort == zeit.fStandort) && (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis));
               if (wg != null)
                 zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenArbeitszeitBeginn);
             }
@@ -334,16 +334,6 @@ namespace JgMaschineGlobalZeit
           }
           _Report.RegisterData(listeAuswertungen, "Auswertungen");
 
-          // Pausenzeiten berechnen
-
-          foreach (var azDruck in _ListeArbeitszeitenAuswahl.Daten)
-          {
-            if (azDruck.AnmeldungGerundet != null)
-            {
-              var zeit = JgZeit.DatumInZeitMinute(azDruck.AnmeldungGerundet.Value);
-              azDruck.Pause = lPausen.FirstOrDefault(w => (zeit >= w.ZeitVon) && (zeit <= w.ZeitBis))?.Pausenzeit ?? TimeSpan.Zero;
-            }
-          }
           _Report.RegisterData(_ListeArbeitszeitenAuswahl.Daten, "Stechzeiten");
           _Report.SetParameterValue("Zeitraum.DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit);
           _Report.SetParameterValue("Zeitraum.DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit);

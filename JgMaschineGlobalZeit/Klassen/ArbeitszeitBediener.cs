@@ -442,7 +442,9 @@ namespace JgMaschineGlobalZeit
       if (UeberstundenAuszahlung != AuswertungMonat.fUeberstundenBezahlt)
       {
         AuswertungMonat.UeberstundenBezahltAnzeige = JgZeit.ZeitInString(UeberstundenAuszahlung);
+        AuswertungMonat.AzAuswertung.AuszahlungUeberstunden = AuswertungMonat.UeberstundenBezahltAnzeige;
         AuswertungGesamt.UeberstundenBezahltAnzeige = JgZeit.ZeitInString(AuswertungKumulativ.fUeberstundenBezahlt + UeberstundenAuszahlung);
+
         BerechneUeberstundenGesamt();
 
         _Db.SaveChanges();

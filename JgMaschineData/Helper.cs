@@ -392,15 +392,21 @@ namespace JgMaschineData
     public bool AnmeldungIstLeer { get { return this.Anmeldung == null; } }
     public bool AbmeldungIstLeer { get { return this.Abmeldung == null; } }
 
-    public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value - this.Pause : TimeSpan.Zero; } }
+    public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value : TimeSpan.Zero; } }
     public string DauerAnzeige { get { return (Dauer == TimeSpan.Zero) ? "-" : JgZeit.ZeitInString(Dauer); } }
 
-    public Nullable<DateTime> AnmeldungGerundetWert { get; set; } = null;
-    public Nullable<DateTime> AnmeldungGerundet { get { return this.AnmeldungGerundetWert ?? this.Anmeldung; } }
-    public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value - this.Pause : TimeSpan.Zero; } }
+    public DateTime? AnmeldungGerundetWert { get; set; } = null;
+    public DateTime? AnmeldungGerundet
+    {
+      get
+      {
+        if (this.AnmeldungGerundetWert == null)
+          return this.Anmeldung;
+        return this.AnmeldungGerundetWert;
+      }
+    }
+    public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value : TimeSpan.Zero; } }
     public string DauerGerundetAnzeige { get { return (DauerGerundet == TimeSpan.Zero) ? "-" : JgZeit.ZeitInString(DauerGerundet); } }
-
-    public TimeSpan Pause { get; set; } = TimeSpan.Zero;
 
     public bool AnzeigeGeloescht
     {
@@ -436,6 +442,20 @@ namespace JgMaschineData
         if (value != Status)
         {
           Status = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
+
+    // Nur zur Anzeige in der Optionen 
+    public string UeberstundenAnzeige
+    {
+      get => Ueberstunden;
+      set
+      {
+        if (value != Ueberstunden)
+        {
+          Ueberstunden = JgZeit.StringInStringZeit(value, Ueberstunden);
           NotifyPropertyChanged();
         }
       }

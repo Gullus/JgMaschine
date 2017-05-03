@@ -42,16 +42,14 @@
             <ColumnDefinition Width="60"/>
             <ColumnDefinition/>
             <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="120"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
             <RowDefinition Height="50"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Label Content="für Jahr" />
-        <Border Grid.Column="1" BorderThickness="1" BorderBrush="Silver" Margin="3">
+        <Label Content="für Jahr" VerticalAlignment="Center"/>
+        <Border Grid.Column="1" BorderThickness="1" BorderBrush="Silver" VerticalAlignment="Center">
             <TextBlock x:Name="tbJahr" Grid.Column="1" TextAlignment="Center"/>
         </Border>
 
@@ -67,7 +65,6 @@
 
                             <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.Urlaub}" Header="Rest&#x0a;Urlaub" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.UeberstundenAnzeige}" Header="Überst.&#x0a;Vorjahr" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
-
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -204,10 +201,10 @@
             </TabItem>
         </TabControl>
 
-        <Button Grid.Column="4" Grid.Row="2" IsDefault="True" Margin="5" Click="ButtonOk_Click">
+        <Button Grid.Column="3" IsDefault="True" Click="ButtonOk_Click">
             <StackPanel Orientation="Horizontal">
-                <Image Source="..\Bilder\JgCheck.ico" Margin="5"/>
-                <TextBlock Text="Eintragen" VerticalAlignment="Center"/>
+                <Image Source="..\Bilder\JgCheck.ico" Height="30"/>
+                <TextBlock Text=" Eintragen" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
     </Grid>
