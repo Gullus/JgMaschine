@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="Klassen\ArbeitszeitBediener.cs" />
     <Compile Include="Commands\Commands.cs" />
+    <Compile Include="Klassen\ArbeitszeitRunden.cs" />
     <Compile Include="Klassen\ExtenionsMethods.cs" />
     <Compile Include="Fenster\FormArbeitszeitRunden.xaml.cs">
       <DependentUpon>FormArbeitszeitRunden.xaml</DependentUpon>

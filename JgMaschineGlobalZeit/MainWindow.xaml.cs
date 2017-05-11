@@ -32,17 +32,14 @@ namespace JgMaschineGlobalZeit
     private FastReport.EnvironmentSettings _ReportSettings = new FastReport.EnvironmentSettings();
 
     private AnmeldungAuswertung _Erstellung;
+    private ArbeitszeitRunden _AzRunden;
 
     public MainWindow()
     {
       InitializeComponent();
 
       Helper.FensterEinstellung(this, Properties.Settings.Default);
-      InitCommands();
-    }
 
-    private void InitCommands()
-    {
       CommandBindings.Add(new CommandBinding(MyCommands.ArbeitszeitLoeschen, (sen, erg) =>
       {
         var az = _ListeArbeitszeitenAuswahl.Current;
@@ -61,12 +58,12 @@ namespace JgMaschineGlobalZeit
 
       void IstArbeitzeitAndern(object Obj, CanExecuteRoutedEventArgs Erg)
       {
-        Erg.CanExecute = _Erstellung.AktuellerBediener.eArbeitszeitHelper.Status == EnumStatusArbeitszeitAuswertung.InArbeit;
+        Erg.CanExecute = _Erstellung?.AktuellerBediener?.EArbeitszeitHelper?.Status == EnumStatusArbeitszeitAuswertung.InArbeit || false;
       }
 
       CommandBindings.Add(new CommandBinding(MyCommands.SollStundenAendern, (sen, erg) =>
       {
-        var form = new FormSollstundenEinstellen(_Erstellung.AktuellerBediener.eArbeitszeitHelper.SollStunden);
+        var form = new FormSollstundenEinstellen(_Erstellung.AktuellerBediener.EArbeitszeitHelper.SollStunden);
         if (form.ShowDialog() ?? false)
           _Erstellung.AzBediener.SetSollstunden(form.Sollstunden);
       }, IstArbeitzeitAndern));
@@ -86,6 +83,9 @@ namespace JgMaschineGlobalZeit
         _Db.Database.Connection.ConnectionString = Properties.Settings.Default.VerbindungsString;
 
       var heute = DateTime.Now.Date;
+
+      _AzRunden = new ArbeitszeitRunden(_Db, heute.Year);
+
       _DzArbeitszeitVon.AnzeigeDatumZeit = heute;
       _DzArbeitszeitBis.AnzeigeDatumZeit = new DateTime(heute.Year, heute.Month, heute.Day, 23, 59, 59);
 
@@ -97,6 +97,7 @@ namespace JgMaschineGlobalZeit
         {
           var datVom = (DateTime)p.Params["DatumVon"];
           var datBis = (DateTime)p.Params["DatumBis"];
+          var azRunden = (ArbeitszeitRunden)p.Params["AzRunden"];
 
           var lZeiten = d.tabArbeitszeitSet.Where(w => (((w.Anmeldung >= datVom) && (w.Anmeldung <= datBis))
             || ((w.Anmeldung == null) && (w.Abmeldung >= datVom) && (w.Abmeldung <= datBis))));
@@ -104,26 +105,18 @@ namespace JgMaschineGlobalZeit
           if (!p.IstSortiert)
             lZeiten = lZeiten.OrderBy(o => o.Anmeldung);
 
-          var listeGerundet = d.tabArbeitszeitRundenSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
           foreach (var zeit in lZeiten.ToList())
           {
-            if (zeit.Anmeldung != null)
-            {
-              var zeitAnmeldung = JgZeit.DatumInZeitMinute(zeit.Anmeldung.Value);
-              var wg = listeGerundet.FirstOrDefault(f => (f.fStandort == zeit.fStandort) && (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis));
-              if (wg != null)
-                zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenArbeitszeitBeginn);
-            }
+            zeit.AnmeldungGerundet = azRunden.GetZeitGerundet(EnumZeitpunkt.Anmeldung, zeit.fStandort, zeit.Anmeldung);
+            zeit.AbmeldungGerundet = azRunden.GetZeitGerundet(EnumZeitpunkt.Abmeldung, zeit.fStandort, zeit.Abmeldung);
           }
 
           return lZeiten;
         }
       };
-      _ListeArbeitszeitenAuswahl.Parameter = new Dictionary<string, object>()
-      {
-        { "DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit },
-        { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
-      };
+      _ListeArbeitszeitenAuswahl.Parameter["AzRunden"] = _AzRunden;
+      _ListeArbeitszeitenAuswahl.Parameter["DatumVon"] = _DzArbeitszeitVon.AnzeigeDatumZeit;
+      _ListeArbeitszeitenAuswahl.Parameter["DatumBis"] = _DzArbeitszeitBis.AnzeigeDatumZeit;
       _ListeArbeitszeitenAuswahl.DatenLaden();
 
       // Report initialisieren ********************************
@@ -154,6 +147,7 @@ namespace JgMaschineGlobalZeit
 
       _Erstellung = new AnmeldungAuswertung(_Db, cbJahr, cbMonat,
         (CollectionViewSource)FindResource("vsBediener"),
+        _AzRunden,
         (ArbeitszeitBediener)FindResource("ArbeitszeitBediener"),
         (CollectionViewSource)FindResource("vsArbeitszeitTage"));
 
@@ -202,24 +196,14 @@ namespace JgMaschineGlobalZeit
         if (anmeldung != az.Anmeldung)
         {
           az.AnzeigeAnmeldung = anmeldung;
-          az.AnmeldungGerundetWert = null;
-          if (anmeldung != null)
-          {
-            var zeit = JgZeit.DatumInZeitMinute(anmeldung.Value);
-            var anm = anmeldung.Value;
-            var azBegin = _Erstellung.Db.tabArbeitszeitRundenSet.FirstOrDefault(w =>
-              (w.fStandort == az.fStandort)
-              && (zeit >= w.ZeitVon) && (zeit <= w.ZeitBis)
-              && (w.Jahr == anm.Year) && (w.Monat == anm.Month) && (!w.DatenAbgleich.Geloescht));
-            if (azBegin != null)
-              az.AnmeldungGerundetWert = anm.Date + azBegin.RundenArbeitszeitBeginn;
-          }
+          az.AnzeigeAnmeldungGerundet = _AzRunden.GetZeitGerundet(EnumZeitpunkt.Anmeldung, az.fStandort, anmeldung);
           sichern = true;
         }
 
         if (abmeldung != az.Abmeldung)
         {
           az.AnzeigeAbmeldung = abmeldung;
+          az.AnzeigeAbmeldungGerundet = _AzRunden.GetZeitGerundet(EnumZeitpunkt.Abmeldung, az.fStandort, abmeldung);
           sichern = true;
         }
 
@@ -320,7 +304,6 @@ namespace JgMaschineGlobalZeit
           var dat = _DzArbeitszeitBis.AnzeigeDatumZeit;
           var db = _ListeArbeitszeitenAuswahl.Db;
           var sollStunden = JgZeit.StringInZeit(db.tabSollStundenSet.FirstOrDefault(w => (w.Jahr == dat.Year) && (w.Monat == dat.Month) && !w.DatenAbgleich.Geloescht).SollStunden, TimeSpan.Zero);
-          var lRunden = db.tabArbeitszeitRundenSet.Where(w => (w.Jahr == dat.Year) && (w.Monat == dat.Month) && !w.DatenAbgleich.Geloescht).ToList();
           var lFeiertage = db.tabFeiertageSet.Where(w => (w.Datum.Year == dat.Year) && (w.Datum.Month == dat.Month) && !w.DatenAbgleich.Geloescht).ToList();
           var lPausen = db.tabPausenzeitSet.Where(w => !w.DatenAbgleich.Geloescht).ToList();
 
@@ -328,8 +311,8 @@ namespace JgMaschineGlobalZeit
 
           foreach (var bedAusw in bediener)
           {
-            var ds = new ArbeitszeitBediener(_Erstellung.Db);
-            ds.BedienerBerechnen(bedAusw, (short)dat.Year, (byte)dat.Month, sollStunden, lRunden, lFeiertage, lPausen);
+            var ds = new ArbeitszeitBediener(_Erstellung.Db, _AzRunden);
+            ds.BedienerBerechnen(bedAusw, (short)dat.Year, (byte)dat.Month, sollStunden, lFeiertage, lPausen);
             listeAuswertungen.Add(ds);
           }
           _Report.RegisterData(listeAuswertungen, "Auswertungen");
@@ -346,8 +329,8 @@ namespace JgMaschineGlobalZeit
 
           foreach (var bedAusw in bedienerImStandort)
           {
-            var ds = new ArbeitszeitBediener(_Erstellung.Db);
-            ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeRundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten);
+            var ds = new ArbeitszeitBediener(_Erstellung.Db, _AzRunden);
+            ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten);
             listeAuswertung.Add(ds);
           }
 
@@ -425,24 +408,21 @@ namespace JgMaschineGlobalZeit
 
     private void BtnAuswahlAktualisieren_Click(object sender, RoutedEventArgs e)
     {
-      _ListeArbeitszeitenAuswahl.Parameter = new Dictionary<string, object>()
-      {
-        { "DatumVon", _DzArbeitszeitVon.AnzeigeDatumZeit },
-        { "DatumBis", _DzArbeitszeitBis.AnzeigeDatumZeit }
-      };
+      _ListeArbeitszeitenAuswahl.Parameter["DatumVon"] = _DzArbeitszeitVon.AnzeigeDatumZeit;
+      _ListeArbeitszeitenAuswahl.Parameter["DatumBis"] = _DzArbeitszeitBis.AnzeigeDatumZeit;
       _ListeArbeitszeitenAuswahl.DatenAktualisieren();
     }
 
     private void BtnOptionen_Click(object sender, RoutedEventArgs e)
     {
-      var formOptionen = new Fenster.FormOptionen(_Erstellung);
+      var formOptionen = new Fenster.FormOptionen(_Erstellung, _AzRunden);
       formOptionen.ShowDialog();
       _Erstellung.Db.SaveChanges();
     }
 
     private void BtnSollStundenEinstellen_Click(object sender, RoutedEventArgs e)
     {
-      var form = new FormSollstundenEinstellen(_Erstellung.AktuellerBediener.eArbeitszeitHelper.SollStunden);
+      var form = new FormSollstundenEinstellen(_Erstellung.AktuellerBediener.EArbeitszeitHelper.SollStunden);
       if (form.ShowDialog() ?? false)
         _Erstellung.AzBediener.SetSollstunden(form.Sollstunden);
     }
@@ -450,9 +430,9 @@ namespace JgMaschineGlobalZeit
     private void BtnAuswertungErledigt_Click(object sender, RoutedEventArgs e)
     {
       var bediener = _Erstellung.AktuellerBediener;
-      if (bediener?.eArbeitszeitHelper != null)
+      if (bediener?.EArbeitszeitHelper != null)
       {
-        bediener.eArbeitszeitHelper.StatusAnzeige = (EnumStatusArbeitszeitAuswertung)Convert.ToByte((sender as Button).Tag);
+        bediener.EArbeitszeitHelper.StatusAnzeige = (EnumStatusArbeitszeitAuswertung)Convert.ToByte((sender as Button).Tag);
         _Erstellung.Db.SaveChanges();
       }
 
@@ -497,7 +477,15 @@ namespace JgMaschineGlobalZeit
 
       if (fo.ShowDialog() ?? false)
       {
-        var daten = _Erstellung.ListeBediener.Daten.Where(w => (w.eArbeitszeitHelper != null) && (w.eArbeitszeitHelper.Status == EnumStatusArbeitszeitAuswertung.Fertig)).ToList();
+        var lBediener = _Erstellung.ListeBediener.Daten.Where(w => (w.EArbeitszeitHelper != null) && (w.EArbeitszeitHelper.Status == EnumStatusArbeitszeitAuswertung.Fertig)).ToList();
+
+        var listeAuswertungen = new List<ArbeitszeitBediener>();
+        foreach (var bedAusw in lBediener)
+        {
+          var ds = new ArbeitszeitBediener(_Db, _AzRunden);
+          ds.BedienerBerechnen(bedAusw, _Erstellung.Jahr, _Erstellung.Monat, _Erstellung.SollStundenMonat, _Erstellung.ListeFeiertageMonat, _Erstellung.ListePausen.Daten);
+          listeAuswertungen.Add(ds);
+        };
 
         var en = new CultureInfo("en-US", false);
         var formatDezimal = Properties.Settings.Default.FormatXmlAusgabeDezimal;
@@ -508,52 +496,63 @@ namespace JgMaschineGlobalZeit
           new XElement("Root",
           new XElement("Monat", $"{(JgZeit.Monate)_Erstellung.Monat} {_Erstellung.Jahr.ToString()}"),
 
-          from z in daten
-          let normalStunden = JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden) - (new TimeSpan(8 * (z.eArbeitszeitHelper.Urlaub + z.eArbeitszeitHelper.Krank + z.eArbeitszeitHelper.Feiertage), 0, 0))
-          let istStunden = JgZeit.ZeitStringAddieren(z.eArbeitszeitHelper.SollStunden, z.eArbeitszeitHelper.Ueberstunden)
+          from z in listeAuswertungen
+          let azMonat = z.AuswertungMonat.AzAuswertung
+          let normalStunden = JgZeit.StringInZeit(azMonat.SollStunden) - (new TimeSpan(8 * (azMonat.Urlaub + azMonat.Krank + azMonat.Feiertage), 0, 0))
+          let istStunden = JgZeit.ZeitStringAddieren(azMonat.SollStunden, azMonat.Ueberstunden)
           select new XElement("Datensatz",
-            new XElement("Mitarbeiter", z.Name),
-            new XElement("Nachname", z.NachName),
-            new XElement("Vorname", z.VorName),
-            new XElement("IdBuchhaltung", z.IdBuchhaltung),
+            new XElement("Mitarbeiter", z.Bediener.Name),
+            new XElement("Nachname", z.Bediener.NachName),
+            new XElement("Vorname", z.Bediener.VorName),
+            new XElement("IdBuchhaltung", z.Bediener.IdBuchhaltung),
 
-            new XElement("Standort", z.eStandort.Bezeichnung),
-            new XElement("Zahltag", z.AuszahlungGehalt),
-            new XElement("Urlaubstage", z.Urlaubstage),
+            new XElement("Standort", z.Bediener.eStandort.Bezeichnung),
+            new XElement("Zahltag", z.Bediener.AuszahlungGehalt),
+            new XElement("Urlaubstage", z.Bediener.Urlaubstage),
 
             // Formatierung als Dezimalzahl mit einer Kommastelle mit Frau Glatter besprochen
 
             new XElement("IstStunden", istStunden.TotalHours.ToString(formatDezimal, en)),
-            new XElement("UeberStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.Ueberstunden).TotalHours.ToString(formatDezimal, en)),
-
-            new XElement("SollStunden", JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden).TotalHours.ToString(formatDezimal, en)),
             new XElement("Normalstunden", normalStunden.TotalHours.ToString(formatDezimal, en)),
-            new XElement("UeberstundenAusgezahlt", JgZeit.StringInZeit(z.eArbeitszeitHelper.AuszahlungUeberstunden).TotalHours.ToString(formatDezimal, en)),
-            new XElement("Urlaub", (z.eArbeitszeitHelper.Urlaub * 8).ToString(formatDezimal, en)),
-            new XElement("Krank", (z.eArbeitszeitHelper.Krank * 8).ToString(formatDezimal, en)),
-            new XElement("Feiertage", (z.eArbeitszeitHelper.Feiertage * 8).ToString(formatDezimal, en)),
+            new XElement("SollStunden", JgZeit.StringInZeit(azMonat.SollStunden).TotalHours.ToString(formatDezimal, en)),
+            
+            new XElement("UeberStunden", JgZeit.StringInZeit(azMonat.Ueberstunden).TotalHours.ToString(formatDezimal, en)),
+            new XElement("UeberstundenAusgezahlt", JgZeit.StringInZeit(azMonat.AuszahlungUeberstunden).TotalHours.ToString(formatDezimal, en)),
+            new XElement("UeberstundenGesamt", z.AuswertungGesamt.fUeberstunden.TotalHours.ToString(formatDezimal, en)),
+            
+            new XElement("Urlaub", (azMonat.Urlaub * 8).ToString(formatDezimal, en)),
+            new XElement("UrlaubstageOffen", z.AuswertungMonat.UrlaubOffenAnzeige),
 
-            new XElement("NachtschichtZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.NachtschichtZuschlaege).TotalHours.ToString(formatDezimal, en)),
-            new XElement("NachtschichtZuschlagGerundet", z.eArbeitszeitHelper.NachtschichtZuschlaegeGerundet.TotalHours.ToString(formatDezimal, en)),
-            new XElement("FeiertagsZuschlag", JgZeit.StringInZeit(z.eArbeitszeitHelper.FeiertagZuschlaege).TotalHours.ToString(formatDezimal, en)),
-            new XElement("FeiertagsZuschlagGerundet", z.eArbeitszeitHelper.FeiertagZuschlaegeGerundet.TotalHours.ToString(formatDezimal, en)),
+            new XElement("Krank", (azMonat.Krank * 8).ToString(formatDezimal, en)),
+            new XElement("Feiertage", (azMonat.Feiertage * 8).ToString(formatDezimal, en)),
+
+            new XElement("NachtschichtZuschlag", JgZeit.StringInZeit(azMonat.NachtschichtZuschlaege).TotalHours.ToString(formatDezimal, en)),
+            new XElement("NachtschichtZuschlagGerundet", azMonat.NachtschichtZuschlaegeGerundet.TotalHours.ToString(formatDezimal, en)),
+            new XElement("FeiertagsZuschlag", JgZeit.StringInZeit(azMonat.FeiertagZuschlaege).TotalHours.ToString(formatDezimal, en)),
+            new XElement("FeiertagsZuschlagGerundet", azMonat.FeiertagZuschlaegeGerundet.TotalHours.ToString(formatDezimal, en)),
+
 
             // Ausgabe als Zeit
 
             new XElement("IstStundenD", XmlZeitInString(istStunden, formatZeit)),
-            new XElement("UeberStundenD", XmlZeitInString(JgZeit.StringInZeit(z.eArbeitszeitHelper.Ueberstunden), formatZeit)),
-
-            new XElement("SollStundenD", XmlZeitInString(JgZeit.StringInZeit(z.eArbeitszeitHelper.SollStunden), formatZeit)),
             new XElement("NormalstundenD", XmlZeitInString(normalStunden, formatZeit)),
-            new XElement("UeberstundenAusgezahltD", XmlZeitInString(JgZeit.StringInZeit(z.eArbeitszeitHelper.AuszahlungUeberstunden), formatZeit)),
-            new XElement("UrlaubD", XmlZeitInString(new TimeSpan(z.eArbeitszeitHelper.Urlaub * 8, 0, 0), formatZeit)),
-            new XElement("KrankD", XmlZeitInString(new TimeSpan(z.eArbeitszeitHelper.Krank * 8), formatZeit)),
-            new XElement("FeiertageD", XmlZeitInString(new TimeSpan(z.eArbeitszeitHelper.Feiertage * 8), formatZeit)),
+            new XElement("SollStundenD", XmlZeitInString(JgZeit.StringInZeit(azMonat.SollStunden), formatZeit)),
+            
+            new XElement("UeberStundenD", XmlZeitInString(JgZeit.StringInZeit(azMonat.Ueberstunden), formatZeit)),
+            new XElement("UeberstundenAusgezahltD", XmlZeitInString(JgZeit.StringInZeit(azMonat.AuszahlungUeberstunden), formatZeit)),
+            new XElement("UeberstundenGesamtD", XmlZeitInString(z.AuswertungGesamt.fUeberstunden, formatZeit)),
 
-            new XElement("NachtschichtZuschlagD", XmlZeitInString(JgZeit.StringInZeit(z.eArbeitszeitHelper.NachtschichtZuschlaege), formatZeit)),
-            new XElement("NachtschichtZuschlagGerundetD", XmlZeitInString(z.eArbeitszeitHelper.NachtschichtZuschlaegeGerundet, formatZeit)),
-            new XElement("FeiertagsZuschlagD", XmlZeitInString(JgZeit.StringInZeit(z.eArbeitszeitHelper.FeiertagZuschlaege), formatZeit)),
-            new XElement("FeiertagsZuschlagGerundetD", XmlZeitInString(z.eArbeitszeitHelper.FeiertagZuschlaegeGerundet, formatZeit))
+
+            new XElement("UrlaubD", XmlZeitInString(new TimeSpan(azMonat.Urlaub * 8, 0, 0), formatZeit)),
+            new XElement("UrlaubstageOffenD", XmlZeitInString(new TimeSpan(z.AuswertungMonat.UrlaubOffenAnzeige * 8, 0, 0), formatZeit)),
+
+            new XElement("KrankD", XmlZeitInString(new TimeSpan(azMonat.Krank * 8), formatZeit)),
+            new XElement("FeiertageD", XmlZeitInString(new TimeSpan(azMonat.Feiertage * 8), formatZeit)),
+
+            new XElement("NachtschichtZuschlagD", XmlZeitInString(JgZeit.StringInZeit(azMonat.NachtschichtZuschlaege), formatZeit)),
+            new XElement("NachtschichtZuschlagGerundetD", XmlZeitInString(azMonat.NachtschichtZuschlaegeGerundet, formatZeit)),
+            new XElement("FeiertagsZuschlagD", XmlZeitInString(JgZeit.StringInZeit(azMonat.FeiertagZuschlaege), formatZeit)),
+            new XElement("FeiertagsZuschlagGerundetD", XmlZeitInString(azMonat.FeiertagZuschlaegeGerundet, formatZeit))
             )
           )
         );
@@ -572,12 +571,12 @@ namespace JgMaschineGlobalZeit
         if (Properties.Settings.Default.NameXmlDatei != fo.FileName)
           Properties.Settings.Default.NameXmlDatei = fo.FileName;
 
-        foreach (var bed in daten)
-          bed.eArbeitszeitHelper.StatusAnzeige = EnumStatusArbeitszeitAuswertung.Erledigt;
+        foreach (var bed in lBediener)
+          bed.EArbeitszeitHelper.StatusAnzeige = EnumStatusArbeitszeitAuswertung.Erledigt;
 
         _Erstellung.Db.SaveChanges();
 
-        Helper.InfoBox($"{daten.Count} Mitarbeiter in Datei gespeichert !", Helper.ProtokollArt.Info);
+        Helper.InfoBox($"{lBediener.Count} Mitarbeiter in Datei gespeichert !", Helper.ProtokollArt.Info);
       }
     }
 
@@ -598,21 +597,11 @@ namespace JgMaschineGlobalZeit
 
     private void NeueArbeitszeit_Click(object sender, RoutedEventArgs e)
     {
-      var standorte = _Erstellung.Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
-      var form = new FormNeueArbeitszeit(standorte, _Erstellung.ListeBediener.Daten);
-      if (form.ShowDialog() ?? false)
+      var form = new FormNeueArbeitszeit(_Db, _Erstellung.ListeBediener.Daten);
+      if (_ListeArbeitszeitenAuswahl.ErgebnissFormular(form.ShowDialog(), true, form.ArbeitsZeit))
       {
-        var az = new tabArbeitszeit()
-        {
-          Id = Guid.NewGuid(),
-          fStandort = form.Standort.Id,
-          fBediener = form.Bediener.Id,
-          Anmeldung = form.DatumVon,
-          ManuelleAnmeldung = true,
-          Abmeldung = form.DatumBis,
-          ManuelleAbmeldung = true,
-        };
-        _ListeArbeitszeitenAuswahl.Add(az);
+        form.ArbeitsZeit.AnzeigeAnmeldungGerundet = _AzRunden.GetZeitGerundet(EnumZeitpunkt.Anmeldung, form.ArbeitsZeit.fStandort, form.ArbeitsZeit.Anmeldung);
+        form.ArbeitsZeit.AnzeigeAbmeldungGerundet = _AzRunden.GetZeitGerundet(EnumZeitpunkt.Abmeldung, form.ArbeitsZeit.fStandort, form.ArbeitsZeit.Abmeldung);
       }
     }
 

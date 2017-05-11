@@ -14,13 +14,17 @@ namespace JgMaschineGlobalZeit.Fenster
     private AnmeldungAuswertung _Auswertung;
     private JgEntityList<tabArbeitszeitTerminal> _ListeTerminals;
 
-    public FormOptionen(AnmeldungAuswertung Auswertung)
+    private JgEntityList<tabArbeitszeitRunden> _ListeRundenBeginn;
+    private JgEntityList<tabArbeitszeitRunden> _ListeRundenEnde;
+
+    public FormOptionen(AnmeldungAuswertung Auswertung, ArbeitszeitRunden AzRunden)
     {
       InitializeComponent();
 
       _Auswertung = Auswertung;
       tbJahr.Text = Auswertung.Jahr.ToString();
 
+      // Sollstunden für jedes Jahr überprüfen
       for (byte i = 1; i <= 12; i++)
       {
         if (_Auswertung.ListeSollstundenJahr.Daten.FirstOrDefault(f => f.Monat == i) == null)
@@ -36,6 +40,7 @@ namespace JgMaschineGlobalZeit.Fenster
         };
       }
 
+      // Kontrolle, ob alle Bediener die Auswertung für Monat 0 besitzen, da hier die Vorjahresdaten eingetragen werden.
       var idisBediener = Auswertung.ListeBediener.Daten.Select(s => s.Id).ToArray();
       var auswertungenVorjahr = Auswertung.Db.tabArbeitszeitAuswertungSet.Where(w => (idisBediener.Contains(w.fBediener)) && (w.Jahr == Auswertung.Jahr) && (w.Monat == 0)).ToList();
       foreach (var bediener in _Auswertung.ListeBediener.Daten)
@@ -56,15 +61,41 @@ namespace JgMaschineGlobalZeit.Fenster
           };
           Auswertung.Db.tabArbeitszeitAuswertungSet.Add(auswVorjahr);
         }
-        bediener.eArbeitszeitHelper = auswVorjahr;
+        bediener.EArbeitszeitHelper = auswVorjahr;
       }
 
       _ListeTerminals = new JgEntityList<tabArbeitszeitTerminal>(_Auswertung.Db)
       {
         ViewSource = (CollectionViewSource)FindResource("vsTerminals"),
-        Tabellen = new DataGrid[] { gridTerminals }
+        Tabellen = new DataGrid[] { gridTerminals },
+        Daten = _Auswertung.Db.tabArbeitszeitTerminalSet.ToList()
       };
-      _ListeTerminals.Daten = _Auswertung.Db.tabArbeitszeitTerminalSet.ToList();
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+      var vsBediener = (CollectionViewSource)(this.FindResource("vsBediener"));
+      vsBediener.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
+      vsBediener.Source = _Auswertung.ListeBediener.Daten;
+
+      _Auswertung.ListeFeiertageJahr.ViewSource = (CollectionViewSource)(this.FindResource("vsFeiertage"));
+      _Auswertung.ListeSollstundenJahr.ViewSource = (CollectionViewSource)(this.FindResource("vsSollStunden"));
+      _Auswertung.ListePausen.ViewSource = (CollectionViewSource)(this.FindResource("vsPausen"));
+
+      _ListeRundenBeginn = new JgEntityList<tabArbeitszeitRunden>(_Auswertung.Db)
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsRundenAzBeginn"),
+        Daten = _Auswertung.AzRunden.ListeRunden.Where(w => w.Zeitpunkt == EnumZeitpunkt.Anmeldung).OrderBy(o => o.Monat).ThenBy(o => o.ZeitVon).ToList()
+      };
+      _ListeRundenBeginn.ViewSource.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
+
+      _ListeRundenEnde = new JgEntityList<tabArbeitszeitRunden>(_Auswertung.Db)
+      {
+        ViewSource = (CollectionViewSource)FindResource("vsRundenAzEnde"),
+        Daten = _Auswertung.AzRunden.ListeRunden.Where(w => w.Zeitpunkt == EnumZeitpunkt.Abmeldung).OrderBy(o => o.Monat).ThenBy(o => o.ZeitVon).ToList()
+      };
+
+      _ListeRundenEnde.ViewSource.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
     }
 
     private void ButtonOk_Click(object sender, RoutedEventArgs e)
@@ -72,20 +103,7 @@ namespace JgMaschineGlobalZeit.Fenster
       this.DialogResult = true;
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-      _Auswertung.ListeFeiertageJahr.ViewSource = (CollectionViewSource)(this.FindResource("vsFeiertage"));
-      _Auswertung.ListeSollstundenJahr.ViewSource = (CollectionViewSource)(this.FindResource("vsSollStunden"));
-      _Auswertung.ListePausen.ViewSource = (CollectionViewSource)(this.FindResource("vsPausen"));
-
-      _Auswertung.ListeRundenJahr.ViewSource = (CollectionViewSource)(this.FindResource("vsRunden"));
-      _Auswertung.ListeRundenJahr.ViewSource.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
-
-      var vsBediener = ((CollectionViewSource)(this.FindResource("vsBediener")));
-      vsBediener.Source = _Auswertung.ListeBediener.Daten;
-    }
-
-    private void btnNeuerFeiertag_Click(object sender, RoutedEventArgs e)
+    private void BtnNeuerFeiertag_Click(object sender, RoutedEventArgs e)
     {
       var feiertag = new tabFeiertage()
       {
@@ -96,7 +114,7 @@ namespace JgMaschineGlobalZeit.Fenster
       _Auswertung.ListeFeiertageJahr.Add(feiertag);
     }
 
-    private void btnNeuePause_Click(object sender, RoutedEventArgs e)
+    private void BtnNeuePause_Click(object sender, RoutedEventArgs e)
     {
       var pause = new tabPausenzeit()
       {
@@ -109,19 +127,22 @@ namespace JgMaschineGlobalZeit.Fenster
       _Auswertung.ListePausen.Add(pause);
     }
 
-    private void btnRundungswert_Click(object sender, RoutedEventArgs e)
+    private void BtnRundungswert_Click(object sender, RoutedEventArgs e)
     {
-      var vorg = Convert.ToByte((sender as Button).Tag);  // 0 - Neu, 1 - Bearbeiten 
-      var vsRunden = (CollectionViewSource)FindResource("vsRunden");
-      var runden = (tabArbeitszeitRunden)vsRunden.View.CurrentItem;
+      var neuerDatensatz = (sender == BtnAzRundenBeginnNeu) || (sender == BtnAzRundenEndeNeu);
+      var zeitPunkt = EnumZeitpunkt.Abmeldung;
+      if ((sender == BtnAzRundenBeginnNeu) || (sender == BtnAzRundenBeginnBearbeiten))
+        zeitPunkt = EnumZeitpunkt.Anmeldung;
+      var aktiv = (zeitPunkt == EnumZeitpunkt.Anmeldung) ? _ListeRundenBeginn.Current : _ListeRundenEnde.Current;
 
-      var fo = new FormArbeitszeitRunden(_Auswertung, runden, vorg == 0);
-      if (!(fo.ShowDialog() ?? false))
-        vsRunden.View.Refresh();
-      vsRunden.View.MoveCurrentTo(fo.AktuellerWert);
+      var fo = new FormArbeitszeitRunden(_Auswertung, zeitPunkt, aktiv, neuerDatensatz);
+      if (zeitPunkt == EnumZeitpunkt.Anmeldung)
+        _ListeRundenBeginn.ErgebnissFormular(fo.ShowDialog(), neuerDatensatz, fo.AzGerundet);
+      else
+        _ListeRundenEnde.ErgebnissFormular(fo.ShowDialog(), neuerDatensatz, fo.AzGerundet);
     }
 
-    private void btnTerminal_Click(object sender, RoutedEventArgs e)
+    private void BtnTerminal_Click(object sender, RoutedEventArgs e)
     {
       var standorte = _Auswertung.Db.tabStandortSet.OrderBy(o => o.Bezeichnung).ToList();
       var fo = new FormTerminal(standorte, (sender == btnNeuesTermin) ? null : _ListeTerminals.Current);

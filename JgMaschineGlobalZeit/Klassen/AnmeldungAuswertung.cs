@@ -15,6 +15,9 @@ namespace JgMaschineGlobalZeit
     private JgModelContainer _Db;
     public JgModelContainer Db { get { return _Db; } }
 
+    private ArbeitszeitRunden _AzRunden;
+    public ArbeitszeitRunden AzRunden { get => _AzRunden; set => _AzRunden = value; }
+
     private ComboBox _CmbJahr;
     private ComboBox _CmbMonat;
 
@@ -25,11 +28,9 @@ namespace JgMaschineGlobalZeit
     public JgEntityList<tabPausenzeit> ListePausen;
     public JgEntityList<tabSollStunden> ListeSollstundenJahr;
     public JgEntityList<tabFeiertage> ListeFeiertageJahr;
-    public JgEntityList<tabArbeitszeitRunden> ListeRundenJahr;
 
     public TimeSpan SollStundenMonat = TimeSpan.Zero;
     public List<tabFeiertage> ListeFeiertageMonat;
-    public List<tabArbeitszeitRunden> ListeRundenMonat;
 
     public ArbeitszeitBediener AzBediener = null;
     private CollectionViewSource _VsAnzeigeTage = null;
@@ -56,10 +57,12 @@ namespace JgMaschineGlobalZeit
 
     public tabBediener AktuellerBediener { get { return ListeBediener.Current; } }
 
-    public AnmeldungAuswertung(JgModelContainer Db, ComboBox CmbJahr, ComboBox CmbMonat, CollectionViewSource VsBediener, 
-      ArbeitszeitBediener NeuAzBediener, CollectionViewSource VsAnzeigeTage)
+
+    public AnmeldungAuswertung(JgModelContainer Db, ComboBox CmbJahr, ComboBox CmbMonat, CollectionViewSource VsBediener,
+      ArbeitszeitRunden NeuAzRunden, ArbeitszeitBediener NeuAzBediener, CollectionViewSource VsAnzeigeTage)
     {
       _Db = Db;
+      _AzRunden = NeuAzRunden;
       _VsAnzeigeTage = VsAnzeigeTage;
 
       var heute = DateTime.Now.Date;
@@ -91,49 +94,72 @@ namespace JgMaschineGlobalZeit
 
       ListeBediener = new JgEntityList<tabBediener>(_Db)
       {
-        Daten = _Db.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv) && !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToList(),
+        OnDatenLaden = (d, f) =>
+        {
+          return d.tabBedienerSet.Where(w => (w.Status == EnumStatusBediener.Aktiv) && !w.DatenAbgleich.Geloescht).OrderBy(o => o.NachName).ToList();
+        },
         ViewSource = VsBediener
       };
       VsBediener.GroupDescriptions.Add(new PropertyGroupDescription("eStandort.Bezeichnung"));
+      ListeBediener.DatenLaden();
       VsBediener.View.CurrentChanged += (sen, erg) =>
       {
         BenutzerGeaendert();
       };
 
       AzBediener = NeuAzBediener;
-      AzBediener.SetDb(_Db);
+      AzBediener.Init(_Db, _AzRunden);
 
       VsAnzeigeTage.Source = AzBediener.ListeTage;
-      JahrGeandert();
+
+      ListePausen = new JgEntityList<tabPausenzeit>(_Db)
+      {
+        OnDatenLaden = (d, f) =>
+        {
+          return d.tabPausenzeitSet.Where(w => (!w.DatenAbgleich.Geloescht)).ToList();
+        }
+      };
+      ListePausen.DatenLaden();
+
+      ListeSollstundenJahr = new JgEntityList<tabSollStunden>(_Db)
+      {
+        OnDatenLaden = (d, f) =>
+        {
+          var jahr = (short)f.Params["Jahr"];
+          return d.tabSollStundenSet.Where(w => (w.Jahr == jahr)).ToList();
+        }
+      };
+      ListeSollstundenJahr.Parameter["Jahr"] = Jahr;
+      ListeSollstundenJahr.DatenLaden();
+
+      ListeFeiertageJahr = new JgEntityList<tabFeiertage>(_Db)
+      {
+        OnDatenLaden = (d, f) =>
+        {
+          var jahr = (short)f.Params["Jahr"];
+          var ersterJahr = new DateTime(jahr, 1, 1);
+          var letzterJahr = new DateTime(jahr, 12, 31, 23, 59, 59);
+
+          return d.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= ersterJahr) && (w.Datum <= letzterJahr)).ToList();
+        }
+      };
+      ListeFeiertageJahr.Parameter["Jahr"] = Jahr;
+      ListeFeiertageJahr.DatenLaden();
+
+      MonatGeandert();
     }
 
     public void JahrGeandert()
     {
-      var pausen =
-      ListePausen = new JgEntityList<tabPausenzeit>(_Db)
-      {
-        Daten = _Db.tabPausenzeitSet.Where(w => (!w.DatenAbgleich.Geloescht)).ToList()
-      };
-
       var jahr = Jahr;
 
-      ListeSollstundenJahr = new JgEntityList<tabSollStunden>(_Db)
-      {
-        Daten = _Db.tabSollStundenSet.Where(f => (f.Jahr == jahr)).ToList()
-      };
+      ListePausen.DatenAktualisieren();
 
-      var ersterJahr = new DateTime(jahr, 1, 1);
-      var letzterJahr = new DateTime(jahr, 12, 31, 23, 59, 59);
+      ListeSollstundenJahr.Parameter["Jahr"] = Jahr;
+      ListeSollstundenJahr.DatenAktualisieren();
 
-      ListeFeiertageJahr = new JgEntityList<tabFeiertage>(_Db)
-      {
-        Daten = _Db.tabFeiertageSet.Where(w => (!w.DatenAbgleich.Geloescht) && (w.Datum >= ersterJahr) && (w.Datum <= letzterJahr)).ToList()
-      };
-
-      ListeRundenJahr = new JgEntityList<tabArbeitszeitRunden>(_Db)
-      {
-        Daten = _Db.tabArbeitszeitRundenSet.Where(w => (w.Jahr == jahr)).ToList()
-      };
+      ListeFeiertageJahr.Parameter["Jahr"] = Jahr;
+      ListeFeiertageJahr.DatenAktualisieren();
 
       MonatGeandert();
     }
@@ -146,13 +172,12 @@ namespace JgMaschineGlobalZeit
       SollStundenMonat = (sollStunde == null) ? TimeSpan.Zero : JgZeit.StringInZeit(sollStunde.SollStunden);
 
       ListeFeiertageMonat = ListeFeiertageJahr.Daten.Where(w => (w.Datum.Month == monat) && (!w.DatenAbgleich.Geloescht)).ToList();
-      ListeRundenMonat = _Db.tabArbeitszeitRundenSet.Where(w => (w.Monat == monat) && (!w.DatenAbgleich.Geloescht)).ToList();
 
       var idisBediener = ListeBediener.Daten.Select(s => s.Id).ToArray();
       var listAuswertungen = _Db.tabArbeitszeitAuswertungSet.Where(w => (idisBediener.Contains(w.fBediener) && (w.Jahr == Jahr) && (w.Monat == monat))).ToList();
 
       foreach (var bediener in ListeBediener.Daten)
-        bediener.eArbeitszeitHelper = listAuswertungen.FirstOrDefault(f => f.eBediener == bediener);
+        bediener.EArbeitszeitHelper = listAuswertungen.FirstOrDefault(f => f.eBediener == bediener);
 
       BenutzerGeaendert();
     }
@@ -160,7 +185,7 @@ namespace JgMaschineGlobalZeit
     public void BenutzerGeaendert()
     {
       Mouse.OverrideCursor = Cursors.Wait;
-      AzBediener.BedienerBerechnen(AktuellerBediener, Jahr, Monat, SollStundenMonat, ListeRundenMonat, ListeFeiertageMonat, ListePausen.Daten);
+      AzBediener.BedienerBerechnen(AktuellerBediener, Jahr, Monat, SollStundenMonat, ListeFeiertageMonat, ListePausen.Daten);
       Mouse.OverrideCursor = null;
     }
 

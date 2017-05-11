@@ -96,12 +96,13 @@
                             <DataGridTextColumn Binding="{Binding eBediener.Name, Mode=OneWay}" Header="Bediener" Width="160"/>
                             <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung, Mode=OneWay}" Header="Standort" Width="120"/>
                             <DataGridTextColumn x:Name="ColAnmeldung" Binding="{Binding AnzeigeAnmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-, Mode=OneWay}" Header="Anmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding AnmeldungGerundet, StringFormat=HH:mm, TargetNullValue=-, Mode=OneWay}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeAnmeldungGerundet, StringFormat=HH:mm, TargetNullValue=-, Mode=OneWay}" Header="Beginn" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAnmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
                             <DataGridTextColumn Binding="{Binding AnzeigeAbmeldung, StringFormat=\{0:dd.MM.yy HH:mm\}, TargetNullValue=-, Mode=OneWay}" Header="Abmeldung" Width="100" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeAbmeldungGerundet, StringFormat=HH:mm, TargetNullValue=-, Mode=OneWay}" Header="Ende" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridCheckBoxColumn Binding="{Binding ManuelleAbmeldung, Mode=OneWay}" Header="Manuell" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding DauerGerundetAnzeige, Mode=OneWay}" Header="Arbeitszeit" Width="80" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding DauerGerundet, Mode=OneWay, TargetNullValue=-, StringFormat=hh\\:mm}" Header="Arbeitszeit" Width="80" CellStyle="{StaticResource CellCenterAlign}" />
                             <DataGridTextColumn Binding="{Binding Baustelle}" Header="Baustelle" Width="120"/>
                             <DataGridTextColumn Binding="{Binding Bemerkung}" Header="Bemerkung" Width="*"/>
                             <DataGridCheckBoxColumn Binding="{Binding AnzeigeGeloescht, Mode=OneWay}" Header="Geloescht" Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
@@ -213,7 +214,7 @@
                         </DataGrid.GroupStyle>
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Mitarbeiter" Width="*"/>
-                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.StatusAnzeige, Mode=OneWay}" Header="Status" Width="60"/>
+                            <DataGridTextColumn Binding="{Binding EArbeitszeitHelper.StatusAnzeige, Mode=OneWay}" Header="Status" Width="60"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -238,7 +239,7 @@
                     <DataGrid x:Name="dgArbeitszeit" AutoGenerateColumns="False" Grid.Column="3" EnableRowVirtualization="True" 
                               ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
                               AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None" MouseDoubleClick="Datagrid_DoppelClick"
-                              IsReadOnly="{Binding eHelper}">
+                              IsReadOnly="{Binding EHelper}">
                         <DataGrid.CellStyle>
                             <Style TargetType="{x:Type DataGridCell}">
                                 <Setter Property="TextBlock.TextAlignment" Value="Center" />
@@ -264,10 +265,11 @@
                                             <DataGrid.CellStyle>
                                                 <Style TargetType="{x:Type DataGridCell}">
                                                     <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                                    <Setter Property="TextBlock.FontStyle" Value="Italic" />
                                                 </Style>
                                             </DataGrid.CellStyle>
 
-                                            <DataGrid.Columns>
+                                            <DataGrid.Columns> 
                                                 <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung, Mode=OneWay}"  Width="90" />
                                                 <DataGridTextColumn Binding="{Binding AnzeigeAnmeldung, Mode=OneWay, StringFormat=HH\\:mm}" Header="Anmeldung" Width="61">
                                                     <DataGridTextColumn.CellStyle>
@@ -300,7 +302,8 @@
                                                         </Style>
                                                     </DataGridTextColumn.CellStyle>
                                                 </DataGridTextColumn>
-                                                <DataGridTextColumn Binding="{Binding DauerGerundetAnzeige, Mode=OneWay}" Header="Abmeldung" Width="60" TextBlock.FontStyle="Italic" Foreground="Gray"/>
+                                                <DataGridTextColumn Binding="{Binding AbmeldungGerundet, Mode=OneWay, StringFormat=HH\\:mm}" Header="Anmeldung" Width="59" />
+                                                <DataGridTextColumn Binding="{Binding DauerGerundet, Mode=OneWay, StringFormat=hh\\:mm}" Header="Gerundet" Width="60" Foreground="Gray"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </Grid>
@@ -459,7 +462,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="5"/>
-                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="150"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -618,21 +621,21 @@
                         <Button Grid.Column="23" Grid.RowSpan="2" Click="BtnExporteren_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgSynchronize.ico" Height="28"/>
-                                <TextBlock Text=" Exportieren" VerticalAlignment="Center"/>
+                                <TextBlock VerticalAlignment="Center"><Run Text=" "/><Run Text=" in XML exportieren"/></TextBlock>
                             </StackPanel>
                         </Button>
 
                         <Button Grid.Column="23" Grid.Row="3" Click="BtnOptionen_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgSettings.ico" Height="14"/>
-                                <TextBlock Text=" Optionen" VerticalAlignment="Center"/>
+                                <TextBlock Text=" Arbeitszeitoptionen" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Grid.Column="23" Grid.Row="2" Click="BtnNeuBerechnen_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Bilder\JgRefresh.ico" Height="14"/>
-                                <TextBlock Text=" Berechnung" VerticalAlignment="Center"/>
+                                <TextBlock Text=" Neu Berechnen" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </Grid>

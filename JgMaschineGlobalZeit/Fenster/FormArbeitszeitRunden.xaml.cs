@@ -2,64 +2,46 @@
 using System.Linq;
 using System.Windows;
 using JgMaschineData;
-using JgMaschineLib;
 using JgZeitHelper;
 
 namespace JgMaschineGlobalZeit.Fenster
 {
   public partial class FormArbeitszeitRunden : Window
   {
-    private bool _Erstellen;
-    private AnmeldungAuswertung _Auswertung;
+    public tabArbeitszeitRunden AzGerundet { get => (tabArbeitszeitRunden)gridRunden.DataContext; }
 
-    public tabArbeitszeitRunden AktuellerWert { get { return (tabArbeitszeitRunden)gridRunden.DataContext; } }
-
-    public FormArbeitszeitRunden(AnmeldungAuswertung Auswertung, tabArbeitszeitRunden WertBearbeiten, bool Erstellen)
+    public FormArbeitszeitRunden(AnmeldungAuswertung Auswertung, EnumZeitpunkt NeuZeitpunkt, tabArbeitszeitRunden WertBearbeiten, bool Erstellen)
     {
       InitializeComponent();
 
-      _Erstellen = Erstellen;
-      _Auswertung = Auswertung;
+      this.Title = $" {(Erstellen ? "Neu" : "Bearbeiten")} {(NeuZeitpunkt == EnumZeitpunkt.Anmeldung ? "Arbeitsbeginn" : "Arbeitsende")} ";
 
-      tabArbeitszeitRunden runden = WertBearbeiten;
+      cmbNiederlassung.ItemsSource = Auswertung.Db.tabStandortSet.Where(w => (!w.DatenAbgleich.Geloescht)).OrderBy(o => o.Bezeichnung).ToList();
+      cmbMonat.ItemsSource = Enum.GetValues(typeof(JgZeit.Monate));
+
+      var runden = WertBearbeiten;
       if (Erstellen)
       {
         runden = new tabArbeitszeitRunden()
         {
-          Jahr = _Auswertung.Jahr,
+          Id = Guid.NewGuid(),
+          Zeitpunkt = NeuZeitpunkt,
+          Jahr = Auswertung.Jahr,
+          Monat = WertBearbeiten?.Monat ?? (byte)1,
+
           ZeitVon = (WertBearbeiten != null) ? WertBearbeiten.ZeitVon : new TimeSpan(5, 30, 0),
           ZeitBis = (WertBearbeiten != null) ? WertBearbeiten.ZeitBis : new TimeSpan(6, 0, 0),
-          RundenArbeitszeitBeginn = (WertBearbeiten != null) ? WertBearbeiten.RundenArbeitszeitBeginn : new TimeSpan(6, 0, 0),
+          RundenArbeitszeit = WertBearbeiten?.RundenArbeitszeit ?? new TimeSpan(6, 0, 0),
 
-          Monat = (WertBearbeiten != null) ? (byte)WertBearbeiten.Monat : (byte)1,
           eStandort = WertBearbeiten?.eStandort,
         };
       }
       gridRunden.DataContext = runden;
-
-      cmbNiederlassung.ItemsSource = Auswertung.Db.tabStandortSet.Where(w => (!w.DatenAbgleich.Geloescht)).OrderBy(o => o.Bezeichnung).ToList();
-      cmbMonat.ItemsSource = Enum.GetValues(typeof(JgZeit.Monate));
     }
 
-    private void btnOk_Click(object sender, RoutedEventArgs e)
+    private void BtnOk_Click(object sender, RoutedEventArgs e)
     {
-      var runden = AktuellerWert;
-      if (_Erstellen)
-      {
-        runden.Id = Guid.NewGuid();
-
-        _Auswertung.Db.tabArbeitszeitRundenSet.Add(runden);
-        _Auswertung.ListeRundenJahr.Add(runden);
-      }
-
-      _Auswertung.Db.SaveChanges();
       this.DialogResult = true;
-    }
-
-    private void Window_Closed(object sender, EventArgs e)
-    {
-      if (!(this.DialogResult ?? false) && (!_Erstellen))
-        _Auswertung.Db.Entry(AktuellerWert).Reload();
     }
   }
 }

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/10/2017 10:34:27
+-- Date Created: 05/05/2017 13:30:49
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -423,9 +423,10 @@ CREATE TABLE [dbo].[tabArbeitszeitRundenSet] (
     [Id] uniqueidentifier  NOT NULL,
     [Jahr] smallint  NOT NULL,
     [Monat] tinyint  NOT NULL,
+    [Zeitpunkt] tinyint  NOT NULL,
     [ZeitVon] time  NOT NULL,
     [ZeitBis] time  NOT NULL,
-    [RundenArbeitszeitBeginn] time  NOT NULL,
+    [RundenArbeitszeit] time  NOT NULL,
     [RundenArbeitszeitLaenge] time  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,

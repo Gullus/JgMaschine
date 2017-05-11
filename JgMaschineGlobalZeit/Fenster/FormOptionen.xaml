@@ -6,7 +6,7 @@
     xmlns:JgMaschineData="clr-namespace:JgMaschineData;assembly=JgMaschineData" 
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" mc:Ignorable="d"
     x:Class="JgMaschineGlobalZeit.Fenster.FormOptionen"
-    Title="Optionen" Height="452" Width="510" ResizeMode="NoResize" ShowInTaskbar="False"
+    Title="Optionen" Height="682" Width="552" ResizeMode="NoResize" ShowInTaskbar="False"
     WindowStartupLocation="CenterOwner" Icon="/JgMaschineGlobalZeit;component/JgGlobalZeit.ico"     
     Loaded="Window_Loaded">
     <Window.Resources>
@@ -15,25 +15,27 @@
                 <ComponentModel:SortDescription Direction="Ascending" PropertyName="Datum"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
+        
         <CollectionViewSource x:Key="vsSollStunden" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabSollStunden}, CreateList=True}" IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
                 <ComponentModel:SortDescription Direction="Ascending" PropertyName="Monat"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-        <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabBediener}, CreateList=True}"/>
+        
         <CollectionViewSource x:Key="vsPausen" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabPausenzeit}, CreateList=True}" IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
                 <ComponentModel:SortDescription Direction="Ascending" PropertyName="ZeitVon"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
-        <CollectionViewSource x:Key="vsRunden" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitRunden}, CreateList=True}">
+        <CollectionViewSource x:Key="vsBediener" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabBediener}, CreateList=True}">
             <CollectionViewSource.SortDescriptions>
-                <ComponentModel:SortDescription Direction="Ascending" PropertyName="MonatAnzeige"/>
-                <ComponentModel:SortDescription Direction="Ascending" PropertyName="AnzeigeZeitVon"/>
+                <ComponentModel:SortDescription Direction="Ascending" PropertyName="NachName"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-
+        
+        <CollectionViewSource x:Key="vsRundenAzBeginn" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitRunden}, CreateList=True}" />
+        <CollectionViewSource x:Key="vsRundenAzEnde" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitRunden}, CreateList=True}" />
         <CollectionViewSource x:Key="vsTerminals" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitTerminal}, CreateList=True}"/>
     </Window.Resources>
     <Grid Margin="8">
@@ -54,17 +56,29 @@
         </Border>
 
         <TabControl Margin="5" Grid.ColumnSpan="5" Grid.Row="1">
-            <TabItem Header=" Benutzer " Height="22" VerticalAlignment="Top">
+            <TabItem Header=" Benutzer " Height="40" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsBediener}">
-                    <DataGrid x:Name="tabBedienerDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource vsBediener}}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <DataGrid.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Background="Blue" Foreground="White" TextAlignment="Center" Height="20">
+                                            <Run Text="{Binding Path=Name, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </DataGrid.GroupStyle>
+                        
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Mitarbeiter" IsReadOnly="True" Width="*"/>
                             <DataGridTextColumn Binding="{Binding Urlaubstage}" Header="Urlaubs&#x0a;Tage" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridTextColumn Binding="{Binding IdBuchhaltung}" Header="Id&#x0a;Buchhaltg." Width="70" CellStyle="{StaticResource CellCenterAlign}"/>
                             <DataGridTextColumn Binding="{Binding AuszahlungGehalt}" Header="Zahltag" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
 
-                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.Urlaub}" Header="Rest&#x0a;Urlaub" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
-                            <DataGridTextColumn Binding="{Binding eArbeitszeitHelper.UeberstundenAnzeige}" Header="Überst.&#x0a;Vorjahr" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding EArbeitszeitHelper.Urlaub}" Header="Rest&#x0a;Urlaub" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
+                            <DataGridTextColumn Binding="{Binding EArbeitszeitHelper.UeberstundenAnzeige}" Header="Überst.&#x0a;Vorjahr" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -105,7 +119,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Button Content="Neuer Feiertag" Grid.Row="1" Margin="5" Click="btnNeuerFeiertag_Click"/>
+                    <Button Content="Neuer Feiertag" Grid.Row="1" Margin="5" Click="BtnNeuerFeiertag_Click"/>
                 </Grid>
             </TabItem>
 
@@ -128,14 +142,13 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Button Content="Neue Pause" Grid.Row="1" Margin="5" Click="btnNeuePause_Click"/>
+                    <Button Content="Neue Pause" Grid.Row="1" Margin="5" Click="BtnNeuePause_Click"/>
                 </Grid>
             </TabItem>
 
-            <TabItem Header=" Runden ">
-                <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsRunden}">
+            <TabItem Header=" Runden&#x0a; Anmeldung">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsRundenAzBeginn}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition/>
@@ -144,7 +157,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
-                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserDeleteRows="False" CanUserAddRows="False" Grid.ColumnSpan="4">
+                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserDeleteRows="False" CanUserAddRows="False" Grid.ColumnSpan="3">
                         <DataGrid.GroupStyle>
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
@@ -159,19 +172,55 @@
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding MonatAnzeige}" CellStyle="{StaticResource CellCenterAlign}" Header="Monat" Width="*"/>
-                            <DataGridTextColumn Binding="{Binding AnzeigeZeitVon, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="von" Width="60"/>
-                            <DataGridTextColumn Binding="{Binding AnzeigeZeitBis, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="bis" Width="60"/>
-                            <DataGridTextColumn Binding="{Binding AnzeigeRundenBeginn, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Runden&#x0a;Arbeitsbeginn" Width="*"/>
-                            <DataGridTextColumn Binding="{Binding AnzeigeRundenLaenge, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Runden&#x0a;Arbeitszeit" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeZeitVon, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="von" Width="80"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeZeitBis, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="bis" Width="80"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeRundenAuf, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Runden&#x0a;Arbeitsbeginn" Width="*"/>
                             <DataGridCheckBoxColumn Binding="{Binding AnzeigeGeloescht}" Header="Gelöscht" Width="60"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button Content="Neuer Wert" Margin="5" Grid.Row="1" Click="btnRundungswert_Click" Tag="0"/>
-                    <Button Content="Bearbeiten" Margin="5" Grid.Column="1" Grid.Row="1" Click="btnRundungswert_Click" Tag="1"/>
+                    <Button x:Name="BtnAzRundenBeginnNeu" Content="Neuer Wert" Margin="5" Grid.Row="1" Click="BtnRundungswert_Click"/>
+                    <Button x:Name="BtnAzRundenBeginnBearbeiten" Content="Bearbeiten" Margin="5" Grid.Column="1" Grid.Row="1" Click="BtnRundungswert_Click"/>
                 </Grid>
             </TabItem>
 
-            <TabItem Header=" Arbeitzeit Terminals " Height="24" VerticalAlignment="Top">
+            <TabItem Header=" Runden&#x0a; Abmeldung">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsRundenAzEnde}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserDeleteRows="False" CanUserAddRows="False" Grid.ColumnSpan="3">
+                        <DataGrid.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Background="Blue" Foreground="White" TextAlignment="Center" Height="20">
+                                            <Run Text="{Binding Path=Name, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </DataGrid.GroupStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding MonatAnzeige}" CellStyle="{StaticResource CellCenterAlign}" Header="Monat" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeZeitVon, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="von" Width="80"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeZeitBis, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="bis" Width="80"/>
+                            <DataGridTextColumn Binding="{Binding AnzeigeRundenAuf, StringFormat=hh\\:mm}" CellStyle="{StaticResource CellCenterAlign}" Header="Runden&#x0a;Arbeitsende" Width="*"/>
+                            <DataGridCheckBoxColumn Binding="{Binding AnzeigeGeloescht}" Header="Gelöscht" Width="60"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="BtnAzRundenEndeNeu" Content="Neuer Wert" Margin="5" Grid.Row="1" Click="BtnRundungswert_Click" Tag="0"/>
+                    <Button x:Name="BtnAzRundenEndeBearbeiten" Content="Bearbeiten" Margin="5" Grid.Column="1" Grid.Row="1" Click="BtnRundungswert_Click" Tag="1"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header=" Arbeitzeit&#x0a; Terminals " Height="40" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsTerminals}">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -194,14 +243,14 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Button x:Name="btnNeuesTermin" Content="Neues Terminal" Grid.Row="1" Click="btnTerminal_Click" />
-                    <Button x:Name="btnTerminalBearbeiten" Content="Bearbeiten" Grid.Column="1" Grid.Row="1" Click="btnTerminal_Click" />
+                    <Button x:Name="btnNeuesTermin" Content="Neues Terminal" Grid.Row="1" Click="BtnTerminal_Click" />
+                    <Button x:Name="btnTerminalBearbeiten" Content="Bearbeiten" Grid.Column="1" Grid.Row="1" Click="BtnTerminal_Click" />
 
                 </Grid>
             </TabItem>
         </TabControl>
 
-        <Button Grid.Column="3" IsDefault="True" Click="ButtonOk_Click">
+        <Button Grid.Column="3" IsDefault="True" Click="ButtonOk_Click" Margin="3, 3, 8, 3">
             <StackPanel Orientation="Horizontal">
                 <Image Source="..\Bilder\JgCheck.ico" Height="30"/>
                 <TextBlock Text=" Eintragen" VerticalAlignment="Center"/>

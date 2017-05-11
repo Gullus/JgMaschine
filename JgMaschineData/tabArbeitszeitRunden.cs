@@ -23,9 +23,10 @@ namespace JgMaschineData
         public System.Guid Id { get; set; }
         public short Jahr { get; set; }
         public byte Monat { get; set; }
+        public EnumZeitpunkt Zeitpunkt { get; set; }
         public System.TimeSpan ZeitVon { get; set; }
         public System.TimeSpan ZeitBis { get; set; }
-        public System.TimeSpan RundenArbeitszeitBeginn { get; set; }
+        public System.TimeSpan RundenArbeitszeit { get; set; }
         public Nullable<System.TimeSpan> RundenArbeitszeitLaenge { get; set; }
         public System.Guid fStandort { get; set; }
     

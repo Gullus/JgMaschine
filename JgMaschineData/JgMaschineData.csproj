@@ -87,6 +87,9 @@
     <Compile Include="EnumStatusProtkoll.cs">
       <DependentUpon>JgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EnumZeitpunkt.cs">
+      <DependentUpon>JgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="JgModel.Context.cs">
       <AutoGen>True</AutoGen>

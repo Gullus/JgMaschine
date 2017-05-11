@@ -1,16 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using JgMaschineData;
 using JgZeitHelper;
 
@@ -21,21 +12,38 @@ namespace JgMaschineGlobalZeit.Fenster
     private JgZeit _ZeitVon { get { return (JgZeit)FindResource("JgZeitVon"); } }
     private JgZeit _ZeitBis { get { return (JgZeit)FindResource("JgZeitBis"); } }
 
-    public tabStandort Standort { get { return (tabStandort)cmbStandort.SelectedValue; } }
-    public tabBediener Bediener { get { return (tabBediener)cmbMitarbeiter.SelectedValue; } }
+    public tabArbeitszeit ArbeitsZeit { get => (tabArbeitszeit)gridArbeitszeit.DataContext; }
 
-    public DateTime DatumVon { get { return _ZeitVon.AnzeigeDatumZeit; } }
-    public DateTime DatumBis { get { return _ZeitBis.AnzeigeDatumZeit; } }
-
-    public FormNeueArbeitszeit(IEnumerable<tabStandort> ListeStandort, IEnumerable<tabBediener> ListeBediener)
+    public FormNeueArbeitszeit(JgModelContainer Db, IEnumerable<tabBediener> ListeBediener)
     {
       InitializeComponent();
 
-      cmbStandort.ItemsSource = ListeStandort;
+      var standorte = Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
+      cmbStandort.ItemsSource = standorte;
       cmbMitarbeiter.ItemsSource = ListeBediener;
 
-      _ZeitVon.AnzeigeDatumZeit = DateTime.Now;
-      _ZeitBis.AnzeigeDatumZeit = DateTime.Now.Add(new TimeSpan(0, 32, 0));
+      var jetzt = DateTime.Now;
+
+      var az = new tabArbeitszeit()
+      {
+        Id = Guid.NewGuid(),
+        eStandort = standorte.FirstOrDefault(),
+        eBediener = ListeBediener.FirstOrDefault(),
+        Anmeldung = jetzt,
+        ManuelleAnmeldung = true,
+        Abmeldung = jetzt.Add(new TimeSpan(0, 32, 0)),
+        ManuelleAbmeldung = true,
+      };
+
+      var zVon = (JgZeit)FindResource("JgZeitVon");
+      zVon.AnzeigeDatumZeit = az.Anmeldung.Value;
+      zVon.OnNeuerWert = (d, z) => { az.Anmeldung = d + z; };
+
+      var zBis = (JgZeit)FindResource("JgZeitBis");
+      zBis.AnzeigeDatumZeit = az.Abmeldung.Value;
+      zBis.OnNeuerWert = (d, z) => { az.Abmeldung = d + z; };
+
+      gridArbeitszeit.DataContext = az;
     }
 
     private void btnOk_Click(object sender, RoutedEventArgs e)

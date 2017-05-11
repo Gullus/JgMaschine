@@ -393,9 +393,10 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Jahr" Type="smallint" Nullable="false" />
     <Property Name="Monat" Type="tinyint" Nullable="false" />
+    <Property Name="Zeitpunkt" Type="tinyint" Nullable="false" />
     <Property Name="ZeitVon" Type="time" Nullable="false" />
     <Property Name="ZeitBis" Type="time" Nullable="false" />
-    <Property Name="RundenArbeitszeitBeginn" Type="time" Nullable="false" />
+    <Property Name="RundenArbeitszeit" Type="time" Nullable="false" />
     <Property Name="RundenArbeitszeitLaenge" Type="time" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
@@ -1433,9 +1434,10 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Jahr" Type="Int16" Nullable="false" />
           <Property Name="Monat" Type="Byte" Nullable="false" />
+          <Property Name="Zeitpunkt" Type="JgModel.EnumZeitpunkt" Nullable="false" />
           <Property Name="ZeitVon" Type="Time" Nullable="false" />
           <Property Name="ZeitBis" Type="Time" Nullable="false" />
-          <Property Name="RundenArbeitszeitBeginn" Type="Time" Nullable="false" />
+          <Property Name="RundenArbeitszeit" Type="Time" Nullable="false" />
           <Property Name="RundenArbeitszeitLaenge" Type="Time" Nullable="true" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
@@ -1479,6 +1481,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EnumType Name="EnumZeitpunkt" UnderlyingType="Byte">
+          <Member Name="Anmeldung" Value="0" />
+          <Member Name="Abmeldung" Value="1" />
+        </EnumType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1801,9 +1807,10 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Jahr" ColumnName="Jahr" />
           <ScalarProperty Name="Monat" ColumnName="Monat" />
+          <ScalarProperty Name="Zeitpunkt" ColumnName="Zeitpunkt" />
           <ScalarProperty Name="ZeitVon" ColumnName="ZeitVon" />
           <ScalarProperty Name="ZeitBis" ColumnName="ZeitBis" />
-          <ScalarProperty Name="RundenArbeitszeitBeginn" ColumnName="RundenArbeitszeitBeginn" />
+          <ScalarProperty Name="RundenArbeitszeit" ColumnName="RundenArbeitszeit" />
           <ScalarProperty Name="RundenArbeitszeitLaenge" ColumnName="RundenArbeitszeitLaenge" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />

@@ -12,6 +12,7 @@ namespace JgMaschineGlobalZeit
   public class ArbeitszeitBediener
   {
     private JgModelContainer _Db;
+    private ArbeitszeitRunden _AzRunden;
 
     public tabBediener Bediener { get; set; }   // Für Auswahl in Reporten
     public Guid IdBediener { get { return Bediener.Id; } }
@@ -21,28 +22,26 @@ namespace JgMaschineGlobalZeit
     public ArbeitszeitHelperMonat AuswertungMonat { get; set; } = new ArbeitszeitHelperMonat();
     public ArbeitszeitHelperAktuell AuswertungGesamt { get; set; } = new ArbeitszeitHelperAktuell();
 
-    public bool IstReadOnly { get { return Bediener?.eArbeitszeitHelper?.Status == EnumStatusArbeitszeitAuswertung.InArbeit; } }
+    public bool IstReadOnly { get { return Bediener?.EArbeitszeitHelper?.Status == EnumStatusArbeitszeitAuswertung.InArbeit; } }
 
     public ObservableCollection<tabArbeitszeitTag> ListeTage { get; set; } = new ObservableCollection<tabArbeitszeitTag>();
 
     public ArbeitszeitBediener()
     { }
 
-    public ArbeitszeitBediener(JgModelContainer Db)
+    public ArbeitszeitBediener(JgModelContainer Db, ArbeitszeitRunden AzRunden)
     {
-      _Db = Db;
+      Init(Db, AzRunden);
     }
 
-    public void SetDb(JgModelContainer Db)
+    public void Init(JgModelContainer Db, ArbeitszeitRunden AzRunden)
     {
       _Db = Db;
+      _AzRunden = AzRunden;
     }
 
-    public void BedienerBerechnen(tabBediener Bediener, short Jahr, byte Monat, 
-      TimeSpan SollStundenMonat,
-      IEnumerable<tabArbeitszeitRunden> ListeRundenMonat,
-      IEnumerable<tabFeiertage> ListeFeiertageMonat,
-      IEnumerable<tabPausenzeit> ListePausen)
+    public void BedienerBerechnen(tabBediener Bediener, short Jahr, byte Monat, TimeSpan SollStundenMonat,
+      IEnumerable<tabFeiertage> ListeFeiertageMonat, IEnumerable<tabPausenzeit> ListePausen)
     {
       this.Bediener = Bediener;
 
@@ -57,7 +56,7 @@ namespace JgMaschineGlobalZeit
       if (auswMonat == null)
         auswMonat = ArbeitszeitAuswertungErstellen(Bediener, Jahr, Monat, SollStundenMonat);
       AuswertungMonat.AzAuswertung = auswMonat;
-      Bediener.eArbeitszeitHelper = auswMonat;
+      Bediener.EArbeitszeitHelper = auswMonat;
 
       var auswKumulativ = alleAuswertungenBediener.Where(w => (w.Monat > 0) && (w.Monat < Monat)).ToList();
 
@@ -70,7 +69,7 @@ namespace JgMaschineGlobalZeit
 
       var berechneteWerteInDb = AuswertungMonat.AzAuswertung.Status == EnumStatusArbeitszeitAuswertung.InArbeit;
 
-      ListeFuerJedenTagErstellen(Bediener.eArbeitszeitHelper, ListeRundenMonat, ListeFeiertageMonat, ListePausen, berechneteWerteInDb);
+      ListeFuerJedenTagErstellen(Bediener.EArbeitszeitHelper, ListeFeiertageMonat, ListePausen, berechneteWerteInDb);
 
       BerechneKrank();
       BerechneUrlaub();
@@ -118,7 +117,6 @@ namespace JgMaschineGlobalZeit
     }
 
     public void ListeFuerJedenTagErstellen(tabArbeitszeitAuswertung AuswertungBediener,
-      IEnumerable<tabArbeitszeitRunden> ListeRundenMonat,
       IEnumerable<tabFeiertage> ListeFeiertageMonat,
       IEnumerable<tabPausenzeit> ListePausen, bool WerteInDb)
     {
@@ -177,20 +175,13 @@ namespace JgMaschineGlobalZeit
             if (zeit.eArbeitszeitAuswertung != auswTag)
               zeit.eArbeitszeitAuswertung = auswTag;
 
-            if (zeit.Anmeldung != null)
+            zeit.AnmeldungGerundet = _AzRunden.GetZeitGerundet(EnumZeitpunkt.Anmeldung, zeit.fStandort, zeit.Anmeldung);
+            zeit.AbmeldungGerundet = _AzRunden.GetZeitGerundet(EnumZeitpunkt.Abmeldung, zeit.fStandort, zeit.Abmeldung);
+
+            if ((zeit.Anmeldung != null) && (zeit.Abmeldung != null))
             {
-              // Anfangszeiten Runden heraussuchen
-              var zeitAnmeldung = JgZeit.DatumInZeitMinute(zeit.Anmeldung.Value);
-
-              var wg = ListeRundenMonat.FirstOrDefault(f => (zeitAnmeldung >= f.ZeitVon) && (zeitAnmeldung <= f.ZeitBis) && (f.fStandort == zeit.fStandort));
-              if (wg != null)
-                zeit.AnmeldungGerundetWert = zeit.Anmeldung.Value.Date.Add(wg.RundenArbeitszeitBeginn);
-
-              if (zeit.Abmeldung != null)
-              {
-                auswTag.ZeitBerechnet += zeit.DauerGerundet;
-                auswTag.NachtschichtBerechnet += NachtSchichtBerechnen(22, 0, 8, 0, zeit.AnmeldungGerundet.Value, zeit.Abmeldung.Value);
-              }
+              auswTag.ZeitBerechnet += zeit.DauerGerundet;
+              auswTag.NachtschichtBerechnet += NachtSchichtBerechnen(22, 0, 8, 0, zeit.AnmeldungGerundet.Value, zeit.Abmeldung.Value);
             }
           }
           auswTag.ZeitBerechnet = ZeitAufMinuteRunden(auswTag.ZeitBerechnet);

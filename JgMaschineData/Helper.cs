@@ -63,7 +63,6 @@ namespace JgMaschineData
         }
       }
     }
-
   }
 
   public partial class tabProtokoll
@@ -120,15 +119,15 @@ namespace JgMaschineData
       }
     }
 
-    private tabArbeitszeitAuswertung fArbeitszeitHelper = null;
-    public tabArbeitszeitAuswertung eArbeitszeitHelper
+    private tabArbeitszeitAuswertung FArbeitszeitHelper = null;
+    public tabArbeitszeitAuswertung EArbeitszeitHelper
     {
-      get { return fArbeitszeitHelper; }
+      get { return FArbeitszeitHelper; }
       set
       {
-        if (fArbeitszeitHelper != value)
+        if (FArbeitszeitHelper != value)
         {
-          fArbeitszeitHelper = value;
+          FArbeitszeitHelper = value;
           NotifyPropertyChanged();
         }
       }
@@ -384,7 +383,6 @@ namespace JgMaschineData
           NotifyPropertyChanged();
           NotifyPropertyChanged("ManuelleAbmeldung");
           NotifyPropertyChanged("AbmeldungIstLeer");
-          NotifyPropertyChanged("DauerGerundetAnzeige");
         }
       }
     }
@@ -395,18 +393,37 @@ namespace JgMaschineData
     public TimeSpan Dauer { get { return ((this.Anmeldung != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.Anmeldung.Value : TimeSpan.Zero; } }
     public string DauerAnzeige { get { return (Dauer == TimeSpan.Zero) ? "-" : JgZeit.ZeitInString(Dauer); } }
 
-    public DateTime? AnmeldungGerundetWert { get; set; } = null;
-    public DateTime? AnmeldungGerundet
+    public DateTime? AnmeldungGerundet { get; set; } = null;
+    public DateTime? AnzeigeAnmeldungGerundet
     {
-      get
+      get => AnmeldungGerundet;
+      set
       {
-        if (this.AnmeldungGerundetWert == null)
-          return this.Anmeldung;
-        return this.AnmeldungGerundetWert;
+        if (value != AnmeldungGerundet)
+        {
+          AnmeldungGerundet = value;
+          NotifyPropertyChanged();
+          NotifyPropertyChanged("DauerGerundet");
+        }
       }
     }
-    public TimeSpan DauerGerundet { get { return ((this.AnmeldungGerundet != null) && (this.Abmeldung != null)) ? this.Abmeldung.Value - this.AnmeldungGerundet.Value : TimeSpan.Zero; } }
-    public string DauerGerundetAnzeige { get { return (DauerGerundet == TimeSpan.Zero) ? "-" : JgZeit.ZeitInString(DauerGerundet); } }
+
+    public DateTime? AbmeldungGerundet { get; set; } = null;
+    public DateTime? AnzeigeAbmeldungGerundet
+    {
+      get => AbmeldungGerundet;
+      set
+      {
+        if (value != AbmeldungGerundet)
+        {
+          AbmeldungGerundet = value;
+          NotifyPropertyChanged();
+          NotifyPropertyChanged("DauerGerundet");
+        }
+      }
+    }
+
+    public TimeSpan DauerGerundet { get => ((AnmeldungGerundet != null) && (this.AbmeldungGerundet != null)) ? this.AbmeldungGerundet.Value - this.AnmeldungGerundet.Value : TimeSpan.Zero; }
 
     public bool AnzeigeGeloescht
     {
@@ -678,15 +695,15 @@ namespace JgMaschineData
       }
     }
 
-    public string AnzeigeRundenBeginn
+    public string AnzeigeRundenAuf
     {
-      get { return JgZeit.ZeitInString(this.RundenArbeitszeitBeginn); }
+      get { return JgZeit.ZeitInString(this.RundenArbeitszeit); }
       set
       {
-        var zeit = JgZeit.StringInZeit(value, RundenArbeitszeitBeginn);
-        if (zeit != RundenArbeitszeitBeginn)
+        var zeit = JgZeit.StringInZeit(value, RundenArbeitszeit);
+        if (zeit != RundenArbeitszeit)
         {
-          this.RundenArbeitszeitBeginn = zeit;
+          this.RundenArbeitszeit = zeit;
           NotifyPropertyChanged();
         }
       }
