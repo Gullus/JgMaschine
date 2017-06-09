@@ -19,6 +19,8 @@ using Newtonsoft.Json;
 using System.ServiceModel;
 using System.Messaging;
 using System.Threading;
+using System.Data.SqlClient;
+using System.Data.Entity;
 
 namespace JgMaschineTest
 {
@@ -26,25 +28,89 @@ namespace JgMaschineTest
   {
     static void Main(string[] args)
     {
-
-      Logger.SetLogWriter(new LogWriterFactory().Create());
-      ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
-
-      Logger.Write("Hallo Ballo");
-
-
-      var i = 0;
-
-      try
+      using (var db = new JgMaschineData.JgModelContainer())
       {
-        Console.WriteLine(10 / i);
+        var gui = Guid.Parse("f6e1b17d-1519-402c-9414-a913c0ec78db");
+        var anm = (from benutzer in db.tabBedienerSet
+                   join anmeldung in db.tabAnmeldungMaschineSet on benutzer.fAktivAnmeldung equals anmeldung.Id
+                   where (anmeldung.eMaschine.fStandort == gui)
+                   select anmeldung).Include(i => i.eMaschine);
+
+
+
+        foreach (var ds in
+          anm.ToList())
+          Console.WriteLine(ds.eMaschine.fStandort);
       }
-      catch (Exception f)
+
+      Console.ReadKey();
+
+
+      //  Logger.SetLogWriter(new LogWriterFactory().Create());
+      //ExceptionPolicy.SetExceptionManager(new ExceptionPolicyFactory().CreateManager(), false);
+
+      //Logger.Write("Hallo Ballo");
+
+
+      //var i = 0;
+
+      //try
+      //{
+      //  Console.WriteLine(10 / i);
+      //}
+      //catch (Exception f)
+      //{
+      //  ExceptionPolicy.HandleException(f, "Policy");
+      //}
+    }
+  }
+
+  public class DatenKontrolle<T>
+    where T : class
+  {
+    public class DatenVergleich
+    {
+      public Guid Id { get; set; }
+      public DateTime DatenAbgleich_Datum { get; set; }
+    }
+
+    private JgModelContainer _Db;
+    private System.Data.Entity.DbSet _Entity;
+
+    public string SqlText = null;
+
+    public DatenKontrolle(JgModelContainer Db)
+    {
+      _Db = Db;
+      _Entity = _Db.Set<T>();
+    }
+
+    public void Pruefen(params SqlParameter[] Parameter)
+    {
+      var daten = _Db.Database.SqlQuery<DatenVergleich>(SqlText, Parameter).ToList();
+      foreach (var ds in daten)
       {
-        ExceptionPolicy.HandleException(f, "Policy");
+        var vorhanden = _Entity.Find(ds.Id);
+        if (vorhanden != null)
+        {
+          var entVorhanden = _Db.Entry(vorhanden);
+          if (entVorhanden.ComplexProperty("DatenAbgleich").Property("Datum").CurrentValue != null)
+          {
+            if (Convert.ToDateTime(entVorhanden.ComplexProperty("DatenAbgleich").Property("Datum").CurrentValue) != ds.DatenAbgleich_Datum)
+              entVorhanden.Reload();
+          }
+        }
       }
     }
   }
+
+
+  public class TestMaschine
+  {
+    public Guid Id { get; set; }
+    public DateTime Datum { get; set; }
+  }
+
 
   [ServiceContract]
   public interface IMsmqDaten

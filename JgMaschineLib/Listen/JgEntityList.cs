@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 using JgMaschineData;
 
 namespace JgMaschineLib
@@ -15,13 +14,13 @@ namespace JgMaschineLib
   public class JgEntityListEventArgs : EventArgs
   {
     public Dictionary<string, object> Params;
-    public bool ErsterDurchlauf;
+    public bool IstDatenLaden = true;
     public bool IstSortiert;
 
-    public JgEntityListEventArgs(Dictionary<string, object> NeuParams, bool NeuErsterDurchlauf, bool NeuIstSortierung)
+    public JgEntityListEventArgs(Dictionary<string, object> NeuParams, bool NeuIstDatenLaden, bool NeuIstSortierung)
     {
       Params = NeuParams;
-      ErsterDurchlauf = NeuErsterDurchlauf;
+      IstDatenLaden = NeuIstDatenLaden;
       IstSortiert = NeuIstSortierung;
     }
   }
@@ -51,7 +50,6 @@ namespace JgMaschineLib
     public Dictionary<string, object> Parameter = new Dictionary<string, object>();
 
     private int _ZeilenNummer = 0;
-    public bool ErsterDurchlauf = true;
     public bool IstSortierung
     {
       get
@@ -70,9 +68,7 @@ namespace JgMaschineLib
       Mouse.OverrideCursor = Cursors.Wait;
 
       if (OnDatenLaden != null)
-        Daten = OnDatenLaden(_Db, new JgEntityListEventArgs(Parameter, ErsterDurchlauf, IstSortierung));
-
-      ErsterDurchlauf = false;
+        Daten = OnDatenLaden(_Db, new JgEntityListEventArgs(Parameter, true, IstSortierung));
 
       Mouse.OverrideCursor = null;
     }
@@ -83,12 +79,10 @@ namespace JgMaschineLib
       {
         Mouse.OverrideCursor = Cursors.Wait;
 
-        MerkeZeile();
-
         var propId = typeof(K).GetProperty("Id");
         var propDateAbleich = typeof(K).GetProperty("DatenAbgleich");
 
-        var lNeu = OnDatenLaden(_Db, new JgEntityListEventArgs(Parameter, ErsterDurchlauf, IstSortierung));
+        var lNeu = OnDatenLaden(_Db, new JgEntityListEventArgs(Parameter, false, IstSortierung));
 
         var dicAlt = new SortedDictionary<Guid, K>();
         var dicNeu = new SortedDictionary<Guid, K>();
@@ -142,10 +136,6 @@ namespace JgMaschineLib
 
           foreach (var ds in idisAendern)
             _Db.Entry<K>(dicNeu[ds]).Reload();
-
-          Refresh();
-          GeheZuZeile();
-
         }
 
         Mouse.OverrideCursor = null;
@@ -262,7 +252,7 @@ namespace JgMaschineLib
     public void Reload(K DatenSatz = null)
     {
       var ds = _Db.Entry(DatenSatz ?? Current);
-      
+
       if (ds.State == System.Data.Entity.EntityState.Modified)
         ds.Reload();
     }

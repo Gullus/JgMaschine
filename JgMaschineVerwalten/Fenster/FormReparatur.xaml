@@ -33,7 +33,7 @@
 
         <Label Content="Maschine" Target="{Binding ElementName=cmbMaschine}" />
         <Border Grid.Column="1" Grid.ColumnSpan="3" BorderThickness="1" Margin="3, 2, 3, 2" BorderBrush="Silver">
-            <TextBlock x:Name="tblMaschine" TextAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="{Binding eMaschine.MaschinenName}" TextAlignment="Center" FontWeight="Bold"/>
         </Border>
         <Label Content="_Beginn" Target="{Binding ElementName=dtpRepVon}" Grid.Row="1"/>
         <DatePicker x:Name="dtpRepVon" SelectedDate="{Binding Source={StaticResource dzReparaturVon}, Path=AnzeigeDatum}" Grid.Column="1" Grid.Row="1" Margin="3,2"/>
@@ -58,7 +58,7 @@
 
         <Label Content="_Bemerkung" Target="{Binding ElementName=tbBemerkung}" Grid.Row="6" />
         <TextBox x:Name="tbBemerkung" Text="{Binding AnzeigeProtokollText}" Grid.Column="1" Grid.ColumnSpan="9" Grid.Row="6" Margin="3" SpellCheck.IsEnabled="True" AcceptsTab="True" />
-
+                                                     
         <Label Content="Anzahl Coils" Grid.Row="7" Target="{Binding ElementName=tbAnzahlCoils}"/>
         <TextBox x:Name="tbAnzahlCoils" Text="{Binding AnzeigeCoilwechselAnzahl}" Grid.Column="1" Grid.Row="7" />
         <Grid Grid.ColumnSpan="6" Grid.Column="2" Grid.Row="7" Grid.RowSpan="2">

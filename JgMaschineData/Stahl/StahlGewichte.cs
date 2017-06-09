@@ -7,7 +7,7 @@ namespace JgMaschineData
   {
     public static decimal GetGewichtKg(int Durchmesser, int Laenge)
     {
-      return Math.Round(Get(Durchmesser) * Laenge / 100, 3);
+      return Math.Round(Get(Durchmesser) * Laenge / 1000m, 3);
     }
 
     public static String GetGewichtKgAsString(int Durchmesser, int Laenge)
@@ -31,7 +31,7 @@ namespace JgMaschineData
         case 12: gewichtProMeter = 0.888m; break;
         case 14: gewichtProMeter = 1.21m; break;
         case 16: gewichtProMeter = 1.58m; break;
-        case 20: gewichtProMeter = 2.47m; break;
+        case 20: gewichtProMeter = 2.42m; break;
         case 25: gewichtProMeter = 3.85m; break;
         case 28: gewichtProMeter = 4.83m; break;
         case 32: gewichtProMeter = 6.31m; break;

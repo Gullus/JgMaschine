@@ -96,10 +96,6 @@
       <End Role="tabArbeitszeit" EntitySet="tabArbeitszeitSet" />
       <End Role="tabBediener" EntitySet="tabBedienerSet" />
     </AssociationSet>
-    <AssociationSet Name="tabMaschinetabAnmeldungMaschine" Association="JgModel.Store.tabMaschinetabAnmeldungMaschine">
-      <End Role="tabMaschine" EntitySet="tabMaschineSet" />
-      <End Role="tabAnmeldungMaschine" EntitySet="tabAnmeldungMaschineSet" />
-    </AssociationSet>
     <AssociationSet Name="tabArbeitszeitAuswertungtabArbeitszeit" Association="JgModel.Store.tabArbeitszeitAuswertungtabArbeitszeit">
       <End Role="tabArbeitszeitAuswertung" EntitySet="tabArbeitszeitTagSet" />
       <End Role="tabArbeitszeit" EntitySet="tabArbeitszeitSet" />
@@ -119,6 +115,10 @@
     <AssociationSet Name="tabStandorttabArbeitszeitTerminal" Association="JgModel.Store.tabStandorttabArbeitszeitTerminal">
       <End Role="tabStandort" EntitySet="tabStandortSet" />
       <End Role="tabArbeitszeitTerminal" EntitySet="tabArbeitszeitTerminalSet" />
+    </AssociationSet>
+    <AssociationSet Name="tabAnmeldungMaschinetabBediener" Association="JgModel.Store.tabAnmeldungMaschinetabBediener">
+      <End Role="tabAnmeldungMaschine" EntitySet="tabAnmeldungMaschineSet" />
+      <End Role="tabBediener" EntitySet="tabBedienerSet" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="tabMaschineSet">
@@ -163,6 +163,7 @@
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fAktivArbeitszeit" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="fAktivAnmeldung" Type="uniqueidentifier" Nullable="true" />
     <Property Name="fStandort" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="tabBauteilSet">
@@ -178,7 +179,7 @@
     <Property Name="IstHandeingabe" Type="bit" Nullable="false" />
     <Property Name="BvbsCode" Type="nvarchar(max)" Nullable="true" />
     <Property Name="IdStahlBauteil" Type="int" Nullable="false" DefaultValue="-1" />
-    <Property Name="BtGewicht" Type="decimal" Nullable="false" />
+    <Property Name="BtGewicht" Type="decimal" Nullable="false" Precision="6" Scale="3" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -200,7 +201,6 @@
     <Property Name="DatenAbgleich_Geloescht" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="fBediener" Type="uniqueidentifier" Nullable="false" />
     <Property Name="fMaschine" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="fAktivMaschine" Type="uniqueidentifier" Nullable="true" />
   </EntityType>
   <EntityType Name="tabProtokollSet">
     <Key>
@@ -397,7 +397,6 @@
     <Property Name="ZeitVon" Type="time" Nullable="false" />
     <Property Name="ZeitBis" Type="time" Nullable="false" />
     <Property Name="RundenArbeitszeit" Type="time" Nullable="false" />
-    <Property Name="RundenArbeitszeitLaenge" Type="time" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -628,18 +627,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="tabMaschinetabAnmeldungMaschine">
-    <End Role="tabMaschine" Type="JgModel.Store.tabMaschineSet" Multiplicity="0..1" />
-    <End Role="tabAnmeldungMaschine" Type="JgModel.Store.tabAnmeldungMaschineSet" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="tabMaschine">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="tabAnmeldungMaschine">
-        <PropertyRef Name="fAktivMaschine" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="tabArbeitszeitAuswertungtabArbeitszeit">
     <End Role="tabArbeitszeitAuswertung" Type="JgModel.Store.tabArbeitszeitTagSet" Multiplicity="0..1" />
     <End Role="tabArbeitszeit" Type="JgModel.Store.tabArbeitszeitSet" Multiplicity="*" />
@@ -697,6 +684,18 @@
       </Principal>
       <Dependent Role="tabArbeitszeitTerminal">
         <PropertyRef Name="fStandort" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="tabAnmeldungMaschinetabBediener">
+    <End Role="tabAnmeldungMaschine" Type="JgModel.Store.tabAnmeldungMaschineSet" Multiplicity="0..1" />
+    <End Role="tabBediener" Type="JgModel.Store.tabBedienerSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tabAnmeldungMaschine">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tabBediener">
+        <PropertyRef Name="fAktivAnmeldung" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -812,10 +811,6 @@
             <End Role="tabArbeitszeit" EntitySet="tabArbeitszeitSet" />
             <End Role="tabBediener" EntitySet="tabBedienerSet" />
           </AssociationSet>
-          <AssociationSet Name="tabMaschinetabAnmeldungMaschine" Association="JgModel.tabMaschinetabAnmeldungMaschine">
-            <End Role="tabMaschine" EntitySet="tabMaschineSet" />
-            <End Role="tabAnmeldungMaschine" EntitySet="tabAnmeldungMaschineSet" />
-          </AssociationSet>
           <EntitySet Name="tabArbeitszeitTagSet" EntityType="JgModel.tabArbeitszeitTag" />
           <EntitySet Name="tabFeiertageSet" EntityType="JgModel.tabFeiertage" />
           <AssociationSet Name="tabArbeitszeitAuswertungtabArbeitszeit" Association="JgModel.tabArbeitszeitAuswertungtabArbeitszeit">
@@ -842,6 +837,10 @@
           <AssociationSet Name="tabStandorttabArbeitszeitTerminal" Association="JgModel.tabStandorttabArbeitszeitTerminal">
             <End Role="tabStandort" EntitySet="tabStandortSet" />
             <End Role="tabArbeitszeitTerminal" EntitySet="tabArbeitszeitTerminalSet" />
+          </AssociationSet>
+          <AssociationSet Name="tabAnmeldungMaschinetabBediener" Association="JgModel.tabAnmeldungMaschinetabBediener">
+            <End Role="tabAnmeldungMaschine" EntitySet="tabAnmeldungMaschineSet" />
+            <End Role="tabBediener" EntitySet="tabBedienerSet" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="tabMaschine">
@@ -879,7 +878,6 @@
           <NavigationProperty Name="sAnmeldungen" Relationship="JgModel.tabMaschinetabAnmeldung" FromRole="tabMaschine" ToRole="tabAnmeldung" />
           <NavigationProperty Name="sBauteile" Relationship="JgModel.tabBauteiltabMaschine1" FromRole="tabMaschine" ToRole="tabBauteil" />
           <NavigationProperty Name="sReparaturen" Relationship="JgModel.tabMaschinetabReparatur" FromRole="tabMaschine" ToRole="tabReparatur" />
-          <NavigationProperty Name="sAktiveAnmeldungen" Relationship="JgModel.tabMaschinetabAnmeldungMaschine" FromRole="tabMaschine" ToRole="tabAnmeldungMaschine" />
         </EntityType>
         <EntityType Name="tabBediener">
           <Key>
@@ -904,8 +902,10 @@
           <Property Name="Status" Type="JgModel.EnumStatusBediener" Nullable="false" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fAktivArbeitszeit" Type="Guid" Nullable="true" />
+          <Property Name="fAktivAnmeldung" Type="Guid" Nullable="true" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
           <NavigationProperty Name="sArbeitszeitAuswertung" Relationship="JgModel.tabBedienertabArbeitszeitAuswertung" FromRole="tabBediener" ToRole="tabArbeitszeitAuswertung" />
+          <NavigationProperty Name="eAktivAnmeldung" Relationship="JgModel.tabAnmeldungMaschinetabBediener" FromRole="tabBediener" ToRole="tabAnmeldungMaschine" />
         </EntityType>
         <EntityType Name="tabBauteil">
           <Key>
@@ -920,7 +920,7 @@
           <Property Name="IstHandeingabe" Type="Boolean" Nullable="false" />
           <Property Name="BvbsCode" Type="String" Nullable="true" />
           <Property Name="IdStahlBauteil" Type="Int32" Nullable="false" DefaultValue="-1" />
-          <Property Name="BtGewicht" Type="Decimal" Nullable="false" />
+          <Property Name="BtGewicht" Type="Decimal" Nullable="false" Scale="3" Precision="6" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eAktivMaschine" Relationship="JgModel.tabBauteiltabMaschine" FromRole="tabBauteil" ToRole="tabMaschine" />
@@ -941,8 +941,7 @@
           <Property Name="fMaschine" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eMaschine" Relationship="JgModel.tabMaschinetabAnmeldung" FromRole="tabAnmeldung" ToRole="tabMaschine" />
           <NavigationProperty Name="eBediener" Relationship="JgModel.tabBedienertabAnmeldung" FromRole="tabAnmeldung" ToRole="tabBediener" />
-          <Property Name="fAktivMaschine" Type="Guid" Nullable="true" />
-          <NavigationProperty Name="eAktivMaschine" Relationship="JgModel.tabMaschinetabAnmeldungMaschine" FromRole="tabAnmeldungMaschine" ToRole="tabMaschine" />
+          <NavigationProperty Name="eAktiveBediener" Relationship="JgModel.tabAnmeldungMaschinetabBediener" FromRole="tabAnmeldungMaschine" ToRole="tabBediener" />
           </EntityType>
         <Association Name="tabMaschinetabAnmeldung">
           <End Type="JgModel.tabMaschine" Role="tabMaschine" Multiplicity="1" >
@@ -1297,18 +1296,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="tabMaschinetabAnmeldungMaschine">
-          <End Type="JgModel.tabMaschine" Role="tabMaschine" Multiplicity="0..1" />
-          <End Type="JgModel.tabAnmeldungMaschine" Role="tabAnmeldungMaschine" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tabMaschine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="tabAnmeldungMaschine">
-              <PropertyRef Name="fAktivMaschine" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="tabArbeitszeitTag">
           <Key>
             <PropertyRef Name="Id" />
@@ -1438,7 +1425,6 @@
           <Property Name="ZeitVon" Type="Time" Nullable="false" />
           <Property Name="ZeitBis" Type="Time" Nullable="false" />
           <Property Name="RundenArbeitszeit" Type="Time" Nullable="false" />
-          <Property Name="RundenArbeitszeitLaenge" Type="Time" Nullable="true" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fStandort" Type="Guid" Nullable="false" />
           <NavigationProperty Name="eStandort" Relationship="JgModel.tabStandorttabArbeitzzeitRunden" FromRole="tabArbeitzzeitRunden" ToRole="tabStandort" />
@@ -1485,6 +1471,18 @@
           <Member Name="Anmeldung" Value="0" />
           <Member Name="Abmeldung" Value="1" />
         </EnumType>
+        <Association Name="tabAnmeldungMaschinetabBediener">
+          <End Type="JgModel.tabAnmeldungMaschine" Role="tabAnmeldungMaschine" Multiplicity="0..1" />
+          <End Type="JgModel.tabBediener" Role="tabBediener" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tabAnmeldungMaschine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tabBediener">
+              <PropertyRef Name="fAktivAnmeldung" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1537,6 +1535,7 @@
             <ScalarProperty Name="Geloescht" ColumnName="DatenAbgleich_Geloescht" />
           </ComplexProperty>
           <ScalarProperty Name="fAktivArbeitszeit" ColumnName="fAktivArbeitszeit" />
+          <ScalarProperty Name="fAktivAnmeldung" ColumnName="fAktivAnmeldung" />
           <ScalarProperty Name="fStandort" ColumnName="fStandort" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -1580,7 +1579,6 @@
           </ComplexProperty>
           <ScalarProperty Name="fBediener" ColumnName="fBediener" />
           <ScalarProperty Name="fMaschine" ColumnName="fMaschine" />
-          <ScalarProperty Name="fAktivMaschine" ColumnName="fAktivMaschine" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1811,7 +1809,6 @@
           <ScalarProperty Name="ZeitVon" ColumnName="ZeitVon" />
           <ScalarProperty Name="ZeitBis" ColumnName="ZeitBis" />
           <ScalarProperty Name="RundenArbeitszeit" ColumnName="RundenArbeitszeit" />
-          <ScalarProperty Name="RundenArbeitszeitLaenge" ColumnName="RundenArbeitszeitLaenge" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

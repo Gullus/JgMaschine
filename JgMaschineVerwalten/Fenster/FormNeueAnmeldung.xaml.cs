@@ -14,13 +14,7 @@ namespace JgMaschineVerwalten.Fenster
   {
     public tabAnmeldungMaschine AnmeldungMaschine
     {
-      get
-      {
-        var anm = (tabAnmeldungMaschine)gridAnmeldung.DataContext;
-        anm.eAktivMaschine = anm.eMaschine;
-        anm.ManuelleAnmeldung = true;
-        return anm;
-      }
+      get => (tabAnmeldungMaschine)gridAnmeldung.DataContext;
     }
 
     public FormNeueAnmeldung(IEnumerable<tabBediener> Bediener, IEnumerable<tabMaschine> Maschinen, tabMaschine AktuelleMaschine)
@@ -28,13 +22,13 @@ namespace JgMaschineVerwalten.Fenster
       InitializeComponent();
 
       cmbMaschine.ItemsSource = Maschinen;
-      var idisAngemeldet = Maschinen.SelectMany(s => s.sAktiveAnmeldungen).Select(s => s.fBediener).ToArray();
-      var bediener = Bediener.Where(w => !idisAngemeldet.Contains(w.Id)).OrderBy(o => o.Name).ToList();
+      var bediener = Bediener.Where(w => w.eAktivAnmeldung == null).OrderBy(o => o.Name).ToList();
       cmbBediener.ItemsSource = bediener;
 
       var anmeldung = new tabAnmeldungMaschine()
       {
         Anmeldung = DateTime.Now,
+        ManuelleAnmeldung = true,
         eMaschine = AktuelleMaschine ?? Maschinen.FirstOrDefault(),
         eBediener = bediener.FirstOrDefault()
       };

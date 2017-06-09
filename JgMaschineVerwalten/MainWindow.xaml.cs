@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using JgMaschineData;
 using JgMaschineLib;
 using JgMaschineVerwalten.Commands;
@@ -21,6 +21,7 @@ namespace JgMaschineVerwalten
   {
     private JgModelContainer _Db;
     private tabStandort _Standort;
+    private DispatcherTimer _TimerAktualisierungTreeView;
 
     private EnumFilterAuswertung _Auswahl { get { return (EnumFilterAuswertung)Convert.ToByte((tcVerwaltung.SelectedItem as TabItem).Tag); } }
 
@@ -67,7 +68,8 @@ namespace JgMaschineVerwalten
     public MainWindow()
     {
       InitializeComponent();
-      Helper.FensterEinstellung(this, Properties.Settings.Default);
+      //Helper.FensterEinstellung(this, Properties.Settings.Default);
+      tblDatum.Text = DateTime.Now.ToString("dddd, dd. MMM yyyy - HH:mm:ss");
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -80,25 +82,6 @@ namespace JgMaschineVerwalten
       tblStandort.Text = _Standort.Bezeichnung;
 
       InitListen();
-
-      CommandBindings.Add(new CommandBinding(MyCommands.AnmeldungReparaturBediener, (sen, erg) =>
-      {
-        var idisBedienerRep = _ListeReparaturen.Current.sAnmeldungen.Select(s => s.eBediener.Id).ToArray();
-        var offeneBediener = _ListeBediener.Daten.Where(w => !idisBedienerRep.Contains(w.Id)).OrderBy(o => o.Name).ToList();
-
-        var form = new FormNeuerBedienerReparatur(offeneBediener);
-        if (form.ShowDialog() ?? false)
-        {
-          _Db.tabAnmeldungReparaturSet.Add(form.Anmeldung);
-          form.Anmeldung.eReparatur = _ListeReparaturen.Current;
-          _Db.SaveChanges();
-          ((CollectionViewSource)FindResource("vsReparaturAktuellBediener")).View.Refresh();
-          ((CollectionViewSource)FindResource("vsReparaturAktuellBediener")).View.MoveCurrentTo(form.Anmeldung);
-        }
-      }, (sen, erg) =>
-      {
-        erg.CanExecute = _ListeReparaturen?.Current != null;
-      }));
 
       _Report = new FastReport.Report()
       {
@@ -125,6 +108,11 @@ namespace JgMaschineVerwalten
           memStr.Dispose();
         }
       };
+
+      _TimerAktualisierungTreeView = new DispatcherTimer(new TimeSpan(0, 1, 0), DispatcherPriority.ApplicationIdle, (sen, erg) =>
+      {
+        TreeViewMaschinenAktualisieren();
+      }, Dispatcher.CurrentDispatcher);
     }
 
     private void InitListen()
@@ -149,11 +137,11 @@ namespace JgMaschineVerwalten
         OnDatenLaden = (d, p) =>
         {
           var idStandort = (Guid)p.Params["idStandort"];
-          return  d.tabMaschineSet.Where(w => (w.fStandort == idStandort) && (!w.DatenAbgleich.Geloescht) && (w.Status != EnumStatusMaschine.Stillgelegt))
+          return d.tabMaschineSet.Where(w => (w.fStandort == idStandort) && (!w.DatenAbgleich.Geloescht) && (w.Status != EnumStatusMaschine.Stillgelegt))
             .OrderBy(o => o.MaschinenName).ToList();
         }
       };
-      _ListeMaschinen.Parameter["idStandort"] = _Standort.Id;    
+      _ListeMaschinen.Parameter["idStandort"] = _Standort.Id;
       _ListeMaschinen.DatenLaden();
 
       // Aktuelle Anmeldungen an Maschine *****************************************************
@@ -164,8 +152,11 @@ namespace JgMaschineVerwalten
         Tabellen = new DataGrid[] { dgAnmeldungAktuell },
         OnDatenLaden = (d, p) =>
         {
-          var idisMaschinen = (Guid[])p.Params["IdisMaschinen"];
-          var dat = d.tabAnmeldungMaschineSet.Where(w => (w.fAktivMaschine != null) && idisMaschinen.Contains((Guid)w.fAktivMaschine));
+          var idStandort = (Guid)p.Params["IdStandort"];
+          var dat = (from benutzer in d.tabBedienerSet
+                     join anmeldung in d.tabAnmeldungMaschineSet on benutzer.fAktivAnmeldung equals anmeldung.Id
+                     where (anmeldung.eMaschine.fStandort == idStandort)
+                     select anmeldung);
 
           if (!p.IstSortiert)
             dat = dat.OrderBy(o => o.Anmeldung);
@@ -173,8 +164,11 @@ namespace JgMaschineVerwalten
           return dat.ToList();
         }
       };
-      _ListeAnmeldungen.Parameter["IdisMaschinen"] = _IdisMaschinen;
+      _ListeAnmeldungen.Parameter["IdStandort"] = _Standort.Id;
       _ListeAnmeldungen.DatenLaden();
+
+      foreach (var ma in _ListeMaschinen.Daten)
+        ma.AktiveAnmeldungen = _ListeAnmeldungen.Daten.Where(w => w.eMaschine == ma).ToList();
 
       // Auswahl Anmeldungenan an Maschinen ********************************************************
 
@@ -195,7 +189,7 @@ namespace JgMaschineVerwalten
 
           if (!p.IstSortiert)
             dat = dat.OrderBy(o => o.Anmeldung);
-          
+
           return dat.ToList();
         }
       };
@@ -220,7 +214,7 @@ namespace JgMaschineVerwalten
 
           if (!p.IstSortiert)
             dat = dat.OrderBy(o => o.DatumStart);
-                    
+
           return dat.ToList();
         }
       };
@@ -233,7 +227,8 @@ namespace JgMaschineVerwalten
         Tabellen = new DataGrid[] { dgReparaturAktuell },
         OnDatenLaden = (d, p) =>
         {
-          var idisReparaturen = (Guid[])p.Params["IdisReparaturen"];
+          var lMaschinen = (IEnumerable<tabMaschine>)p.Params["ListeMaschinen"];
+          var idisReparaturen = lMaschinen.Where(w => w.eAktivReparatur != null).Select(s => (Guid)s.fAktivReparatur).ToArray();
 
           var dat = d.tabReparaturSet.Where(w => idisReparaturen.Contains(w.Id))
             .Include(i => i.sAnmeldungen).Include(i => i.sAnmeldungen.Select(s => s.eBediener));
@@ -241,9 +236,15 @@ namespace JgMaschineVerwalten
           if (!p.IstSortiert)
             dat = dat.OrderBy(o => o.VorgangBeginn);
 
+          if (!p.IstDatenLaden) // Nur bei Aktualisierung starten 
+            HelperReparaturAnmeldungen(d, dat);
+
           return dat.ToList();
         }
       };
+      _ListeReparaturen.Parameter["ListeMaschinen"] = _ListeMaschinen.Daten;
+      _ListeReparaturen.DatenLaden();
+
 
       // Auswahl Reparaturen initialisieren ********************************************************
 
@@ -261,16 +262,16 @@ namespace JgMaschineVerwalten
           var datBis = (DateTime)p.Params["DatumBis"];
 
           var dat = d.tabReparaturSet.Where(w => idisMaschinen.Contains(w.fMaschine) && (w.VorgangBeginn >= datVon) && (w.VorgangBeginn <= datBis))
-            .Include(i => i.sAnmeldungen).Include(i => i.sAnmeldungen.Select(s => s.eBediener));
+            .Include(i => i.sAnmeldungen).Include(i => i.sAnmeldungen.Select(s => s.eBediener)).OrderBy(o => o.VorgangBeginn).ToList();
 
-          if (!p.IstSortiert)
-            dat = dat.OrderBy(o => o.VorgangBeginn);
+          if (!p.IstDatenLaden) // Nur bei Aktualisierung starten 
+            HelperReparaturAnmeldungen(d, dat);
 
           return dat.ToList();
         }
       };
 
-      // Auswertung initialisieren ********************************
+      // Reporte für Auswertungen initialisieren ********************************
 
       var filterAuswertungen = new EnumFilterAuswertung[] { EnumFilterAuswertung.Anmeldung, EnumFilterAuswertung.Bauteil, EnumFilterAuswertung.Reparatur };
       var reporte = _Db.tabAuswertungSet.Where(w => filterAuswertungen.Contains(w.FilterAuswertung) && (!w.DatenAbgleich.Geloescht)).ToList();
@@ -294,40 +295,50 @@ namespace JgMaschineVerwalten
       };
     }
 
+    private async void HelperReparaturAnmeldungen(JgModelContainer d, IEnumerable<tabReparatur> dat)
+    {
+      await JgList.ListeAktualisieren<tabAnmeldungReparatur>(d, dat.SelectMany(s => s.sAnmeldungen).ToList());
+    }
+
     private void TreeViewMaschinenAktualisieren()
     {
-      var maschine = _Maschine;
-      _ListeMaschinen.Refresh();
-      GeheZu(maschine?.Id);
-    }
-
-    private void GeheZu(Guid? Id)
-    {
-      if (Id == null)
-        return;
-
-      try
+      tblDatum.Text = DateTime.Now.ToString("dddd, dd. MMM yyyy - HH:mm:ss");
+      _ListeMaschinen.DatenAktualisieren();
+      _ListeAnmeldungen.DatenAktualisieren();
+      foreach (var ma in _ListeMaschinen.Daten)
       {
-        foreach (var dsMaschine in treeViewMaschinen.Items)
-        {
-          if ((dsMaschine as tabMaschine).Id == Id)
-          {
-            (treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine) as TreeViewItem).IsSelected = true;
-            return;
-          }
-          var itemMaschine = (TreeViewItem)treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine);
-          foreach (var dsAnmeldung in itemMaschine.Items)
-          {
-            if ((dsAnmeldung as tabAnmeldungMaschine).Id == Id)
-            {
-              (itemMaschine.ItemContainerGenerator.ContainerFromItem(dsAnmeldung) as TreeViewItem).IsSelected = true;
-              return;
-            }
-          }
-        }
+        ma.AktiveAnmeldungen = _ListeAnmeldungen.Daten.Where(w => w.eMaschine == ma).ToList();
+        ma.NotifyPropertyChanged("IstReparatur");
       }
-      catch { }
     }
+
+    //private void GeheZu(Guid? Id)
+    //{
+    //  if (Id == null)
+    //    return;
+
+    //  try
+    //  {
+    //    foreach (var dsMaschine in treeViewMaschinen.Items)
+    //    {
+    //      if ((dsMaschine as tabMaschine).Id == Id)
+    //      {
+    //        (treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine) as TreeViewItem).IsSelected = true;
+    //        return;
+    //      }
+    //      var itemMaschine = (TreeViewItem)treeViewMaschinen.ItemContainerGenerator.ContainerFromItem(dsMaschine);
+    //      foreach (var dsAnmeldung in itemMaschine.Items)
+    //      {
+    //        if ((dsAnmeldung as tabAnmeldungMaschine).Id == Id)
+    //        {
+    //          (itemMaschine.ItemContainerGenerator.ContainerFromItem(dsAnmeldung) as TreeViewItem).IsSelected = true;
+    //          return;
+    //        }
+    //      }
+    //    }
+    //  }
+    //  catch { }
+    //}
 
     #region Reparaturen ************************************************************
 
@@ -336,15 +347,14 @@ namespace JgMaschineVerwalten
       if (_Maschine == null)
         Helper.InfoBox("Bitte Maschine in linker Tabelle auswahlen !", Helper.ProtokollArt.Warnung);
       else if (_Maschine.fAktivReparatur != null)
-        MessageBox.Show($"Die Maschine {_Maschine.MaschinenName} ist bereits im Reparaturmodus.", "Information !", MessageBoxButton.OK, MessageBoxImage.Information);
+        Helper.InfoBox($"Die Maschine {_Maschine.MaschinenName} ist bereits im Reparaturmodus.", Helper.ProtokollArt.Info);
       else
       {
         var form = new Fenster.FormReparatur(null, _ListeBediener.Daten, _Maschine);
         if (_ListeReparaturen.ErgebnissFormular(form.ShowDialog(), true, form.Reparatur))
         {
           _Maschine.eAktivReparatur = form.Reparatur;
-
-          foreach (var anmeldungMaschine in _Maschine.sAktiveAnmeldungen)
+          foreach (var anmeldungMaschine in _Maschine.AktiveAnmeldungen)
           {
             var anmledRep = new tabAnmeldungReparatur()
             {
@@ -400,21 +410,6 @@ namespace JgMaschineVerwalten
       _ListeReparaturAuswahl.ErgebnissFormular(form.ShowDialog(), false, form.Reparatur);
     }
 
-    private void ReparaturAnmeldungAbmeldung_Click(object sender, RoutedEventArgs e)
-    {
-      var cvsRepBenutzer = (CollectionViewSource)FindResource("vsReparaturAktuellBediener");
-      var dsRepBenutzer = (tabAnmeldungReparatur)cvsRepBenutzer.View.CurrentItem;
-
-      string anzeigeText = $"Möchten Sie den Bediener {dsRepBenutzer.eBediener.Name} von der Reparatur an Maschine {dsRepBenutzer.eReparatur.eMaschine.MaschinenName} abmelden ?";
-      var zeitAbmeldung = (DateTime?)(dsRepBenutzer.Abmeldung ?? DateTime.Now);
-
-      if (JgZeit.AbfrageZeit(anzeigeText, "Abmeldung", ref zeitAbmeldung, false))
-      {
-        dsRepBenutzer.Abmeldung = zeitAbmeldung;
-        _Db.SaveChanges();
-      }
-    }
-
     private void ReparaturAnmeldungAuswahlBearbeiten_Click(object sender, RoutedEventArgs e)
     {
       var colView = (CollectionViewSource)FindResource("vsReparaturAuswahlBediener");
@@ -446,6 +441,16 @@ namespace JgMaschineVerwalten
       }
     }
 
+    private static void BedienerVonReparaturAbmelden(tabMaschine Maschine, tabBediener Bediener)
+    {
+      if (Maschine.eAktivReparatur != null)
+      {
+        var anmeldungReparatur = Maschine.eAktivReparatur.sAnmeldungen.Where(w => w.IstAktiv).FirstOrDefault(f => f.eBediener == Bediener);
+        if (anmeldungReparatur != null)
+          anmeldungReparatur.AnzeigeAbmeldung = DateTime.Now;
+      }
+    }
+
     #endregion
 
     #region Anmeldungen Maschine ***************************************************
@@ -455,12 +460,32 @@ namespace JgMaschineVerwalten
       var form = new FormNeueAnmeldung(_ListeBediener.Daten, _ListeMaschinen.Daten, _Maschine);
       if (_ListeAnmeldungen.ErgebnissFormular(form.ShowDialog(), true, form.AnmeldungMaschine))
       {
-        _ListeMaschinen.Refresh();
-        GeheZu(form.AnmeldungMaschine.fMaschine);
+        var anmeldungAlt = form.AnmeldungMaschine.eBediener.eAktivAnmeldung;
+        if (anmeldungAlt != null)
+        {
+          BedienerVonReparaturAbmelden(anmeldungAlt.eMaschine, anmeldungAlt.eBediener);
+          BenutzerVonMaschineAbmelden(anmeldungAlt, form.AnmeldungMaschine.Anmeldung);
+        }
+
+        form.AnmeldungMaschine.eBediener.eAktivAnmeldung = form.AnmeldungMaschine;
+        if (form.AnmeldungMaschine.eMaschine.eAktivReparatur != null)
+        {
+          var anmeldRepa = new tabAnmeldungReparatur()
+          {
+            Id = Guid.NewGuid(),
+            Anmeldung = form.AnmeldungMaschine.Anmeldung,
+            eBediener = form.AnmeldungMaschine.eBediener,
+            eReparatur = form.AnmeldungMaschine.eMaschine.eAktivReparatur,
+          };
+          _Db.tabAnmeldungReparaturSet.Add(anmeldRepa);
+        }
+
+        _Db.SaveChanges();
+        TreeViewMaschinenAktualisieren();
       }
     }
 
-    private void BanutzerMaschineAbmelden_Click(object sender, RoutedEventArgs e)
+    private void BenutzerMaschineAbmelden_Click(object sender, RoutedEventArgs e)
     {
       var anmeldung = _ListeAnmeldungen.Current;
       var msg = $"Möchten Sie den Bediener {anmeldung.eBediener.Name} von der Maschine {anmeldung.eMaschine.MaschinenName} abmelden ?";
@@ -468,20 +493,11 @@ namespace JgMaschineVerwalten
 
       if (JgZeit.AbfrageZeit(msg, "Abmeldung", ref zeitAbmeldung, false))
       {
-        anmeldung.AnzeigeAbmeldung = zeitAbmeldung;
-        anmeldung.ManuelleAbmeldung = true;
-        anmeldung.eAktivMaschine = null;
+        BenutzerVonMaschineAbmelden(anmeldung, zeitAbmeldung.Value);
+        BedienerVonReparaturAbmelden(anmeldung.eMaschine, anmeldung.eBediener);
         _ListeAnmeldungen.Remove(anmeldung);
-
-        // Von eventuellen Reparaturen abmelden
-        var rep = _ListeReparaturen.Daten.SelectMany(s => s.sAnmeldungen).Where(w => w.IstAktiv).FirstOrDefault(f => f.fBediener == anmeldung.fBediener);
-        if (rep != null)
-          rep.Abmeldung = zeitAbmeldung;
-
-        _ListeAnmeldungen.DsSave(anmeldung);
-
-        GeheZu(_Maschine?.Id);
-        _ListeMaschinen.Refresh();
+        TreeViewMaschinenAktualisieren();
+        _ListeAnmeldungen.DsSave();
       }
     }
 
@@ -509,7 +525,17 @@ namespace JgMaschineVerwalten
         }
         if (safe)
           _ListeAnmeldungAuswahl.DsSave();
-      } 
+      }
+    }
+
+    private void BenutzerVonMaschineAbmelden(tabAnmeldungMaschine Anmeldung, DateTime ZeitAbmeldung)
+    {
+      if (Anmeldung != null)
+      {
+        Anmeldung.AnzeigeAbmeldung = ZeitAbmeldung;
+        Anmeldung.ManuelleAbmeldung = true;
+        Anmeldung.eBediener.eAktivAnmeldung = null;
+      }
     }
 
     #endregion
@@ -521,8 +547,13 @@ namespace JgMaschineVerwalten
       {
         _Standort = form.StandOrt;
         tblStandort.Text = _Standort.Bezeichnung;
-        _ListeMaschinen.Parameter["idStandort"] = _Standort.Id;
+
+        _ListeAnmeldungen.Parameter["IdStandort"] = _Standort.Id;
+        _ListeAnmeldungen.DatenAktualisieren();
         _ListeMaschinen.DatenAktualisieren();
+        TreeViewMaschinenAktualisieren();
+
+        _ListeMaschinen.Parameter["idStandort"] = _Standort.Id;
       }
     }
 
@@ -553,18 +584,23 @@ namespace JgMaschineVerwalten
           _ListeBauteilAuswahl.Parameter["DatumBis"] = _DzBauteilBis.AnzeigeDatumZeit;
           _ListeBauteilAuswahl.DatenAktualisieren();
 
-          foreach(var bt in _ListeBauteilAuswahl.Daten)
+          foreach (var bt in _ListeBauteilAuswahl.Daten)
           {
             if (bt.BvbsDaten == null)
               bt.LoadBvbsDaten(false);
           }
 
+          _ListeBauteilAuswahl.Refresh();
           break;
         case "2":
           _ListeReparaturAuswahl.Parameter["IdisMaschinen"] = _IdisMaschinen;
           _ListeReparaturAuswahl.Parameter["DatumVon"] = _DzReparaturVon.AnzeigeDatumZeit;
           _ListeReparaturAuswahl.Parameter["DatumBis"] = _DzReparaturBis.AnzeigeDatumZeit;
           _ListeReparaturAuswahl.DatenAktualisieren();
+
+          var cvReparaturAnmmeldung = (CollectionViewSource)FindResource("vsReparaturAuswahlBediener");
+          cvReparaturAnmmeldung?.View?.Refresh();
+
           break;
       }
     }
@@ -721,36 +757,30 @@ namespace JgMaschineVerwalten
       JgMaschineLib.Imports.JgFastCube.JgFastCubeStart(prop.JgCubeVerbindungsString, prop.JgCubeSqlText, dat);
     }
 
-    private Guid[] _IdisMaschinenInReparatur
-    {
-      get { return _ListeMaschinen.Daten.Where(w => w.eAktivReparatur != null).Select(s => (Guid)s.fAktivReparatur).ToArray(); }
-    }
-
     private void BtnAktuellAktualisieren_Click(object sender, RoutedEventArgs e)
     {
       switch ((sender as Button).Tag.ToString())
       {
-        case "0": // Treeview aktualisieren
+        case "1": // Anweldung aktualisieren
+          _ListeAnmeldungen.DatenAktualisieren();
           TreeViewMaschinenAktualisieren();
           break;
-        case "1": // Anweldung aktualisieren
-          _ListeAnmeldungen.Parameter["IdisMaschinen"] = _IdisMaschinen;
-          _ListeAnmeldungen.DatenAktualisieren ();
-          break;
         case "2": // Reparaturen aktualisieren
-          _ListeReparaturen.Parameter["IdisReparaturen"] = _IdisMaschinenInReparatur;
+          _ListeMaschinen.DatenAktualisieren();
+          _ListeReparaturen.Parameter["ListeMaschinen"] = _ListeMaschinen.Daten;
           _ListeReparaturen.DatenAktualisieren();
+
+          var cvReparaturAnmmeldung = (CollectionViewSource)FindResource("vsReparaturAktuellBediener");
+          cvReparaturAnmmeldung?.View?.Refresh();
           break;
       }
     }
 
-    private void TabItemFocusReparatur(object sender, RoutedEventArgs e)
+    private void BtnBauteileLoeschen_Click(object sender, RoutedEventArgs e)
     {
-      if (_ListeReparaturen.ErsterDurchlauf)
-      {
-        _ListeReparaturen.Parameter["IdisReparaturen"] = _IdisMaschinenInReparatur;
-        _ListeReparaturen.DatenLaden();
-      }
+      _Db.tabBauteilSet.RemoveRange(_ListeBauteilAuswahl.Daten);
+      _Db.SaveChanges();
+      _ListeBauteilAuswahl.DatenLaden();
     }
   }
 }

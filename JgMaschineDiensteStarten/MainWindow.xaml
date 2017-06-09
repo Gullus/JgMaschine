@@ -1,0 +1,61 @@
+﻿<Window x:Class="JgMaschineDiensteStarten.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JgMaschineDiensteStarten"
+        mc:Ignorable="d"
+        Title="Dienste JgMaschine starten" Height="350" Width="994.969">
+    <Window.Resources>
+        <CollectionViewSource x:Key="CvsDienste" d:DesignSource="{d:DesignInstance {x:Type local:CDienste}, CreateList=True}"/>
+    </Window.Resources>
+    
+    
+    
+    
+    
+    <Grid Margin="8" DataContext="{StaticResource CvsDienste}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        
+
+        <!--<ListView ItemsSource="{Binding}" Margin="5" Grid.ColumnSpan="4">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    --><!--<Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="30" />
+
+                        </Grid.ColumnDefinitions>--><!--
+                        <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}" Margin="3"/>
+                        <TextBlock Text="{Binding Status}" Grid.Column="1" />
+
+                    --><!--</Grid>--><!--
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+
+        <DataGrid x:Name="cDiensteDataGrid" AutoGenerateColumns="False" Grid.ColumnSpan="3" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="5" RowDetailsVisibilityMode="VisibleWhenSelected" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Gray" CanUserDeleteRows="False" CanUserAddRows="False" RowHeight="22">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{Binding IsChecked, Mode=TwoWay}" Header="Action" Width="50"/>
+                <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Dienstname" Width="140"/>
+                <DataGridTextColumn Binding="{Binding Status, Mode=OneWay, TargetNullValue=-}" Header="Status" Width="70"/>
+                <DataGridTextColumn Binding="{Binding FehlerText, Mode=OneWay}" Header="Fehlertext" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="1" Margin="5" Content="Dienste Starten" Height="40" Click="BtnDienstStarten_Click"/>
+
+        <Button Grid.Row="1" Grid.Column="1" Margin="5" Content="Dienste Beenden" Height="40" Click="BtnDienstBeenden_Click" />
+
+    </Grid>
+</Window>

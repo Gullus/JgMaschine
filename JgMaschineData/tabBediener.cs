@@ -38,6 +38,7 @@ namespace JgMaschineData
         public byte AuszahlungGehalt { get; set; }
         public EnumStatusBediener Status { get; set; }
         public Nullable<System.Guid> fAktivArbeitszeit { get; set; }
+        public Nullable<System.Guid> fAktivAnmeldung { get; set; }
         public System.Guid fStandort { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }
@@ -58,5 +59,6 @@ namespace JgMaschineData
         public virtual ICollection<tabReparatur> sReparaturProtokollanten { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabArbeitszeitAuswertung> sArbeitszeitAuswertung { get; set; }
+        public virtual tabAnmeldungMaschine eAktivAnmeldung { get; set; }
     }
 }

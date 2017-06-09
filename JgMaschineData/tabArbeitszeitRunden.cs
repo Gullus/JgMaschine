@@ -27,7 +27,6 @@ namespace JgMaschineData
         public System.TimeSpan ZeitVon { get; set; }
         public System.TimeSpan ZeitBis { get; set; }
         public System.TimeSpan RundenArbeitszeit { get; set; }
-        public Nullable<System.TimeSpan> RundenArbeitszeitLaenge { get; set; }
         public System.Guid fStandort { get; set; }
     
         public DatenAbgleich DatenAbgleich { get; set; }

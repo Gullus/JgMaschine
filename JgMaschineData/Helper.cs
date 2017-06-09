@@ -15,12 +15,29 @@ namespace JgMaschineData
   }
 
   [MetadataType(typeof(tabMaschineMetaData))]
-  public partial class tabMaschine
+  public partial class tabMaschine : INotifyPropertyChanged
   {
+    public event PropertyChangedEventHandler PropertyChanged;
+    public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     public bool IstReparatur
     {
       get { return this.fAktivReparatur != null; }
       set { }
+    }
+
+    private List<tabAnmeldungMaschine> _AktiveAnmeldungen = new List<tabAnmeldungMaschine>();
+    public List<tabAnmeldungMaschine> AktiveAnmeldungen
+    {
+      get => _AktiveAnmeldungen;
+      set
+      {
+        _AktiveAnmeldungen = value;
+        NotifyPropertyChanged();
+      }
     }
   }
 
@@ -295,9 +312,26 @@ namespace JgMaschineData
     }
   }
 
-  public partial class tabBauteil
+  public partial class tabBauteil : INotifyPropertyChanged
   {
-    public BvbsDatenaustausch BvbsDaten { get; set; } = null;
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public DateTime? AnzeigeDatumEnde
+    {
+      get => DatumEnde;
+      set
+      {
+        if (value != DatumEnde)
+        {
+          DatumEnde = value;
+          NotifyPropertyChanged();
+        }
+      }
+    }
 
     public double ZeitInSekunden
     {
@@ -320,6 +354,8 @@ namespace JgMaschineData
           return string.Join("; ", sBediener.Select(s => s.NachName + ", " + s.VorName).ToArray());
       }
     }
+
+    public BvbsDatenaustausch BvbsDaten { get; set; } = null;
 
     public void LoadBvbsDaten(bool GeometriedatenErstellen)
     {
@@ -704,20 +740,6 @@ namespace JgMaschineData
         if (zeit != RundenArbeitszeit)
         {
           this.RundenArbeitszeit = zeit;
-          NotifyPropertyChanged();
-        }
-      }
-    }
-
-    public string AnzeigeRundenLaenge
-    {
-      get { return JgZeit.ZeitInString(this.RundenArbeitszeitLaenge.Value); }
-      set
-      {
-        var zeit = JgZeit.StringInZeit(value, RundenArbeitszeitLaenge);
-        if (zeit != RundenArbeitszeitLaenge)
-        {
-          this.RundenArbeitszeitLaenge = zeit;
           NotifyPropertyChanged();
         }
       }

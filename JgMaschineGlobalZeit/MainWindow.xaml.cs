@@ -367,7 +367,7 @@ namespace JgMaschineGlobalZeit
         switch (auswahl)
         {
           case EnumFilterAuswertung.Arbeitszeit: _ListeReporteArbeitszeiten.Add(_AktuellerReport); break;
-          case EnumFilterAuswertung.Anmeldung: _ListeReporteAuswertung.Add(_AktuellerReport); break;
+          case EnumFilterAuswertung.ArbeitszeitAuswertung: _ListeReporteAuswertung.Add(_AktuellerReport); break;
         }
 
         _Report.Design();

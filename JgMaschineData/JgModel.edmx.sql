@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/05/2017 13:30:49
+-- Date Created: 05/24/2017 12:58:54
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -71,9 +71,6 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_tabArbeitszeittabBediener]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabBedienerSet] DROP CONSTRAINT [FK_tabArbeitszeittabBediener];
 GO
-IF OBJECT_ID(N'[dbo].[FK_tabMaschinetabAnmeldungMaschine]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[tabAnmeldungMaschineSet] DROP CONSTRAINT [FK_tabMaschinetabAnmeldungMaschine];
-GO
 IF OBJECT_ID(N'[dbo].[FK_tabArbeitszeitAuswertungtabArbeitszeit]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabArbeitszeitSet] DROP CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeit];
 GO
@@ -88,6 +85,9 @@ IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitzzeitRunden]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_tabStandorttabArbeitszeitTerminal]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[tabArbeitszeitTerminalSet] DROP CONSTRAINT [FK_tabStandorttabArbeitszeitTerminal];
+GO
+IF OBJECT_ID(N'[dbo].[FK_tabAnmeldungMaschinetabBediener]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[tabBedienerSet] DROP CONSTRAINT [FK_tabAnmeldungMaschinetabBediener];
 GO
 
 -- --------------------------------------------------
@@ -193,6 +193,7 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fAktivArbeitszeit] uniqueidentifier  NULL,
+    [fAktivAnmeldung] uniqueidentifier  NULL,
     [fStandort] uniqueidentifier  NOT NULL
 );
 GO
@@ -208,7 +209,7 @@ CREATE TABLE [dbo].[tabBauteilSet] (
     [IstHandeingabe] bit  NOT NULL,
     [BvbsCode] nvarchar(max)  NULL,
     [IdStahlBauteil] int  NOT NULL,
-    [BtGewicht] decimal(18,0)  NOT NULL,
+    [BtGewicht] decimal(6,3)  NOT NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
@@ -229,8 +230,7 @@ CREATE TABLE [dbo].[tabAnmeldungMaschineSet] (
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
     [DatenAbgleich_Geloescht] bit  NOT NULL,
     [fBediener] uniqueidentifier  NOT NULL,
-    [fMaschine] uniqueidentifier  NOT NULL,
-    [fAktivMaschine] uniqueidentifier  NULL
+    [fMaschine] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -427,7 +427,6 @@ CREATE TABLE [dbo].[tabArbeitszeitRundenSet] (
     [ZeitVon] time  NOT NULL,
     [ZeitBis] time  NOT NULL,
     [RundenArbeitszeit] time  NOT NULL,
-    [RundenArbeitszeitLaenge] time  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
@@ -833,21 +832,6 @@ ON [dbo].[tabBedienerSet]
     ([fAktivArbeitszeit]);
 GO
 
--- Creating foreign key on [fAktivMaschine] in table 'tabAnmeldungMaschineSet'
-ALTER TABLE [dbo].[tabAnmeldungMaschineSet]
-ADD CONSTRAINT [FK_tabMaschinetabAnmeldungMaschine]
-    FOREIGN KEY ([fAktivMaschine])
-    REFERENCES [dbo].[tabMaschineSet]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_tabMaschinetabAnmeldungMaschine'
-CREATE INDEX [IX_FK_tabMaschinetabAnmeldungMaschine]
-ON [dbo].[tabAnmeldungMaschineSet]
-    ([fAktivMaschine]);
-GO
-
 -- Creating foreign key on [fArbeitszeitAuswertung] in table 'tabArbeitszeitSet'
 ALTER TABLE [dbo].[tabArbeitszeitSet]
 ADD CONSTRAINT [FK_tabArbeitszeitAuswertungtabArbeitszeit]
@@ -921,6 +905,21 @@ GO
 CREATE INDEX [IX_FK_tabStandorttabArbeitszeitTerminal]
 ON [dbo].[tabArbeitszeitTerminalSet]
     ([fStandort]);
+GO
+
+-- Creating foreign key on [fAktivAnmeldung] in table 'tabBedienerSet'
+ALTER TABLE [dbo].[tabBedienerSet]
+ADD CONSTRAINT [FK_tabAnmeldungMaschinetabBediener]
+    FOREIGN KEY ([fAktivAnmeldung])
+    REFERENCES [dbo].[tabAnmeldungMaschineSet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_tabAnmeldungMaschinetabBediener'
+CREATE INDEX [IX_FK_tabAnmeldungMaschinetabBediener]
+ON [dbo].[tabBedienerSet]
+    ([fAktivAnmeldung]);
 GO
 
 -- --------------------------------------------------

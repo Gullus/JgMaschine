@@ -10,25 +10,22 @@ namespace JgMaschineVerwalten.Fenster
   {
     public tabReparatur Reparatur { get { return (tabReparatur)gridReparatur.DataContext; } }
 
-    public FormReparatur(tabReparatur Reparatur, IEnumerable<tabBediener> Bediener, tabMaschine AktuelleMaschine = null)
+    public FormReparatur(tabReparatur NeuReparatur, IEnumerable<tabBediener> Bediener, tabMaschine AktuelleMaschine = null)
     {
       InitializeComponent();
-      tblMaschine.Text = Reparatur?.eMaschine.MaschinenName ?? AktuelleMaschine.MaschinenName;
 
       cmbVerursacher.ItemsSource = Bediener;
       cmbProtokollant.ItemsSource = Bediener;
       cmbVorgangs.ItemsSource = Enum.GetValues(typeof(EnumReperaturVorgang));
       cmbVorgangs.SelectedIndex = 0;
 
-      if (Reparatur == null)
+      if (NeuReparatur == null)
       {
-        Reparatur = new JgMaschineData.tabReparatur()
+        NeuReparatur = new JgMaschineData.tabReparatur()
         {
           VorgangBeginn = DateTime.Now,
-          fMaschine = AktuelleMaschine.Id
+          eMaschine = AktuelleMaschine
         };
-
-        tblMaschine.Text = AktuelleMaschine.MaschinenName;
 
         lbBisDatum.Visibility = Visibility.Collapsed;
         dtpRepBis.Visibility = Visibility.Collapsed;
@@ -37,18 +34,16 @@ namespace JgMaschineVerwalten.Fenster
       }
       else
       {
-        tblMaschine.Text = Reparatur.eMaschine.MaschinenName;
-
         var dzBis = (JgZeit)this.FindResource("dzReparaturBis");
-        dzBis.AnzeigeDatumZeit = Reparatur.VorgangEnde ?? DateTime.Now;
+        dzBis.AnzeigeDatumZeit = NeuReparatur.VorgangEnde ?? DateTime.Now;
         dzBis.OnNeuerWert = (datum, zeit) => Reparatur.AnzeigeVorgangEnde = datum + zeit;
       }
 
       var dzVon = (JgZeit)this.FindResource("dzReparaturVon");
-      dzVon.AnzeigeDatumZeit = Reparatur.VorgangBeginn;
-      dzVon.OnNeuerWert = (datum, zeit) => Reparatur.AnzeigeVorgangBeginn = datum + zeit;
+      dzVon.AnzeigeDatumZeit = NeuReparatur.VorgangBeginn;
+      dzVon.OnNeuerWert = (datum, zeit) => NeuReparatur.AnzeigeVorgangBeginn = datum + zeit;
 
-      gridReparatur.DataContext = Reparatur;
+      gridReparatur.DataContext = NeuReparatur;
     }
 
     private void ButtonOk_Click(object sender, RoutedEventArgs e)

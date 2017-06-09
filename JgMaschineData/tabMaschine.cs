@@ -21,7 +21,6 @@ namespace JgMaschineData
             this.sAnmeldungen = new HashSet<tabAnmeldungMaschine>();
             this.sBauteile = new HashSet<tabBauteil>();
             this.sReparaturen = new HashSet<tabReparatur>();
-            this.sAktiveAnmeldungen = new HashSet<tabAnmeldungMaschine>();
             this.DatenAbgleich = new DatenAbgleich();
         }
     
@@ -53,7 +52,5 @@ namespace JgMaschineData
         public virtual ICollection<tabBauteil> sBauteile { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tabReparatur> sReparaturen { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tabAnmeldungMaschine> sAktiveAnmeldungen { get; set; }
     }
 }

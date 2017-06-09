@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineAuswertung", "JgMaschineAuswertung\JgMaschineAuswertung.csproj", "{7191D4C9-A789-4EC1-B120-2C745781E817}"
 EndProject
@@ -34,6 +34,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineServiceHandyArbeitszeit", "JgMaschineServiceHandyArbeitszeit\JgMaschineServiceHandyArbeitszeit.csproj", "{2A04BF99-E4DF-4475-B096-5798E089B595}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMessageQueuing", "JgMessageQueuing\JgMessageQueuing.csproj", "{309E1D7B-7A32-4DBD-B5AE-B7D9995E3672}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JgMaschineDiensteStarten", "JgMaschineDiensteStarten\JgMaschineDiensteStarten.csproj", "{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -300,6 +302,22 @@ Global
 		{309E1D7B-7A32-4DBD-B5AE-B7D9995E3672}.Release|x64.Build.0 = Release|Any CPU
 		{309E1D7B-7A32-4DBD-B5AE-B7D9995E3672}.Release|x86.ActiveCfg = Release|Any CPU
 		{309E1D7B-7A32-4DBD-B5AE-B7D9995E3672}.Release|x86.Build.0 = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|x64.Build.0 = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Debug|x86.Build.0 = Debug|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|x64.ActiveCfg = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|x64.Build.0 = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|x86.ActiveCfg = Release|Any CPU
+		{CAD72B72-E68F-4701-81CC-21F4BA4E1E98}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
