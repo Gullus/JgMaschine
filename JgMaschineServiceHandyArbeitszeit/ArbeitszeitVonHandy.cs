@@ -16,194 +16,203 @@ using Newtonsoft.Json;
 
 namespace JgMaschineServiceHandyArbeitszeit
 {
-  public class ArbeitszeitVonHandy
-  {
-    //"Manage NuGet packages" -> Search for "newtonsoft json".
-
-    private const string _Lc = "JgDatenHandy";
-    private string _ConnectionString;
-    private int _PortNummer;
-
-    private TcpListener _Listener;
-    public TcpListener Listener { get { return _Listener; } }
-
-    public class HandyOptionen
+    public class ArbeitszeitVonHandy
     {
-      public const string Lc = "JgDatenHandy";
-      public string ConnectionString;
+        //"Manage NuGet packages" -> Search for "newtonsoft json".
 
-      public TcpClient Client = null;
+        private const string _Lc = "JgDatenHandy";
+        private string _ConnectionString;
+        private int _PortNummer;
 
-      public HandyOptionen(string ConnectionStringDb, TcpClient ClientHandy)
-      {
-        Client = ClientHandy;
-        ConnectionString = ConnectionStringDb;
-      }
-    }
+        private TcpListener _Listener;
+        public TcpListener Listener { get { return _Listener; } }
 
-    public class HandyDaten
-    {
-      public string userId { get; set; }
-      public DateTime timestamp { get; set; }
-      public bool isCheckIn { get; set; }
-      public string construction { get; set; }
-    }
-
-    public ArbeitszeitVonHandy(string ConnectionStringDb, int PortNummerServer)
-    {
-      _PortNummer = PortNummerServer;
-      _ConnectionString = ConnectionStringDb;
-    }
-
-    public void Start()
-    {
-      string msg = $"Starte Server !";
-      Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-
-      string hostName = Dns.GetHostName();
-      var hostIp = JgMaschineLib.TcpIp.Helper.GetIpAdressV4(Dns.GetHostName());
-
-      try
-      {
-        _Listener = new TcpListener(hostIp, _PortNummer);
-        _Listener.Start(200);
-
-        msg = $"Listener gestartet:\n  Server: {hostIp} Port: {_PortNummer}";
-        Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-
-        while (true)
+        public class HandyOptionen
         {
-          var client = _Listener.AcceptTcpClient();
-          var hOpt = new HandyOptionen(_ConnectionString, client);
+            public const string Lc = "JgDatenHandy";
+            public string ConnectionString;
 
-          Task.Factory.StartNew(handyOpt =>
-          {
-            var fehler = true;
-            var ho = (HandyOptionen)handyOpt;
-            NetworkStream nwStream = null;
+            public TcpClient Client = null;
+
+            public HandyOptionen(string ConnectionStringDb, TcpClient ClientHandy)
+            {
+                Client = ClientHandy;
+                ConnectionString = ConnectionStringDb;
+            }
+        }
+
+        public class HandyDaten
+        {
+            public string userId { get; set; }
+            public DateTime timestamp { get; set; }
+            public bool isCheckIn { get; set; }
+            public string construction { get; set; }
+        }
+
+        /// <summary>
+        /// Programm zum abhören eines Portes für Eintragung von Arbeitszeitdaten in eine Datenbank 
+        /// </summary>
+        /// <param name="ConnectionStringDb">Verbindungsstring zur Datenbank</param>
+        /// <param name="PortNummerServer">Portnummer an der glauscht wird</param>
+        public ArbeitszeitVonHandy(string ConnectionStringDb, int PortNummerServer)
+        {
+            _PortNummer = PortNummerServer;
+            _ConnectionString = ConnectionStringDb;
+        }
+
+        public void Start()
+        {
+            string msg = $"Starte Server !";
+            Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
+
+            // Ermittlung der Ip des Rechners
+            string hostName = Dns.GetHostName();
+            var hostIp = JgMaschineLib.TcpIp.Helper.GetIpAdressV4(Dns.GetHostName());
 
             try
             {
-              var clientIp = ((IPEndPoint)ho.Client.Client.RemoteEndPoint).Address.ToString();
-              var clientPort = ((IPEndPoint)ho.Client.Client.RemoteEndPoint).Port;
+                // Listener starten
+                _Listener = new TcpListener(hostIp, _PortNummer);
+                _Listener.Start(200);
 
-              msg = $"Client verbunden:\nPort: {clientIp} Port: {clientPort}";
-              Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-
-              var buffer = new byte[8192];
-              nwStream = client.GetStream();
-              var anzahlZeichen = nwStream.Read(buffer, 0, buffer.Length);
-
-              var empf = JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen);
-              List<HandyDaten> listeHandyDaten = null;
-
-              try
-              {
-                listeHandyDaten = JsonConvert.DeserializeObject<List<HandyDaten>>(empf);
-
-                var werte = listeHandyDaten.Select(s => $"  {s.timestamp} - {s.userId} / {s.isCheckIn}").ToList();
-                msg = $"{anzahlZeichen} Zeichnen vom Server Empfangen.\n {Helper.ListeInString(werte)}";
+                msg = $"Listener gestartet:\n  Server: {hostIp} Port: {_PortNummer}";
                 Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-              }
-              catch (Exception ex)
-              {
-                msg = $"Fehler beim konvertieren der JSon Werte.\nGrund: {ex.Message}\nEmpfangen: {empf}";
-                Logger.Write(msg, _Lc, 0, 0, TraceEventType.Error);
-                throw;
-              }
 
-              DatenInDatenbankEintragen(listeHandyDaten);
+                while (true)
+                {
+                    // Wird aufgerufen, wenn Client sich meldet
+                    var client = _Listener.AcceptTcpClient();
+                    var hOpt = new HandyOptionen(_ConnectionString, client);
 
-              fehler = false;
-            }
-            catch (ObjectDisposedException ex)
-            {
-              msg = $"DisposeException.\nGrund: {ex.Message}";
-              Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-            }
-            catch (SocketException ex)
-            {
-              msg = $"Client Socket Abbruch.\nGrund: {ex.Message}";
-              Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
-            }
-            catch (IOException ex)
-            {
-              msg = $"Client IO Abbruch.\nGrund: {ex.Message}";
-              Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
+                    // Es wird ein separater Task gestartet, der die Abwicklung des Datenverkehrs übernimmet.
+                    Task.Factory.StartNew(handyOpt =>
+                    {
+                        var fehler = true;
+                        var ho = (HandyOptionen)handyOpt;
+                        NetworkStream nwStream = null;
+
+                        try
+                        {
+                            var clientIp = ((IPEndPoint)ho.Client.Client.RemoteEndPoint).Address.ToString();
+                            var clientPort = ((IPEndPoint)ho.Client.Client.RemoteEndPoint).Port;
+
+                            msg = $"Client verbunden:\nPort: {clientIp} Port: {clientPort}";
+                            Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
+
+                            var buffer = new byte[8192];
+                            nwStream = client.GetStream();
+                            var anzahlZeichen = nwStream.Read(buffer, 0, buffer.Length);
+
+                            var empf = JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen);
+                            List<HandyDaten> listeHandyDaten = null;
+
+                            try
+                            {
+                                listeHandyDaten = JsonConvert.DeserializeObject<List<HandyDaten>>(empf);
+
+                                var werte = listeHandyDaten.Select(s => $"  {s.timestamp} - {s.userId} / {s.isCheckIn}").ToList();
+                                msg = $"{anzahlZeichen} Zeichnen vom Server Empfangen.\n {Helper.ListeInString(werte)}";
+                                Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
+                            }
+                            catch (Exception ex)
+                            {
+                                msg = $"Fehler beim konvertieren der JSon Werte.\nGrund: {ex.Message}\nEmpfangen: {empf}";
+                                Logger.Write(msg, _Lc, 0, 0, TraceEventType.Error);
+                                throw;
+                            }
+
+                            DatenInDatenbankEintragen(listeHandyDaten);
+
+                            fehler = false;
+                        }
+                        catch (ObjectDisposedException ex)
+                        {
+                            msg = $"DisposeException.\nGrund: {ex.Message}";
+                            Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
+                        }
+                        catch (SocketException ex)
+                        {
+                            msg = $"Client Socket Abbruch.\nGrund: {ex.Message}";
+                            Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
+                        }
+                        catch (IOException ex)
+                        {
+                            msg = $"Client IO Abbruch.\nGrund: {ex.Message}";
+                            Logger.Write(msg, _Lc, 0, 0, TraceEventType.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Fehler bei Clientverarbeitung !", ex);
+                        }
+                        finally
+                        {
+                            try
+                            {
+                                if (ho.Client.Connected)
+                                {
+                                    var senden = JgMaschineLib.TcpIp.Helper.StringInBuffer(fehler ? "201" : "200"); // 200 - Daten erfolgreich eingetragen
+                          nwStream.Write(senden, 0, senden.Length);
+                                }
+
+                                ho.Client.Close();
+                                nwStream?.Close();
+                            }
+                            catch { }
+                        }
+                    }, hOpt, TaskCreationOptions.LongRunning);
+                }
             }
             catch (Exception ex)
             {
-              throw new Exception("Fehler bei Clientverarbeitung !", ex);
+                ExceptionPolicy.HandleException(ex, "Policy");
             }
             finally
             {
-              try
-              {
-                if (ho.Client.Connected)
-                {
-                  var senden = JgMaschineLib.TcpIp.Helper.StringInBuffer(fehler ? "201" : "200"); // 200 - Daten erfolgreich eingetragen
-                  nwStream.Write(senden, 0, senden.Length);
-                }
-
-                ho.Client.Close();
-                nwStream?.Close();
-              }
-              catch { }
+                _Listener.Stop();
+                Thread.Sleep(10000);
             }
-          }, hOpt, TaskCreationOptions.LongRunning);
+
+            Environment.Exit(10);
         }
-      }
-      catch (Exception ex)
-      {
-        ExceptionPolicy.HandleException(ex, "Policy");
-      }
-      finally
-      {
-        _Listener.Stop();
-        Thread.Sleep(10000);
-      }
 
-      Environment.Exit(10);
-    }
-
-    public void DatenInDatenbankEintragen(List<HandyDaten> ListeDaten)
-    {
-      var listeAuswertung = ListeDaten.Select(s => new ArbeitszeitImportDaten()
-      {
-        Datum = s.timestamp,
-        MatchCode = s.userId,
-        Vorgang = s.isCheckIn ? ArbeitszeitImportDaten.EnumVorgang.Komme : ArbeitszeitImportDaten.EnumVorgang.Gehen,
-        Baustelle = s.construction        
-      }).ToList();
-
-      var msg = "";
-      try
-      {
-        using (var Db = new JgModelContainer())
+        public void DatenInDatenbankEintragen(List<HandyDaten> ListeDaten)
         {
-          if (!string.IsNullOrWhiteSpace(_ConnectionString))
-            Db.Database.Connection.ConnectionString = _ConnectionString;
+            var listeAuswertung = ListeDaten.Select(s => new ArbeitszeitImportDaten()
+            {
+                Datum = s.timestamp,
+                MatchCode = s.userId,
+                Vorgang = s.isCheckIn ? ArbeitszeitImportDaten.EnumVorgang.Komme : ArbeitszeitImportDaten.EnumVorgang.Gehen,
+                Baustelle = s.construction
+            }).ToList();
 
-          var azImport = new ArbeitszeitImport();
-          azImport.ImportStarten(Db, listeAuswertung);
+            var msg = "";
+            try
+            {
+                using (var Db = new JgModelContainer())
+                {
+                    if (!string.IsNullOrWhiteSpace(_ConnectionString))
+                        Db.Database.Connection.ConnectionString = _ConnectionString;
 
-          Db.SaveChanges();
-          msg = $"{azImport.AnzahlAnmeldungen} Handy Anmeldungen in Datenbank gespeichert.\n{azImport.ProtokollOk}";
-          Logger.Write(msg, "Service", 0, 0, TraceEventType.Verbose);
+                    var azImport = new ArbeitszeitImport();
+                    azImport.ImportStarten(Db, listeAuswertung);
 
-          if (azImport.ProtokollFehler != null)
-          {
-            msg = $"Anmeldungen ohne Benutzerzuordnung.\n{azImport.ProtokollFehler}";
-            Logger.Write(msg, "Service", 0, 0, TraceEventType.Warning);
-          }
+                    Db.SaveChanges();
+                    msg = $"{azImport.AnzahlAnmeldungen} Handy Anmeldungen in Datenbank gespeichert.\n{azImport.ProtokollOk}";
+                    Logger.Write(msg, "Service", 0, 0, TraceEventType.Verbose);
+
+                    if (azImport.ProtokollFehler != null)
+                    {
+                        msg = $"Anmeldungen ohne Benutzerzuordnung.\n{azImport.ProtokollFehler}";
+                        Logger.Write(msg, "Service", 0, 0, TraceEventType.Warning);
+                    }
+                }
+            }
+            catch (Exception f)
+            {
+                msg = "Fehler beim eintragen der Anmeldedaten in die Datenbank.";
+                throw new MyException(msg, f);
+            }
         }
-      }
-      catch (Exception f)
-      {
-        msg = "Fehler beim eintragen der Anmeldedaten in die Datenbank.";
-        throw new MyException(msg, f);
-      }
     }
-  }
 }
 

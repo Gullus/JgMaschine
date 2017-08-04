@@ -17,9 +17,11 @@
               <xs:element name="IstStunden" type="xs:decimal" />
               <xs:element name="UeberStunden" type="xs:decimal" />
               <xs:element name="SollStunden" type="xs:decimal" />
-              <xs:element name="Normalstunden" type="xs:decimal" />
+              <xs:element name="UeberStunden" type="xs:decimal" />
               <xs:element name="UeberstundenAusgezahlt" type="xs:decimal" />
+              <xs:element name="UeberstundenGesamt" type="xs:decimal" />
               <xs:element name="Urlaub" type="xs:decimal" />
+              <xs:element name="UrlaubstageOffen" type="xs:decimal" />
               <xs:element name="Krank" type="xs:decimal" />
               <xs:element name="Feiertage" type="xs:decimal" />
               <xs:element name="NachtschichtZuschlag" type="xs:decimal" />
@@ -27,11 +29,13 @@
               <xs:element name="FeiertagsZuschlag" type="xs:decimal" />
               <xs:element name="FeiertagsZuschlagGerundet" type="xs:decimal" />
               <xs:element name="IstStundenD" type="xs:time" />
+              <xs:element name="NormalstundenD" type="xs:string" />
               <xs:element name="UeberStundenD" type="xs:time" />
               <xs:element name="SollStundenD" type="xs:time" />
-              <xs:element name="NormalstundenD" type="xs:time" />
               <xs:element name="UeberstundenAusgezahltD" type="xs:time" />
+              <xs:element name="UeberstundenGesamtD" type="xs:time" />
               <xs:element name="UrlaubD" type="xs:time" />
+              <xs:element name="UrlaubstageOffenD" type="xs:time" />
               <xs:element name="KrankD" type="xs:time" />
               <xs:element name="FeiertageD" type="xs:time" />
               <xs:element name="NachtschichtZuschlagD" type="xs:time" />

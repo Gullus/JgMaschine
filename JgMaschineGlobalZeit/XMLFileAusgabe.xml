@@ -1,7 +1,229 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--Arbeitszeit Monat: 2.2017 Datum: 10.04.17 18:53-->
+<!--Arbeitszeit Monat: 6.2017 Datum: 11.07.17 16:13-->
 <Root>
-  <Monat>Februar 2017</Monat>
+  <Monat>Juni 2017</Monat>
+  <Datensatz>
+    <Mitarbeiter>Barthel, Tino</Mitarbeiter>
+    <Nachname>Barthel</Nachname>
+    <Vorname>Tino</Vorname>
+    <IdBuchhaltung>2032</IdBuchhaltung>
+    <Standort>Heidenau</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>31</Urlaubstage>
+    <IstStunden>192.00</IstStunden>
+    <Normalstunden>136.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>16.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>20.00</UeberstundenGesamt>
+    <Urlaub>24.00</Urlaub>
+    <UrlaubstageOffen>23</UrlaubstageOffen>
+    <Krank>8.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>17.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>17.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>192:00:00</IstStundenD>
+    <NormalstundenD>136:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>16:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>20:00:00</UeberstundenGesamtD>
+    <UrlaubD>24:00:00</UrlaubD>
+    <UrlaubstageOffenD>184:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>17:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>17:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Bartosch, Enrico</Mitarbeiter>
+    <Nachname>Bartosch</Nachname>
+    <Vorname>Enrico</Vorname>
+    <IdBuchhaltung>2037</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>183.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>7.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>-16.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>23</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>55.35</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>55.50</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>183:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>07:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>-16:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>184:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>55:21:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>55:30:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Bielert, Bernd</Mitarbeiter>
+    <Nachname>Bielert</Nachname>
+    <Vorname>Bernd</Vorname>
+    <IdBuchhaltung>2008</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>25</Urlaubstage>
+    <IstStunden>180.00</IstStunden>
+    <Normalstunden>80.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>4.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>12.00</UeberstundenGesamt>
+    <Urlaub>88.00</Urlaub>
+    <UrlaubstageOffen>12</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>3.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>3.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>180:00:00</IstStundenD>
+    <NormalstundenD>80:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>04:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>12:00:00</UeberstundenGesamtD>
+    <UrlaubD>88:00:00</UrlaubD>
+    <UrlaubstageOffenD>96:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>03:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>03:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Bjarsch, Ronny</Mitarbeiter>
+    <Nachname>Bjarsch</Nachname>
+    <Vorname>Ronny</Vorname>
+    <IdBuchhaltung>2041</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>28</Urlaubstage>
+    <IstStunden>208.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>32.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>68.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>21</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>10.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>10.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>208:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>32:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>68:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>168:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>10:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>10:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Bjarsch, René</Mitarbeiter>
+    <Nachname>Bjarsch</Nachname>
+    <Vorname>René</Vorname>
+    <IdBuchhaltung>2093</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>183.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>7.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>29.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>24</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>20.13</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>20.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>183:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>07:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>29:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>192:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>20:08:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>20:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Böhme, Uwe</Mitarbeiter>
+    <Nachname>Böhme</Nachname>
+    <Vorname>Uwe</Vorname>
+    <IdBuchhaltung>2110</IdBuchhaltung>
+    <Standort>Laußnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>180.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>4.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>26.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>18</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>180:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>04:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>26:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>144:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
   <Datensatz>
     <Mitarbeiter>Brejora, Olaf</Mitarbeiter>
     <Nachname>Brejora</Nachname>
@@ -10,28 +232,69 @@
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>24</Urlaubstage>
-    <IstStunden>149.00</IstStunden>
-    <UeberStunden>-11.00</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>152.00</Normalstunden>
+    <IstStunden>186.00</IstStunden>
+    <Normalstunden>128.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>10.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
-    <Urlaub>8.00</Urlaub>
+    <UeberstundenGesamt>46.75</UeberstundenGesamt>
+    <Urlaub>40.00</Urlaub>
+    <UrlaubstageOffen>14</UrlaubstageOffen>
     <Krank>0.00</Krank>
-    <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>1.00</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>1.00</NachtschichtZuschlagGerundet>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>17.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>17.00</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>149:00:00</IstStundenD>
-    <UeberStundenD>-11:00:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>152:00:00</NormalstundenD>
+    <IstStundenD>186:00:00</IstStundenD>
+    <NormalstundenD>128:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>10:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
-    <UrlaubD>08:00:00</UrlaubD>
+    <UeberstundenGesamtD>46:45:00</UeberstundenGesamtD>
+    <UrlaubD>40:00:00</UrlaubD>
+    <UrlaubstageOffenD>112:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>01:00:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>01:00:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>17:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>17:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Dzhemil, Bayryam</Mitarbeiter>
+    <Nachname>Dzhemil</Nachname>
+    <Vorname>Bayryam</Vorname>
+    <IdBuchhaltung>2132</IdBuchhaltung>
+    <Standort>Montage (unterwegs)</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>156.50</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>-19.50</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>75.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>26</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>156:30:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>-19:30:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>75:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>208:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
@@ -43,61 +306,402 @@
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>25</Urlaubstage>
-    <IstStunden>150.68</IstStunden>
-    <UeberStunden>-9.32</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>160.00</Normalstunden>
+    <IstStunden>184.00</IstStunden>
+    <Normalstunden>88.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>8.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
-    <Urlaub>0.00</Urlaub>
+    <UeberstundenGesamt>51.50</UeberstundenGesamt>
+    <Urlaub>80.00</Urlaub>
+    <UrlaubstageOffen>10</UrlaubstageOffen>
     <Krank>0.00</Krank>
-    <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>4.00</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>4.00</NachtschichtZuschlagGerundet>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>9.52</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>9.50</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>150:41:00</IstStundenD>
-    <UeberStundenD>-09:19:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>160:00:00</NormalstundenD>
+    <IstStundenD>184:00:00</IstStundenD>
+    <NormalstundenD>88:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>08:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
-    <UrlaubD>00:00:00</UrlaubD>
+    <UeberstundenGesamtD>51:30:00</UeberstundenGesamtD>
+    <UrlaubD>80:00:00</UrlaubD>
+    <UrlaubstageOffenD>80:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>04:00:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>04:00:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>09:31:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>09:30:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
   <Datensatz>
-    <Mitarbeiter>Kirsch, Oliver</Mitarbeiter>
-    <Nachname>Kirsch</Nachname>
+    <Mitarbeiter>Hauffe, Uwe</Mitarbeiter>
+    <Nachname>Hauffe</Nachname>
+    <Vorname>Uwe</Vorname>
+    <IdBuchhaltung>2035</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>177.50</IstStunden>
+    <Normalstunden>120.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>1.50</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>11.00</UeberstundenGesamt>
+    <Urlaub>48.00</Urlaub>
+    <UrlaubstageOffen>15</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>177:30:00</IstStundenD>
+    <NormalstundenD>120:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>01:30:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>11:00:00</UeberstundenGesamtD>
+    <UrlaubD>48:00:00</UrlaubD>
+    <UrlaubstageOffenD>120:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Henning, Jörg</Mitarbeiter>
+    <Nachname>Henning</Nachname>
+    <Vorname>Jörg</Vorname>
+    <IdBuchhaltung>2109</IdBuchhaltung>
+    <Standort>Laußnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>188.00</IstStunden>
+    <Normalstunden>136.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>12.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>4.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>11</UrlaubstageOffen>
+    <Krank>32.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>188:00:00</IstStundenD>
+    <NormalstundenD>136:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>12:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>04:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>88:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Hoffmann, Sebastian</Mitarbeiter>
+    <Nachname>Hoffmann</Nachname>
+    <Vorname>Sebastian</Vorname>
+    <IdBuchhaltung />
+    <Standort>Heidenau</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>12</Urlaubstage>
+    <IstStunden>31.50</IstStunden>
+    <Normalstunden>32.00</Normalstunden>
+    <SollStunden>32.00</SollStunden>
+    <UeberStunden>-0.50</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>-0.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>12</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>0.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>31:30:00</IstStundenD>
+    <NormalstundenD>32:00:00</NormalstundenD>
+    <SollStundenD>32:00:00</SollStundenD>
+    <UeberStundenD>-00:30:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>-00:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>96:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Hoffmann, Tino</Mitarbeiter>
+    <Nachname>Hoffmann</Nachname>
+    <Vorname>Tino</Vorname>
+    <IdBuchhaltung>2075</IdBuchhaltung>
+    <Standort>Mittelbach</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>24</Urlaubstage>
+    <IstStunden>170.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>-6.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>39.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>24</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>170:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>-06:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>39:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>192:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Kästner, Sven</Mitarbeiter>
+    <Nachname>Kästner</Nachname>
+    <Vorname>Sven</Vorname>
+    <IdBuchhaltung>2133</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>190.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>14.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>25.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>20</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>20.12</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>20.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>190:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>14:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>25:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>160:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>20:07:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>20:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Kästner, Stefan</Mitarbeiter>
+    <Nachname>Kästner</Nachname>
+    <Vorname>Stefan</Vorname>
+    <IdBuchhaltung>2105</IdBuchhaltung>
+    <Standort>Montage (unterwegs)</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>173.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>-3.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>64.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>23</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>173:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>-03:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>64:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>184:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Kirsch AZUBI, Oliver</Mitarbeiter>
+    <Nachname>Kirsch AZUBI</Nachname>
     <Vorname>Oliver</Vorname>
     <IdBuchhaltung>2123</IdBuchhaltung>
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>20</Urlaubstage>
-    <IstStunden>155.32</IstStunden>
-    <UeberStunden>-4.68</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>160.00</Normalstunden>
+    <IstStunden>183.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>7.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>-11.50</UeberstundenGesamt>
     <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>18</UrlaubstageOffen>
     <Krank>0.00</Krank>
-    <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>1.00</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>1.00</NachtschichtZuschlagGerundet>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>15.93</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>16.00</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>155:19:00</IstStundenD>
-    <UeberStundenD>-04:41:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>160:00:00</NormalstundenD>
+    <IstStundenD>183:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>07:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>-11:30:00</UeberstundenGesamtD>
     <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>144:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>01:00:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>01:00:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>15:56:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>16:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Knels, Matthias</Mitarbeiter>
+    <Nachname>Knels</Nachname>
+    <Vorname>Matthias</Vorname>
+    <IdBuchhaltung>2068</IdBuchhaltung>
+    <Standort>Mittelbach</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>25</Urlaubstage>
+    <IstStunden>176.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>0.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>54.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>16</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>176:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>00:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>54:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>128:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Krause, Frank</Mitarbeiter>
+    <Nachname>Krause</Nachname>
+    <Vorname>Frank</Vorname>
+    <IdBuchhaltung>2131</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>188.00</IstStunden>
+    <Normalstunden>128.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>12.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>24.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>22</UrlaubstageOffen>
+    <Krank>40.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>44.32</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>44.50</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>188:00:00</IstStundenD>
+    <NormalstundenD>128:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>12:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>24:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>176:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>44:19:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>44:30:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Lawniczak, Jens</Mitarbeiter>
+    <Nachname>Lawniczak</Nachname>
+    <Vorname>Jens</Vorname>
+    <IdBuchhaltung>2084</IdBuchhaltung>
+    <Standort>Laußnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>177.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>1.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>45.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>18</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>177:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>01:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>45:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>144:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
@@ -110,11 +714,13 @@
     <Zahltag>10</Zahltag>
     <Urlaubstage>20</Urlaubstage>
     <IstStunden>0.00</IstStunden>
-    <UeberStunden>0.00</UeberStunden>
-    <SollStunden>0.00</SollStunden>
     <Normalstunden>0.00</Normalstunden>
+    <SollStunden>0.00</SollStunden>
+    <UeberStunden>0.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>23.00</UeberstundenGesamt>
     <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>28</UrlaubstageOffen>
     <Krank>0.00</Krank>
     <Feiertage>0.00</Feiertage>
     <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
@@ -122,11 +728,87 @@
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
     <IstStundenD>00:00:00</IstStundenD>
-    <UeberStundenD>00:00:00</UeberStundenD>
-    <SollStundenD>00:00:00</SollStundenD>
     <NormalstundenD>00:00:00</NormalstundenD>
+    <SollStundenD>00:00:00</SollStundenD>
+    <UeberStundenD>00:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>23:00:00</UeberstundenGesamtD>
     <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>224:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Merseburg ZUVERDIENST, Dieter</Mitarbeiter>
+    <Nachname>Merseburg ZUVERDIENST</Nachname>
+    <Vorname>Dieter</Vorname>
+    <IdBuchhaltung>6071</IdBuchhaltung>
+    <Standort>Mittelbach</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>0</Urlaubstage>
+    <IstStunden>88.00</IstStunden>
+    <Normalstunden>46.00</Normalstunden>
+    <SollStunden>46.00</SollStunden>
+    <UeberStunden>42.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>242.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>0</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>0.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>88:00:00</IstStundenD>
+    <NormalstundenD>46:00:00</NormalstundenD>
+    <SollStundenD>46:00:00</SollStundenD>
+    <UeberStundenD>42:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>242:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>00:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Michael, Sebastian</Mitarbeiter>
+    <Nachname>Michael</Nachname>
+    <Vorname>Sebastian</Vorname>
+    <IdBuchhaltung>2127</IdBuchhaltung>
+    <Standort>Montage (unterwegs)</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>178.00</IstStunden>
+    <Normalstunden>128.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>2.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>15.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>21</UrlaubstageOffen>
+    <Krank>40.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>178:00:00</IstStundenD>
+    <NormalstundenD>128:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>02:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>15:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>168:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
     <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
@@ -142,28 +824,32 @@
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>22</Urlaubstage>
-    <IstStunden>159.55</IstStunden>
-    <UeberStunden>-0.45</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>160.00</Normalstunden>
+    <IstStunden>188.50</IstStunden>
+    <Normalstunden>136.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>12.50</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
-    <Urlaub>0.00</Urlaub>
+    <UeberstundenGesamt>68.75</UeberstundenGesamt>
+    <Urlaub>32.00</Urlaub>
+    <UrlaubstageOffen>7</UrlaubstageOffen>
     <Krank>0.00</Krank>
-    <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>2.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>2.00</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>159:33:00</IstStundenD>
-    <UeberStundenD>-00:27:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>160:00:00</NormalstundenD>
+    <IstStundenD>188:30:00</IstStundenD>
+    <NormalstundenD>136:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>12:30:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
-    <UrlaubD>00:00:00</UrlaubD>
+    <UeberstundenGesamtD>68:45:00</UeberstundenGesamtD>
+    <UrlaubD>32:00:00</UrlaubD>
+    <UrlaubstageOffenD>56:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>02:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>02:00:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
@@ -175,28 +861,32 @@
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>25</Urlaubstage>
-    <IstStunden>140.35</IstStunden>
-    <UeberStunden>-19.65</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>160.00</Normalstunden>
+    <IstStunden>202.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>26.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>106.50</UeberstundenGesamt>
     <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>23</UrlaubstageOffen>
     <Krank>0.00</Krank>
-    <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>18.38</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>18.50</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>140:21:00</IstStundenD>
-    <UeberStundenD>-19:39:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>160:00:00</NormalstundenD>
+    <IstStundenD>202:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>26:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>106:30:00</UeberstundenGesamtD>
     <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>184:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>18:23:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>18:30:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
@@ -208,28 +898,402 @@
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>23</Urlaubstage>
-    <IstStunden>142.03</IstStunden>
-    <UeberStunden>-17.97</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>152.00</Normalstunden>
+    <IstStunden>176.00</IstStunden>
+    <Normalstunden>0.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>0.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
-    <Urlaub>8.00</Urlaub>
-    <Krank>0.00</Krank>
+    <UeberstundenGesamt>33.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>16</UrlaubstageOffen>
+    <Krank>176.00</Krank>
     <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>3.42</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>3.50</NachtschichtZuschlagGerundet>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>142:02:00</IstStundenD>
-    <UeberStundenD>-17:58:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>152:00:00</NormalstundenD>
+    <IstStundenD>176:00:00</IstStundenD>
+    <NormalstundenD>00:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>00:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
-    <UrlaubD>08:00:00</UrlaubD>
+    <UeberstundenGesamtD>33:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>128:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>03:25:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>03:30:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Redlich, Peter</Mitarbeiter>
+    <Nachname>Redlich</Nachname>
+    <Vorname>Peter</Vorname>
+    <IdBuchhaltung>2065</IdBuchhaltung>
+    <Standort>Mittelbach</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>25</Urlaubstage>
+    <IstStunden>168.00</IstStunden>
+    <Normalstunden>0.00</Normalstunden>
+    <SollStunden>168.00</SollStunden>
+    <UeberStunden>0.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>169.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>15</UrlaubstageOffen>
+    <Krank>168.00</Krank>
+    <Feiertage>0.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>168:00:00</IstStundenD>
+    <NormalstundenD>00:00:00</NormalstundenD>
+    <SollStundenD>168:00:00</SollStundenD>
+    <UeberStundenD>00:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>169:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>120:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Richter, Karl Heinz</Mitarbeiter>
+    <Nachname>Richter</Nachname>
+    <Vorname>Karl Heinz</Vorname>
+    <IdBuchhaltung>2062</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>30</Urlaubstage>
+    <IstStunden>185.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>9.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>62.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>29</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>9.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>9.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>185:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>09:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>62:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>232:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>09:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>09:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Rothe, Matthias</Mitarbeiter>
+    <Nachname>Rothe</Nachname>
+    <Vorname>Matthias</Vorname>
+    <IdBuchhaltung>2049</IdBuchhaltung>
+    <Standort>Laußnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>179.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>3.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>34.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>22</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>179:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>03:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>34:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>176:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Rotter, Thomas</Mitarbeiter>
+    <Nachname>Rotter</Nachname>
+    <Vorname>Thomas</Vorname>
+    <IdBuchhaltung>2067</IdBuchhaltung>
+    <Standort>Mittelbach</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>27</Urlaubstage>
+    <IstStunden>176.00</IstStunden>
+    <Normalstunden>128.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>0.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>0.00</UeberstundenGesamt>
+    <Urlaub>40.00</Urlaub>
+    <UrlaubstageOffen>17</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>176:00:00</IstStundenD>
+    <NormalstundenD>128:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>00:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>00:00:00</UeberstundenGesamtD>
+    <UrlaubD>40:00:00</UrlaubD>
+    <UrlaubstageOffenD>136:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Schäfer, Robert</Mitarbeiter>
+    <Nachname>Schäfer</Nachname>
+    <Vorname>Robert</Vorname>
+    <IdBuchhaltung>2129</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>22</Urlaubstage>
+    <IstStunden>183.83</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>7.83</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>19.83</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>20</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>46.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>46.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>183:50:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>07:50:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>19:50:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>160:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>46:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>46:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Seifert, Lars </Mitarbeiter>
+    <Nachname>Seifert</Nachname>
+    <Vorname>Lars </Vorname>
+    <IdBuchhaltung>2101</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>24</Urlaubstage>
+    <IstStunden>188.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>12.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>38.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>13</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>49.27</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>49.50</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>188:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>12:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>38:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>104:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>49:16:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>49:30:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Seifert, Michael</Mitarbeiter>
+    <Nachname>Seifert</Nachname>
+    <Vorname>Michael</Vorname>
+    <IdBuchhaltung>2061</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>30</Urlaubstage>
+    <IstStunden>184.00</IstStunden>
+    <Normalstunden>144.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>8.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>9.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>30</UrlaubstageOffen>
+    <Krank>24.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>8.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>8.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>184:00:00</IstStundenD>
+    <NormalstundenD>144:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>08:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>09:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>240:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>08:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>08:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Seifert, Robin</Mitarbeiter>
+    <Nachname>Seifert</Nachname>
+    <Vorname>Robin</Vorname>
+    <IdBuchhaltung>2051</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>18</Urlaubstage>
+    <IstStunden>183.50</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>7.50</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>7.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>17</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>52.30</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>52.50</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>183:30:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>07:30:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>07:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>136:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>52:18:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>52:30:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Seifert ZUVERDIENST, Joachim</Mitarbeiter>
+    <Nachname>Seifert ZUVERDIENST</Nachname>
+    <Vorname>Joachim</Vorname>
+    <IdBuchhaltung>6060</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>0</Urlaubstage>
+    <IstStunden>179.00</IstStunden>
+    <Normalstunden>50.00</Normalstunden>
+    <SollStunden>50.00</SollStunden>
+    <UeberStunden>129.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>147.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>0</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>0.00</Feiertage>
+    <NachtschichtZuschlag>22.05</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>22.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>179:00:00</IstStundenD>
+    <NormalstundenD>50:00:00</NormalstundenD>
+    <SollStundenD>50:00:00</SollStundenD>
+    <UeberStundenD>129:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>147:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>00:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>22:03:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>22:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Shala, Ramadan</Mitarbeiter>
+    <Nachname>Shala</Nachname>
+    <Vorname>Ramadan</Vorname>
+    <IdBuchhaltung>2096</IdBuchhaltung>
+    <Standort>Montage (unterwegs)</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>15</Urlaubstage>
+    <IstStunden>170.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>-6.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>7.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>15</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>170:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>-06:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>07:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>120:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
@@ -241,28 +1305,32 @@
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>25</Urlaubstage>
-    <IstStunden>154.00</IstStunden>
-    <UeberStunden>-6.00</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>112.00</Normalstunden>
+    <IstStunden>192.00</IstStunden>
+    <Normalstunden>136.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>16.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
-    <Urlaub>48.00</Urlaub>
+    <UeberstundenGesamt>64.75</UeberstundenGesamt>
+    <Urlaub>32.00</Urlaub>
+    <UrlaubstageOffen>18</UrlaubstageOffen>
     <Krank>0.00</Krank>
-    <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>3.45</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>3.50</NachtschichtZuschlagGerundet>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>13.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>13.00</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>154:00:00</IstStundenD>
-    <UeberStundenD>-06:00:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>112:00:00</NormalstundenD>
+    <IstStundenD>192:00:00</IstStundenD>
+    <NormalstundenD>136:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>16:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
-    <UrlaubD>48:00:00</UrlaubD>
+    <UeberstundenGesamtD>64:45:00</UeberstundenGesamtD>
+    <UrlaubD>32:00:00</UrlaubD>
+    <UrlaubstageOffenD>144:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>03:27:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>03:30:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>13:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>13:00:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
@@ -274,28 +1342,291 @@
     <Standort>Heidenau</Standort>
     <Zahltag>10</Zahltag>
     <Urlaubstage>25</Urlaubstage>
-    <IstStunden>130.50</IstStunden>
-    <UeberStunden>-29.50</UeberStunden>
-    <SollStunden>160.00</SollStunden>
-    <Normalstunden>160.00</Normalstunden>
+    <IstStunden>193.00</IstStunden>
+    <Normalstunden>168.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>17.00</UeberStunden>
     <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>36.00</UeberstundenGesamt>
     <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>18</UrlaubstageOffen>
     <Krank>0.00</Krank>
-    <Feiertage>0.00</Feiertage>
-    <NachtschichtZuschlag>2.93</NachtschichtZuschlag>
-    <NachtschichtZuschlagGerundet>3.00</NachtschichtZuschlagGerundet>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>23.23</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>23.00</NachtschichtZuschlagGerundet>
     <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
     <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
-    <IstStundenD>130:30:00</IstStundenD>
-    <UeberStundenD>-29:30:00</UeberStundenD>
-    <SollStundenD>160:00:00</SollStundenD>
-    <NormalstundenD>160:00:00</NormalstundenD>
+    <IstStundenD>193:00:00</IstStundenD>
+    <NormalstundenD>168:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>17:00:00</UeberStundenD>
     <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>36:00:00</UeberstundenGesamtD>
     <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>144:00:00</UrlaubstageOffenD>
     <KrankD>00:00:00</KrankD>
     <FeiertageD>00:00:00</FeiertageD>
-    <NachtschichtZuschlagD>02:56:00</NachtschichtZuschlagD>
-    <NachtschichtZuschlagGerundetD>03:00:00</NachtschichtZuschlagGerundetD>
+    <NachtschichtZuschlagD>23:14:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>23:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Vierling, André</Mitarbeiter>
+    <Nachname>Vierling</Nachname>
+    <Vorname>André</Vorname>
+    <IdBuchhaltung>2130</IdBuchhaltung>
+    <Standort>Heidenau</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>20</Urlaubstage>
+    <IstStunden>181.00</IstStunden>
+    <Normalstunden>120.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>5.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>7.75</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>12</UrlaubstageOffen>
+    <Krank>48.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>11.87</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>12.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>181:00:00</IstStundenD>
+    <NormalstundenD>120:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>05:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>07:45:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>96:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>11:52:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>12:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Wabra, Bernd</Mitarbeiter>
+    <Nachname>Wabra</Nachname>
+    <Vorname>Bernd</Vorname>
+    <IdBuchhaltung>2078</IdBuchhaltung>
+    <Standort>Mittelbach</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>25</Urlaubstage>
+    <IstStunden>176.00</IstStunden>
+    <Normalstunden>152.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>0.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>57.00</UeberstundenGesamt>
+    <Urlaub>16.00</Urlaub>
+    <UrlaubstageOffen>20</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>176:00:00</IstStundenD>
+    <NormalstundenD>152:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>00:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>57:00:00</UeberstundenGesamtD>
+    <UrlaubD>16:00:00</UrlaubD>
+    <UrlaubstageOffenD>160:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Wegner, Frank</Mitarbeiter>
+    <Nachname>Wegner</Nachname>
+    <Vorname>Frank</Vorname>
+    <IdBuchhaltung>2104</IdBuchhaltung>
+    <Standort>Montage (unterwegs)</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>177.00</IstStunden>
+    <Normalstunden>144.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>1.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>167.00</UeberstundenGesamt>
+    <Urlaub>24.00</Urlaub>
+    <UrlaubstageOffen>20</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>177:00:00</IstStundenD>
+    <NormalstundenD>144:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>01:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>167:00:00</UeberstundenGesamtD>
+    <UrlaubD>24:00:00</UrlaubD>
+    <UrlaubstageOffenD>160:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Weiß, Enrico</Mitarbeiter>
+    <Nachname>Weiß</Nachname>
+    <Vorname>Enrico</Vorname>
+    <IdBuchhaltung>2070</IdBuchhaltung>
+    <Standort>Mittelbach</Standort>
+    <Zahltag>15</Zahltag>
+    <Urlaubstage>25</Urlaubstage>
+    <IstStunden>190.50</IstStunden>
+    <Normalstunden>112.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>14.50</UeberStunden>
+    <UeberstundenAusgezahlt>8.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>148.00</UeberstundenGesamt>
+    <Urlaub>56.00</Urlaub>
+    <UrlaubstageOffen>18</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>190:30:00</IstStundenD>
+    <NormalstundenD>112:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>14:30:00</UeberStundenD>
+    <UeberstundenAusgezahltD>08:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>148:00:00</UeberstundenGesamtD>
+    <UrlaubD>56:00:00</UrlaubD>
+    <UrlaubstageOffenD>144:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Wendt, Gabor</Mitarbeiter>
+    <Nachname>Wendt</Nachname>
+    <Vorname>Gabor</Vorname>
+    <IdBuchhaltung>2055</IdBuchhaltung>
+    <Standort>Laußnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>176.50</IstStunden>
+    <Normalstunden>160.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>0.50</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>15.00</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>15</UrlaubstageOffen>
+    <Krank>8.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>176:30:00</IstStundenD>
+    <NormalstundenD>160:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>00:30:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>15:00:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>120:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Wilhelm ZUVERDIENST, Karlfried</Mitarbeiter>
+    <Nachname>Wilhelm ZUVERDIENST</Nachname>
+    <Vorname>Karlfried</Vorname>
+    <IdBuchhaltung>6070</IdBuchhaltung>
+    <Standort>Schwepnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>0</Urlaubstage>
+    <IstStunden>105.00</IstStunden>
+    <Normalstunden>50.00</Normalstunden>
+    <SollStunden>50.00</SollStunden>
+    <UeberStunden>55.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>118.50</UeberstundenGesamt>
+    <Urlaub>0.00</Urlaub>
+    <UrlaubstageOffen>0</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>0.00</Feiertage>
+    <NachtschichtZuschlag>2.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>2.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>105:00:00</IstStundenD>
+    <NormalstundenD>50:00:00</NormalstundenD>
+    <SollStundenD>50:00:00</SollStundenD>
+    <UeberStundenD>55:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>118:30:00</UeberstundenGesamtD>
+    <UrlaubD>00:00:00</UrlaubD>
+    <UrlaubstageOffenD>00:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>02:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>02:00:00</NachtschichtZuschlagGerundetD>
+    <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
+    <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
+  </Datensatz>
+  <Datensatz>
+    <Mitarbeiter>Wünsche, Ralph</Mitarbeiter>
+    <Nachname>Wünsche</Nachname>
+    <Vorname>Ralph</Vorname>
+    <IdBuchhaltung>2112</IdBuchhaltung>
+    <Standort>Laußnitz</Standort>
+    <Zahltag>10</Zahltag>
+    <Urlaubstage>23</Urlaubstage>
+    <IstStunden>190.00</IstStunden>
+    <Normalstunden>152.00</Normalstunden>
+    <SollStunden>176.00</SollStunden>
+    <UeberStunden>14.00</UeberStunden>
+    <UeberstundenAusgezahlt>0.00</UeberstundenAusgezahlt>
+    <UeberstundenGesamt>138.50</UeberstundenGesamt>
+    <Urlaub>16.00</Urlaub>
+    <UrlaubstageOffen>15</UrlaubstageOffen>
+    <Krank>0.00</Krank>
+    <Feiertage>8.00</Feiertage>
+    <NachtschichtZuschlag>0.00</NachtschichtZuschlag>
+    <NachtschichtZuschlagGerundet>0.00</NachtschichtZuschlagGerundet>
+    <FeiertagsZuschlag>0.00</FeiertagsZuschlag>
+    <FeiertagsZuschlagGerundet>0.00</FeiertagsZuschlagGerundet>
+    <IstStundenD>190:00:00</IstStundenD>
+    <NormalstundenD>152:00:00</NormalstundenD>
+    <SollStundenD>176:00:00</SollStundenD>
+    <UeberStundenD>14:00:00</UeberStundenD>
+    <UeberstundenAusgezahltD>00:00:00</UeberstundenAusgezahltD>
+    <UeberstundenGesamtD>138:30:00</UeberstundenGesamtD>
+    <UrlaubD>16:00:00</UrlaubD>
+    <UrlaubstageOffenD>120:00:00</UrlaubstageOffenD>
+    <KrankD>00:00:00</KrankD>
+    <FeiertageD>00:00:00</FeiertageD>
+    <NachtschichtZuschlagD>00:00:00</NachtschichtZuschlagD>
+    <NachtschichtZuschlagGerundetD>00:00:00</NachtschichtZuschlagGerundetD>
     <FeiertagsZuschlagD>00:00:00</FeiertagsZuschlagD>
     <FeiertagsZuschlagGerundetD>00:00:00</FeiertagsZuschlagGerundetD>
   </Datensatz>
