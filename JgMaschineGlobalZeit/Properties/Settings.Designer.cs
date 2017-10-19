@@ -27,9 +27,9 @@ namespace JgMaschineGlobalZeit.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True")]
-        public string VerbindungsString {
+        public string DatenbankVerbindungsString {
             get {
-                return ((string)(this["VerbindungsString"]));
+                return ((string)(this["DatenbankVerbindungsString"]));
             }
         }
         

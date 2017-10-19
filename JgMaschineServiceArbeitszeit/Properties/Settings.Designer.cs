@@ -34,7 +34,8 @@ namespace JgMaschineServiceAbreitszeit.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\Sqlexpress;Initial Catalog=JgMaschine;Integrated Security=True")]
         public string DatenbankVerbindungsString {
             get {
                 return ((string)(this["DatenbankVerbindungsString"]));

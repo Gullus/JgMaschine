@@ -58,9 +58,9 @@
           <RibbonButton Label="Report laden" Width="60" Command="{x:Static comand:MyCommands.ReportAusDateiLaden}" LargeImageSource="Bilder\JgDownLoad.ico" />
           <RibbonButton Label="Report speichern" Width="60" Command="{x:Static comand:MyCommands.ReportInDateiSpeichern}" LargeImageSource="Bilder\JgSave.ico"/>
         </RibbonGroup>
-        <RibbonGroup Header="Optionen">
+        <!--<RibbonGroup Header="Optionen">
           <RibbonButton Label="Sql Verbindung" Width="80" Command="{x:Static comand:MyCommands.SqlVerbindung}" LargeImageSource="Bilder\JgDownLoad.ico" />
-        </RibbonGroup>
+        </RibbonGroup>-->
       </RibbonTab>
     </Ribbon>
 

@@ -79,8 +79,8 @@ namespace JgMaschineGlobalZeit
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       _Db = new JgModelContainer();
-      if (Properties.Settings.Default.VerbindungsString != "")
-        _Db.Database.Connection.ConnectionString = Properties.Settings.Default.VerbindungsString;
+      if (Properties.Settings.Default.DatenbankVerbindungsString != "")
+        _Db.Database.Connection.ConnectionString = Properties.Settings.Default.DatenbankVerbindungsString;
 
       var heute = DateTime.Now.Date;
 

@@ -32,7 +32,7 @@ namespace JgMaschineServiceArbeitszeit
     public void TimerStop()
     {
       _SteuerungsTimer.Change(Timeout.Infinite, Timeout.Infinite);
-      var msg = "Timer gestopt";
+      var msg = "Timer gestoppt";
       Logger.Write(msg, "Service", 0, 0, TraceEventType.Stop);
     }
 

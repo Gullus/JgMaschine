@@ -51,7 +51,7 @@ namespace JgMaschineServiceHandyArbeitszeit
     public JgMaschineServiceHandyArbeitszeit()
     {
       var prop = Properties.Settings.Default;
-      _ArbeitszeitHandy = new ArbeitszeitVonHandy(prop.ConnectionString, prop.PortNummerServer);
+      _ArbeitszeitHandy = new ArbeitszeitVonHandy(prop.DatenbankVerbindungsString, prop.PortNummerServer);
     }
 
     protected override void OnStart(string[] args)

@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace JgMaschineLib.SqlVerbindung
 {
-  public class SqlVerbindung
+  public class _SqlVerbindung
   {
     public enum EnumVerbindungen
     {
@@ -23,13 +23,13 @@ namespace JgMaschineLib.SqlVerbindung
       set { _FileNameDatei = value; }
     }
 
-    public SqlVerbindung(string FileName)
+    public _SqlVerbindung(string FileName)
       : base()
     {
       _FileNameDatei = FileName;
     }
 
-    public SqlVerbindung()
+    public _SqlVerbindung()
     { }
 
     private void VerbindungenLaden()

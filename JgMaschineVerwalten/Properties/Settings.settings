@@ -5,7 +5,7 @@
     <Setting Name="IdStandort" Type="System.Guid" Scope="User">
       <Value Profile="(Default)">00000000-0000-0000-0000-000000000000</Value>
     </Setting>
-    <Setting Name="VerbindungsString" Type="(Connection string)" Scope="Application">
+    <Setting Name="DatenbankVerbindungsString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;ConnectionString&gt;Data Source=.\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True&lt;/ConnectionString&gt;
