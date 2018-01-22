@@ -15,13 +15,13 @@
                 <ComponentModel:SortDescription Direction="Ascending" PropertyName="Datum"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-        
+
         <CollectionViewSource x:Key="vsSollStunden" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabSollStunden}, CreateList=True}" IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
                 <ComponentModel:SortDescription Direction="Ascending" PropertyName="Monat"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-        
+
         <CollectionViewSource x:Key="vsPausen" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabPausenzeit}, CreateList=True}" IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
                 <ComponentModel:SortDescription Direction="Ascending" PropertyName="ZeitVon"/>
@@ -33,7 +33,7 @@
                 <ComponentModel:SortDescription Direction="Ascending" PropertyName="NachName"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-        
+
         <CollectionViewSource x:Key="vsRundenAzBeginn" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitRunden}, CreateList=True}" />
         <CollectionViewSource x:Key="vsRundenAzEnde" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitRunden}, CreateList=True}" />
         <CollectionViewSource x:Key="vsTerminals" d:DesignSource="{d:DesignInstance {x:Type JgMaschineData:tabArbeitszeitTerminal}, CreateList=True}"/>
@@ -58,6 +58,13 @@
         <TabControl Margin="5" Grid.ColumnSpan="5" Grid.Row="1">
             <TabItem Header=" Benutzer " Height="40" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource vsBediener}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
                     <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="3" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.GroupStyle>
                             <GroupStyle>
@@ -70,7 +77,7 @@
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
                         </DataGrid.GroupStyle>
-                        
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Mitarbeiter" IsReadOnly="True" Width="*"/>
                             <DataGridTextColumn Binding="{Binding Urlaubstage}" Header="Urlaubs&#x0a;Tage" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
@@ -81,7 +88,26 @@
                             <DataGridTextColumn Binding="{Binding EArbeitszeitHelper.UeberstundenAnzeige}" Header="Überst.&#x0a;Vorjahr" Width="60" CellStyle="{StaticResource CellCenterAlign}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    <Grid Grid.Row="1" Margin="3, 3, 3, 10" Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
+                        <Label Content="Datum Einstellung" />
+                        <DatePicker Grid.Column="1" Margin="3" SelectedDate="{Binding DatumEinstellung}" />
+
+                        <Label Content="Datum Entlassung" Grid.Row="1"/>
+                        <DatePicker Grid.Column="1" Grid.Row="1" Margin="3" SelectedDate="{Binding DatumEntlassung}"/>
+                        <TextBlock Text="Leer bzw. kein Datum -> ist in Arbeit" Grid.Column="1" Grid.Row="2" Margin="3,0,3,3" FontStyle="Italic"/>
+
+                    </Grid>
                 </Grid>
             </TabItem>
 

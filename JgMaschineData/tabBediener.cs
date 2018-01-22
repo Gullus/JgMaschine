@@ -37,6 +37,8 @@ namespace JgMaschineData
         public string IdBuchhaltung { get; set; }
         public byte AuszahlungGehalt { get; set; }
         public EnumStatusBediener Status { get; set; }
+        public System.DateTime DatumEinstellung { get; set; }
+        public Nullable<System.DateTime> DatumEntlassung { get; set; }
         public Nullable<System.Guid> fAktivArbeitszeit { get; set; }
         public Nullable<System.Guid> fAktivAnmeldung { get; set; }
         public System.Guid fStandort { get; set; }

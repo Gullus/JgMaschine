@@ -104,6 +104,7 @@ namespace JgMaschineServiceHandyArbeitszeit
                             var anzahlZeichen = nwStream.Read(buffer, 0, buffer.Length);
 
                             var empf = JgMaschineLib.TcpIp.Helper.BufferInString(buffer, anzahlZeichen);
+                            Logger.Write($"Daten Handy: {empf}", _Lc, 0, 0, TraceEventType.Verbose);
                             List<HandyDaten> listeHandyDaten = null;
 
                             try
@@ -150,8 +151,12 @@ namespace JgMaschineServiceHandyArbeitszeit
                             {
                                 if (ho.Client.Connected)
                                 {
-                                    var senden = JgMaschineLib.TcpIp.Helper.StringInBuffer(fehler ? "201" : "200"); // 200 - Daten erfolgreich eingetragen
-                          nwStream.Write(senden, 0, senden.Length);
+                                    var zeichenAntwort = fehler ? "201" : "200"; // 200 - Daten erfolgreich eingetragen
+                                    var senden = JgMaschineLib.TcpIp.Helper.StringInBuffer(zeichenAntwort);
+                                    nwStream.Write(senden, 0, senden.Length);
+                                    nwStream.Flush();
+                                    msg = $"Zeichen {zeichenAntwort} an Handy gesendet.";
+                                    Logger.Write(msg, _Lc, 0, 0, TraceEventType.Verbose);
                                 }
 
                                 ho.Client.Close();
@@ -197,6 +202,7 @@ namespace JgMaschineServiceHandyArbeitszeit
                     azImport.ImportStarten(Db, listeAuswertung);
 
                     Db.SaveChanges();
+
                     msg = $"{azImport.AnzahlAnmeldungen} Handy Anmeldungen in Datenbank gespeichert.\n{azImport.ProtokollOk}";
                     Logger.Write(msg, "Service", 0, 0, TraceEventType.Verbose);
 

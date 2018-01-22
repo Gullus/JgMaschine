@@ -190,18 +190,10 @@ namespace JgMaschineSetup
             var erg = MessageBox.Show(msg, "Information", MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK);
             if (erg == MessageBoxResult.OK)
             {
-                using (var db = new JgModelContainer())
-                {
-                    var lTerminals = db.tabArbeitszeitTerminalSet.ToList();
-                    foreach (var term in lTerminals)
-                        term.UpdateTerminal = true;
-                    db.SaveChanges();
-
-                    msg = $"{lTerminals.Count} Terminals werden aktualisiert.";
-                    MessageBox.Show(msg, "Information", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
-                }
-
-                _ListeStandorte.Db.SaveChanges();
+                var sqlText = "UPDATE[dbo].[tabArbeitszeitTerminalSet] SET [UpdateTerminal] = 1";
+                var anz = _Db.Database.ExecuteSqlCommand(sqlText);
+                msg = $"{anz} Terminals werden aktualisiert.";
+                MessageBox.Show(msg, "Information", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
             }
         }
 

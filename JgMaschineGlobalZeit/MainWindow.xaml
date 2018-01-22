@@ -170,55 +170,72 @@
             <TabItem Header="  Auswertung Arbeitszeit  ">
                 <Grid Margin="5" DataContext="{Binding Source={StaticResource vsBediener}}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="250"/>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
+                        <RowDefinition />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Label Content="Jahr"/>
-                    <ComboBox x:Name="cbJahr" Grid.Column="1"/>
+                    <Grid Grid.RowSpan="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                    <Label Content="Monat" Grid.Row="1"/>
-                    <ComboBox x:Name="cbMonat" Grid.Column="1" Grid.Row="1"/>
+                        <Label Content="Jahr"/>
+                        <ComboBox x:Name="cbJahr" Grid.Column="1" />
 
-                    <DataGrid Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding}" Grid.Row="2" Grid.RowSpan="2" SelectionMode="Single">
-                        <DataGrid.CellStyle>
-                            <Style TargetType="{x:Type DataGridCell}">
-                                <Setter Property="Foreground" Value="Black" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="Red" />
-                                        <Setter Property="BorderBrush" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.CellStyle>
+                        <Label Content="Monat" Grid.Row="1"/>
+                        <ComboBox x:Name="cbMonat" Grid.Column="1" Grid.Row="1" />
 
-                        <DataGrid.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Background="Blue" Foreground="White" TextAlignment="Center" Height="20"><Run Text="{Binding Name, Mode=OneWay}"/></TextBlock>
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </DataGrid.GroupStyle>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Mitarbeiter" Width="*"/>
-                            <DataGridTextColumn Binding="{Binding EArbeitszeitHelper.StatusAnzeige, Mode=OneWay}" Header="Status" Width="60"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        <DataGrid Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding}" Grid.Row="2" SelectionMode="Single" Margin="3">
+                            <DataGrid.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="BorderBrush" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
 
-                    <Grid   Grid.ColumnSpan="2" Grid.Row="8">
+                            <DataGrid.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Background="Blue" Foreground="White" TextAlignment="Center" Height="20"><Run Text="{Binding Name, Mode=OneWay}"/></TextBlock>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </DataGrid.GroupStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Mitarbeiter" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding EArbeitszeitHelper.StatusAnzeige, Mode=OneWay}" Header="Status" Width="60"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Label Content="Eintritt" Grid.Row="3"/>
+                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding DatumEinstellung, Mode=OneWay, StringFormat='{}{0:dd.MM.yyyy}' }" />
+
+                        <Label Content="Austritt" Grid.Row="4"/>
+                        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding DatumEntlassung, Mode=OneWay, TargetNullValue='Ist im Arbeitsverhältnis',  StringFormat='{}{0:dd.MM.yyyy}' }" />
+                    </Grid>
+
+                    <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -237,7 +254,7 @@
                     </Grid>
 
                     <DataGrid x:Name="dgArbeitszeit" AutoGenerateColumns="False" Grid.Column="3" EnableRowVirtualization="True" 
-                              ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3" Grid.RowSpan="3" RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
+                              ItemsSource="{Binding Source={StaticResource vsArbeitszeitTage}}" Margin="3"  RowDetailsVisibilityMode="Visible" CanUserAddRows="False" 
                               AlternatingRowBackground="White" CanUserDeleteRows="False" CanUserResizeRows="False" GridLinesVisibility="None" MouseDoubleClick="Datagrid_DoppelClick"
                               IsReadOnly="{Binding EHelper}">
                         <DataGrid.CellStyle>
@@ -269,7 +286,7 @@
                                                 </Style>
                                             </DataGrid.CellStyle>
 
-                                            <DataGrid.Columns> 
+                                            <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding eStandort.Bezeichnung, Mode=OneWay}"  Width="90" />
                                                 <DataGridTextColumn Binding="{Binding AnzeigeAnmeldung, Mode=OneWay, StringFormat=HH\\:mm}" Header="Anmeldung" Width="61">
                                                     <DataGridTextColumn.CellStyle>
@@ -425,7 +442,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Grid Grid.Column="8" Grid.Row="3" DataContext="{Binding Source={StaticResource ArbeitszeitBediener}}" >
+                    <Grid Grid.Column="3" Grid.Row="1" DataContext="{Binding Source={StaticResource ArbeitszeitBediener}}"  >
                         <Grid.Resources>
                             <Style TargetType="{x:Type Border}" >
                                 <Setter Property="Margin" Value="3" />
@@ -640,7 +657,7 @@
                         </Button>
                     </Grid>
 
-                    <Grid Grid.Row="5" Grid.Column="3">
+                    <Grid Grid.Row="3" Grid.Column="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="160"/>

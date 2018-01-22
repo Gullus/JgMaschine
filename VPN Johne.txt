@@ -1,0 +1,13 @@
+Aufrufen der Internetseite:
+
+https://jug.myfirewall.org/
+
+Benutzername: Gullus
+Kennwort: Start123
+
+SSL-VPN Client Installer herunterladen
+
+RemoteDesktop
+IP: 192.168.149.2
+Benutzer: juggmbh\install
+Kennwort: Stahl2009

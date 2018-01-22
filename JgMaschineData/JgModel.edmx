@@ -158,6 +158,8 @@
     <Property Name="IdBuchhaltung" Type="nvarchar" Nullable="true" MaxLength="10" />
     <Property Name="AuszahlungGehalt" Type="tinyint" Nullable="false" DefaultValue="1" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
+    <Property Name="DatumEinstellung" Type="datetime" Nullable="false" />
+    <Property Name="DatumEntlassung" Type="datetime" Nullable="true" />
     <Property Name="DatenAbgleich_Datum" Type="datetime" Nullable="false" />
     <Property Name="DatenAbgleich_Status" Type="tinyint" Nullable="false" />
     <Property Name="DatenAbgleich_Bearbeiter" Type="nvarchar" Nullable="false" MaxLength="60" />
@@ -900,6 +902,8 @@
           <Property Name="IdBuchhaltung" Type="String" MaxLength="10" Nullable="true" />
           <Property Name="AuszahlungGehalt" Type="Byte" Nullable="false" DefaultValue="1" />
           <Property Name="Status" Type="JgModel.EnumStatusBediener" Nullable="false" />
+          <Property Name="DatumEinstellung" Type="DateTime" Nullable="false" />
+          <Property Name="DatumEntlassung" Type="DateTime" Nullable="true" />
           <Property Name="DatenAbgleich" Type="JgModel.DatenAbgleich" Nullable="false" />
           <Property Name="fAktivArbeitszeit" Type="Guid" Nullable="true" />
           <Property Name="fAktivAnmeldung" Type="Guid" Nullable="true" />
@@ -1528,6 +1532,8 @@
           <ScalarProperty Name="IdBuchhaltung" ColumnName="IdBuchhaltung" />
           <ScalarProperty Name="AuszahlungGehalt" ColumnName="AuszahlungGehalt" />
           <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DatumEinstellung" ColumnName="DatumEinstellung" />
+          <ScalarProperty Name="DatumEntlassung" ColumnName="DatumEntlassung" />
           <ComplexProperty Name="DatenAbgleich" TypeName="JgModel.DatenAbgleich">
             <ScalarProperty Name="Datum" ColumnName="DatenAbgleich_Datum" />
             <ScalarProperty Name="Status" ColumnName="DatenAbgleich_Status" />

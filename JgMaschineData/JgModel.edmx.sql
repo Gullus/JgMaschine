@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/24/2017 12:58:54
+-- Date Created: 12/22/2017 14:05:25
 -- Generated from EDMX file: C:\Entwicklung\JgMaschine\JgMaschineData\JgModel.edmx
 -- --------------------------------------------------
 
@@ -188,6 +188,8 @@ CREATE TABLE [dbo].[tabBedienerSet] (
     [IdBuchhaltung] nvarchar(10)  NULL,
     [AuszahlungGehalt] tinyint  NOT NULL,
     [Status] tinyint  NOT NULL,
+    [DatumEinstellung] datetime  NOT NULL,
+    [DatumEntlassung] datetime  NULL,
     [DatenAbgleich_Datum] datetime  NOT NULL,
     [DatenAbgleich_Status] tinyint  NOT NULL,
     [DatenAbgleich_Bearbeiter] nvarchar(60)  NOT NULL,
