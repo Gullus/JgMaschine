@@ -17,7 +17,7 @@ namespace JgMaschineGlobalZeit.Fenster
     private JgEntityList<tabArbeitszeitRunden> _ListeRundenBeginn;
     private JgEntityList<tabArbeitszeitRunden> _ListeRundenEnde;
 
-    public FormOptionen(AnmeldungAuswertung Auswertung, ArbeitszeitRunden AzRunden)
+    public FormOptionen(AnmeldungAuswertung Auswertung)
     {
       InitializeComponent();
 

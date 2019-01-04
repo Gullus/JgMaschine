@@ -23,7 +23,7 @@ namespace JgMaschineServiceHandyArbeitszeit
 #if DEBUG
 
       var prop = Properties.Settings.Default;
-      var arbeitszeitHandy = new ArbeitszeitVonHandy(prop.ConnectionString, prop.PortNummerServer);
+      var arbeitszeitHandy = new ArbeitszeitVonHandy(prop.DatenbankVerbindungsString, prop.PortNummerServer);
 
       var t = new Task((azHandy) =>
       {

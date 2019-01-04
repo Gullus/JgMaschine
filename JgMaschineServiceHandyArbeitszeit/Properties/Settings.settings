@@ -11,7 +11,7 @@
       <Value Profile="(Default)">Data Source=.\SqlExpress;Initial Catalog=JgMaschine;Integrated Security=True</Value>
     </Setting>
     <Setting Name="PortNummerServer" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">8010</Value>
+      <Value Profile="(Default)">6100</Value>
     </Setting>
   </Settings>
 </SettingsFile>

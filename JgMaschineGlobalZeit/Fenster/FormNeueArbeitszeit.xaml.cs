@@ -20,7 +20,7 @@ namespace JgMaschineGlobalZeit.Fenster
 
       var standorte = Db.tabStandortSet.Where(w => !w.DatenAbgleich.Geloescht).OrderBy(o => o.Bezeichnung).ToList();
       cmbStandort.ItemsSource = standorte;
-      cmbMitarbeiter.ItemsSource = ListeBediener;
+      cmbMitarbeiter.ItemsSource = ListeBediener.OrderBy(o => o.NachName);
 
       var jetzt = DateTime.Now;
 
